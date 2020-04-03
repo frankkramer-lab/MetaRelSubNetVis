@@ -5,7 +5,6 @@ import {PatientData} from './patient-data';
 import {Network} from './network';
 import {Observable} from 'rxjs';
 import {ThresholdResponse} from './threshold-response';
-import {plainToClass} from 'class-transformer';
 
 @Injectable({
   providedIn: 'root'

@@ -7,6 +7,7 @@ import {Patient} from './patient';
 import {CyGraphService} from './cy-graph.service';
 import {Threshold} from './threshold';
 import {ThresholdResponse} from './threshold-response';
+import { saveAs} from 'file-saver';
 
 
 @Component({
@@ -20,39 +21,44 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
   sideBarShown = true;
   activeMenuItem = {
     patient: true,
-    threshold: false,
-    layout: true
+    threshold: true,
+    layout: true,
+    download: true
   };
   private cy;
 
   @ViewChild('cy') cyDiv: ElementRef;
 
   objectKeys = Object.keys;
-
   thresholds: ThresholdResponse;
 
   patients: PatientsResponse = {metastatic: [],
                                 nonmetastatic: []};
 
   selectedMetastaticPatient: Patient;
-  selectedNonmetastaticPatient: Patient;
 
+  selectedNonmetastaticPatient: Patient;
   layoutNodeSize = 'rel';
-  layoutNodeColor = 'ge';
+
+  layoutNodeColor = 'geLevel';
   layoutNodeSizeOptions = {
     rel: 'Relevance',
     ge: 'Gene Expression'
   };
   layoutNodeColorOptions = {
-    ge: 'Gene Expression',
     geLevel: 'Gene Expression Level (Low, Normal, High)',
+    ge: 'Gene Expression',
     rel: 'Relevance'
   };
   layoutAllNodes = true;
 
+  downloadFormat: 'png';
+
   constructor(private httpClient: HttpClient,
               private dataLoader: DataLoaderService,
               private cyGraph: CyGraphService) {}
+
+  XOR(a: boolean, b: boolean) { return ( a || b ) && !( a && b ); }
 
   ngOnChanges() {
   }
@@ -102,5 +108,12 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
 
   updateThreshold(thresholds: ThresholdResponse){
     this.cyGraph.updateThreshold(thresholds);
+  }
+
+  downloadImage(type: string) {
+    console.log(type);
+    const image = this.cyGraph.getImage(type);
+    const filename = 'test.png';
+    saveAs(image, filename);
   }
 }

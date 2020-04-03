@@ -5,6 +5,7 @@ import cytoscape from 'cytoscape';
 import {Patient} from './patient';
 import {ThresholdResponse} from './threshold-response';
 import {Threshold} from './threshold';
+import {min} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class CyGraphService {
     yellow: '#e8e857',
     // yellow: '#d6d656',
     blue: '#599eff',
-    green: '#0b0'
+    green: '#0b0',
+    gray: '#888'
   }
 
   private cy: any;
@@ -35,6 +37,31 @@ export class CyGraphService {
     console.log("In the init of cyService");
     this.dataLoader.getNetwork().subscribe((network) => {
       console.log("init cytoscape");
+      const layer = {};
+      let numberOfLayers = 7;
+      network.nodes.forEach((node, i) => {
+        if(i < 1) {
+          layer[node.data.id] = numberOfLayers;     //1
+        } else if (i < 5) {                          //5=4+1
+          layer[node.data.id] = numberOfLayers - 1;  //4
+        } else if (i < 17) {                         //17=12+5
+          layer[node.data.id] = numberOfLayers - 2;  //12=4*3
+        } else if (i < 37) {                         //53=36+17
+          layer[node.data.id] = numberOfLayers - 3;  //36=12*3
+        } else if (i < 61) {                        //161=108+53
+          layer[node.data.id] = numberOfLayers - 4;  //108=36*3
+        } else if (i < 93) {
+          layer[node.data.id] = numberOfLayers - 5;
+        } else if (i < 133) {
+          layer[node.data.id] = numberOfLayers - 6;
+        } else {
+          layer[node.data.id] = numberOfLayers - 7;
+        }
+      });
+
+
+      console.log('Layer: ' + network.nodes[1].layer);
+
       this.cy = cytoscape({
               container: cyDiv.nativeElement, // container to render in
 
@@ -46,10 +73,10 @@ export class CyGraphService {
                   style: {
                     label: 'data(id)',
                     'text-valign': 'center',
-                    'background-color': '#888',
+                    'background-color': this.colors.gray,
                     color: '#fff',
                     // color: '#242424',
-                    'text-outline-color': '#888',
+                    'text-outline-color': this.colors.gray,
                     'text-outline-width': '5px',
                     width: '50px', height: '50px'
                   }
@@ -65,7 +92,7 @@ export class CyGraphService {
                 //   }
                 // },
                 {
-                  selector: 'node[color]',
+                  selector: 'node[color], node[colorMet], node[colorNonMet]',
                   style: {
                       color: '#383838',
                       'font-weight': 'bold',
@@ -88,9 +115,15 @@ export class CyGraphService {
                 {
                   selector: 'node.split',
                   style: {
+                    'text-outline-width': '0px',
+                    'text-outline-color': this.colors.gray,
+                    'text-outline-opacity': '0.3',
+                    width: '80px', height: '80px',
                     'pie-size': '100%',
-                    'pie-1-background-color': 'mapData(colorMet, 0.00017, 0.00029, blue, red)',
-                    'pie-1-background-size': '50%'
+                    'pie-1-background-color': 'green',
+                    'pie-1-background-size': '50%',
+                    'pie-2-background-color': 'green',
+                    'pie-2-background-size': '50%'
                   }
                 },
                 {
@@ -119,17 +152,25 @@ export class CyGraphService {
                 }
 
               ],
-
               layout: {
                 name: 'concentric',
                 levelWidth( nodes ) { // the letiation of concentric values in each level
-                  return nodes.maxDegree() / 5;
+                  return 1;
                 },
-                spacingFactor: 1.5
+                concentric( node ) { // returns numeric value for each node, placing higher nodes in levels towards the centre
+                  console.log('Node: ' + node.data('id') + ' Layer: ' + layer[node.data('id')]);
+                  return layer[node.data('id')];
+                },
+                spacingFactor: 1.65
               }
+              // layout: {
+              //   name: 'grid',
+              // }
             })
       this.cy.elements('node')
         .data('shown', true);
+      console.log("Max Node Degree: " + this.cy.elements('node').maxDegree());
+      // console.log("degree dist:" + Object.values(degreeDist));
     });
   }
 
@@ -178,9 +219,12 @@ export class CyGraphService {
       this.cy.elements('node')
         .removeData('member')
         .removeData('color')
+        .removeData('colorMet')
+        .removeData('colorNonMet')
         .removeData('size')
         .removeClass('mtb')
         .removeClass('split');
+      this.removeSizeMap();
       // this.updataShownNodes();
     });
   }
@@ -195,12 +239,33 @@ export class CyGraphService {
       .style('font-size', fontSizeMap);
   }
 
+  private removeSizeMap() {
+    this.cy.style()
+      .selector('node[?member]')
+      // .style('background-color', this.colors.gray)
+      // .style('text-outline-color', this.colors.gray)
+      .style('width', '50px')
+      .style('height', '50px')
+      .style('font-size', '18px');
+  }
+
   private setColorMap(minValue, maxValue) {
     const colorMap = 'mapData(color, ' + minValue + ', ' + maxValue + ', ' + this.colors.blue + ', ' + this.colors.red + ')';
     this.cy.style()
-      .selector('node[?member]')
+      .selector('node[color]')
       .style('background-color', colorMap)
       .style('text-outline-color', colorMap);
+  }
+
+  private setSplitColorMap(minValueMet, maxValueMet, minValueNonMet, maxValueNonMet) {
+    const colorMapMet = 'mapData(colorMet, ' + minValueMet + ', ' + maxValueMet + ', ' + this.colors.blue + ', ' + this.colors.red + ')';
+    const colorMapNonMet = 'mapData(colorMet, ' + minValueNonMet + ', ' + maxValueNonMet + ', ' + this.colors.blue + ', ' + this.colors.red + ')';
+    this.cy.style()
+      .selector('node.split')
+      .style('width', '80px')
+      .style('height', '80px')
+      .style('pie-2-background-color', colorMapMet)
+      .style('pie-1-background-color', colorMapNonMet);
   }
 
   private setColorDisc() {
@@ -216,7 +281,22 @@ export class CyGraphService {
       .style('text-outline-color', this.colors.yellow)
       .selector('node[color = \'HIGH\']')
       .style('background-color', this.colors.red)
-      .style('text-outline-color', this.colors.red);
+      .style('text-outline-color', this.colors.red)
+      .selector('node.split[colorMet], node.split[colorNonMet]')
+      .style('width', '80px')
+      .style('height', '80px')
+      .selector('node.split[colorMet = \'LOW\']')
+      .style('pie-2-background-color', this.colors.blue)
+      .selector('node.split[colorNonMet = \'LOW\']')
+      .style('pie-1-background-color', this.colors.blue)
+      .selector('node.split[colorMet = \'NORMAL\']')
+      .style('pie-2-background-color', this.colors.yellow)
+      .selector('node.split[colorNonMet = \'NORMAL\']')
+      .style('pie-1-background-color', this.colors.yellow)
+      .selector('node.split[colorMet = \'HIGH\']')
+      .style('pie-2-background-color', this.colors.red)
+      .selector('node.split[colorNonMet = \'HIGH\']')
+      .style('pie-1-background-color', this.colors.red);
   }
 
   private visualizeOne(pat: Patient, threshold: Threshold) {
@@ -227,7 +307,8 @@ export class CyGraphService {
       let size: string;
       if (this.sizeBy === 'rel') {
         size = 'score';
-        this.setSizeMap(pat.getMinScore(), pat.getMaxScore());
+        this.setSizeMap(threshold.threshold, threshold.max);
+        // this.setSizeMap(pat.getMinScore(), pat.getMaxScore());
       } else if (this.sizeBy === 'ge') {
         size = 'ge';
         this.setSizeMap(pat.getMinGe(), pat.getMaxGe());
@@ -236,14 +317,14 @@ export class CyGraphService {
       let color: string;
       if (this.colorBy === 'rel') {
         color = 'score';
-        this.setColorMap(pat.getMinScore(), pat.getMaxScore());
+        this.setColorMap(threshold.threshold, threshold.max);
+        // this.setColorMap(pat.getMinScore(), pat.getMaxScore());
       } else if (this.colorBy === 'ge') {
         color = 'ge';
         this.setColorMap(pat.getMinGe(), pat.getMaxGe());
       } else if (this.colorBy === 'geLevel') {
         color = 'geLevel';
-        this.cy.style()
-          this.setColorDisc();
+        this.setColorDisc();
       }
 
       for (const data of pat.patientData) {
@@ -254,7 +335,6 @@ export class CyGraphService {
           const node = this.cy.getElementById(data.name)
             .data('member', true)
             .data('shown', true)
-            .data('score', data.score)
             .data('size', data[size])
             .data('color', data[color]);
           if (data.mtb) {
@@ -268,23 +348,77 @@ export class CyGraphService {
   }
 
   private visualizeTwo() {
-    console.log('Layout Patient: ' + this.metPat.name);
+    console.log('Layout Two Patients: ' + this.metPat.name + ' and ' + this.nonPat.name);
     this.cy.batch(() => {
-      this.cy.elements('node')
-        .data('member', false);
-      // .removeData('member');
-      console.log(this.cy.elements('node').data('shown'));
+      this.clear();
 
-      for (let node of this.metPat.patientData) {
-        this.cy.getElementById(node.name)
-          .data('member', true)
-          .data('shown', true)
-          .data('score', node.score)
-          .data('colorMet', 0)
-          // .data('colorMet', node.score)
-          .addClass('split')
-          .data('ge', node.ge)
-          .data('mtb', node.mtb);
+      let color: string;
+      if (this.colorBy === 'rel') {
+        color = 'score';
+        const minValue = Math.min(this.thresholds.metastatic.threshold, this.thresholds.nonmetastatic.threshold);
+        const maxValue = Math.max(this.thresholds.metastatic.max, this.thresholds.nonmetastatic.max);
+        this.setColorMap(minValue, maxValue);
+        this.setSplitColorMap(
+          this.thresholds.metastatic.threshold, this.thresholds.metastatic.max,
+          this.thresholds.nonmetastatic.threshold, this.thresholds.nonmetastatic.max
+        );
+      } else if (this.colorBy === 'ge') {
+        color = 'ge';
+        const minValue = Math.min(this.metPat.getMinGe(), this.nonPat.getMinGe());
+        const maxValue = Math.min(this.metPat.getMaxGe(), this.nonPat.getMaxGe());
+        this.setColorMap(minValue, maxValue);
+        this.setSplitColorMap(
+          this.metPat.getMinGe(), this.metPat.getMaxGe(),
+          this.nonPat.getMinGe(), this.nonPat.getMaxGe()
+        );
+      } else if (this.colorBy === 'geLevel') {
+        color = 'geLevel';
+        this.setColorDisc();
+      }
+
+      const combinedPats = {};
+      for (const pat of this.metPat.patientData) {
+        combinedPats[pat.name] = [pat];
+      }
+      for (const pat of this.nonPat.patientData) {
+        if (Object.keys(combinedPats).indexOf(pat.name) > -1) {
+          combinedPats[pat.name].push(pat);
+        } else {
+          combinedPats[pat.name] = [pat];
+        }
+      }
+
+      for (const nodeId of Object.keys(combinedPats)) {
+        // console.log("Score: " + data.score + " Threshold: " + (threshold.selected / this.thresholds.multiplier) + " IF: " + (data.score >= (threshold.selected / this.thresholds.multiplier)));
+        let data = combinedPats[nodeId];
+        console.log("Node: " + nodeId + " Data: " + data + " Length: " + data.length);
+        if (data.length === 2) {
+          console.log("Min Score: " + Math.max(data[0].score, data[1].score) + " Threshold: " + (this.thresholds.selected / this.thresholds.multiplier));
+          if (Math.max(data[0].score, data[1].score) >= (this.thresholds.selected / this.thresholds.multiplier)) {
+            console.log('Patient Data: ' + data);
+            const node = this.cy.getElementById(nodeId)
+              .data('member', true)
+              .data('shown', true)
+              .addClass('split')
+              .data('colorMet', data[0][color])
+              .data('colorNonMet', data[1][color]);
+            if (data.mtb) {
+              node.addClass('mtb');
+            }
+          }
+        } else {
+          data = data[0];
+          if (data.score >= (this.thresholds.selected / this.thresholds.multiplier)) {
+            console.log('Patient Data: ' + data);
+            const node = this.cy.getElementById(data.name)
+              .data('member', true)
+              .data('shown', true)
+              .data('color', data[color]);
+            if (data.mtb) {
+              node.addClass('mtb');
+            }
+          }
+        }
       }
 
       this.updataShownNodes();
@@ -323,5 +457,15 @@ export class CyGraphService {
   updateThreshold(thresholds: ThresholdResponse) {
     this.thresholds = thresholds;
     this.layoutPatient();
+  }
+
+  getImage(type: string) {
+    let image;
+    if (type === 'jpg') {
+      image = this.cy.png();
+    } else {
+      image = this.cy.jpg();
+    }
+    return image;
   }
 }

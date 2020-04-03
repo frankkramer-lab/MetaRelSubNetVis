@@ -16,7 +16,7 @@
 
 <body>
 <div class="page-wrapper chiller-theme" [class.toggled]="sideBarShown">
-  <a id="show-sidebar" class="btn btn-sm btn-dark" href="#" (click)="sideBarShown = true">
+  <a id="show-sidebar" class="btn btn-lg btn-dark" href="#" (click)="sideBarShown = true">
     <i class="fas fa-bars"></i>
   </a>
   <nav id="sidebar" class="sidebar-wrapper">
@@ -99,7 +99,7 @@
             </a>
             <div class="sidebar-submenu" [style.display]="activeMenuItem.threshold ? 'block':'none'">
               <ul *ngIf="thresholds !== undefined">
-                <li [style.display]="selectedMetastaticPatient !== undefined ? 'block':'none'">
+                <li [style.display]="(selectedMetastaticPatient !== undefined)&&(selectedNonmetastaticPatient === undefined) ? 'block':'none'">
                   <div class="input-group mb-3 custom-form-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="basic-addon1">Metastatic:</span>
@@ -124,7 +124,7 @@
                     </div>
                   </div>
                 </li>
-                <li [style.display]="selectedNonmetastaticPatient !== undefined ? 'block':'none'">
+                <li [style.display]="((selectedMetastaticPatient === undefined)&&(selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
                   <div class="input-group mb-3 custom-form-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="basic-addon2">Non-Metastatic:</span>
@@ -149,6 +149,31 @@
                     </div>
                   </div>
                 </li>
+                <li [style.display]="((selectedMetastaticPatient !== undefined)&&(selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
+                  <div class="input-group mb-3 custom-form-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon3">Both Patients:</span>
+                    </div>
+                    <input type="text" class="form-control" id="both-patients-input"
+                           value="{{thresholds.selected / thresholds.multiplier}}"
+                           aria-describedby="basic-addon3" disabled>
+                  </div>
+                  <div class="form-group custom-form-group">
+                    <input type="range" class="custom-range" id="customRange3"
+                           min="{{thresholds.minThreshold * thresholds.multiplier}}"
+                           max="{{thresholds.maxThreshold * thresholds.multiplier}}"
+                           [(ngModel)]="thresholds.selected"
+                           (change)="updateThreshold(thresholds)">
+                    <div class="row justify-content-between">
+                      <div class="col-4">
+                        {{thresholds.minThreshold}}
+                      </div>
+                      <div class="col-4 text-right">
+                        {{thresholds.maxThreshold}}
+                      </div>
+                    </div>
+                  </div>
+                </li>
                 <li [style.display]="((selectedMetastaticPatient === undefined) && (selectedNonmetastaticPatient === undefined)) ? 'block':'none'">
                   <legend>Select some patients from the upper menu</legend>
                 </li>
@@ -162,7 +187,7 @@
             </a>
             <div class="sidebar-submenu" [style.display]="activeMenuItem.layout ? 'block':'none'">
               <ul>
-                <li class="form-group">
+                <li class="form-group" [style.display]="XOR((selectedMetastaticPatient !== undefined), (selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
                   <legend>Set Node Size</legend>
                   <div *ngFor="let opt of objectKeys(layoutNodeSizeOptions)" class="custom-control custom-radio custom-control-inline"  >
                     <input type="radio" id="nodeSizeBy{{opt}}" name="customRadioNodeSize" class="custom-control-input"
@@ -173,7 +198,7 @@
                     <label class="custom-control-label" for="nodeSizeBy{{opt}}">by {{layoutNodeSizeOptions[opt]}}</label>
                   </div>
                 </li>
-                <li class="form-group">
+                <li class="form-group" [style.display]="((selectedMetastaticPatient !== undefined) || (selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
                   <legend>Color Nodes</legend>
                   <div *ngFor="let opt of objectKeys(layoutNodeColorOptions)" class="custom-control custom-radio custom-control-inline"  >
                     <input type="radio" id="nodeColorBy{{opt}}" name="customRadioNodeColor" class="custom-control-input"
@@ -184,13 +209,44 @@
                     <label class="custom-control-label" for="nodeColorBy{{opt}}">by {{layoutNodeColorOptions[opt]}}</label>
                   </div>
                 </li>
-                <li class="form-group">
+                <li class="form-group" [style.display]="((selectedMetastaticPatient !== undefined) || (selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
                   <legend>Show All Nodes
                     <label class="switch" >
                       <input type="checkbox" class="primary" [(ngModel)]="layoutAllNodes" (change)="updateAllNodes(layoutAllNodes)">
                       <span class="slider round"></span>
                     </label>
                   </legend>
+                </li>
+                <li [style.display]="((selectedMetastaticPatient === undefined) && (selectedNonmetastaticPatient === undefined)) ? 'block':'none'">
+                  <legend>Select some patients from the upper menu</legend>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="sidebar-dropdown" [class.active]="activeMenuItem.download">
+            <a href="#" (click)="toggleMenu('download')">
+              <i class="far fa-gem"></i>
+              <span>Download</span>
+            </a>
+            <div class="sidebar-submenu" [style.display]="activeMenuItem.download ? 'block':'none'">
+              <ul>
+                <li>
+                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary" >
+                      <input type="radio" name="options" id="downloadFormat1"
+                             [(ngModel)]="downloadFormat"
+                             value="png"
+                             [checked]="true"> PNG
+                    </label>
+                    <label class="btn btn-secondary">
+                      <input type="radio" name="options" id="downloadFormat2"
+                             [(ngModel)]="downloadFormat"
+                             value="jpg"> JPEG
+                    </label>
+                  </div>
+                  <button class="btn btn-dark btn-small" (click)="downloadImage(downloadFormat)">
+                    Download
+                  </button>
                 </li>
               </ul>
             </div>

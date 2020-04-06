@@ -38,7 +38,7 @@ export class CyGraphService {
     this.dataLoader.getNetwork().subscribe((network) => {
       console.log("init cytoscape");
       const layer = {};
-      let numberOfLayers = 7;
+      const numberOfLayers = 7;
       network.nodes.forEach((node, i) => {
         if(i < 1) {
           layer[node.data.id] = numberOfLayers;     //1
@@ -60,7 +60,7 @@ export class CyGraphService {
       });
 
 
-      console.log('Layer: ' + network.nodes[1].layer);
+      // console.log('Layer: ' + network.nodes[1].layer);
 
       this.cy = cytoscape({
               container: cyDiv.nativeElement, // container to render in
@@ -81,16 +81,6 @@ export class CyGraphService {
                     width: '50px', height: '50px'
                   }
                 },
-                //
-                // {
-                //   selector: 'node[?member]',
-                //   style: {
-                //     'background-color': 'mapData(color, 0.00017, 0.00029, blue, red)',
-                //     'text-outline-color': 'mapData(color, 0.00017, 0.00029, blue, red)',
-                //     width: 'mapData(size, 0.00017, 0.00029, 50, 130)',
-                //     height: 'mapData(size, 0.00017, 0.00029, 50, 130)'
-                //   }
-                // },
                 {
                   selector: 'node[color], node[colorMet], node[colorNonMet]',
                   style: {
@@ -169,7 +159,7 @@ export class CyGraphService {
             })
       this.cy.elements('node')
         .data('shown', true);
-      console.log("Max Node Degree: " + this.cy.elements('node').maxDegree());
+      // console.log("Max Node Degree: " + this.cy.elements('node').maxDegree());
       // console.log("degree dist:" + Object.values(degreeDist));
     });
   }
@@ -425,9 +415,6 @@ export class CyGraphService {
     });
   }
 
-  //TODO: in R: include ge, not only LOW,NORMAL,HIGH
-  //Add selector for pos/neg GE and mapping from blue-yellow-red
-  //Add selectors and data assignment when more than one node are selected
   layoutPatient() {
     console.log('Met Patient defined: ' + (this.metPat !== undefined));
     console.log('Non Patient defined: ' + (this.nonPat !== undefined));
@@ -446,7 +433,7 @@ export class CyGraphService {
       this.clear();
       this.cy.elements('node')
         .data('shown', true);
-      this.updataShownNodes();
+      // this.updataShownNodes();
     }
   }
 
@@ -459,12 +446,13 @@ export class CyGraphService {
     this.layoutPatient();
   }
 
-  getImage(type: string) {
+  getImage(type: string, transparent: boolean, scaleBy: number) {
     let image;
-    if (type === 'jpg') {
-      image = this.cy.png();
+    const bgColor = transparent ? 'transparent' : 'white';
+    if (type === 'png') {
+      image = this.cy.png({bg: bgColor, scale: scaleBy});
     } else {
-      image = this.cy.jpg();
+      image = this.cy.jpg({scale: scaleBy});
     }
     return image;
   }

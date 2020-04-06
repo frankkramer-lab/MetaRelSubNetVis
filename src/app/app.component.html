@@ -9,7 +9,7 @@
   <title>Sidebar template</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
-  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" rel="stylesheet">
 
 
 </head>
@@ -22,51 +22,89 @@
   <nav id="sidebar" class="sidebar-wrapper">
     <div class="sidebar-content">
       <div class="sidebar-brand">
-        <a href="#">pro sidebar</a>
+        <a href="#">Explore the Networks</a>
         <div id="close-sidebar" (click)="sideBarShown = false">
           <i class="fas fa-times"></i>
         </div>
       </div>
-      <div class="sidebar-header">
-        <div class="user-pic">
-          <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
-               alt="User picture">
-        </div>
-        <div class="user-info">
-          <span class="user-name">Jhon
-            <strong>Smith</strong>
-          </span>
-          <span class="user-role">Administrator</span>
-          <span class="user-status">
-            <i class="fa fa-circle"></i>
-            <span>Online</span>
-          </span>
-        </div>
+<!--      Info box    -->
+      <div class="sidebar-menu">
+        <ul>
+          <li class="header-menu">
+            <span>Info</span>
+          </li>
+        </ul>
       </div>
-      <!-- sidebar-header  -->
-      <div class="sidebar-search">
-        <div>
-          <div class="input-group">
-            <input type="text" class="form-control search-menu" placeholder="Search...">
-            <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="fa fa-search" aria-hidden="true"></i>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+<!--      <div class="sidebar-header">-->
+<!--        <div class="user-pic">-->
+<!--          <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"-->
+<!--               alt="User picture">-->
+<!--        </div>-->
+<!--        <div class="user-info">-->
+<!--          <span class="user-name">Jhon-->
+<!--            <strong>Smith</strong>-->
+<!--          </span>-->
+<!--          <span class="user-role">Administrator</span>-->
+<!--          <span class="user-status">-->
+<!--            <i class="fa fa-circle"></i>-->
+<!--            <span>Online</span>-->
+<!--          </span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      &lt;!&ndash; sidebar-header  &ndash;&gt;-->
+<!--      <div class="sidebar-search">-->
+<!--        <div>-->
+<!--          <div class="input-group">-->
+<!--            <input type="text" class="form-control search-menu" placeholder="Search...">-->
+<!--            <div class="input-group-append">-->
+<!--              <span class="input-group-text">-->
+<!--                <i class="fa fa-search" aria-hidden="true"></i>-->
+<!--              </span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
       <!-- sidebar-search  -->
       <div class="sidebar-menu">
         <ul>
           <li class="header-menu">
-            <span>General</span>
+            <span>Settings</span>
           </li>
+<!--      Choose a Node          -->
+          <li class="sidebar-dropdown" [class.active]="activeMenuItem.nodes">
+            <a href="#" (click)="toggleMenu('nodes')">
+              <i class="fas fa-project-diagram"></i>
+              <span>Nodes</span>
+            </a>
+            <div class="sidebar-submenu" [style.display]="activeMenuItem.nodes ? 'block':'none'">
+              <div class="sidebar-search">
+                <div>
+                  <div class="input-group">
+                    <input type="text" class="form-control search-menu" placeholder="Search...">
+                    <div class="input-group-append">
+                      <span class="input-group-text">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ul class="list-group">
+                <li type="button" class="list-group-item list-group-item-secondary active">Cras justo odio</li>
+                <li type="button" class="list-group-item list-group-item-secondary" disabled>Vestibulum at eros</li>
+                <li type="button" class="list-group-item list-group-item-secondary">Dapibus ac facilisis in</li>
+                <li type="button" class="list-group-item list-group-item-secondary">Morbi leo risus</li>
+                <li type="button" class="list-group-item list-group-item-secondary">Porta ac consectetur ac</li>
+                <li type="button" class="list-group-item list-group-item-secondary">Vestibulum at eros</li>
+              </ul>
+            </div>
+          </li>
+<!--Choose a Patient          -->
           <li class="sidebar-dropdown" [class.active]="activeMenuItem.patient">
             <a href="#" (click)="toggleMenu('patient')">
-              <i class="fa fa-tachometer-alt"></i>
+              <i class="fas fa-hospital-user"></i>
               <span>Patients</span>
-              <span class="badge badge-pill badge-warning">New</span>
+<!--              <span class="badge badge-pill badge-warning">New</span>-->
             </a>
             <div class="sidebar-submenu" [style.display]="activeMenuItem.patient ? 'block':'none'">
               <ul>
@@ -91,11 +129,12 @@
               </ul>
             </div>
           </li>
+<!--          Choose Threshold      -->
           <li class="sidebar-dropdown" [class.active]="activeMenuItem.threshold">
             <a href="#" (click)="toggleMenu('threshold')">
-              <i class="fa fa-shopping-cart"></i>
+              <i class="fas fa-sort-amount-up"></i>
               <span>Threshold</span>
-              <span class="badge badge-pill badge-danger">3</span>
+<!--              <span class="badge badge-pill badge-danger">3</span>-->
             </a>
             <div class="sidebar-submenu" [style.display]="activeMenuItem.threshold ? 'block':'none'">
               <ul *ngIf="thresholds !== undefined">
@@ -180,9 +219,10 @@
               </ul>
             </div>
           </li>
+<!--          Choose Layout      -->
           <li class="sidebar-dropdown" [class.active]="activeMenuItem.layout">
             <a href="#" (click)="toggleMenu('layout')">
-              <i class="far fa-gem"></i>
+              <i class="fas fa-palette"></i>
               <span>Layout</span>
             </a>
             <div class="sidebar-submenu" [style.display]="activeMenuItem.layout ? 'block':'none'">
@@ -223,94 +263,116 @@
               </ul>
             </div>
           </li>
+<!--          Download Network as Image     -->
           <li class="sidebar-dropdown" [class.active]="activeMenuItem.download">
             <a href="#" (click)="toggleMenu('download')">
-              <i class="far fa-gem"></i>
+              <i class="fas fa-arrow-circle-down"></i>
               <span>Download</span>
             </a>
             <div class="sidebar-submenu" [style.display]="activeMenuItem.download ? 'block':'none'">
               <ul>
+                <li class="row mb-3 custom-form-group">
+                    <div class="btn-group btn-group-toggle col-6" data-toggle="buttons">
+                      <label class="btn btn-light" [class.active]="downloadFormat ==='png'">
+                        <input type="radio" name="options" id="downloadFormat1"
+                               [(ngModel)]="downloadFormat"
+                               value="png"
+                               [checked]="downloadFormat === 'png'"> PNG
+                      </label>
+                      <label class="btn btn-light" [class.active]="downloadFormat ==='jpg'">
+                        <input type="radio" name="options" id="downloadFormat2"
+                               [(ngModel)]="downloadFormat"
+                               value="jpg"
+                               [checked]="downloadFormat ==='jpg'"> JPEG
+                      </label>
+                    </div>
+                    <div class="col-6 text-right">
+                      <button class="btn btn-light btn-small" (click)="downloadImage(downloadFormat)">
+                        Download
+                      </button>
+                    </div>
+                </li>
                 <li>
-                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary" >
-                      <input type="radio" name="options" id="downloadFormat1"
-                             [(ngModel)]="downloadFormat"
-                             value="png"
-                             [checked]="true"> PNG
-                    </label>
-                    <label class="btn btn-secondary">
-                      <input type="radio" name="options" id="downloadFormat2"
-                             [(ngModel)]="downloadFormat"
-                             value="jpg"> JPEG
-                    </label>
+                  <div class="input-group mb-3 custom-form-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="scaleImage">Scale Image by </span>
+                    </div>
+                    <input type="text" class="form-control" id="scaleImage-input"
+                           [(ngModel)]="downloadScaleImageBy"
+                           aria-describedby="scaleImage">
                   </div>
-                  <button class="btn btn-dark btn-small" (click)="downloadImage(downloadFormat)">
-                    Download
-                  </button>
+                </li>
+                <li class="form-group" [style.display]="downloadFormat !== 'jpg' ? 'block':'none'">
+                  <legend>Transparent Background
+                    <label class="switch" >
+                      <input type="checkbox" class="primary" [(ngModel)]="downloadTransparent" >
+                      <span class="slider round"></span>
+                    </label>
+                  </legend>
                 </li>
               </ul>
             </div>
           </li>
-          <li class="sidebar-dropdown">
-            <a href="#">
-              <i class="fa fa-chart-line"></i>
-              <span>Charts</span>
-            </a>
-            <div class="sidebar-submenu">
-              <ul>
-                <li>
-                  <a href="#">Pie chart</a>
-                </li>
-                <li>
-                  <a href="#">Line chart</a>
-                </li>
-                <li>
-                  <a href="#">Bar chart</a>
-                </li>
-                <li>
-                  <a href="#">Histogram</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li class="sidebar-dropdown">
-            <a href="#">
-              <i class="fa fa-globe"></i>
-              <span>Maps</span>
-            </a>
-            <div class="sidebar-submenu">
-              <ul>
-                <li>
-                  <a href="#">Google maps</a>
-                </li>
-                <li>
-                  <a href="#">Open street map</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li class="header-menu">
-            <span>Extra</span>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-book"></i>
-              <span>Documentation</span>
-              <span class="badge badge-pill badge-primary">Beta</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-calendar"></i>
-              <span>Calendar</span>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-folder"></i>
-              <span>Examples</span>
-            </a>
-          </li>
+<!--          <li class="sidebar-dropdown">-->
+<!--            <a href="#">-->
+<!--              <i class="fa fa-chart-line"></i>-->
+<!--              <span>Charts</span>-->
+<!--            </a>-->
+<!--            <div class="sidebar-submenu">-->
+<!--              <ul>-->
+<!--                <li>-->
+<!--                  <a href="#">Pie chart</a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                  <a href="#">Line chart</a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                  <a href="#">Bar chart</a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                  <a href="#">Histogram</a>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </div>-->
+<!--          </li>-->
+<!--          <li class="sidebar-dropdown">-->
+<!--            <a href="#">-->
+<!--              <i class="fa fa-globe"></i>-->
+<!--              <span>Maps</span>-->
+<!--            </a>-->
+<!--            <div class="sidebar-submenu">-->
+<!--              <ul>-->
+<!--                <li>-->
+<!--                  <a href="#">Google maps</a>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                  <a href="#">Open street map</a>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </div>-->
+<!--          </li>-->
+<!--          <li class="header-menu">-->
+<!--            <span>Extra</span>-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <a href="#">-->
+<!--              <i class="fa fa-book"></i>-->
+<!--              <span>Documentation</span>-->
+<!--              <span class="badge badge-pill badge-primary">Beta</span>-->
+<!--            </a>-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <a href="#">-->
+<!--              <i class="fa fa-calendar"></i>-->
+<!--              <span>Calendar</span>-->
+<!--            </a>-->
+<!--          </li>-->
+<!--          <li>-->
+<!--            <a href="#">-->
+<!--              <i class="fa fa-folder"></i>-->
+<!--              <span>Examples</span>-->
+<!--            </a>-->
+<!--          </li>-->
         </ul>
       </div>
       <!-- sidebar-menu  -->

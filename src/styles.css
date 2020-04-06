@@ -1,6 +1,15 @@
 #sidebar {
   color: lightgrey;
+  font-size: large;
 }
+
+#sidebar .list-group {
+  padding-left: 20px;
+  padding-right: 20px;
+  max-height: 230px;
+  overflow-y: scroll;
+}
+
 .custom-range {
   -webkit-appearance: none;
   width: 100%;
@@ -17,13 +26,13 @@
   padding-right: 25px;
 }
 
-.custom-form-group label{
-  color: #b8bfce;
-}
+/*.custom-form-group label{*/
+/*  color: #b8bfce;*/
+/*}*/
 
 #sidebar legend {
   font-size: medium;
-  padding-right: 22px;
+  padding-right: 25px;
 }
 
 .custom-range::-webkit-slider-thumb {
@@ -42,6 +51,12 @@
   border-radius: 50%;
   background: #007bff;
   cursor: pointer;
+}
+
+
+.btn.active {
+  background-color: #007bff !important;
+  border-color: #007bff !important;
 }
 
 /*Switch*/

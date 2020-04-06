@@ -96,6 +96,9 @@ body {
   border-radius: 0 4px 4px 0px;
   width: 35px;
   transition-delay: 0.3s;
+  font-size: 1.0rem;
+  line-height: 1.1;
+  padding-left: 8px;
 }
 .page-wrapper.toggled #show-sidebar {
   left: -40px;
@@ -127,7 +130,8 @@ body {
 .sidebar-content {
   max-height: calc(100% - 30px);
   height: calc(100% - 30px);
-  overflow-y: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
   position: relative;
 }
 

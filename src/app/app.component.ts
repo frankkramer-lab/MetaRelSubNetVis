@@ -20,10 +20,11 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
 
   sideBarShown = true;
   activeMenuItem = {
+    nodes: true,
     patient: true,
     threshold: true,
     layout: true,
-    download: true
+    download: false
   };
   private cy;
 
@@ -52,7 +53,9 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
   };
   layoutAllNodes = true;
 
-  downloadFormat: 'png';
+  downloadFormat = 'png';
+  downloadTransparent = false;
+  downloadScaleImageBy = 1.0;
 
   constructor(private httpClient: HttpClient,
               private dataLoader: DataLoaderService,
@@ -112,8 +115,18 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
 
   downloadImage(type: string) {
     console.log(type);
-    const image = this.cyGraph.getImage(type);
-    const filename = 'test.png';
+    const image = this.cyGraph.getImage(type, this.downloadTransparent, this.downloadScaleImageBy);
+
+    let filename = 'test.' + type;
+    if (this.selectedMetastaticPatient === undefined && this.selectedNonmetastaticPatient === undefined){
+      filename = 'PPI_network.' + type;
+    } else if (this.selectedMetastaticPatient !== undefined && this.selectedNonmetastaticPatient === undefined) {
+      filename = this.selectedMetastaticPatient.name + '.' + type;
+    } else if (this.selectedMetastaticPatient === undefined && this.selectedNonmetastaticPatient !== undefined) {
+      filename = this.selectedNonmetastaticPatient.name + '.' + type;
+    } else {
+      filename = this.selectedMetastaticPatient.name + '_vs_' + this.selectedNonmetastaticPatient.name + '.' + type;
+    }
     saveAs(image, filename);
   }
 }

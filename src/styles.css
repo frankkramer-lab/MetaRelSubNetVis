@@ -10,6 +10,22 @@
   overflow-y: scroll;
 }
 
+#sidebar .list-group-item{
+  font-size: medium;
+  padding: 6px 14px;
+}
+
+#sidebar .list-group-item.selected{
+  /*font-weight: bold;*/
+  color: lightgrey;
+  background-color: #2196F3;
+}
+
+#sidebar .list-group-item-dark{
+  font-size: small;
+  padding: 6px 14px;
+}
+
 .custom-range {
   -webkit-appearance: none;
   width: 100%;

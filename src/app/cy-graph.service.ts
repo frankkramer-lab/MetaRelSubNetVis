@@ -6,6 +6,9 @@ import {Patient} from './patient';
 import {ThresholdResponse} from './threshold-response';
 import {Threshold} from './threshold';
 import {min} from 'rxjs/operators';
+import {AppComponent} from './app.component';
+import {Edge} from './edge';
+import {style} from '@angular/animations';
 
 @Injectable({
   providedIn: 'root'
@@ -17,26 +20,30 @@ export class CyGraphService {
     // yellow: '#d6d656',
     blue: '#599eff',
     green: '#0b0',
-    gray: '#888'
+    gray: '#888',
+    highlight: '#333'
   }
 
+  // private appComponent: AppComponent;
   private cy: any;
   private metPat: Patient;
   private nonPat: Patient;
   private showAllNodes: boolean;
+  private showMtbNodes: boolean;
   private sizeBy: string;
   private colorBy: string;
   private thresholds: ThresholdResponse;
+  private highlightedNode: string;
 
   constructor(private dataLoader: DataLoaderService) { }
 
 
-  initGraph(cyDiv: ElementRef, sizeBy: string, colorBy:string) {
+  initGraph(cyDiv: ElementRef, sizeBy: string, colorBy: string) {
     this.sizeBy = sizeBy;
     this.colorBy = colorBy;
-    console.log("In the init of cyService");
+    // console.log("In the init of cyService");
     this.dataLoader.getNetwork().subscribe((network) => {
-      console.log("init cytoscape");
+      // console.log("init cytoscape");
       const layer = {};
       const numberOfLayers = 7;
       network.nodes.forEach((node, i) => {
@@ -116,6 +123,14 @@ export class CyGraphService {
                     'pie-2-background-size': '50%'
                   }
                 },
+
+                {
+                  selector: 'node.highlight',
+                  style: {
+                    'border-width': '13px',
+                    'border-color': this.colors.highlight,
+                  }
+                },
                 {
                   selector: 'edge[!shown]',
                   style: {
@@ -148,7 +163,7 @@ export class CyGraphService {
                   return 1;
                 },
                 concentric( node ) { // returns numeric value for each node, placing higher nodes in levels towards the centre
-                  console.log('Node: ' + node.data('id') + ' Layer: ' + layer[node.data('id')]);
+                  // console.log('Node: ' + node.data('id') + ' Layer: ' + layer[node.data('id')]);
                   return layer[node.data('id')];
                 },
                 spacingFactor: 1.65
@@ -159,8 +174,6 @@ export class CyGraphService {
             })
       this.cy.elements('node')
         .data('shown', true);
-      // console.log("Max Node Degree: " + this.cy.elements('node').maxDegree());
-      // console.log("degree dist:" + Object.values(degreeDist));
     });
   }
 
@@ -179,6 +192,11 @@ export class CyGraphService {
     this.updataShownNodes();
   }
 
+  setShowMtbNodes(shown: boolean) {
+    this.showMtbNodes = shown;
+    this.updateMtbNodes();
+  }
+
   setSizeBy(by: string) {
     this.sizeBy = by;
     this.layoutPatient();
@@ -187,6 +205,15 @@ export class CyGraphService {
   setColorBy(by: string) {
     this.colorBy = by;
     this.layoutPatient();
+  }
+
+  getNetwork() {
+    const nodes = [];
+    this.cy.elements('node[?shown]').forEach((node) => {
+      // console.log('Get Network from CS: ' + Object.keys(node.data()) + Object.values(node.data()));
+      nodes.push({id: node.id(), connected: node.connectedEdges()});
+    });
+    return nodes;
   }
 
   private updataShownNodes() {
@@ -289,8 +316,21 @@ export class CyGraphService {
       .style('pie-1-background-color', this.colors.red);
   }
 
+  updateMtbNodes() {
+    if (this.showMtbNodes) {
+      this.cy.style()
+        .selector('node.mtb')
+        .style('border-width', '7px');
+    } else {
+      this.cy.style()
+        .selector('node.mtb')
+        .style('border-width', '0px');
+    }
+    this.layoutPatient();
+  }
+
   private visualizeOne(pat: Patient, threshold: Threshold) {
-    console.log('Layout Patient: ' + pat.name);
+    // console.log('Layout Patient: ' + pat.name);
     this.cy.batch(() => {
       this.clear();
 
@@ -320,8 +360,8 @@ export class CyGraphService {
       for (const data of pat.patientData) {
         // console.log("Score: " + data.score + " Threshold: " + (threshold.selected / this.thresholds.multiplier) + " IF: " + (data.score >= (threshold.selected / this.thresholds.multiplier)));
         if (data.score >= (threshold.selected / this.thresholds.multiplier)) {
-          console.log('size: ' + size);
-          console.log('Patient Data: ' + data);
+          // console.log('size: ' + size);
+          // console.log('Patient Data: ' + data);
           const node = this.cy.getElementById(data.name)
             .data('member', true)
             .data('shown', true)
@@ -338,7 +378,7 @@ export class CyGraphService {
   }
 
   private visualizeTwo() {
-    console.log('Layout Two Patients: ' + this.metPat.name + ' and ' + this.nonPat.name);
+    // console.log('Layout Two Patients: ' + this.metPat.name + ' and ' + this.nonPat.name);
     this.cy.batch(() => {
       this.clear();
 
@@ -381,11 +421,11 @@ export class CyGraphService {
       for (const nodeId of Object.keys(combinedPats)) {
         // console.log("Score: " + data.score + " Threshold: " + (threshold.selected / this.thresholds.multiplier) + " IF: " + (data.score >= (threshold.selected / this.thresholds.multiplier)));
         let data = combinedPats[nodeId];
-        console.log("Node: " + nodeId + " Data: " + data + " Length: " + data.length);
+        // console.log("Node: " + nodeId + " Data: " + data + " Length: " + data.length);
         if (data.length === 2) {
-          console.log("Min Score: " + Math.max(data[0].score, data[1].score) + " Threshold: " + (this.thresholds.selected / this.thresholds.multiplier));
+          // console.log("Min Score: " + Math.max(data[0].score, data[1].score) + " Threshold: " + (this.thresholds.selected / this.thresholds.multiplier));
           if (Math.max(data[0].score, data[1].score) >= (this.thresholds.selected / this.thresholds.multiplier)) {
-            console.log('Patient Data: ' + data);
+            // console.log('Patient Data: ' + data);
             const node = this.cy.getElementById(nodeId)
               .data('member', true)
               .data('shown', true)
@@ -399,7 +439,7 @@ export class CyGraphService {
         } else {
           data = data[0];
           if (data.score >= (this.thresholds.selected / this.thresholds.multiplier)) {
-            console.log('Patient Data: ' + data);
+            // console.log('Patient Data: ' + data);
             const node = this.cy.getElementById(data.name)
               .data('member', true)
               .data('shown', true)
@@ -416,20 +456,20 @@ export class CyGraphService {
   }
 
   layoutPatient() {
-    console.log('Met Patient defined: ' + (this.metPat !== undefined));
-    console.log('Non Patient defined: ' + (this.nonPat !== undefined));
+    // console.log('Met Patient defined: ' + (this.metPat !== undefined));
+    // console.log('Non Patient defined: ' + (this.nonPat !== undefined));
     if ((this.metPat !== undefined) && (this.nonPat !== undefined)) {
-      console.log('Layout two patients!');
+      // console.log('Layout two patients!');
       this.clear();
       this.visualizeTwo();
     } else if (this.metPat !== undefined) {
-      console.log('Layout metPat!');
+      // console.log('Layout metPat!');
       this.visualizeOne(this.metPat, this.thresholds.metastatic);
     } else if (this.nonPat !== undefined) {
-      console.log('Layout nonPat!');
+      // console.log('Layout nonPat!');
       this.visualizeOne(this.nonPat, this.thresholds.nonmetastatic);
     } else {
-      console.log('Nothing to layout!');
+      // console.log('Nothing to layout!');
       this.clear();
       this.cy.elements('node')
         .data('shown', true);
@@ -455,5 +495,14 @@ export class CyGraphService {
       image = this.cy.jpg({scale: scaleBy});
     }
     return image;
+  }
+
+  highlightNode(node: string) {
+    this.cy.elements('node')
+      .removeClass('highlight');
+    if (node !== undefined) {
+      this.cy.getElementById(node)
+        .addClass('highlight');
+    }
   }
 }

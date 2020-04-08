@@ -58,7 +58,7 @@ export class Patient {
   private loadPatientData(): void {
     this.dataLoader.getPatientData(this.name).subscribe((data) => {
       this.patientData = data;
-      console.log('Patient ' + this.name + ': ' + this.patientData.length);
+      // console.log('Patient ' + this.name + ': ' + this.patientData.length);
     });
   }
 }

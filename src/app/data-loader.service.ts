@@ -23,7 +23,7 @@ export class DataLoaderService {
   }
 
   getPatientData(patientId: string): Observable<PatientData[]> {
-    console.log('Called get patient data: ' + this.patientDataUrl + patientId + '.json');
+    // console.log('Called get patient data: ' + this.patientDataUrl + patientId + '.json');
     return this.httpClient.get<PatientData[]>(this.patientDataUrl + patientId + '.json');
   }
 
@@ -35,7 +35,7 @@ export class DataLoaderService {
   // }
 
   getNetwork(): Observable<Network> {
-    console.log('Get network: ' + this.networkUrl);
+    // console.log('Get network: ' + this.networkUrl);
     return this.httpClient.get<Network>(this.networkUrl);
   }
 

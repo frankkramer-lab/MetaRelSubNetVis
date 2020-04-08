@@ -27,77 +27,19 @@
           <i class="fas fa-times"></i>
         </div>
       </div>
-<!--      Info box    -->
-      <div class="sidebar-menu">
-        <ul>
-          <li class="header-menu">
-            <span>Info</span>
-          </li>
-        </ul>
-      </div>
-<!--      <div class="sidebar-header">-->
-<!--        <div class="user-pic">-->
-<!--          <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"-->
-<!--               alt="User picture">-->
-<!--        </div>-->
-<!--        <div class="user-info">-->
-<!--          <span class="user-name">Jhon-->
-<!--            <strong>Smith</strong>-->
-<!--          </span>-->
-<!--          <span class="user-role">Administrator</span>-->
-<!--          <span class="user-status">-->
-<!--            <i class="fa fa-circle"></i>-->
-<!--            <span>Online</span>-->
-<!--          </span>-->
-<!--        </div>-->
+<!--&lt;!&ndash;      Info box    &ndash;&gt;-->
+<!--      <div class="sidebar-menu">-->
+<!--        <ul>-->
+<!--          <li class="header-menu">-->
+<!--            <span>Info</span>-->
+<!--          </li>-->
+<!--        </ul>-->
 <!--      </div>-->
-<!--      &lt;!&ndash; sidebar-header  &ndash;&gt;-->
-<!--      <div class="sidebar-search">-->
-<!--        <div>-->
-<!--          <div class="input-group">-->
-<!--            <input type="text" class="form-control search-menu" placeholder="Search...">-->
-<!--            <div class="input-group-append">-->
-<!--              <span class="input-group-text">-->
-<!--                <i class="fa fa-search" aria-hidden="true"></i>-->
-<!--              </span>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-      <!-- sidebar-search  -->
+
       <div class="sidebar-menu">
         <ul>
           <li class="header-menu">
             <span>Settings</span>
-          </li>
-<!--      Choose a Node          -->
-          <li class="sidebar-dropdown" [class.active]="activeMenuItem.nodes">
-            <a href="#" (click)="toggleMenu('nodes')">
-              <i class="fas fa-project-diagram"></i>
-              <span>Nodes</span>
-            </a>
-            <div class="sidebar-submenu" [style.display]="activeMenuItem.nodes ? 'block':'none'">
-              <div class="sidebar-search">
-                <div>
-                  <div class="input-group">
-                    <input type="text" class="form-control search-menu" placeholder="Search...">
-                    <div class="input-group-append">
-                      <span class="input-group-text">
-                        <i class="fa fa-search" aria-hidden="true"></i>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <ul class="list-group">
-                <li type="button" class="list-group-item list-group-item-secondary active">Cras justo odio</li>
-                <li type="button" class="list-group-item list-group-item-secondary" disabled>Vestibulum at eros</li>
-                <li type="button" class="list-group-item list-group-item-secondary">Dapibus ac facilisis in</li>
-                <li type="button" class="list-group-item list-group-item-secondary">Morbi leo risus</li>
-                <li type="button" class="list-group-item list-group-item-secondary">Porta ac consectetur ac</li>
-                <li type="button" class="list-group-item list-group-item-secondary">Vestibulum at eros</li>
-              </ul>
-            </div>
           </li>
 <!--Choose a Patient          -->
           <li class="sidebar-dropdown" [class.active]="activeMenuItem.patient">
@@ -129,6 +71,7 @@
               </ul>
             </div>
           </li>
+
 <!--          Choose Threshold      -->
           <li class="sidebar-dropdown" [class.active]="activeMenuItem.threshold">
             <a href="#" (click)="toggleMenu('threshold')">
@@ -219,6 +162,49 @@
               </ul>
             </div>
           </li>
+          <!--      Choose a Node          -->
+          <li class="sidebar-dropdown" [class.active]="activeMenuItem.nodes">
+            <a href="#" (click)="toggleMenu('nodes')">
+              <i class="fas fa-project-diagram"></i>
+              <span>Nodes</span>
+            </a>
+            <div class="sidebar-submenu" [style.display]="activeMenuItem.nodes ? 'block':'none'">
+              <div class="sidebar-search">
+                <div>
+                  <div class="input-group">
+                    <input type="text" class="form-control search-menu" placeholder="Search..."
+                           [(ngModel)]="searchNode"
+                           (input)="updateNetwork()"
+                           autofocus>
+                    <!--                           autofocus>-->
+                    <div class="input-group-append">
+                      <span class="input-group-text">
+                        <i *ngIf="searchNode !== ''" (click)="resetNodeSearch()" class="far fa-times-circle"></i>
+                        <i *ngIf="searchNode === ''" class="fa fa-search" aria-hidden="true"></i>
+                      </span>
+                    </div>
+                    <button type="button" class="btn btn-secondary" disabled>{{nodes.length}}</button>
+                  </div>
+                </div>
+              </div>
+              <ul class="list-group">
+                <li type="button"
+                    class="list-group-item list-group-item-dark">Protein</li>
+              </ul>
+              <ul class="list-group">
+                <li type="button"
+                    class="list-group-item list-group-item-secondary"
+                    *ngFor="let node of nodes"
+                    (click)="highlightNode(node.id)"
+                [class.selected]="node.id === selectedNode">{{node.id}}</li>
+              </ul>
+              <ul class="list-group">
+                <button type="button" class="btn btn-secondary"
+                        (click)="highlightNode(undefined)"
+                        [style.display]="selectedNode === undefined ? 'none':'block'">unselect</button>
+              </ul>
+            </div>
+          </li>
 <!--          Choose Layout      -->
           <li class="sidebar-dropdown" [class.active]="activeMenuItem.layout">
             <a href="#" (click)="toggleMenu('layout')">
@@ -253,6 +239,12 @@
                   <legend>Show All Nodes
                     <label class="switch" >
                       <input type="checkbox" class="primary" [(ngModel)]="layoutAllNodes" (change)="updateAllNodes(layoutAllNodes)">
+                      <span class="slider round"></span>
+                    </label>
+                  </legend>
+                  <legend>Show MTB results
+                    <label class="switch" >
+                      <input type="checkbox" class="primary" [(ngModel)]="layoutMtbNodes" (change)="updateMtbNodes(layoutMtbNodes)">
                       <span class="slider round"></span>
                     </label>
                   </legend>
@@ -313,87 +305,28 @@
               </ul>
             </div>
           </li>
-<!--          <li class="sidebar-dropdown">-->
-<!--            <a href="#">-->
-<!--              <i class="fa fa-chart-line"></i>-->
-<!--              <span>Charts</span>-->
-<!--            </a>-->
-<!--            <div class="sidebar-submenu">-->
-<!--              <ul>-->
-<!--                <li>-->
-<!--                  <a href="#">Pie chart</a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                  <a href="#">Line chart</a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                  <a href="#">Bar chart</a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                  <a href="#">Histogram</a>-->
-<!--                </li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--          </li>-->
-<!--          <li class="sidebar-dropdown">-->
-<!--            <a href="#">-->
-<!--              <i class="fa fa-globe"></i>-->
-<!--              <span>Maps</span>-->
-<!--            </a>-->
-<!--            <div class="sidebar-submenu">-->
-<!--              <ul>-->
-<!--                <li>-->
-<!--                  <a href="#">Google maps</a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                  <a href="#">Open street map</a>-->
-<!--                </li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--          </li>-->
-<!--          <li class="header-menu">-->
-<!--            <span>Extra</span>-->
-<!--          </li>-->
-<!--          <li>-->
-<!--            <a href="#">-->
-<!--              <i class="fa fa-book"></i>-->
-<!--              <span>Documentation</span>-->
-<!--              <span class="badge badge-pill badge-primary">Beta</span>-->
-<!--            </a>-->
-<!--          </li>-->
-<!--          <li>-->
-<!--            <a href="#">-->
-<!--              <i class="fa fa-calendar"></i>-->
-<!--              <span>Calendar</span>-->
-<!--            </a>-->
-<!--          </li>-->
-<!--          <li>-->
-<!--            <a href="#">-->
-<!--              <i class="fa fa-folder"></i>-->
-<!--              <span>Examples</span>-->
-<!--            </a>-->
-<!--          </li>-->
+
         </ul>
       </div>
       <!-- sidebar-menu  -->
     </div>
     <!-- sidebar-content  -->
     <div class="sidebar-footer">
-      <a href="#">
-        <i class="fa fa-bell"></i>
-        <span class="badge badge-pill badge-warning notification">3</span>
-      </a>
-      <a href="#">
-        <i class="fa fa-envelope"></i>
-        <span class="badge badge-pill badge-success notification">7</span>
-      </a>
-      <a href="#">
-        <i class="fa fa-cog"></i>
-        <span class="badge-sonar"></span>
-      </a>
-      <a href="#">
-        <i class="fa fa-power-off"></i>
-      </a>
+<!--      <a href="#">-->
+<!--        <i class="fa fa-bell"></i>-->
+<!--        <span class="badge badge-pill badge-warning notification">3</span>-->
+<!--      </a>-->
+<!--      <a href="#">-->
+<!--        <i class="fa fa-envelope"></i>-->
+<!--        <span class="badge badge-pill badge-success notification">7</span>-->
+<!--      </a>-->
+<!--      <a href="#">-->
+<!--        <i class="fa fa-cog"></i>-->
+<!--        <span class="badge-sonar"></span>-->
+<!--      </a>-->
+<!--      <a href="#">-->
+<!--        <i class="fa fa-power-off"></i>-->
+<!--      </a>-->
     </div>
   </nav>
 

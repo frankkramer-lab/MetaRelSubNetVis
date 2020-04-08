@@ -1,11 +1,9 @@
 import {Component, OnChanges, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {PatientsResponse} from './patients-response';
 import {DataLoaderService} from './data-loader.service';
 import {Patient} from './patient';
 import {CyGraphService} from './cy-graph.service';
-import {Threshold} from './threshold';
 import {ThresholdResponse} from './threshold-response';
 import { saveAs} from 'file-saver';
 
@@ -20,7 +18,7 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
 
   sideBarShown = true;
   activeMenuItem = {
-    nodes: true,
+    nodes: false,
     patient: true,
     threshold: true,
     layout: true,
@@ -52,10 +50,14 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
     rel: 'Relevance'
   };
   layoutAllNodes = true;
+  layoutMtbNodes = true;
 
   downloadFormat = 'png';
   downloadTransparent = false;
   downloadScaleImageBy = 1.0;
+  nodes = [];
+  searchNode = '';
+  selectedNode = undefined;
 
   constructor(private httpClient: HttpClient,
               private dataLoader: DataLoaderService,
@@ -71,50 +73,92 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
     this.dataLoader.getThresholds().subscribe(data => {
       this.thresholds = new ThresholdResponse(data);
       this.cyGraph.setThreshold(this.thresholds);
-      console.log('Multiplier1: ' + this.thresholds.multiplier);
+      // console.log('Multiplier1: ' + this.thresholds.multiplier);
     });
 
     this.dataLoader.getPatients().subscribe((data: PatientsResponse) => {
-      console.log('Loaded patients:');
-      console.log(data);
+      // console.log('Loaded patients:');
+      // console.log(data);
       this.patients = new PatientsResponse(data, this.dataLoader);
     });
   }
 
   ngAfterViewInit() {
-    console.log("Init Graph: " + this.layoutNodeSize);
+    // console.log("Init Graph: " + this.layoutNodeSize);
     this.cyGraph.initGraph(this.cyDiv, this.layoutNodeSize, this.layoutNodeColor);
   }
 
-  setMetastaticPatient(pat: Patient) { this.cyGraph.setMetastaticPatient(pat); }
-  setNonMetastaticPatient(pat: Patient) { this.cyGraph.setNonMetastaticPatient(pat); }
+
+  setMetastaticPatient(pat: Patient) {
+    this.cyGraph.setMetastaticPatient(pat);
+    this.updateNetwork();
+  }
+  setNonMetastaticPatient(pat: Patient) {
+    this.cyGraph.setNonMetastaticPatient(pat);
+    this.updateNetwork();
+  }
 
   toggleMenu(name: string) {
+    if (name === 'nodes') {
+      this.updateNetwork();
+    }
     this.activeMenuItem[name] = !this.activeMenuItem[name];
   }
 
   updateNodeSize(by: string) {
-    console.log('Change Node Size: ' + by);
+    // console.log('Change Node Size: ' + by);
     this.cyGraph.setSizeBy(by);
+    this.updateNetwork();
   }
 
   updateNodeColor(by: string) {
-    console.log('Change Node Color: ' + by);
+    // console.log('Change Node Color: ' + by);
     this.cyGraph.setColorBy(by);
+    this.updateNetwork();
   }
 
   updateAllNodes(shown: boolean) {
-    // this.layoutAllNodes = shown;
     this.cyGraph.setShowAllNodes(shown);
-    console.log('Show all nodes: ' + shown);
+    this.updateNetwork();
   }
 
-  updateThreshold(thresholds: ThresholdResponse){
+  updateMtbNodes(shown: boolean) {
+    // console.log('MTB: ' + shown);
+    this.cyGraph.setShowMtbNodes(shown);
+  }
+
+  updateThreshold(thresholds: ThresholdResponse) {
     this.cyGraph.updateThreshold(thresholds);
+    this.updateNetwork();
+  }
+
+  updateNetwork() {
+    let nodes = this.cyGraph.getNetwork();
+    if (this.searchNode !== '') {
+      nodes = nodes.filter((node) => {
+        return (node.id.toLowerCase().indexOf(this.searchNode.toLowerCase()) !== -1);
+      });
+    }
+    this.nodes = nodes.sort((a, b) => {return a.id.localeCompare(b.id); });
+  }
+
+  resetNodeSearch() {
+    this.searchNode = '';
+    this.updateNetwork();
+  }
+
+  highlightNode(node: string) {
+    // console.log('Highlight node: ' + node);
+    if (this.selectedNode === node) {
+      this.selectedNode = undefined;
+    } else {
+      this.selectedNode = node;
+    }
+    this.cyGraph.highlightNode(this.selectedNode);
   }
 
   downloadImage(type: string) {
-    console.log(type);
+    // console.log(type);
     const image = this.cyGraph.getImage(type, this.downloadTransparent, this.downloadScaleImageBy);
 
     let filename = 'test.' + type;

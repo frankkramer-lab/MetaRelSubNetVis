@@ -5,6 +5,7 @@ export class Patient {
   private dataLoader?: DataLoaderService;
   public name: string;
   public mfsYears: number;
+  public subtype: string;
   public patientData?: PatientData[];
   private minScore?: number;
   private maxScore?: number;
@@ -14,6 +15,7 @@ export class Patient {
   constructor(data: any, dataLoader: DataLoaderService) {
     this.name = data.name;
     this.mfsYears = data.mfsYears;
+    this.subtype = data.subtype;
     this.dataLoader = dataLoader;
     this.loadPatientData();
   }

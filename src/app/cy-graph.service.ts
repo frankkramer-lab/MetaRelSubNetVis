@@ -45,7 +45,7 @@ export class CyGraphService {
     this.dataLoader.getNetwork().subscribe((network) => {
       // console.log("init cytoscape");
       const layer = {};
-      const numberOfLayers = 7;
+      const numberOfLayers = 11;
       network.nodes.forEach((node, i) => {
         if(i < 1) {
           layer[node.data.id] = numberOfLayers;     //1
@@ -61,8 +61,16 @@ export class CyGraphService {
           layer[node.data.id] = numberOfLayers - 5;
         } else if (i < 133) {
           layer[node.data.id] = numberOfLayers - 6;
-        } else {
+        } else if (i < 173) {
           layer[node.data.id] = numberOfLayers - 7;
+        } else if (i < 225) {
+          layer[node.data.id] = numberOfLayers - 8;
+        } else if (i < 285) {
+          layer[node.data.id] = numberOfLayers - 9;
+        } else if (i < 335) {
+          layer[node.data.id] = numberOfLayers - 10;
+        } else {
+          layer[node.data.id] = numberOfLayers - 11;
         }
       });
 
@@ -172,7 +180,7 @@ export class CyGraphService {
               //   name: 'grid',
               // }
             })
-      this.cy.elements('node')
+      this.cy.elements('node,edge')
         .data('shown', true);
     });
   }

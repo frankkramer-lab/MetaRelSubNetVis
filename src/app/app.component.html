@@ -55,7 +55,7 @@
                     <span>Metastatic Patient:</span>
                     <select [(ngModel)]="selectedMetastaticPatient" class="form-control" (change)="setMetastaticPatient(selectedMetastaticPatient)">
                       <option class="dropdown-item" selected [ngValue]="undefined"><hr/></option>
-                      <option class="dropdown-item" *ngFor="let pat of patients.metastatic" [ngValue]="pat" >{{pat.name}}</option>
+                      <option class="dropdown-item" *ngFor="let pat of patients.metastatic" [ngValue]="pat" >{{pat.name}} ({{pat.subtype}})</option>
                     </select>
                     <span *ngIf="selectedMetastaticPatient !== undefined">Metastasis free Survival: {{selectedMetastaticPatient.mfsYears}} years</span>
                   </div>
@@ -63,7 +63,7 @@
                     <span>Non-Metastatic Patient:</span>
                     <select [(ngModel)]="selectedNonmetastaticPatient" class="form-control" (change)="setNonMetastaticPatient(selectedNonmetastaticPatient)">
                       <option class="dropdown-item" selected [ngValue]="undefined"><hr/></option>
-                      <option class="dropdown-item" *ngFor="let pat of patients.nonmetastatic" [ngValue]="pat">{{pat.name}}</option>
+                      <option class="dropdown-item" *ngFor="let pat of patients.nonmetastatic" [ngValue]="pat">{{pat.name}} ({{pat.subtype}})</option>
                     </select>
                     <span *ngIf="selectedNonmetastaticPatient !== undefined">Metastasis free Survival: {{selectedNonmetastaticPatient.mfsYears}} years</span>
                   </div>

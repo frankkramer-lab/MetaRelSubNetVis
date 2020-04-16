@@ -20,7 +20,7 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
   activeMenuItem = {
     nodes: false,
     patient: true,
-    threshold: true,
+    threshold: false,
     layout: true,
     download: false
   };
@@ -32,7 +32,9 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
   thresholds: ThresholdResponse;
 
   patients: PatientsResponse = {metastatic: [],
-                                nonmetastatic: []};
+                                nonmetastatic: [],
+                                geMin: 0,
+                                geMax: 15};
 
   selectedMetastaticPatient: Patient;
 
@@ -45,11 +47,11 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
     ge: 'Gene Expression'
   };
   layoutNodeColorOptions = {
-    geLevel: 'Gene Expression Level (Low, Normal, High)',
+    geLevel: 'Gene Expression Level ',
     ge: 'Gene Expression',
     rel: 'Relevance'
   };
-  layoutAllNodes = true;
+  layoutAllNodes = false;
   layoutMtbNodes = true;
 
   downloadFormat = 'png';
@@ -58,6 +60,7 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
   nodes = [];
   searchNode = '';
   selectedNode = undefined;
+  layoutOnlyShared = false;
 
   constructor(private httpClient: HttpClient,
               private dataLoader: DataLoaderService,
@@ -80,6 +83,7 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
       // console.log('Loaded patients:');
       // console.log(data);
       this.patients = new PatientsResponse(data, this.dataLoader);
+      this.cyGraph.setGeRange(this.patients.geMin, this.patients.geMax);
     });
   }
 
@@ -127,6 +131,11 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
     this.cyGraph.setShowMtbNodes(shown);
   }
 
+  updateSharedNodes(shown: boolean) {
+    this.cyGraph.setShowOnlySharedNodes(shown);
+    this.updateNetwork();
+  }
+
   updateThreshold(thresholds: ThresholdResponse) {
     this.cyGraph.updateThreshold(thresholds);
     this.updateNetwork();
@@ -172,5 +181,9 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
       filename = this.selectedMetastaticPatient.name + '_vs_' + this.selectedNonmetastaticPatient.name + '.' + type;
     }
     saveAs(image, filename);
+  }
+
+  fitGraphToViewport() {
+    this.cyGraph.fitGraphToViewport();
   }
 }

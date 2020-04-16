@@ -28,11 +28,14 @@ export class CyGraphService {
   private cy: any;
   private metPat: Patient;
   private nonPat: Patient;
-  private showAllNodes: boolean;
+  private showAllNodes = false;
+  private showOnlySharedNodes = false;
   private showMtbNodes: boolean;
   private sizeBy: string;
   private colorBy: string;
   private thresholds: ThresholdResponse;
+  private geMin: number;
+  private geMax: number;
   private highlightedNode: string;
 
   constructor(private dataLoader: DataLoaderService) { }
@@ -113,12 +116,26 @@ export class CyGraphService {
                 {
                   selector: 'node.mtb',
                   style: {
-                    'border-width': '7px',
+                    'border-width': '10px',
                     'border-color': this.colors.green
                   }
                 },
                 {
                   selector: 'node.split',
+                  style: {
+                    'text-outline-width': '0px',
+                    'text-outline-color': this.colors.gray,
+                    'text-outline-opacity': '0.3',
+                    width: '80px', height: '80px',
+                    'pie-size': '100%',
+                    'pie-1-background-color': 'green',
+                    'pie-1-background-size': '50%',
+                    'pie-2-background-color': 'green',
+                    'pie-2-background-size': '50%'
+                  }
+                },
+                {
+                  selector: 'node.splitLeft',
                   style: {
                     'text-outline-width': '0px',
                     'text-outline-color': this.colors.gray,
@@ -157,10 +174,10 @@ export class CyGraphService {
                 },
 
                 {
-                  selector: 'edge[highlight]',
+                  selector: 'edge.highlight',
                   style: {
                     width: 3,
-                    'line-color': this.colors.green,
+                    'line-color': this.colors.highlight,
                   }
                 }
 
@@ -185,6 +202,13 @@ export class CyGraphService {
     });
   }
 
+
+  setGeRange(geMin: number, geMax: number) {
+    this.geMin = geMin;
+    this.geMax = geMax;
+    // console.log('ge range: '+this.geMin+'-'+this.geMax);
+  }
+
   setMetastaticPatient(metPat: Patient) {
     this.metPat = metPat;
     this.layoutPatient();
@@ -197,6 +221,11 @@ export class CyGraphService {
 
   setShowAllNodes(shown: boolean) {
     this.showAllNodes = shown;
+    this.updataShownNodes();
+  }
+
+  setShowOnlySharedNodes(shown: boolean) {
+    this.showOnlySharedNodes = shown;
     this.updataShownNodes();
   }
 
@@ -236,6 +265,13 @@ export class CyGraphService {
       this.cy.elements('node[!member]')
         .connectedEdges()
         .data('shown', this.showAllNodes);
+      this.cy.elements('node.split[colorMet][^colorNonMet]')
+        .data('shown', !this.showOnlySharedNodes);
+      this.cy.elements('node.split[^colorMet][colorNonMet]')
+        .data('shown', !this.showOnlySharedNodes);
+      this.cy.elements('node.split[colorMet][^colorNonMet], node.split[^colorMet][colorNonMet]')
+        .connectedEdges('edge[?shown]')
+        .data('shown', !this.showOnlySharedNodes);
     });
   }
 
@@ -275,28 +311,47 @@ export class CyGraphService {
   }
 
   private setColorMap(minValue, maxValue) {
-    const colorMap = 'mapData(color, ' + minValue + ', ' + maxValue + ', ' + this.colors.blue + ', ' + this.colors.red + ')';
+    const midPoint = maxValue - ((maxValue - minValue) / 2);
+    const colorMap1 = 'mapData(color, ' + minValue + ', ' + maxValue + ', ' + this.colors.blue + ', ' + this.colors.yellow + ')';
+    const colorMap2 = 'mapData(color, ' + minValue + ', ' + maxValue + ', ' + this.colors.yellow + ', ' + this.colors.red + ')';
     this.cy.style()
-      .selector('node[color]')
-      .style('background-color', colorMap)
-      .style('text-outline-color', colorMap);
+      .selector('node[color<=' + midPoint + ']')
+      .style('background-color', colorMap1)
+      .style('text-outline-color', colorMap1)
+      .selector('node[color>' + midPoint + ']')
+      .style('background-color', colorMap2)
+      .style('text-outline-color', colorMap2);
   }
 
   private setSplitColorMap(minValueMet, maxValueMet, minValueNonMet, maxValueNonMet) {
-    const colorMapMet = 'mapData(colorMet, ' + minValueMet + ', ' + maxValueMet + ', ' + this.colors.blue + ', ' + this.colors.red + ')';
-    const colorMapNonMet = 'mapData(colorMet, ' + minValueNonMet + ', ' + maxValueNonMet + ', ' + this.colors.blue + ', ' + this.colors.red + ')';
+    const midPointMet = maxValueMet - ((maxValueMet - minValueMet) / 2);
+    const midPointNonMet = maxValueNonMet - ((maxValueNonMet - minValueNonMet) / 2);
+    const colorMapMet1 = 'mapData(colorMet, ' + minValueMet + ', ' + maxValueMet + ', ' + this.colors.blue + ', ' + this.colors.yellow + ')';
+    const colorMapMet2 = 'mapData(colorMet, ' + minValueMet + ', ' + maxValueMet + ', ' + this.colors.yellow + ', ' + this.colors.red + ')';
+    const colorMapNonMet1 = 'mapData(colorNonMet, ' + minValueNonMet + ', ' + maxValueNonMet + ', ' + this.colors.blue + ', ' + this.colors.yellow + ')';
+    const colorMapNonMet2 = 'mapData(colorNonMet, ' + minValueNonMet + ', ' + maxValueNonMet + ', ' + this.colors.yellow + ', ' + this.colors.red + ')';
     this.cy.style()
-      .selector('node.split')
+      .selector('node.split[colorMet][colorNonMet]')
       .style('width', '80px')
       .style('height', '80px')
-      .style('pie-2-background-color', colorMapMet)
-      .style('pie-1-background-color', colorMapNonMet);
+      .selector('node.split[colorMet<=' + midPointMet + ']')
+      .style('pie-2-background-color', colorMapMet1)
+      .selector('node.split[colorMet>' + midPointMet + ']')
+      .style('pie-2-background-color', colorMapMet2)
+      .selector('node.split[colorNonMet<=' + midPointNonMet + ']')
+      .style('pie-1-background-color', colorMapNonMet1)
+      .selector('node.split[colorNonMet>' + midPointNonMet + ']')
+      .style('pie-1-background-color', colorMapNonMet2)
+      .selector('node.split[colorMet][^colorNonMet]')
+      .style('pie-1-background-color', this.colors.gray)
+      .selector('node.split[^colorMet][colorNonMet]')
+      .style('pie-2-background-color', this.colors.gray);
   }
 
   private setColorDisc() {
     this.cy.style()
       .selector('node[color]')
-      .style('color', '#242424')
+      // .style('color', '#242424')
       .style('font-weight', 'bold')
       .selector('node[color = \'LOW\']')
       .style('background-color', this.colors.blue)
@@ -307,9 +362,12 @@ export class CyGraphService {
       .selector('node[color = \'HIGH\']')
       .style('background-color', this.colors.red)
       .style('text-outline-color', this.colors.red)
-      .selector('node.split[colorMet], node.split[colorNonMet]')
+      .selector('node.split[colorMet][colorNonMet]')
       .style('width', '80px')
       .style('height', '80px')
+      .selector('node.split[^colorMet], node.split[^colorNonMet]')
+      .style('pie-2-background-color', this.colors.gray)
+      .style('pie-1-background-color', this.colors.gray)
       .selector('node.split[colorMet = \'LOW\']')
       .style('pie-2-background-color', this.colors.blue)
       .selector('node.split[colorNonMet = \'LOW\']')
@@ -359,7 +417,7 @@ export class CyGraphService {
         // this.setColorMap(pat.getMinScore(), pat.getMaxScore());
       } else if (this.colorBy === 'ge') {
         color = 'ge';
-        this.setColorMap(pat.getMinGe(), pat.getMaxGe());
+        this.setColorMap(this.geMin, this.geMax);
       } else if (this.colorBy === 'geLevel') {
         color = 'geLevel';
         this.setColorDisc();
@@ -386,6 +444,69 @@ export class CyGraphService {
   }
 
   private visualizeTwo() {
+    // console.log('Layout Two Patients: ' + this.metPat.name + ' and ' + this.nonPat.name);
+    this.cy.batch(() => {
+      this.clear();
+
+      let color: string;
+      if (this.colorBy === 'rel') {
+        color = 'score';
+        const minValue = Math.min(this.thresholds.metastatic.threshold, this.thresholds.nonmetastatic.threshold);
+        const maxValue = Math.max(this.thresholds.metastatic.max, this.thresholds.nonmetastatic.max);
+        this.setColorMap(minValue, maxValue);
+        this.setSplitColorMap(
+          this.thresholds.metastatic.threshold, this.thresholds.metastatic.max,
+          this.thresholds.nonmetastatic.threshold, this.thresholds.nonmetastatic.max
+        );
+      } else if (this.colorBy === 'ge') {
+        color = 'ge';
+        // const minValue = Math.min(this.metPat.getMinGe(), this.nonPat.getMinGe());
+        // const maxValue = Math.min(this.metPat.getMaxGe(), this.nonPat.getMaxGe());
+        // this.setColorMap(minValue, maxValue);
+        // this.setSplitColorMap(
+        //   this.metPat.getMinGe(), this.metPat.getMaxGe(),
+        //   this.nonPat.getMinGe(), this.nonPat.getMaxGe()
+        // );
+        this.setSplitColorMap(
+          this.geMin, this.geMax,
+          this.geMin, this.geMax
+        );
+      } else if (this.colorBy === 'geLevel') {
+        color = 'geLevel';
+        this.setColorDisc();
+      }
+
+      for (const data of this.metPat.patientData) {
+        if (data.score >= (this.thresholds.selected / this.thresholds.multiplier)) {
+          const node = this.cy.getElementById(data.name)
+            .data('member', true)
+            .data('shown', true)
+            .addClass('split')
+            .data('colorMet', data[color]);
+          if (data.mtb) {
+            node.addClass('mtb');
+          }
+        }
+      }
+      for (const data of this.nonPat.patientData) {
+        if (data.score >= (this.thresholds.selected / this.thresholds.multiplier)) {
+          const node = this.cy.getElementById(data.name)
+            .data('member', true)
+            .data('shown', true)
+            .addClass('split')
+            .data('colorNonMet', data[color]);
+          if (data.mtb) {
+            node.addClass('mtb');
+          }
+        }
+      }
+
+      this.updataShownNodes();
+    });
+  }
+
+
+  private visualizeTwo_old() {
     // console.log('Layout Two Patients: ' + this.metPat.name + ' and ' + this.nonPat.name);
     this.cy.batch(() => {
       this.clear();
@@ -508,9 +629,17 @@ export class CyGraphService {
   highlightNode(node: string) {
     this.cy.elements('node')
       .removeClass('highlight');
+    this.cy.elements('edge')
+      .removeClass('highlight');
     if (node !== undefined) {
       this.cy.getElementById(node)
+        .addClass('highlight')
+        .connectedEdges()
         .addClass('highlight');
     }
+  }
+
+  fitGraphToViewport() {
+    this.cy.fit();
   }
 }

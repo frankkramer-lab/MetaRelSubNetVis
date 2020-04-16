@@ -54,10 +54,15 @@
                   <div class="col-6 ">
                     <span>Metastatic Patient:</span>
                     <select [(ngModel)]="selectedMetastaticPatient" class="form-control" (change)="setMetastaticPatient(selectedMetastaticPatient)">
-                      <option class="dropdown-item" selected [ngValue]="undefined"><hr/></option>
+                      <option class="dropdown-item" selected [ngValue]="undefined" ><hr/></option>
                       <option class="dropdown-item" *ngFor="let pat of patients.metastatic" [ngValue]="pat" >{{pat.name}} ({{pat.subtype}})</option>
                     </select>
-                    <span *ngIf="selectedMetastaticPatient !== undefined">Metastasis free Survival: {{selectedMetastaticPatient.mfsYears}} years</span>
+                    <div *ngIf="selectedMetastaticPatient !== undefined">
+                      <span>Cancer Subtype: {{selectedMetastaticPatient.subtype}}</span>
+                    </div>
+                    <div *ngIf="selectedMetastaticPatient !== undefined">
+                      <span>Metastasis free Survival: {{selectedMetastaticPatient.mfsYears}} years</span>
+                    </div>
                   </div>
                   <div class="col-6 ">
                     <span>Non-Metastatic Patient:</span>
@@ -226,13 +231,31 @@
                 </li>
                 <li class="form-group" [style.display]="((selectedMetastaticPatient !== undefined) || (selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
                   <legend>Color Nodes</legend>
-                  <div *ngFor="let opt of objectKeys(layoutNodeColorOptions)" class="custom-control custom-radio custom-control-inline"  >
+                  <div *ngFor="let opt of objectKeys(layoutNodeColorOptions)" class="custom-control custom-radio "  >
                     <input type="radio" id="nodeColorBy{{opt}}" name="customRadioNodeColor" class="custom-control-input"
                            [(ngModel)]="layoutNodeColor"
                            [value]="opt"
                            (change)="updateNodeColor(layoutNodeColor)"
                            [checked]="layoutNodeColor===opt">
-                    <label class="custom-control-label" for="nodeColorBy{{opt}}">by {{layoutNodeColorOptions[opt]}}</label>
+                    <label class="custom-control-label layout-list-label" for="nodeColorBy{{opt}}">
+                      <div>by {{layoutNodeColorOptions[opt]}}
+                        <strong *ngIf="opt==='geLevel' && layoutNodeColor === opt">(
+                          <b style="background-color:#599eff;color:#383838;">Low</b>,
+                          <b style="background-color:#e8e857;color:#383838;">Normal</b>,
+                          <b style="background-color:#ff3d6a;color:#383838;">High</b>)
+                        </strong>
+                        <div class="color-legend" *ngIf="opt === 'ge' && layoutNodeColor === opt" align="center">
+                          <div class="from">{{patients.geMin}}</div>
+                          <div class="mid"></div>
+                          <div class="to">{{patients.geMax}}</div>
+                        </div>
+                        <div class="color-legend" *ngIf="opt === 'rel' && layoutNodeColor === opt" align="center">
+                          <div class="from">{{thresholds.minThreshold}}</div>
+                          <div class="mid"></div>
+                          <div class="to">{{thresholds.maxThreshold}}</div>
+                        </div>
+                      </div>
+                    </label>
                   </div>
                 </li>
                 <li class="form-group" [style.display]="((selectedMetastaticPatient !== undefined) || (selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
@@ -242,12 +265,26 @@
                       <span class="slider round"></span>
                     </label>
                   </legend>
-                  <legend>Show MTB results
+                  <legend>Show MTB results <div class="circle"></div>
                     <label class="switch" >
                       <input type="checkbox" class="primary" [(ngModel)]="layoutMtbNodes" (change)="updateMtbNodes(layoutMtbNodes)">
                       <span class="slider round"></span>
                     </label>
                   </legend>
+                  <legend [style.display]="((selectedMetastaticPatient !== undefined) && (selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
+                    Show Only Shared Nodes
+                    <label class="switch" >
+                      <input type="checkbox" class="primary" [(ngModel)]="layoutOnlyShared" (change)="updateSharedNodes(layoutOnlyShared)">
+                      <span class="slider round"></span>
+                    </label>
+                  </legend>
+                </li>
+                <li class="row mb-3 custom-form-group">
+                  <div class="col-12">
+                    <button class="btn btn-light btn-block" (click)="fitGraphToViewport()">
+                      Fit Graph To Viewport
+                    </button>
+                  </div>
                 </li>
                 <li [style.display]="((selectedMetastaticPatient === undefined) && (selectedNonmetastaticPatient === undefined)) ? 'block':'none'">
                   <legend>Select some patients from the upper menu</legend>
@@ -311,7 +348,7 @@
       <!-- sidebar-menu  -->
     </div>
     <!-- sidebar-content  -->
-    <div class="sidebar-footer">
+<!--    <div class="sidebar-footer">-->
 <!--      <a href="#">-->
 <!--        <i class="fa fa-bell"></i>-->
 <!--        <span class="badge badge-pill badge-warning notification">3</span>-->
@@ -327,7 +364,7 @@
 <!--      <a href="#">-->
 <!--        <i class="fa fa-power-off"></i>-->
 <!--      </a>-->
-    </div>
+<!--    </div>-->
   </nav>
 
   <!-- sidebar-wrapper  -->

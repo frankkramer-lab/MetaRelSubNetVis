@@ -22,7 +22,8 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
     patient: true,
     threshold: false,
     layout: true,
-    download: false
+    download: false,
+    impressum: false
   };
   private cy;
 
@@ -186,11 +187,15 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
 
   highlightNode(node: string) {
     // console.log('Highlight node: ' + node);
-    const index = this.selectedNode.indexOf(node);
-    if (index > -1) {
-      this.selectedNode.splice(index, 1);
+    if(node === undefined) {
+      this.selectedNode = [];
     } else {
-      this.selectedNode.push(node);
+      const index = this.selectedNode.indexOf(node);
+      if (index > -1) {
+        this.selectedNode.splice(index, 1);
+      } else {
+        this.selectedNode.push(node);
+      }
     }
     this.cyGraph.highlightNode(this.selectedNode);
   }

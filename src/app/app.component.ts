@@ -59,7 +59,7 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
   downloadScaleImageBy = 1.0;
   nodes = [];
   searchNode = '';
-  selectedNode = undefined;
+  selectedNode = [];
   layoutOnlyShared = false;
   nodeInfo: object;
   subtypeCounts: object;
@@ -186,10 +186,11 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
 
   highlightNode(node: string) {
     // console.log('Highlight node: ' + node);
-    if (this.selectedNode === node) {
-      this.selectedNode = undefined;
+    const index = this.selectedNode.indexOf(node);
+    if (index > -1) {
+      this.selectedNode.splice(index, 1);
     } else {
-      this.selectedNode = node;
+      this.selectedNode.push(node);
     }
     this.cyGraph.highlightNode(this.selectedNode);
   }

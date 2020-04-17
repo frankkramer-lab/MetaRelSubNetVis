@@ -188,9 +188,9 @@
                            autofocus>
                     <!--                           autofocus>-->
                     <div class="input-group-append">
-                      <span class="input-group-text">
-                        <i *ngIf="searchNode !== ''" (click)="resetNodeSearch()" class="far fa-times-circle"></i>
-                        <i *ngIf="searchNode === ''" class="fa fa-search" aria-hidden="true"></i>
+                      <span class="input-group-text search-icon">
+                        <i *ngIf="searchNode.length !== 0" (click)="resetNodeSearch()" class="far fa-times-circle"></i>
+                        <i *ngIf="searchNode.length === 0" class="fa fa-search" aria-hidden="true"></i>
                       </span>
                     </div>
                     <button type="button" class="btn btn-secondary" disabled>{{nodes.length}}</button>
@@ -234,7 +234,7 @@
                 <tbody>
                 <tr *ngFor="let node of nodes"
                   (click)="highlightNode(node.id)"
-                  [class.selected]="node.id === selectedNode">
+                  [class.selected]="selectedNode.includes(node.id)">
                   <td class="w25">{{node.id}}</td>
                   <td class="w25" *ngIf="selectedNonmetastaticPatient === undefined || selectedMetastaticPatient === selectedNonmetastaticPatient"></td>
                   <td class="w25">{{selectedMetastaticPatient !== undefined ? nodeInfo[node.id][selectedMetastaticPatient.subtype] : ""}}</td>

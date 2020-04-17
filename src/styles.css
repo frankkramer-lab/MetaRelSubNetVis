@@ -93,6 +93,12 @@
   color: #fff;
 }
 
+#sidebar .input-group-text.search-icon{
+  background-color: #3a3f48;
+  border: 1px solid #3a3f48;
+  color: #818896;
+}
+
 .custom-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;

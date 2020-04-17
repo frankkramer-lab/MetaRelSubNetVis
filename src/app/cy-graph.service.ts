@@ -626,16 +626,18 @@ export class CyGraphService {
     return image;
   }
 
-  highlightNode(node: string) {
+  highlightNode(nodes: string[]) {
     this.cy.elements('node')
       .removeClass('highlight');
     this.cy.elements('edge')
       .removeClass('highlight');
-    if (node !== undefined) {
-      this.cy.getElementById(node)
-        .addClass('highlight')
-        .connectedEdges()
-        .addClass('highlight');
+    if (nodes !== undefined) {
+      nodes.forEach((node) => {
+        this.cy.getElementById(node)
+          .addClass('highlight')
+          .connectedEdges()
+          .addClass('highlight');
+      });
     }
   }
 

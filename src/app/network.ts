@@ -5,5 +5,6 @@ export interface Network {
 
   nodes: Node[];
   edges: Edge[];
+  occ: object;
 
 }

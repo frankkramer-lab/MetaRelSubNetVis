@@ -2,6 +2,7 @@ export class Node {
 
 
   constructor(
-    public data: {id: string}
+    public data: {id: string},
+    public occ: object
   ) { }
 }

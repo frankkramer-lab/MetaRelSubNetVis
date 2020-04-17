@@ -61,6 +61,9 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
   searchNode = '';
   selectedNode = undefined;
   layoutOnlyShared = false;
+  nodeInfo: object;
+  subtypeCounts: object;
+  private nodeSort = 'name';
 
   constructor(private httpClient: HttpClient,
               private dataLoader: DataLoaderService,
@@ -89,7 +92,14 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
 
   ngAfterViewInit() {
     // console.log("Init Graph: " + this.layoutNodeSize);
-    this.cyGraph.initGraph(this.cyDiv, this.layoutNodeSize, this.layoutNodeColor);
+    this.dataLoader.getNetwork().subscribe((network) => {
+      this.subtypeCounts = network.occ;
+      this.nodeInfo = {};
+      network.nodes.forEach((node) => {
+        this.nodeInfo[node.data.id] = node.occ;
+      });
+      this.cyGraph.initGraph(this.cyDiv, network, this.layoutNodeSize, this.layoutNodeColor);
+    });
   }
 
 
@@ -122,6 +132,10 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
   }
 
   updateAllNodes(shown: boolean) {
+    if (this.layoutOnlyShared && shown) {
+      this.layoutOnlyShared = false;
+      this.cyGraph.setShowOnlySharedNodes(false);
+    }
     this.cyGraph.setShowAllNodes(shown);
     this.updateNetwork();
   }
@@ -132,12 +146,21 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
   }
 
   updateSharedNodes(shown: boolean) {
+    if (this.layoutAllNodes && shown) {
+      this.layoutAllNodes = false;
+      this.cyGraph.setShowAllNodes(false);
+    }
     this.cyGraph.setShowOnlySharedNodes(shown);
     this.updateNetwork();
   }
 
   updateThreshold(thresholds: ThresholdResponse) {
     this.cyGraph.updateThreshold(thresholds);
+    this.updateNetwork();
+  }
+
+  updateNodeSort(column: string){
+    this.nodeSort = column;
     this.updateNetwork();
   }
 
@@ -148,7 +171,12 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
         return (node.id.toLowerCase().indexOf(this.searchNode.toLowerCase()) !== -1);
       });
     }
-    this.nodes = nodes.sort((a, b) => {return a.id.localeCompare(b.id); });
+    if (this.nodeSort === 'name') {
+      nodes = nodes.sort((a, b) => {return a.id.localeCompare(b.id); });
+    } else {
+      nodes = nodes.sort((a, b) => {return this.nodeInfo[b.id][this.nodeSort] - this.nodeInfo[a.id][this.nodeSort]; });
+    }
+    this.nodes = nodes;
   }
 
   resetNodeSearch() {

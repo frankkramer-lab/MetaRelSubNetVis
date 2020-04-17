@@ -52,25 +52,30 @@
               <ul>
                 <li class="row custom-form-group">
                   <div class="col-6 ">
-                    <span>Metastatic Patient:</span>
-                    <select [(ngModel)]="selectedMetastaticPatient" class="form-control" (change)="setMetastaticPatient(selectedMetastaticPatient)">
-                      <option class="dropdown-item" selected [ngValue]="undefined" ><hr/></option>
-                      <option class="dropdown-item" *ngFor="let pat of patients.metastatic" [ngValue]="pat" >{{pat.name}} ({{pat.subtype}})</option>
-                    </select>
-                    <div *ngIf="selectedMetastaticPatient !== undefined">
-                      <span>Cancer Subtype: {{selectedMetastaticPatient.subtype}}</span>
-                    </div>
-                    <div *ngIf="selectedMetastaticPatient !== undefined">
-                      <span>Metastasis free Survival: {{selectedMetastaticPatient.mfsYears}} years</span>
-                    </div>
+                    <p>
+                      <span>Metastatic Patient:</span>
+                      <select [(ngModel)]="selectedMetastaticPatient" class="form-control" (change)="setMetastaticPatient(selectedMetastaticPatient)">
+                        <option class="dropdown-item" selected [ngValue]="undefined" ><hr/></option>
+                        <option class="dropdown-item" *ngFor="let pat of patients.metastatic" [ngValue]="pat" >{{pat.name}} ({{pat.subtype}})</option>
+                      </select>
+                    </p>
+                    <span *ngIf="selectedMetastaticPatient !== undefined">
+                      <p>Cancer Subtype: <br/><b>{{selectedMetastaticPatient.subtype}}</b></p>
+                      <p>Metastasis free Survival: <b>{{selectedMetastaticPatient.mfsYears}} years</b></p>
+                    </span>
                   </div>
                   <div class="col-6 ">
-                    <span>Non-Metastatic Patient:</span>
-                    <select [(ngModel)]="selectedNonmetastaticPatient" class="form-control" (change)="setNonMetastaticPatient(selectedNonmetastaticPatient)">
-                      <option class="dropdown-item" selected [ngValue]="undefined"><hr/></option>
-                      <option class="dropdown-item" *ngFor="let pat of patients.nonmetastatic" [ngValue]="pat">{{pat.name}} ({{pat.subtype}})</option>
-                    </select>
-                    <span *ngIf="selectedNonmetastaticPatient !== undefined">Metastasis free Survival: {{selectedNonmetastaticPatient.mfsYears}} years</span>
+                    <p>
+                      <span>Non-Metastatic Patient:</span>
+                      <select [(ngModel)]="selectedNonmetastaticPatient" class="form-control" (change)="setNonMetastaticPatient(selectedNonmetastaticPatient)">
+                        <option class="dropdown-item" selected [ngValue]="undefined"><hr/></option>
+                        <option class="dropdown-item" *ngFor="let pat of patients.nonmetastatic" [ngValue]="pat">{{pat.name}} ({{pat.subtype}})</option>
+                      </select>
+                    </p>
+                    <span *ngIf="selectedNonmetastaticPatient !== undefined">
+                      <p>Cancer Subtype: <br/><b>{{selectedNonmetastaticPatient.subtype}}</b></p>
+                      <p>Metastasis free Survival: <b>{{selectedNonmetastaticPatient.mfsYears}} years</b></p>
+                    </span>
                   </div>
                 </li>
               </ul>
@@ -192,16 +197,52 @@
                   </div>
                 </div>
               </div>
+<!--              <ul class="list-group">-->
+<!--                <li type="button"-->
+<!--                    class="list-group-item list-group-item-dark">Protein</li>-->
+<!--              </ul>-->
+<!--              <ul class="list-group">-->
+<!--                <li type="button"-->
+<!--                    class="list-group-item list-group-item-secondary"-->
+<!--                    *ngFor="let node of nodes"-->
+<!--                    (click)="highlightNode(node.id)"-->
+<!--                [class.selected]="node.id === selectedNode">{{node.id}} ({{nodeInfo[node.id].all}})</li>-->
+<!--              </ul>-->
               <ul class="list-group">
-                <li type="button"
-                    class="list-group-item list-group-item-dark">Protein</li>
-              </ul>
-              <ul class="list-group">
-                <li type="button"
-                    class="list-group-item list-group-item-secondary"
-                    *ngFor="let node of nodes"
-                    (click)="highlightNode(node.id)"
-                [class.selected]="node.id === selectedNode">{{node.id}}</li>
+              <table class="table table-hover table-dark">
+                <thead>
+                <tr>
+                  <th scope="col" class="w25"
+                      (click)="updateNodeSort('name')">Protein</th>
+                  <th scope="col" class="w25" *ngIf="selectedNonmetastaticPatient === undefined"></th>
+                  <th scope="col" class="w25">
+                    <div *ngIf="selectedMetastaticPatient !== undefined"
+                         (click)="updateNodeSort(selectedMetastaticPatient.subtype)">
+                      {{selectedMetastaticPatient.subtype}} ({{subtypeCounts[selectedMetastaticPatient.subtype]}})
+                    </div>
+                  </th>
+                  <th scope="col" class="w25" *ngIf="selectedNonmetastaticPatient !== undefined"
+                      (click)="updateNodeSort(selectedNonmetastaticPatient.subtype)">
+                      {{selectedNonmetastaticPatient.subtype}} ({{subtypeCounts[selectedNonmetastaticPatient.subtype]}})
+                  </th>
+                  <th scope="col" class="w25"
+                      (click)="updateNodeSort('all')">
+                    All ({{subtypeCounts !== undefined ? subtypeCounts["all"] : ""}})
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let node of nodes"
+                  (click)="highlightNode(node.id)"
+                  [class.selected]="node.id === selectedNode">
+                  <td class="w25">{{node.id}}</td>
+                  <td class="w25" *ngIf="selectedNonmetastaticPatient === undefined || selectedMetastaticPatient === selectedNonmetastaticPatient"></td>
+                  <td class="w25">{{selectedMetastaticPatient !== undefined ? nodeInfo[node.id][selectedMetastaticPatient.subtype] : ""}}</td>
+                  <td class="w25" *ngIf="selectedNonmetastaticPatient !== undefined && selectedMetastaticPatient !== selectedNonmetastaticPatient">{{nodeInfo[node.id][selectedNonmetastaticPatient.subtype]}}</td>
+                  <td class="w25">{{nodeInfo[node.id].all}}</td>
+                </tr>
+                </tbody>
+              </table>
               </ul>
               <ul class="list-group">
                 <button type="button" class="btn btn-secondary"
@@ -210,7 +251,7 @@
               </ul>
             </div>
           </li>
-<!--          Choose Layout      -->
+                <!--          Choose Layout      -->
           <li class="sidebar-dropdown" [class.active]="activeMenuItem.layout">
             <a href="#" (click)="toggleMenu('layout')">
               <i class="fas fa-palette"></i>
@@ -218,17 +259,6 @@
             </a>
             <div class="sidebar-submenu" [style.display]="activeMenuItem.layout ? 'block':'none'">
               <ul>
-                <li class="form-group" [style.display]="XOR((selectedMetastaticPatient !== undefined), (selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
-                  <legend>Set Node Size</legend>
-                  <div *ngFor="let opt of objectKeys(layoutNodeSizeOptions)" class="custom-control custom-radio custom-control-inline"  >
-                    <input type="radio" id="nodeSizeBy{{opt}}" name="customRadioNodeSize" class="custom-control-input"
-                           [(ngModel)]="layoutNodeSize"
-                           [value]="opt"
-                           (change)="updateNodeSize(layoutNodeSize)"
-                           [checked]="layoutNodeSize===opt">
-                    <label class="custom-control-label" for="nodeSizeBy{{opt}}">by {{layoutNodeSizeOptions[opt]}}</label>
-                  </div>
-                </li>
                 <li class="form-group" [style.display]="((selectedMetastaticPatient !== undefined) || (selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
                   <legend>Color Nodes</legend>
                   <div *ngFor="let opt of objectKeys(layoutNodeColorOptions)" class="custom-control custom-radio "  >
@@ -245,13 +275,13 @@
                           <b style="background-color:#ff3d6a;color:#383838;">High</b>)
                         </strong>
                         <div class="color-legend" *ngIf="opt === 'ge' && layoutNodeColor === opt" align="center">
-                          <div class="from">{{patients.geMin}}</div>
-                          <div class="mid"></div>
-                          <div class="to">{{patients.geMax}}</div>
+                          <div class="from">{{patients.geMin | number:'1.1-1'}}</div>
+                          <div class="mid-ge"></div>
+                          <div class="to">{{patients.geMax | number:'1.1-1'}}</div>
                         </div>
                         <div class="color-legend" *ngIf="opt === 'rel' && layoutNodeColor === opt" align="center">
                           <div class="from">{{thresholds.minThreshold}}</div>
-                          <div class="mid"></div>
+                          <div class="mid-rel"></div>
                           <div class="to">{{thresholds.maxThreshold}}</div>
                         </div>
                       </div>
@@ -279,9 +309,20 @@
                     </label>
                   </legend>
                 </li>
+                <li class="form-group" [style.display]="XOR((selectedMetastaticPatient !== undefined), (selectedNonmetastaticPatient !== undefined)) ? 'block':'none'">
+                  <legend>Set Node Size</legend>
+                  <div *ngFor="let opt of objectKeys(layoutNodeSizeOptions)" class="custom-control custom-radio custom-control-inline"  >
+                    <input type="radio" id="nodeSizeBy{{opt}}" name="customRadioNodeSize" class="custom-control-input"
+                           [(ngModel)]="layoutNodeSize"
+                           [value]="opt"
+                           (change)="updateNodeSize(layoutNodeSize)"
+                           [checked]="layoutNodeSize===opt">
+                    <label class="custom-control-label" for="nodeSizeBy{{opt}}">by {{layoutNodeSizeOptions[opt]}}</label>
+                  </div>
+                </li>
                 <li class="row mb-3 custom-form-group">
                   <div class="col-12">
-                    <button class="btn btn-light btn-block" (click)="fitGraphToViewport()">
+                    <button class="btn btn-block btn-secondary" (click)="fitGraphToViewport()">
                       Fit Graph To Viewport
                     </button>
                   </div>
@@ -302,13 +343,13 @@
               <ul>
                 <li class="row mb-3 custom-form-group">
                     <div class="btn-group btn-group-toggle col-6" data-toggle="buttons">
-                      <label class="btn btn-light" [class.active]="downloadFormat ==='png'">
+                      <label class="btn btn-secondary" [class.active]="downloadFormat ==='png'">
                         <input type="radio" name="options" id="downloadFormat1"
                                [(ngModel)]="downloadFormat"
                                value="png"
                                [checked]="downloadFormat === 'png'"> PNG
                       </label>
-                      <label class="btn btn-light" [class.active]="downloadFormat ==='jpg'">
+                      <label class="btn btn-secondary" [class.active]="downloadFormat ==='jpg'">
                         <input type="radio" name="options" id="downloadFormat2"
                                [(ngModel)]="downloadFormat"
                                value="jpg"
@@ -316,7 +357,7 @@
                       </label>
                     </div>
                     <div class="col-6 text-right">
-                      <button class="btn btn-light btn-small" (click)="downloadImage(downloadFormat)">
+                      <button class="btn btn-secondary btn-small" (click)="downloadImage(downloadFormat)">
                         Download
                       </button>
                     </div>

@@ -41,7 +41,7 @@ export class CyGraphService {
   constructor(private dataLoader: DataLoaderService) { }
 
 
-  initGraph(cyDiv: ElementRef, sizeBy: string, colorBy: string) {
+  initGraph(cyDiv: ElementRef, network: Network, sizeBy: string, colorBy: string) {
     this.sizeBy = sizeBy;
     this.colorBy = colorBy;
     // console.log("In the init of cyService");
@@ -116,7 +116,7 @@ export class CyGraphService {
                 {
                   selector: 'node.mtb',
                   style: {
-                    'border-width': '10px',
+                    'border-width': '15px',
                     'border-color': this.colors.green
                   }
                 },
@@ -640,6 +640,6 @@ export class CyGraphService {
   }
 
   fitGraphToViewport() {
-    this.cy.fit();
+    this.cy.fit(this.cy.elements('node[?shown]'));
   }
 }

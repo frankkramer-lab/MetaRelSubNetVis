@@ -70,10 +70,12 @@ export class CyGraphService {
           layer[node.data.id] = numberOfLayers - 8;
         } else if (i < 285) {
           layer[node.data.id] = numberOfLayers - 9;
-        } else if (i < 335) {
+        } else if (i < 345) {
           layer[node.data.id] = numberOfLayers - 10;
-        } else {
+        } else if (i < 405) {
           layer[node.data.id] = numberOfLayers - 11;
+        } else {
+          layer[node.data.id] = numberOfLayers - 12;
         }
       });
 

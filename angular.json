@@ -13,7 +13,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/MetaRelSubNetVis",
+            "outputPath": "dist/MetaRelSubNetVisMPS",
+            "baseHref": "http://mypathsem.bioinf.med.uni-goettingen.de/MetaRelSubNetVis",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",

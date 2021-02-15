@@ -63,6 +63,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "baseHref": "",
             "browserTarget": "MetaRelSubNetVis:build"
           },
           "configurations": {

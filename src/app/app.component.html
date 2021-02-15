@@ -342,7 +342,7 @@
             <div class="sidebar-submenu" [style.display]="activeMenuItem.download ? 'block':'none'">
               <ul>
                 <li class="row mb-3 custom-form-group">
-                    <div class="btn-group btn-group-toggle col-6" data-toggle="buttons">
+                    <div class="btn-group btn-group-toggle col-7" data-toggle="buttons">
                       <label class="btn btn-secondary" [class.active]="downloadFormat ==='png'">
                         <input type="radio" name="options" id="downloadFormat1"
                                [(ngModel)]="downloadFormat"
@@ -355,14 +355,21 @@
                                value="jpg"
                                [checked]="downloadFormat ==='jpg'"> JPEG
                       </label>
+
+                      <label class="btn btn-secondary" [class.active]="downloadFormat ==='svg'">
+                        <input type="radio" name="options" id="downloadFormat2"
+                               [(ngModel)]="downloadFormat"
+                               value="svg"
+                               [checked]="downloadFormat ==='svg'"> SVG
+                      </label>
                     </div>
-                    <div class="col-6 text-right">
+                    <div class="col-5 text-right">
                       <button class="btn btn-secondary btn-small" (click)="downloadImage(downloadFormat)">
                         Download
                       </button>
                     </div>
                 </li>
-                <li>
+                <li  [style.display]="downloadFormat !== 'svg' ? 'block':'none'">
                   <div class="input-group mb-3 custom-form-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="scaleImage">Scale Image by </span>
@@ -372,7 +379,7 @@
                            aria-describedby="scaleImage">
                   </div>
                 </li>
-                <li class="form-group" [style.display]="downloadFormat !== 'jpg' ? 'block':'none'">
+                <li class="form-group" [style.display]="downloadFormat === 'png' ? 'block':'none'">
                   <legend>Transparent Background
                     <label class="switch" >
                       <input type="checkbox" class="primary" [(ngModel)]="downloadTransparent" >

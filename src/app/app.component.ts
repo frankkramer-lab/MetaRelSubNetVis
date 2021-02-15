@@ -202,8 +202,6 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
 
   downloadImage(type: string) {
     // console.log(type);
-    const image = this.cyGraph.getImage(type, this.downloadTransparent, this.downloadScaleImageBy);
-
     let filename = 'test.' + type;
     if (this.selectedMetastaticPatient === undefined && this.selectedNonmetastaticPatient === undefined){
       filename = 'PPI_network.' + type;
@@ -214,6 +212,14 @@ export class AppComponent  implements AfterViewInit, OnChanges, OnInit {
     } else {
       filename = this.selectedMetastaticPatient.name + '_vs_' + this.selectedNonmetastaticPatient.name + '.' + type;
     }
+
+    let image = this.cyGraph.getImage(type, this.downloadTransparent, this.downloadScaleImageBy);
+    if (type === 'svg') {
+      image = new Blob([image], {type: "text/plain;charset=utf-8"});
+    } else {
+      image = this.cyGraph.getImage(type, this.downloadTransparent, this.downloadScaleImageBy);
+    }
+
     saveAs(image, filename);
   }
 

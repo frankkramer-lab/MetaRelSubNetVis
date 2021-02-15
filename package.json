@@ -23,6 +23,8 @@
     "@syncfusion/ej2-angular-inputs": "^17.4.55",
     "angular-cli-ghpages": "^0.6.2",
     "cytoscape": "^3.14.1",
+    "canvas2svg": "^1.0.16",
+    "cytoscape-svg": "^0.3.1",
     "file-saver": "latest",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

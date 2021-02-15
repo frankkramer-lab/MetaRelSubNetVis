@@ -2,6 +2,7 @@ import {ElementRef, Injectable, ViewChild} from '@angular/core';
 import {DataLoaderService} from './data-loader.service';
 import {Network} from './network';
 import cytoscape from 'cytoscape';
+import svg from 'cytoscape-svg';
 import {Patient} from './patient';
 import {ThresholdResponse} from './threshold-response';
 import {Threshold} from './threshold';
@@ -22,7 +23,7 @@ export class CyGraphService {
     green: '#0b0',
     gray: '#888',
     highlight: '#333'
-  }
+  };
 
   // private appComponent: AppComponent;
   private cy: any;
@@ -50,16 +51,16 @@ export class CyGraphService {
       const layer = {};
       const numberOfLayers = 11;
       network.nodes.forEach((node, i) => {
-        if(i < 1) {
-          layer[node.data.id] = numberOfLayers;     //1
-        } else if (i < 5) {                          //5=4+1
-          layer[node.data.id] = numberOfLayers - 1;  //4
-        } else if (i < 17) {                         //17=12+5
-          layer[node.data.id] = numberOfLayers - 2;  //12=4*3
-        } else if (i < 37) {                         //53=36+17
-          layer[node.data.id] = numberOfLayers - 3;  //36=12*3
-        } else if (i < 61) {                        //161=108+53
-          layer[node.data.id] = numberOfLayers - 4;  //108=36*3
+        if (i < 1) {
+          layer[node.data.id] = numberOfLayers;     // 1
+        } else if (i < 5) {                          // 5=4+1
+          layer[node.data.id] = numberOfLayers - 1;  // 4
+        } else if (i < 17) {                         // 17=12+5
+          layer[node.data.id] = numberOfLayers - 2;  // 12=4*3
+        } else if (i < 37) {                         // 53=36+17
+          layer[node.data.id] = numberOfLayers - 3;  // 36=12*3
+        } else if (i < 61) {                        // 161=108+53
+          layer[node.data.id] = numberOfLayers - 4;  // 108=36*3
         } else if (i < 93) {
           layer[node.data.id] = numberOfLayers - 5;
         } else if (i < 133) {
@@ -79,7 +80,7 @@ export class CyGraphService {
 
 
       // console.log('Layer: ' + network.nodes[1].layer);
-
+      cytoscape.use( svg );
       this.cy = cytoscape({
               container: cyDiv.nativeElement, // container to render in
 
@@ -196,7 +197,7 @@ export class CyGraphService {
               // layout: {
               //   name: 'grid',
               // }
-            })
+            });
       this.cy.elements('node,edge')
         .data('shown', true);
     });
@@ -620,9 +621,21 @@ export class CyGraphService {
     const bgColor = transparent ? 'transparent' : 'white';
     if (type === 'png') {
       image = this.cy.png({bg: bgColor, scale: scaleBy});
-    } else {
+    } else if (type === 'jpg') {
       image = this.cy.jpg({scale: scaleBy});
+    } else {
+      image = this.cy.svg();
     }
+    return image;
+  }
+
+  getSvg(type: string, transparent: boolean, scaleBy: number) {
+    let image;
+    const bgColor = transparent ? 'transparent' : 'white';
+    // image = this.cy.svg({bg: bgColor, scale: scaleBy});
+    console.log('export svg!');
+    image = this.cy.svg();
+    console.log('done');
     return image;
   }
 

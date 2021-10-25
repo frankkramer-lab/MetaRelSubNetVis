@@ -1,4 +1,10 @@
 .sidebar {
   background-color: #3f3f3f;
-  color: #f0f0f0;
 }
+
+.cursor {
+  cursor: pointer;
+}
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';

@@ -3,9 +3,10 @@
   <div class='row'>
 
     <div *ngIf='showSidebar'
-         class='col-2 sidebar'>
+         class='col-2 text-muted sidebar'>
 
-      <h4 class='mt-2'>
+      <!-- headline -->
+      <h4 class='mt-2 mb-4'>
         <span>Explore the networks</span>
         <span class='float-end'>
           <button class='btn btn-outline-light'
@@ -15,13 +16,118 @@
         </span>
       </h4>
 
-      <button class='btn btn-outline-light' (click)='exportSvg()'>
-        EXPORT
-      </button>
+      <div class='d-grid gap-2'>
+        <!-- PATIENTS -->
+        <button class='btn btn-primary'
+                type='button'
+                data-bs-toggle='collapse'
+                data-bs-target='#collapsePatient'
+                aria-expanded='false'
+                aria-controls='collapsePatient'>
+          Patients
+        </button>
+        <div class='collapse'
+             id='collapsePatient'>
+          <div class='card card-body'>
+            Content: PATIENT
+          </div>
+        </div>
+
+        <!-- THRESHOLD -->
+        <button class='btn btn-primary'
+                type='button'
+                data-bs-toggle='collapse'
+                data-bs-target='#collapseThreshold'
+                aria-expanded='false'
+                aria-controls='collapseThreshold'>
+          Threshold
+        </button>
+        <div class='collapse'
+             id='collapseThreshold'>
+          <div class='card card-body'>
+            Content: THRESHOLD
+          </div>
+        </div>
+
+        <!-- NODES -->
+        <button class='btn btn-primary'
+                type='button'
+                data-bs-toggle='collapse'
+                data-bs-target='#collapseNodes'
+                aria-expanded='false'
+                aria-controls='collapseNodes'>
+          Layout
+        </button>
+        <div class='collapse'
+             id='collapseNodes'>
+          <div class='card card-body'>
+            Content: NODES
+          </div>
+        </div>
+
+        <!-- LAYOUT -->
+        <button class='btn btn-primary'
+                type='button'
+                data-bs-toggle='collapse'
+                data-bs-target='#collapseLayout'
+                aria-expanded='false'
+                aria-controls='collapseLayout'>
+          Layout
+        </button>
+        <div class='collapse'
+             id='collapseLayout'>
+          <div class='card card-body'>
+            Content: LAYOUT
+          </div>
+        </div>
+
+        <!-- DOWNLOAD -->
+        <button class='btn btn-primary'
+                type='button'
+                data-bs-toggle='collapse'
+                data-bs-target='#collapseDownload'
+                aria-expanded='false'
+                aria-controls='collapseDownload'>
+          Download
+        </button>
+        <div class='collapse'
+             id='collapseDownload'>
+          <div class='card card-body'>
+            Content: DOWNLOAD
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- fixme Export svg -->
+<!--      <button class='btn btn-outline-light'-->
+<!--              (click)='exportSvg()'>-->
+<!--        EXPORT SVG-->
+<!--      </button>-->
     </div>
 
     <div [ngClass]='showSidebar ? "col-10" : "12"'>
-      <div #cy id='cy'></div>
+
+      <div class='row'>
+
+        <!-- Show sidebar -->
+        <div class='col-auto mt-2'>
+          <div *ngIf='!showSidebar' [ngStyle]='{"z-index": -1}'>
+            <button class='btn btn-outline-dark'
+                    (click)='showSidebar = true'>
+              <fa-icon [icon]='faBars'></fa-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Canvas -->
+        <div class='col'>
+          <div #cy id='cy'></div>
+        </div>
+
+      </div>
+
     </div>
 
   </div>

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleDown, faBars, faHospitalUser, faPalette, faProjectDiagram, faSortAmountUp, faTimes } from '@fortawesome/free-solid-svg-icons';
 import * as cytoscape from 'cytoscape';
 // @ts-ignore
 import * as svg from 'cytoscape-svg';
@@ -19,6 +19,31 @@ export class AppComponent implements AfterViewInit {
    * Icon: faTimes
    */
   faTimes = faTimes;
+
+  /**
+   * Icon: faHospitalUser
+   */
+  faHospitalUser = faHospitalUser;
+
+  /**
+   * Icon: faSortAmountUp;
+   */
+  faSortAmountUp = faSortAmountUp;
+
+  /**
+   * Icon: faProjectDiagram
+   */
+  faProjectDiagram = faProjectDiagram;
+
+  /**
+   * Icon: faPalette
+   */
+  faPalette = faPalette;
+
+  /**
+   * Icon: faArrowCircleDown
+   */
+  faArrowCircleDown = faArrowCircleDown;
 
   /**
    * True, if the sidebar is visible

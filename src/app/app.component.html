@@ -6,19 +6,20 @@
          class='col-2 text-muted sidebar'>
 
       <!-- headline -->
-      <h4 class='mt-2 mb-4'>
+      <h3 class='mt-2 mb-4'>
         <span>Explore the networks</span>
         <span class='float-end'>
-          <button class='btn btn-outline-light'
-                  (click)='showSidebar = false'>
-            <fa-icon [icon]='faTimes'></fa-icon>
-          </button>
+<!--          <button class='btn btn-outline-light'-->
+          <!--                  (click)='showSidebar = false'>-->
+            <fa-icon [icon]='faTimes' class='cursor' (click)='showSidebar = false'></fa-icon>
+          <!--          </button>-->
         </span>
-      </h4>
+      </h3>
 
       <div class='d-grid gap-2'>
         <!-- PATIENTS -->
-        <button class='btn btn-primary'
+        <button [ngClass]='(collapsePatient.className.includes("show")) ? "btn-danger" : "btn-info"'
+                class='btn'
                 type='button'
                 data-bs-toggle='collapse'
                 data-bs-target='#collapsePatient'
@@ -27,6 +28,7 @@
           Patients
         </button>
         <div class='collapse'
+             #collapsePatient
              id='collapsePatient'>
           <div class='card card-body'>
             Content: PATIENT
@@ -56,7 +58,7 @@
                 data-bs-target='#collapseNodes'
                 aria-expanded='false'
                 aria-controls='collapseNodes'>
-          Layout
+          Nodes
         </button>
         <div class='collapse'
              id='collapseNodes'>
@@ -101,10 +103,10 @@
 
 
       <!-- fixme Export svg -->
-<!--      <button class='btn btn-outline-light'-->
-<!--              (click)='exportSvg()'>-->
-<!--        EXPORT SVG-->
-<!--      </button>-->
+      <!--      <button class='btn btn-outline-light'-->
+      <!--              (click)='exportSvg()'>-->
+      <!--        EXPORT SVG-->
+      <!--      </button>-->
     </div>
 
     <div [ngClass]='showSidebar ? "col-10" : "12"'>

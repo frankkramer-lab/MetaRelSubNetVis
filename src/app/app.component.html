@@ -1,136 +1,33 @@
-<div class='container-fluid'>
+<div class="container-fluid">
+  <div class="row">
 
-  <div class='row'>
+    <div *ngIf="showSidebar"
+         class="col-4 text-muted sidebar">
 
-    <div *ngIf='showSidebar'
-         class='col-2 text-muted sidebar'>
-
-      <!-- headline -->
-      <h3 class='mt-2 mb-4'>
-        <span>Explore the networks</span>
-        <span class='float-end'>
-<!--          <button class='btn btn-outline-light'-->
-          <!--                  (click)='showSidebar = false'>-->
-            <fa-icon [icon]='faTimes' class='cursor' (click)='showSidebar = false'></fa-icon>
-          <!--          </button>-->
-        </span>
-      </h3>
-
-      <div class='d-grid gap-2'>
-        <!-- PATIENTS -->
-        <button [ngClass]='(collapsePatient.className.includes("show")) ? "btn-danger" : "btn-info"'
-                class='btn'
-                type='button'
-                data-bs-toggle='collapse'
-                data-bs-target='#collapsePatient'
-                aria-expanded='false'
-                aria-controls='collapsePatient'>
-          Patients
-        </button>
-        <div class='collapse'
-             #collapsePatient
-             id='collapsePatient'>
-          <div class='card card-body'>
-            Content: PATIENT
-          </div>
-        </div>
-
-        <!-- THRESHOLD -->
-        <button class='btn btn-primary'
-                type='button'
-                data-bs-toggle='collapse'
-                data-bs-target='#collapseThreshold'
-                aria-expanded='false'
-                aria-controls='collapseThreshold'>
-          Threshold
-        </button>
-        <div class='collapse'
-             id='collapseThreshold'>
-          <div class='card card-body'>
-            Content: THRESHOLD
-          </div>
-        </div>
-
-        <!-- NODES -->
-        <button class='btn btn-primary'
-                type='button'
-                data-bs-toggle='collapse'
-                data-bs-target='#collapseNodes'
-                aria-expanded='false'
-                aria-controls='collapseNodes'>
-          Nodes
-        </button>
-        <div class='collapse'
-             id='collapseNodes'>
-          <div class='card card-body'>
-            Content: NODES
-          </div>
-        </div>
-
-        <!-- LAYOUT -->
-        <button class='btn btn-primary'
-                type='button'
-                data-bs-toggle='collapse'
-                data-bs-target='#collapseLayout'
-                aria-expanded='false'
-                aria-controls='collapseLayout'>
-          Layout
-        </button>
-        <div class='collapse'
-             id='collapseLayout'>
-          <div class='card card-body'>
-            Content: LAYOUT
-          </div>
-        </div>
-
-        <!-- DOWNLOAD -->
-        <button class='btn btn-primary'
-                type='button'
-                data-bs-toggle='collapse'
-                data-bs-target='#collapseDownload'
-                aria-expanded='false'
-                aria-controls='collapseDownload'>
-          Download
-        </button>
-        <div class='collapse'
-             id='collapseDownload'>
-          <div class='card card-body'>
-            Content: DOWNLOAD
-          </div>
-        </div>
-
-      </div>
-
-
-      <!-- fixme Export svg -->
-      <!--      <button class='btn btn-outline-light'-->
-      <!--              (click)='exportSvg()'>-->
-      <!--        EXPORT SVG-->
-      <!--      </button>-->
-    </div>
-
-    <div [ngClass]='showSidebar ? "col-10" : "12"'>
-
-      <div class='row'>
-
-        <!-- Show sidebar -->
-        <div class='col-auto mt-2'>
-          <div *ngIf='!showSidebar' [ngStyle]='{"z-index": -1}'>
-            <button class='btn btn-outline-dark'
-                    (click)='showSidebar = true'>
-              <fa-icon [icon]='faBars'></fa-icon>
-            </button>
-          </div>
-        </div>
-
-        <!-- Canvas -->
-        <div class='col'>
-          <div #cy id='cy'></div>
-        </div>
-
-      </div>
+      <app-sidebar
+        (showSidebarEmitter)="showSidebar = false"
+        [showSidebar]="showSidebar"
+        [patients]="patientData$ | async"
+      ></app-sidebar>
 
     </div>
 
+    <div [ngClass]="showSidebar ? 'col-8' : 'col-12'">
+      <div class="row">
+
+        <!-- BUTTON: show sidebar -->
+        <div class="col-auto mt-2" *ngIf="!showSidebar">
+          <button class="btn btn-outline-dark" (click)="showSidebar = true">
+            <fa-icon icon="bars"></fa-icon>
+          </button>
+        </div>
+
+        <!-- CANVAS -->
+        <div class="col">
+          <div #cy id="cy"></div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </div>

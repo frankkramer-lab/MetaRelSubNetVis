@@ -1,0 +1,53 @@
+<h6>Color nodes</h6>
+<!-- by gene expression level -->
+<div class="form-check">
+  <input (click)="selectColorNodesBy(utilService.colorNodesBy.geneExpressionLevel)"
+         class="form-check-input" type="radio"
+         name="colorNodesBy" id="geneExpressionLevel" value="geneExpressionLevel" checked>
+  <label class="form-check-label" for="geneExpressionLevel">
+    by gene expression level (Low, Normal, High)
+  </label>
+</div>
+<!-- by gene expression -->
+<div class="form-check">
+  <input (click)="selectColorNodesBy(utilService.colorNodesBy.geneExpression)"
+         class="form-check-input" type="radio"
+         name="colorNodesBy" id="geneExpression" value="geneExpression">
+  <label class="form-check-label" for="geneExpression">
+    by gene expression
+  </label>
+</div>
+<!-- by relevance -->
+<div class="form-check">
+  <input (click)="selectColorNodesBy(utilService.colorNodesBy.relevance)"
+         class="form-check-input" type="radio"
+         name="colorNodesBy" id="relevance" value="relevance">
+  <label class="form-check-label" for="relevance">
+    by relevance
+  </label>
+</div>
+
+<hr>
+
+<!-- TOGGLE: show all nodes -->
+<div class="form-check form-switch mt-2">
+  <label class="form-check-label" for="showAllNodes">Show all nodes</label>
+  <input class="form-check-input" type="checkbox" role="switch" id="showAllNodes" checked>
+</div>
+
+<!-- TOGGLE: show MTB results -->
+<div class="form-check form-switch mt-2">
+  <label class="form-check-label" for="showMtbResults">Show MTB results</label>
+  <input class="form-check-input" type="checkbox" role="switch" id="showMtbResults" checked>
+</div>
+
+<!-- TOGGLE: show only shared nodes -->
+<div class="form-check form-switch mt-2">
+  <label class="form-check-label" for="showOnlyShared">Show only shared nodes</label>
+  <input class="form-check-input" type="checkbox" role="switch" id="showOnlyShared" checked>
+</div>
+
+<!-- FIT -->
+<div class="d-grid mt-2">
+  <button class="btn btn-secondary" type="button" (click)="fitGraph()">Fit graph to viewport</button>
+</div>

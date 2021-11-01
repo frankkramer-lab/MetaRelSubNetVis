@@ -1,0 +1,660 @@
+[
+  {
+    "name": "CD44",
+    "score": 0.0003465,
+    "ge": 10.2844761,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "HDAC1",
+    "score": 0.0003643,
+    "ge": 9.4846722,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "IL6ST",
+    "score": 0.0003757,
+    "ge": 11.4146177,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "HNRNPK",
+    "score": 0.0004223,
+    "ge": 11.1119274,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "PIK3R1",
+    "score": 0.0003781,
+    "ge": 9.6794907,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "SHC1",
+    "score": 0.0003941,
+    "ge": 10.1107339,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "CD9",
+    "score": 0.000386,
+    "ge": 11.2650553,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "SMAD2",
+    "score": 0.0003529,
+    "ge": 9.140107,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "UBE2I",
+    "score": 0.0003716,
+    "ge": 9.7199892,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "CEBPB",
+    "score": 0.0003279,
+    "ge": 9.9909138,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "ITGB1",
+    "score": 0.0004077,
+    "ge": 10.4700846,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "CTSB",
+    "score": 0.0003342,
+    "ge": 10.4640196,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "SPP1",
+    "score": 0.0003635,
+    "ge": 10.7206185,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "KPNB1",
+    "score": 0.0003382,
+    "ge": 10.2123659,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "VIM",
+    "score": 0.0005389,
+    "ge": 11.2230584,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "YWHAB",
+    "score": 0.0005675,
+    "ge": 11.25083,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "GAPDH",
+    "score": 0.0005515,
+    "ge": 12.4664851,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "YWHAZ",
+    "score": 0.0005088,
+    "ge": 10.5493475,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "PFN1",
+    "score": 0.0003367,
+    "ge": 10.5143051,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "RAC1",
+    "score": 0.0004724,
+    "ge": 11.044789,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "TUBA1B",
+    "score": 0.0003749,
+    "ge": 11.9433027,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "CFL1",
+    "score": 0.000453,
+    "ge": 12.2522153,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "DYNLL1",
+    "score": 0.0003819,
+    "ge": 10.6630753,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "UBA52",
+    "score": 0.0003657,
+    "ge": 11.4682172,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "HSP90AA1",
+    "score": 0.0005292,
+    "ge": 11.7647005,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "CANX",
+    "score": 0.0004307,
+    "ge": 11.0185239,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "SPARC",
+    "score": 0.0003287,
+    "ge": 10.7700527,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "XRCC5",
+    "score": 0.0003265,
+    "ge": 10.2862028,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "HSPA5",
+    "score": 0.0003562,
+    "ge": 10.3682206,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "PTMA",
+    "score": 0.0003709,
+    "ge": 11.4041023,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "HNRNPU",
+    "score": 0.0003898,
+    "ge": 11.0036742,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "NFKBIA",
+    "score": 0.0003501,
+    "ge": 10.0997044,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "XRCC6",
+    "score": 0.0003869,
+    "ge": 10.3589429,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "EEF1A1",
+    "score": 0.0008789,
+    "ge": 13.9489238,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "SET",
+    "score": 0.0003519,
+    "ge": 11.3081731,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "HMGB1",
+    "score": 0.000475,
+    "ge": 11.8915098,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "EIF3E",
+    "score": 0.0003297,
+    "ge": 10.7286282,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "TUBB",
+    "score": 0.0004586,
+    "ge": 11.1450362,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "HSP90AB1",
+    "score": 0.0003964,
+    "ge": 11.552216,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "SQSTM1",
+    "score": 0.0003483,
+    "ge": 10.0764684,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "CSNK1A1",
+    "score": 0.0003341,
+    "ge": 10.0444647,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "YWHAQ",
+    "score": 0.0005074,
+    "ge": 10.9236341,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "FTL",
+    "score": 0.0004219,
+    "ge": 12.26519,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "MORF4L2",
+    "score": 0.0003275,
+    "ge": 11.2275912,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "CLTC",
+    "score": 0.0004164,
+    "ge": 10.8878194,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "HUWE1",
+    "score": 0.000425,
+    "ge": 13.1304368,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "RPLP1",
+    "score": 0.0004052,
+    "ge": 12.9338871,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "DDX17",
+    "score": 0.0003886,
+    "ge": 11.5234373,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "FN1",
+    "score": 0.0005931,
+    "ge": 12.325569,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "TPT1",
+    "score": 0.0004503,
+    "ge": 13.4593386,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "UBB",
+    "score": 0.0006556,
+    "ge": 12.8984885,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "TUBA1A",
+    "score": 0.000339,
+    "ge": 11.0297218,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "RASA1",
+    "score": 0.0003198,
+    "ge": 9.5966395,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "YWHAE",
+    "score": 0.0003506,
+    "ge": 9.4752612,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "NPM1",
+    "score": 0.0004172,
+    "ge": 11.4898895,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "ANXA2",
+    "score": 0.0004792,
+    "ge": 12.6081344,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "HSPB1",
+    "score": 0.0003173,
+    "ge": 10.5786197,
+    "geLevel": "NORMAL",
+    "mtb": true
+  },
+  {
+    "name": "TMSB4X",
+    "score": 0.0003688,
+    "ge": 11.4734591,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "RPS27A",
+    "score": 0.0003898,
+    "ge": 11.8269537,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "SKP1",
+    "score": 0.0003802,
+    "ge": 11.7521007,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "B2M",
+    "score": 0.0003878,
+    "ge": 12.6286167,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "CAPN2",
+    "score": 0.0003335,
+    "ge": 11.0602625,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "COL3A1",
+    "score": 0.0004336,
+    "ge": 12.6494835,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "HLA-A",
+    "score": 0.0003642,
+    "ge": 11.6593831,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "HLA-B",
+    "score": 0.000329,
+    "ge": 12.3998338,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "COL1A1",
+    "score": 0.000422,
+    "ge": 11.5757006,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "ESR1",
+    "score": 0.0007106,
+    "ge": 12.2115499,
+    "geLevel": "HIGH",
+    "mtb": true
+  },
+  {
+    "name": "KRT18",
+    "score": 0.0004766,
+    "ge": 11.6779148,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "STAT3",
+    "score": 0.0003824,
+    "ge": 10.0523487,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "RPL6",
+    "score": 0.000343,
+    "ge": 11.7952547,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "RPL29",
+    "score": 0.0003728,
+    "ge": 12.4197931,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "S100A10",
+    "score": 0.0003688,
+    "ge": 11.0110905,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "EIF3L",
+    "score": 0.0003242,
+    "ge": 11.4516983,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "DAZAP2",
+    "score": 0.0003792,
+    "ge": 10.8503291,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "PNN",
+    "score": 0.0003212,
+    "ge": 10.8624718,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "EEF1D",
+    "score": 0.000352,
+    "ge": 11.5122393,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "UBC",
+    "score": 0.000587,
+    "ge": 13.3616603,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "ACTB",
+    "score": 0.0007097,
+    "ge": 12.8495638,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "HSPD1",
+    "score": 0.0003391,
+    "ge": 10.6556192,
+    "geLevel": "LOW",
+    "mtb": false
+  },
+  {
+    "name": "CDC42",
+    "score": 0.0003182,
+    "ge": 9.7619962,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "KRT19",
+    "score": 0.0004277,
+    "ge": 11.989057,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "DSP",
+    "score": 0.0003503,
+    "ge": 10.7125837,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "ACTA2",
+    "score": 0.0003818,
+    "ge": 10.933529,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "COL1A2",
+    "score": 0.0004937,
+    "ge": 12.8336131,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "A2M",
+    "score": 0.0003496,
+    "ge": 10.6838343,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "FTH1",
+    "score": 0.0004126,
+    "ge": 12.999661,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "IGFBP5",
+    "score": 0.0003581,
+    "ge": 10.9104916,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "DCN",
+    "score": 0.0003304,
+    "ge": 11.0223594,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "LGALS1",
+    "score": 0.0003641,
+    "ge": 11.8588033,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "RPS14",
+    "score": 0.0003887,
+    "ge": 13.1952565,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "GLUL",
+    "score": 0.000321,
+    "ge": 11.5177567,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "RPL9",
+    "score": 0.0003795,
+    "ge": 12.5873964,
+    "geLevel": "NORMAL",
+    "mtb": false
+  },
+  {
+    "name": "XBP1",
+    "score": 0.0003406,
+    "ge": 11.9631337,
+    "geLevel": "HIGH",
+    "mtb": false
+  },
+  {
+    "name": "RPS3",
+    "score": 0.0003604,
+    "ge": 12.2586169,
+    "geLevel": "NORMAL",
+    "mtb": false
+  }
+]

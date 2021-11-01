@@ -1,0 +1,27 @@
+<p *ngIf="graphService.visualizationConfig.patientMetastatic === ''
+&& graphService.visualizationConfig.patientNonmetastatic === ''; else thresholdTemplate">
+  Select at least one patient above
+</p>
+
+<ng-template #thresholdTemplate>
+
+  <div class="input-group mb-3">
+  <span class="input-group-text"
+        id="thresholdLabel">
+
+    {{graphService.visualizationConfig.patientNonmetastatic !== ''
+  && graphService.visualizationConfig.patientMetastatic !== '' ? 'Both patients:'
+    : (graphService.visualizationConfig.patientMetastatic !== '' ? 'Metastatic:' : 'Non-Metastatic:')}}
+
+  </span>
+    <input type="number"
+           id="threshold"
+           class="form-control"
+           aria-label="Sizing example input"
+           aria-describedby="inputGroup-sizing-default"
+           [value]="">
+  </div>
+
+  <input type="range" class="form-range" id="thresholdRange">
+
+</ng-template>

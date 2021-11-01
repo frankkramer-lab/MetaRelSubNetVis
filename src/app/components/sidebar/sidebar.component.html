@@ -1,0 +1,127 @@
+<!-- headline -->
+<h3 class="mt-2 mb-4">
+  <span>Explore the networks</span>
+  <span class="float-end">
+      <fa-icon icon="times" class="cursor" (click)="hideSidebar()"></fa-icon>
+    </span>
+</h3>
+
+<div class="d-grid gap-2">
+  <!-- PATIENTS -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapsePatient"
+    aria-expanded="false"
+    aria-controls="collapsePatient"
+  >
+    <fa-icon
+      icon="hospital-user"
+      [ngClass]="collapsePatient.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Patients
+  </button>
+  <div class="collapse" #collapsePatient id="collapsePatient">
+    <div class="card card-body">
+      <app-patients [patients]="patients"></app-patients>
+    </div>
+  </div>
+
+  <!-- THRESHOLD -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseThreshold"
+    aria-expanded="false"
+    aria-controls="collapseThreshold"
+  >
+    <fa-icon
+      icon="sort-amount-up"
+      [ngClass]="collapseThreshold.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Threshold
+  </button>
+  <div class="collapse" id="collapseThreshold" #collapseThreshold>
+    <div class="card card-body">
+      <app-threshold></app-threshold>
+    </div>
+  </div>
+
+  <!-- NODES -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseNodes"
+    aria-expanded="false"
+    aria-controls="collapseNodes"
+  >
+    <fa-icon
+      icon="project-diagram"
+      [ngClass]="collapseNodes.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Nodes
+  </button>
+  <div class="collapse" id="collapseNodes" #collapseNodes>
+    <div class="card card-body">
+      <app-nodes></app-nodes>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseLayout"
+    aria-expanded="false"
+    aria-controls="collapseLayout"
+  >
+    <fa-icon
+      icon="palette"
+      [ngClass]="collapseLayout.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Layout
+  </button>
+  <div class="collapse" id="collapseLayout" #collapseLayout>
+    <div class="card card-body">
+      <app-layout></app-layout>
+    </div>
+  </div>
+
+  <!-- DOWNLOAD -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseDownload"
+    aria-expanded="false"
+    aria-controls="collapseDownload"
+  >
+    <fa-icon
+      icon="arrow-circle-down"
+      [ngClass]="collapseDownload.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Download
+  </button>
+  <div class="collapse" id="collapseDownload" #collapseDownload>
+    <div class="card card-body">
+
+      <app-download></app-download>
+
+    </div>
+  </div>
+</div>
+
+<!-- fixme Export svg -->
+<!--      <button class='btn btn-outline-light'-->
+<!--              (click)='exportSvg()'>-->
+<!--        EXPORT SVG-->
+<!--      </button>-->

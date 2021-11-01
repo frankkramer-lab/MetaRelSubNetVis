@@ -1,0 +1,17 @@
+<div class="row">
+
+  <div class="col-6">
+    <app-patient-dropdown headline="Metastatic"
+                          [cancerStatus]="utilService.cancerStatus.metastatic"
+                          [patients]="patients ? patients.metastatic : null"
+    ></app-patient-dropdown>
+  </div>
+
+  <div class="col-6">
+    <app-patient-dropdown headline="Nonmetastatic"
+                          [cancerStatus]="utilService.cancerStatus.nonmetastatic"
+                          [patients]="patients ? patients.nonmetastatic : null"
+    ></app-patient-dropdown>
+
+</div>
+

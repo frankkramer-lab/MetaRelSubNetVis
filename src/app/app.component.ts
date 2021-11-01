@@ -1,106 +1,48 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { faArrowCircleDown, faBars, faHospitalUser, faPalette, faProjectDiagram, faSortAmountUp, faTimes } from '@fortawesome/free-solid-svg-icons';
-import * as cytoscape from 'cytoscape';
-// @ts-ignore
-import * as svg from 'cytoscape-svg';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { DataService } from './services/data.service';
+import { GraphService } from './services/graph.service';
+import { PatientCollection } from './models/patient-collection';
+import { Patient } from './models/patient';
+import { PatientItem } from './models/patient-item';
+import { Observable } from 'rxjs';
+import { Threshold } from './models/threshold';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements AfterViewInit {
-  /**
-   * Icon: faBars
-   */
-  faBars = faBars;
-
-  /**
-   * Icon: faTimes
-   */
-  faTimes = faTimes;
-
-  /**
-   * Icon: faHospitalUser
-   */
-  faHospitalUser = faHospitalUser;
-
-  /**
-   * Icon: faSortAmountUp;
-   */
-  faSortAmountUp = faSortAmountUp;
-
-  /**
-   * Icon: faProjectDiagram
-   */
-  faProjectDiagram = faProjectDiagram;
-
-  /**
-   * Icon: faPalette
-   */
-  faPalette = faPalette;
-
-  /**
-   * Icon: faArrowCircleDown
-   */
-  faArrowCircleDown = faArrowCircleDown;
-
+export class AppComponent implements OnInit {
   /**
    * True, if the sidebar is visible
    */
   showSidebar = true;
 
   /**
-   * Cytoscape core which contains the essential functionality
-   */
-  cy!: cytoscape.Core;
-
-  /**
    * Cytoscape container used for rendering the network
    */
   @ViewChild('cy') cyContainer!: ElementRef;
 
-  ngAfterViewInit(): void {
-    cytoscape.use(svg);
-    this.cy = cytoscape({
-      container: this.cyContainer.nativeElement,
-      elements: [
-        {
-          group: 'nodes',
-          data: {
-            id: 'n1',
-            parent: 'nparent',
-          },
+  patientData$!: Observable<PatientCollection> | null;
 
-          scratch: {
-            _foo: 'bar',
-          },
+  thresholdData$!: Observable<Threshold> | null;
 
-          position: {
-            x: 100,
-            y: 100,
-          },
-        },
-      ],
+  /**
+   * Constructor
+   * @param dataService Needed to load network data
+   * @param graphService Needed to initialize the network's core
+   */
+  constructor(private dataService: DataService, private graphService: GraphService) {}
 
-      layout: {
-        name: 'preset',
-      },
-
-      // so we can see the ids
-      style: [
-        {
-          selector: 'node',
-          style: {
-            label: 'data(id)',
-          },
-        },
-      ],
+  /**
+   * Loading the network and rendering the initially displayed network
+   */
+  ngOnInit(): void {
+    this.dataService.loadNetwork().subscribe((network) => {
+      this.graphService.initializeCore(network, this.cyContainer.nativeElement);
     });
-  }
 
-  exportSvg(): void {
-    // @ts-ignore
-    console.log(this.cy.svg());
+    this.patientData$ = this.dataService.loadPatientsClassified();
+    this.thresholdData$ = this.dataService.loadThresholds();
   }
 }

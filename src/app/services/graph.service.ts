@@ -31,6 +31,7 @@ export class GraphService {
   visualizationConfig: VisualizationConfig = {
     colorNodesBy: 0,
     nodeSizeBy: 0,
+    patientsSelected: 0,
     patientMetastatic: null,
     patientDetailsMetastatic: null,
     patientNonmetastatic: null,

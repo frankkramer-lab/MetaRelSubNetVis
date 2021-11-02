@@ -50,23 +50,39 @@ export class PatientDropdownComponent {
    */
   selectPatient(patient: Patient): void {
     this.selected = patient;
-    if (this.cancerStatus === this.utilService.cancerStatus.metastatic) {
-      // this.graphService.visualizationConfig.patientNameMetastatic = patient.name;
-      this.graphService.visualizationConfig.patientMetastatic = patient;
 
-      this.dataService.loadPatient(patient.name).subscribe((patientDetails: PatientItem) => {
-        this.graphService.visualizationConfig.patientDetailsMetastatic = patientDetails;
-        console.log(this.graphService.visualizationConfig.patientDetailsMetastatic);
-      });
-    } else {
-      // this.graphService.visualizationConfig.patientNameNonmetastatic = patient.name;
-      this.graphService.visualizationConfig.patientNonmetastatic = patient;
+    this.graphService.visualizationConfig[
+      this.cancerStatus === this.utilService.cancerStatus.metastatic
+        ? 'patientMetastatic'
+        : 'patientNonmetastatic'
+    ] = patient;
 
-      this.dataService.loadPatient(patient.name).subscribe((patientDetails: PatientItem) => {
-        this.graphService.visualizationConfig.patientDetailsNonmetastatic = patientDetails;
-        console.log(this.graphService.visualizationConfig.patientDetailsNonmetastatic);
-      });
+    this.updateSelectedPatients();
+
+    this.dataService.loadPatient(patient.name).subscribe((patientDetails: PatientItem) => {
+      this.graphService.visualizationConfig[
+        this.cancerStatus === this.utilService.cancerStatus.metastatic
+          ? 'patientDetailsMetastatic'
+          : 'patientDetailsNonmetastatic'
+      ] = patientDetails;
+    });
+  }
+
+  /**
+   * Updates the number of selected patients when the user makes selections via dropdown
+   * @private
+   */
+  private updateSelectedPatients(): void {
+    let count = 0;
+    if (this.graphService.visualizationConfig.patientMetastatic !== null) {
+      // eslint-disable-next-line no-plusplus
+      count++;
     }
+    if (this.graphService.visualizationConfig.patientNonmetastatic !== null) {
+      // eslint-disable-next-line no-plusplus
+      count++;
+    }
+    this.graphService.visualizationConfig.patientsSelected = count;
   }
 
   /**
@@ -81,5 +97,6 @@ export class PatientDropdownComponent {
       this.graphService.visualizationConfig.patientNonmetastatic = null;
       this.graphService.visualizationConfig.patientDetailsNonmetastatic = null;
     }
+    this.updateSelectedPatients();
   }
 }

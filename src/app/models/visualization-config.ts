@@ -21,6 +21,12 @@ export interface VisualizationConfig {
    * Selected nonmetastatic patient
    */
   patientNonmetastatic: Patient | null;
+
+  /**
+   * Indicates how many patients are selected. Can either be 0, 1 or 2.
+   * Used for determining the width of the nodes table
+   */
+  patientsSelected: number;
   /**
    * Selected threshold
    */

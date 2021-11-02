@@ -13,6 +13,8 @@ export class NodesComponent {
    */
   @Input() nodes!: Node[];
 
+  @Input() occ!: any;
+
   /**
    * List of nodes which were selected by the user
    */

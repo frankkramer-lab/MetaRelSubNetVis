@@ -24,6 +24,8 @@ export class SidebarComponent {
 
   @Input() nodes!: Node[];
 
+  @Input() occ!: any;
+
   @Output() showSidebarEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   hideSidebar(): void {

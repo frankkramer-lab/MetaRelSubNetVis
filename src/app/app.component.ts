@@ -30,6 +30,8 @@ export class AppComponent implements OnInit {
 
   nodeData: Node[] = [];
 
+  totalOccurrences: any = {};
+
   /**
    * Constructor
    * @param dataService Needed to load network data
@@ -43,6 +45,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.dataService.loadNetwork().subscribe((network) => {
       this.nodeData = network.nodes;
+      this.totalOccurrences = network.occ;
       this.graphService.initializeCore(network, this.cyContainer.nativeElement);
     });
 

@@ -3,44 +3,126 @@
   type="text"
   placeholder="Search..."
   [(ngModel)]="filterTerm"
-  aria-label="default input example"
+  aria-label="Filter nodes"
 />
+
+<!-- ++++ DIV GRID ++++ -->
+
+<!--<div class="row mt-3">-->
+
+<!--  <div [ngClass]="graphService.visualizationConfig.patientsSelected === 0-->
+<!--  ? 'col-6'-->
+<!--  : (graphService.visualizationConfig.patientsSelected === 1-->
+<!--  ? 'col-4'-->
+<!--  : 'col-3')">-->
+<!--    <b>Protein</b>-->
+<!--  </div>-->
+
+<!--  <div *ngIf="graphService.visualizationConfig.patientMetastatic !== null"-->
+<!--       [ngClass]="graphService.visualizationConfig.patientsSelected === 1 ? 'col-4' : 'col-3'">-->
+<!--    <b>{{graphService.visualizationConfig.patientMetastatic.subtype}}&nbsp;-->
+<!--      ({{occ[graphService.visualizationConfig.patientMetastatic.subtype]}})</b>-->
+<!--  </div>-->
+
+
+<!--  <div *ngIf="graphService.visualizationConfig.patientNonmetastatic !== null"-->
+<!--       [ngClass]="graphService.visualizationConfig.patientsSelected === 1 ? 'col-4' : 'col-3'">-->
+<!--    <b>{{graphService.visualizationConfig.patientNonmetastatic.subtype}}&nbsp;-->
+<!--      ({{occ[graphService.visualizationConfig.patientNonmetastatic.subtype]}})-->
+<!--    </b>-->
+<!--  </div>-->
+
+<!--  <div [ngClass]="graphService.visualizationConfig.patientsSelected === 0-->
+<!--  ? 'col-6'-->
+<!--  : (graphService.visualizationConfig.patientsSelected === 1-->
+<!--  ? 'col-4'-->
+<!--  : 'col-3')">-->
+<!--    <b>All&nbsp;({{occ.all}})</b>-->
+<!--  </div>-->
+
+<!--</div>-->
+<!--<ng-container class="table-scrollable">-->
+<!--  <div class="row" *ngFor="let node of nodes">-->
+<!--    <div [ngClass]="graphService.visualizationConfig.patientsSelected === 0-->
+<!--  ? 'col-6'-->
+<!--  : (graphService.visualizationConfig.patientsSelected === 1-->
+<!--  ? 'col-4'-->
+<!--  : 'col-3')">-->
+<!--      {{node.data.id}}-->
+<!--    </div>-->
+
+<!--    <div *ngIf="graphService.visualizationConfig.patientMetastatic !== null"-->
+<!--         [ngClass]="graphService.visualizationConfig.patientsSelected === 1 ? 'col-4' : 'col-3'">-->
+<!--      {{node.occ[graphService.visualizationConfig.patientMetastatic.subtype]}}-->
+<!--    </div>-->
+
+<!--    <div *ngIf="graphService.visualizationConfig.patientNonmetastatic !== null"-->
+<!--         [ngClass]="graphService.visualizationConfig.patientsSelected === 1 ? 'col-4' : 'col-3'">-->
+<!--      {{node.occ[graphService.visualizationConfig.patientNonmetastatic.subtype]}}-->
+<!--    </div>-->
+
+<!--    <div [ngClass]="graphService.visualizationConfig.patientsSelected === 0-->
+<!--  ? 'col-6'-->
+<!--  : (graphService.visualizationConfig.patientsSelected === 1-->
+<!--  ? 'col-4'-->
+<!--  : 'col-3')">-->
+<!--      {{node.occ.all}}-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</ng-container>-->
+
+
+<!-- ++++ TABLE ++++ -->
 
 <table class="table table-bordered">
   <thead>
-    <tr>
-      <th>Protein</th>
-      <th
-        *ngIf="graphService.visualizationConfig.patientMetastatic"
-        (click)="sortBySubtypeMeta(graphService.visualizationConfig.patientMetastatic.subtype)"
-      >
-        {{ graphService.visualizationConfig.patientMetastatic.subtype }}&nbsp;()
-      </th>
-      <th
-        *ngIf="graphService.visualizationConfig.patientNonmetastatic"
-        (click)="
+  <tr>
+    <th>Protein</th>
+    <th
+      *ngIf="graphService.visualizationConfig.patientMetastatic"
+      (click)="sortBySubtypeMeta(graphService.visualizationConfig.patientMetastatic.subtype)"
+    >
+      {{ graphService.visualizationConfig.patientMetastatic.subtype }}&nbsp;
+      ({{occ[graphService.visualizationConfig.patientMetastatic.subtype]}})
+    </th>
+    <th
+      *ngIf="graphService.visualizationConfig.patientNonmetastatic"
+      (click)="
           sortBySubtypeNonmeta(graphService.visualizationConfig.patientNonmetastatic.subtype)
         "
-      >
-        {{ graphService.visualizationConfig.patientNonmetastatic.subtype }}&nbsp;()
-      </th>
-      <th (click)="sortByTotal()">All&nbsp;()</th>
-    </tr>
+    >
+      {{ graphService.visualizationConfig.patientNonmetastatic.subtype }}&nbsp;
+      ({{occ[graphService.visualizationConfig.patientNonmetastatic.subtype]}})
+    </th>
+    <th (click)="sortByTotal()">All&nbsp;({{occ.all}})</th>
+  </tr>
   </thead>
 
-    <tbody>
-      <tr
-        *ngFor="let node of nodes"
-        [ngClass]="selectedNodes.includes(node) ? 'bg-primary' : ''"
-        (click)="selectNode(node)"
-      >
-        <td>{{ node.data.id }}</td>
-        <td *ngIf="graphService.visualizationConfig.patientMetastatic">meta number</td>
-        <td *ngIf="graphService.visualizationConfig.patientNonmetastatic">nonmeta number</td>
-        <td>number</td>
-      </tr>
-    </tbody>
+  <tbody>
+  <ng-container *ngFor="let node of nodes">
+    <tr
+      *ngIf="(node.data.id | lowercase).includes(filterTerm | lowercase)"
+      [ngClass]="selectedNodes.includes(node) ? 'bg-info' : ''"
+      (click)="selectNode(node)"
+    >
+      <td>{{ node.data.id }}</td>
+      <td *ngIf="graphService.visualizationConfig.patientMetastatic">
+        {{node.occ[graphService.visualizationConfig.patientMetastatic.subtype]}}
+      </td>
+      <td *ngIf="graphService.visualizationConfig.patientNonmetastatic">
+        {{node.occ[graphService.visualizationConfig.patientNonmetastatic.subtype]}}
+      </td>
+      <td>
+        {{node.occ.all}}
+      </td>
+    </tr>
+
+  </ng-container>
+  </tbody>
 </table>
+
+
+<!-- ++++ SELECT ++++ -->
 
 <!--<div class="row mt-3">-->
 <!--  -->

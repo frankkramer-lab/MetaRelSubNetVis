@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ColorNodesBy, UtilService } from '../../services/util.service';
+import { ColorNodesBy, NodeSizeBy, UtilService } from '../../services/util.service';
 import { GraphService } from '../../services/graph.service';
 
 @Component({
@@ -7,15 +7,23 @@ import { GraphService } from '../../services/graph.service';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })
-export class LayoutComponent implements OnInit {
-
-  constructor(public utilService: UtilService, private graphService: GraphService) { }
-
-  ngOnInit(): void {
-  }
+export class LayoutComponent {
+  /**
+   * Constructor
+   * @param utilService Needed for access to essential enums
+   * @param graphService Needed to change graph visualization on demand
+   */
+  constructor(
+    public utilService: UtilService,
+    public graphService: GraphService
+  ) { }
 
   selectColorNodesBy(colorBy: ColorNodesBy): void {
     this.graphService.visualizationConfig.colorNodesBy = colorBy;
+  }
+
+  selectNodeSizeBy(nodeSizeBy: NodeSizeBy): void {
+    // todo
   }
 
   toggleShowAllNodes(b: boolean): void {

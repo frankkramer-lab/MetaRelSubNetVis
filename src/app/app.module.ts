@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   faArrowCircleDown,
   faBars,
-  faHospitalUser,
+  faHospitalUser, faInfo, faInfoCircle,
   faPalette,
   faProjectDiagram,
   faSortAmountUp,
@@ -56,6 +56,7 @@ export class AppModule {
       faProjectDiagram,
       faSortAmountUp,
       faTimes,
+      faInfo,
     );
   }
 }

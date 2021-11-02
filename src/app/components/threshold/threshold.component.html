@@ -1,5 +1,4 @@
-<p *ngIf="graphService.visualizationConfig.patientNameMetastatic === ''
-&& graphService.visualizationConfig.patientNameNonmetastatic === ''; else thresholdTemplate">
+<p *ngIf="graphService.visualizationConfig.patientsSelected === 0; else thresholdTemplate">
   Select at least one patient above
 </p>
 
@@ -9,9 +8,8 @@
   <span class="input-group-text"
         id="thresholdLabel">
 
-    {{graphService.visualizationConfig.patientNameNonmetastatic !== ''
-  && graphService.visualizationConfig.patientNameMetastatic !== '' ? 'Both patients:'
-    : (graphService.visualizationConfig.patientNameMetastatic !== '' ? 'Metastatic:' : 'Non-Metastatic:')}}
+    {{graphService.visualizationConfig.patientsSelected === 2 ? 'Both patients:'
+    : (graphService.visualizationConfig.patientMetastatic !== null ? 'Metastatic:' : 'Non-Metastatic:')}}
 
   </span>
     <input type="number"

@@ -13,6 +13,9 @@ export class NodesComponent {
    */
   @Input() nodes!: Node[];
 
+  /**
+   * List of occurrences
+   */
   @Input() occ!: any;
 
   /**
@@ -25,8 +28,11 @@ export class NodesComponent {
    */
   filterTerm = '';
 
-  constructor(public graphService: GraphService) {
-  }
+  /**
+   * Constructor
+   * @param graphService Necessary to access the current {@link graphService#visualizationConfig}
+   */
+  constructor(public graphService: GraphService) {}
 
   /**
    * Selects or unselects nodes
@@ -41,18 +47,18 @@ export class NodesComponent {
     }
   }
 
-  sortBySubtypeNonmeta(subtype: string): void {
-    // todo
-    console.log('sorting nonmeta: ' + subtype);
+  /**
+   * Sort the list of nodes by subtype
+   * @param subtype
+   */
+  sortBySubtype(subtype: string): void {
+    this.nodes.sort((a, b) => (a.occ[subtype] < b.occ[subtype] ? 1 : -1));
   }
 
-  sortBySubtypeMeta(subtype: string): void {
-    // todo
-    console.log('sorting meta: ' + subtype);
-  }
-
+  /**
+   * Sort the list of nodes by total occurrences
+   */
   sortByTotal(): void {
-    // todo
-    console.log('sorting total');
+    this.nodes.sort((a, b) => (a.occ.all < b.occ.all ? 1 : -1));
   }
 }

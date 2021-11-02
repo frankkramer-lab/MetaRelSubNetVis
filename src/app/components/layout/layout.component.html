@@ -1,53 +1,134 @@
-<h6>Color nodes</h6>
-<!-- by gene expression level -->
-<div class="form-check">
-  <input (click)="selectColorNodesBy(utilService.colorNodesBy.geneExpressionLevel)"
-         class="form-check-input" type="radio"
-         name="colorNodesBy" id="geneExpressionLevel" value="geneExpressionLevel" checked>
-  <label class="form-check-label" for="geneExpressionLevel">
-    by gene expression level (Low, Normal, High)
-  </label>
-</div>
-<!-- by gene expression -->
-<div class="form-check">
-  <input (click)="selectColorNodesBy(utilService.colorNodesBy.geneExpression)"
-         class="form-check-input" type="radio"
-         name="colorNodesBy" id="geneExpression" value="geneExpression">
-  <label class="form-check-label" for="geneExpression">
-    by gene expression
-  </label>
-</div>
-<!-- by relevance -->
-<div class="form-check">
-  <input (click)="selectColorNodesBy(utilService.colorNodesBy.relevance)"
-         class="form-check-input" type="radio"
-         name="colorNodesBy" id="relevance" value="relevance">
-  <label class="form-check-label" for="relevance">
-    by relevance
-  </label>
-</div>
+<ng-container *ngIf="graphService.visualizationConfig.patientsSelected > 0; else emptyTemplate">
+  <h6>Color nodes</h6>
+  <!-- by gene expression level -->
+  <div class="form-check">
+    <input
+      (click)="selectColorNodesBy(utilService.colorNodesBy.geneExpressionLevel)"
+      class="form-check-input"
+      type="radio"
+      name="colorNodesBy"
+      id="colorByGeneExpressionLevel"
+      value="geneExpressionLevel"
+      [checked]="
+        graphService.visualizationConfig.colorNodesBy ===
+        utilService.colorNodesBy.geneExpressionLevel
+      "
+    />
+    <label class="form-check-label" for="colorByGeneExpressionLevel">
+      by gene expression level (
+      <span id="low">Low</span>, <span id="normal">Normal</span>, <span id="high">High</span>)
+    </label>
+  </div>
+  <!-- by gene expression -->
+  <div class="form-check">
+    <input
+      (click)="selectColorNodesBy(utilService.colorNodesBy.geneExpression)"
+      class="form-check-input"
+      type="radio"
+      name="colorNodesBy"
+      id="colorByGeneExpression"
+      value="geneExpression"
+      [checked]="
+        graphService.visualizationConfig.colorNodesBy === utilService.colorNodesBy.geneExpression
+      "
+    />
+    <label class="form-check-label" for="colorByGeneExpression"> by gene expression </label>
+  </div>
+  <!-- by relevance -->
+  <div class="form-check">
+    <input
+      (click)="selectColorNodesBy(utilService.colorNodesBy.relevance)"
+      class="form-check-input"
+      type="radio"
+      name="colorNodesBy"
+      id="colorByRelevance"
+      value="relevance"
+      [checked]="
+        graphService.visualizationConfig.colorNodesBy === utilService.colorNodesBy.relevance
+      "
+    />
+    <label class="form-check-label" for="colorByRelevance"> by relevance </label>
+  </div>
 
-<hr>
+  <hr />
 
-<!-- TOGGLE: show all nodes -->
-<div class="form-check form-switch mt-2">
-  <label class="form-check-label" for="showAllNodes">Show all nodes</label>
-  <input class="form-check-input" type="checkbox" role="switch" id="showAllNodes" checked>
-</div>
+  <!-- TOGGLE: show all nodes -->
+  <div class="form-check form-switch mt-2">
+    <label class="form-check-label" for="showAllNodes">Show all nodes</label>
+    <input
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      id="showAllNodes"
+      [checked]="graphService.visualizationConfig.showAllNodes"
+    />
+  </div>
 
-<!-- TOGGLE: show MTB results -->
-<div class="form-check form-switch mt-2">
-  <label class="form-check-label" for="showMtbResults">Show MTB results</label>
-  <input class="form-check-input" type="checkbox" role="switch" id="showMtbResults" checked>
-</div>
+  <!-- TOGGLE: show MTB results -->
+  <div class="form-check form-switch mt-2">
+    <label class="form-check-label" for="showMtbResults">Show MTB results
+    <span class="circle"></span>
+    </label>
+    <input
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      id="showMtbResults"
+      [checked]="graphService.visualizationConfig.showMtbResults"
+    />
+  </div>
 
-<!-- TOGGLE: show only shared nodes -->
-<div class="form-check form-switch mt-2">
-  <label class="form-check-label" for="showOnlyShared">Show only shared nodes</label>
-  <input class="form-check-input" type="checkbox" role="switch" id="showOnlyShared" checked>
-</div>
+  <!-- TOGGLE: show only shared nodes -->
+  <div class="form-check form-switch mt-2">
+    <label class="form-check-label" for="showOnlyShared">Show only shared nodes</label>
+    <input
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      id="showOnlyShared"
+      [checked]="graphService.visualizationConfig.showOnlySharedNodes"
+    />
+  </div>
+
+  <hr />
+
+  <!-- set node size -->
+  <h6>Node size</h6>
+  <!-- by relevance -->
+  <div class="form-check">
+    <input
+      (click)="selectNodeSizeBy(utilService.nodeSizeBy.relevance)"
+      class="form-check-input"
+      type="radio"
+      name="nodeSizeBy"
+      id="nodeSizeByRelevance"
+      value="relevance"
+      [checked]="graphService.visualizationConfig.nodeSizeBy === utilService.nodeSizeBy.relevance"
+    />
+    <label class="form-check-label" for="nodeSizeByRelevance"> by relevance </label>
+  </div>
+  <!-- by gene expression -->
+  <div class="form-check">
+    <input
+      (click)="selectNodeSizeBy(utilService.nodeSizeBy.geneExpression)"
+      class="form-check-input"
+      type="radio"
+      name="nodeSizeBy"
+      id="nodeSizeByGeneExpression"
+      value="geneExpression"
+      [checked]="
+        graphService.visualizationConfig.nodeSizeBy === utilService.nodeSizeBy.geneExpression
+      "
+    />
+    <label class="form-check-label" for="nodeSizeByGeneExpression"> by gene expression </label>
+  </div>
+</ng-container>
+
+<ng-template #emptyTemplate> Select at least one patient above </ng-template>
 
 <!-- FIT -->
 <div class="d-grid mt-2">
-  <button class="btn btn-secondary" type="button" (click)="fitGraph()">Fit graph to viewport</button>
+  <button class="btn btn-secondary" type="button" (click)="fitGraph()">
+    Fit graph to viewport
+  </button>
 </div>

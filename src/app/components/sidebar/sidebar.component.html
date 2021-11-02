@@ -6,7 +6,7 @@
     </span>
 </h3>
 
-<div class="d-grid gap-2">
+<div class="d-grid gap-2 mb-4">
   <!-- PATIENTS -->
   <button
     class="btn btn-dark icon-hover"
@@ -24,9 +24,7 @@
     &nbsp;Patients
   </button>
   <div class="collapse" #collapsePatient id="collapsePatient">
-    <div class="card card-body">
-      <app-patients [patients]="patients"></app-patients>
-    </div>
+    <app-patients [patients]="patients"></app-patients>
   </div>
 
   <!-- THRESHOLD -->
@@ -46,9 +44,7 @@
     &nbsp;Threshold
   </button>
   <div class="collapse" id="collapseThreshold" #collapseThreshold>
-    <div class="card card-body">
-      <app-threshold></app-threshold>
-    </div>
+    <app-threshold></app-threshold>
   </div>
 
   <!-- NODES -->
@@ -68,9 +64,7 @@
     &nbsp;Nodes
   </button>
   <div class="collapse" id="collapseNodes" #collapseNodes>
-    <div class="card card-body">
-      <app-nodes [nodes]="nodes" [occ]="occ"></app-nodes>
-    </div>
+    <app-nodes [nodes]="nodes" [occ]="occ"></app-nodes>
   </div>
 
   <!-- LAYOUT -->
@@ -90,9 +84,7 @@
     &nbsp;Layout
   </button>
   <div class="collapse" id="collapseLayout" #collapseLayout>
-    <div class="card card-body">
-      <app-layout></app-layout>
-    </div>
+    <app-layout></app-layout>
   </div>
 
   <!-- DOWNLOAD -->
@@ -112,16 +104,29 @@
     &nbsp;Download
   </button>
   <div class="collapse" id="collapseDownload" #collapseDownload>
-    <div class="card card-body">
+    <app-download></app-download>
+  </div>
 
-      <app-download></app-download>
-
-    </div>
+  <!-- IMPRESSUM -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseImpressum"
+    aria-expanded="false"
+    aria-controls="collapseImpressum"
+  >
+    <fa-icon
+      icon="info"
+      [ngClass]="collapseImpressum.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Impressum
+  </button>
+  <div class="collapse" id="collapseImpressum" #collapseImpressum>
+    <h3><a href="http://mypathsem.bioinf.med.uni-goettingen.de/">MyPathSem Project</a></h3>
+    <h3><a href="http://mypathsem.bioinf.med.uni-goettingen.de/impressum">Impressum</a></h3>
+    <h3><a href="http://mypathsem.bioinf.med.uni-goettingen.de/datenschutz">Datenschutz</a></h3>
   </div>
 </div>
 
-<!-- fixme Export svg -->
-<!--      <button class='btn btn-outline-light'-->
-<!--              (click)='exportSvg()'>-->
-<!--        EXPORT SVG-->
-<!--      </button>-->

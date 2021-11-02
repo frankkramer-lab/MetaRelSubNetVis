@@ -21,14 +21,19 @@ $customHighlight: '#333';
   color: $info;
 }
 
-.mark-normal {
-  color: $customYellow;
-}
+//.mark-normal {
+//  color: $customYellow;
+//}
+//
+//.mark-low {
+//  color: $customBlue;
+//}
+//
+//.mark-high {
+//  color: $customRed;
+//}
 
-.mark-low {
-  color: $customBlue;
-}
-
-.mark-high {
-  color: $customRed;
+.table-scrollable {
+  overflow-scrolling: auto;
+  height: 100px;
 }

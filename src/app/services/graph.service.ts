@@ -2,17 +2,16 @@ import { Injectable } from '@angular/core';
 import * as cytoscape from 'cytoscape';
 // @ts-ignore
 import * as svg from 'cytoscape-svg';
+import { Observable } from 'rxjs';
 import { Node } from '../models/node';
 import { Network } from '../models/network';
 import { DownloadConfig } from '../models/download-config';
 import { VisualizationConfig } from '../models/visualization-config';
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class GraphService {
-
   /**
    * List of locally used colors
    * @private
@@ -32,8 +31,10 @@ export class GraphService {
   visualizationConfig: VisualizationConfig = {
     colorNodesBy: 0,
     nodeSizeBy: 0,
-    patientMetastatic: '',
-    patientNonmetastatic: '',
+    patientMetastatic: null,
+    patientDetailsMetastatic: null,
+    patientNonmetastatic: null,
+    patientDetailsNonmetastatic: null,
     selectedNodes: [],
     showAllNodes: false,
     showOnlySharedNodes: false,
@@ -223,8 +224,10 @@ export class GraphService {
   /**
    * Returns the network's rendered core
    */
-  getCore(): cytoscape.Core {
-    return this.core;
+  getCore(): Observable<cytoscape.Core> {
+    return new Observable<cytoscape.Core>((observer) => {
+      observer.next(this.core);
+    });
   }
 
   /**

@@ -1,15 +1,26 @@
+import { Patient } from './patient';
+import { PatientItem } from './patient-item';
+
 /**
  * Contains all aspects users can manipulate through the sidebar
  */
 export interface VisualizationConfig {
   /**
+   * Selected metastatic patient details
+   */
+  patientDetailsMetastatic: PatientItem | null;
+  /**
+   * Selected nonmetastatic patient details
+   */
+  patientDetailsNonmetastatic: PatientItem | null;
+  /**
    * Selected metastatic patient
    */
-  patientMetastatic: string;
+  patientMetastatic: Patient | null;
   /**
    * Selected nonmetastatic patient
    */
-  patientNonmetastatic: string;
+  patientNonmetastatic: Patient | null;
   /**
    * Selected threshold
    */

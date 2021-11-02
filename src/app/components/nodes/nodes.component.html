@@ -1,1 +1,75 @@
-<p>nodes works!</p>
+<input
+  class="form-control"
+  type="text"
+  placeholder="Search..."
+  [(ngModel)]="filterTerm"
+  aria-label="default input example"
+/>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Protein</th>
+      <th
+        *ngIf="graphService.visualizationConfig.patientMetastatic"
+        (click)="sortBySubtypeMeta(graphService.visualizationConfig.patientMetastatic.subtype)"
+      >
+        {{ graphService.visualizationConfig.patientMetastatic.subtype }}&nbsp;()
+      </th>
+      <th
+        *ngIf="graphService.visualizationConfig.patientNonmetastatic"
+        (click)="
+          sortBySubtypeNonmeta(graphService.visualizationConfig.patientNonmetastatic.subtype)
+        "
+      >
+        {{ graphService.visualizationConfig.patientNonmetastatic.subtype }}&nbsp;()
+      </th>
+      <th (click)="sortByTotal()">All&nbsp;()</th>
+    </tr>
+  </thead>
+
+    <tbody>
+      <tr
+        *ngFor="let node of nodes"
+        [ngClass]="selectedNodes.includes(node) ? 'bg-primary' : ''"
+        (click)="selectNode(node)"
+      >
+        <td>{{ node.data.id }}</td>
+        <td *ngIf="graphService.visualizationConfig.patientMetastatic">meta number</td>
+        <td *ngIf="graphService.visualizationConfig.patientNonmetastatic">nonmeta number</td>
+        <td>number</td>
+      </tr>
+    </tbody>
+</table>
+
+<!--<div class="row mt-3">-->
+<!--  -->
+<!--  &lt;!&ndash; Unselected nodes &ndash;&gt;-->
+<!--  <div [ngClass]="selectedNodes.length === 0 ? 'col-12' : 'col-6'">-->
+<!--    <h6>Unselected nodes</h6>-->
+<!--    <select class="form-select" size="7" aria-label="Unselected nodes">-->
+<!--      <ng-container *ngFor="let node of nodes">-->
+<!--        <option-->
+<!--          *ngIf="-->
+<!--            !selectedNodes.includes(node) &&-->
+<!--            (node.data.id | lowercase).includes(filterTerm | lowercase)-->
+<!--          "-->
+<!--          [value]="node.data.id"-->
+<!--          (click)="selectNode(node)"-->
+<!--        >-->
+<!--          {{ node.data.id }}-->
+<!--        </option>-->
+<!--      </ng-container>-->
+<!--    </select>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Selected nodes &ndash;&gt;-->
+<!--  <div class="col-6" *ngIf="selectedNodes.length > 0">-->
+<!--    <h6>Selected nodes</h6>-->
+<!--    <select class="form-select" size="7" aria-label="Selected nodes">-->
+<!--      <option *ngFor="let node of selectedNodes" [value]="node.data.id" (click)="selectNode(node)">-->
+<!--        {{ node.data.id }}-->
+<!--      </option>-->
+<!--    </select>-->
+<!--  </div>-->
+<!--</div>-->

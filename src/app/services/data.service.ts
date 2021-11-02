@@ -5,6 +5,7 @@ import { Network } from '../models/network';
 import { Patient } from '../models/patient';
 import { PatientCollection } from '../models/patient-collection';
 import { Threshold } from '../models/threshold';
+import { PatientItem } from '../models/patient-item';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +39,8 @@ export class DataService {
    * Constructor
    * @param http Loading network and patient data via HTTP
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   /**
    * Loading the initially rendered network
@@ -47,17 +49,26 @@ export class DataService {
     return this.http.get<Network>(this.urlNetwork);
   }
 
+  /**
+   * Loading thresholds
+   */
   loadThresholds(): Observable<Threshold> {
     return this.http.get<Threshold>(this.urlThresholds);
   }
 
+  /**
+   * Loading patients subsumed as classes of metastatic and nonmetastatic patients
+   */
   loadPatientsClassified(): Observable<PatientCollection> {
     return this.http.get<PatientCollection>(this.urlPatients);
   }
 
-  loadPatient(id: string): Observable<Patient> {
-    return this.http.get<Patient>(`${this.urlPatientPrefix}${id}.json`);
+  /**
+   * Loading specific patients with protein details necessary for updating the network visualization
+   * @param id Name of the specified patient
+   */
+  loadPatient(id: string): Observable<PatientItem> {
+    return this.http.get<PatientItem>(`${this.urlPatientPrefix}${id}.json`);
   }
-
 
 }

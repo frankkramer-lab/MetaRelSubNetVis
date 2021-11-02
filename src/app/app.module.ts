@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   faArrowCircleDown,
   faBars,
@@ -41,6 +41,7 @@ import { PatientDropdownComponent } from './components/patient-dropdown/patient-
     AppRoutingModule,
     FontAwesomeModule,
     ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [DataService, GraphService],
   bootstrap: [AppComponent],

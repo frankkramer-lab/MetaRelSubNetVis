@@ -5,9 +5,11 @@
           type="button" id="patientMetastatic"
           data-bs-toggle="dropdown"
           aria-expanded="false">
-    {{headline}} patient
+    <span *ngIf="!selected">{{headline}} patient</span>
+    <span *ngIf="selected">{{selected.name}} ({{selected.subtype}})</span>
   </button>
   <ul class="dropdown-menu" aria-labelledby="patientMetastatic">
+    <li><a class="dropdown-item" (click)="resetPatient()">Reset</a></li>
     <li *ngFor="let patient of patients">
       <a class="dropdown-item"
          (click)="selectPatient(patient)">
@@ -20,11 +22,11 @@
 <ng-container *ngIf="selected">
   <label for="subtype">Cancer subtype:</label>
   <div id="subtype">
-    {{selected.subtype}}
+    <b>{{selected.subtype}}</b>
   </div>
 
   <label for="mfs">Metastasis free survival:</label>
   <div id="mfs">
-    {{selected.mfsYears}}
+    <b>{{selected.mfsYears}}&nbsp;years</b>
   </div>
 </ng-container>

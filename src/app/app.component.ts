@@ -6,6 +6,7 @@ import { Patient } from './models/patient';
 import { PatientItem } from './models/patient-item';
 import { Observable } from 'rxjs';
 import { Threshold } from './models/threshold';
+import { Node } from './models/node';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,8 @@ export class AppComponent implements OnInit {
 
   thresholdData$!: Observable<Threshold> | null;
 
+  nodeData: Node[] = [];
+
   /**
    * Constructor
    * @param dataService Needed to load network data
@@ -39,6 +42,7 @@ export class AppComponent implements OnInit {
    */
   ngOnInit(): void {
     this.dataService.loadNetwork().subscribe((network) => {
+      this.nodeData = network.nodes;
       this.graphService.initializeCore(network, this.cyContainer.nativeElement);
     });
 

@@ -287,7 +287,6 @@ export class GraphService {
   }
 
   /**
-   * todo remove console.log
    * Initializes the core for the given container
    * @param network Network elements
    * @param container HTML container where the network is to be rendered
@@ -300,11 +299,9 @@ export class GraphService {
       layout: this.getLayout(network.nodes),
     });
     this.core.elements('node,edge').data('shown', true);
-    console.log(this.core);
   }
 
   /**
-   * todo remove console.log
    * Triggers the download for the specified download configuration
    * @param config Download configuration containing information about file extension, background and scale
    */
@@ -328,7 +325,6 @@ export class GraphService {
       filename = `${this.visualizationConfig.patientNonmetastatic.name}`;
     }
     filename = `${filename}.${config.extension}`;
-    console.log(filename);
 
     let image = this.getImage(config);
     if (config.extension === 'SVG') {
@@ -404,7 +400,6 @@ export class GraphService {
       this.clear();
 
       const color = this.utilService.getColorByLiteral(this.visualizationConfig.colorNodesBy);
-
       switch (this.visualizationConfig.colorNodesBy) {
         case this.utilService.colorNodesBy.relevance:
           // eslint-disable-next-line no-case-declarations
@@ -435,12 +430,13 @@ export class GraphService {
       (patientDetailsMetastatic || []).forEach((data) => {
         if (data.score >= this.visualizationConfig.thresholdDefined / this.thresholds.multiplier) {
           const node = this.core
+            .nodes()
             .getElementById(data.name)
             .data('member', true)
             .data('shown', true)
             .addClass('split')
             .data('colorMet', data[color as keyof PatientItem]);
-          if (data.mtb) {
+          if (node && data.mtb) {
             node.addClass('mtb');
           }
         }
@@ -450,12 +446,13 @@ export class GraphService {
       (patientDetailsNonmetastatic || []).forEach((data) => {
         if (data.score >= this.visualizationConfig.thresholdDefined / this.thresholds.multiplier) {
           const node = this.core
+            .nodes()
             .getElementById(data.name)
             .data('member', true)
             .data('shown', true)
             .addClass('split')
             .data('colorNonMet', data[color as keyof PatientItem]);
-          if (data.mtb) {
+          if (node && data.mtb) {
             node.addClass('mtb');
           }
         }
@@ -516,12 +513,13 @@ export class GraphService {
       (patientDetails || []).forEach((data) => {
         if (data.score >= this.visualizationConfig.thresholdDefined / this.thresholds.multiplier) {
           const node = this.core
+            .nodes()
             .getElementById(data.name)
             .data('member', true)
             .data('shown', true)
             .data('size', data[size as keyof PatientItem])
             .data('color', data[color as keyof PatientItem]);
-          if (data.mtb) {
+          if (node && data.mtb) {
             node.addClass('mtb');
           }
         }
@@ -539,42 +537,44 @@ export class GraphService {
     // @ts-ignore
     this.core.elements('node[color]').style('font-weight', 'bold');
     this.core
-      .elements("node[color = 'LOW']")
+      .style()
+      // @ts-ignore
+      .selector("node[color = 'LOW']")
       .style('background-color', this.colors.blue)
-      .style('text-outline-color', this.colors.blue);
-    this.core
-      .elements("node[color = 'NORMAL']")
+      .style('text-outline-color', this.colors.blue)
+      // @ts-ignore
+      .selector("node[color = 'NORMAL']")
       .style('background-color', this.colors.yellow)
-      .style('text-outline-color', this.colors.yellow);
-    this.core
-      .elements("node[color = 'HIGH']")
+      .style('text-outline-color', this.colors.yellow)
+      // @ts-ignore
+      .selector("node[color = 'HIGH']")
       .style('background-color', this.colors.red)
-      .style('text-outline-color', this.colors.red);
-    this.core
-      .elements('node.split[colorMet][colorNonMet]')
+      .style('text-outline-color', this.colors.red)
+      // @ts-ignore
+      .selector('node.split[colorMet][colorNonMet]')
       .style('width', '80px')
-      .style('height', '80px');
-    this.core
-      .elements('node.split[^colorMet], node.split[^colorNonMet]')
+      .style('height', '80px')
+      // @ts-ignore
+      .selector('node.split[^colorMet], node.split[^colorNonMet]')
       .style('pie-2-background-color', this.colors.gray)
-      .style('pie-1-background-color', this.colors.gray);
-    this.core
-      .elements("node.split[colorMet = 'LOW']")
-      .style('pie-2-background-color', this.colors.blue);
-    this.core
-      .elements("node.split[colorNonMet = 'LOW']")
-      .style('pie-1-background-color', this.colors.blue);
-    this.core
-      .elements("node.split[colorMet = 'NORMAL']")
-      .style('pie-2-background-color', this.colors.yellow);
-    this.core
-      .elements("node.split[colorNonMet = 'NORMAL']")
-      .style('pie-1-background-color', this.colors.yellow);
-    this.core
-      .elements("node.split[colorMet = 'HIGH']")
-      .style('pie-2-background-color', this.colors.red);
-    this.core
-      .elements("node.split[colorNonMet = 'HIGH']")
+      .style('pie-1-background-color', this.colors.gray)
+      // @ts-ignore
+      .selector("node.split[colorMet = 'LOW']")
+      .style('pie-2-background-color', this.colors.blue)
+      // @ts-ignore
+      .selector("node.split[colorNonMet = 'LOW']")
+      .style('pie-1-background-color', this.colors.blue)
+      // @ts-ignore
+      .selector("node.split[colorMet = 'NORMAL']")
+      .style('pie-2-background-color', this.colors.yellow)
+      // @ts-ignore
+      .selector("node.split[colorNonMet = 'NORMAL']")
+      .style('pie-1-background-color', this.colors.yellow)
+      // @ts-ignore
+      .selector("node.split[colorMet = 'HIGH']")
+      .style('pie-2-background-color', this.colors.red)
+      // @ts-ignore
+      .selector("node.split[colorNonMet = 'HIGH']")
       .style('pie-1-background-color', this.colors.red);
   }
 
@@ -590,11 +590,13 @@ export class GraphService {
     const colorMap2 = `mapData(color, ${minValue}, ${maxValue}, ${this.colors.yellow}, ${this.colors.red})`;
 
     this.core
-      .elements(`node[color<=${midPoint}]`)
+      .style()
+      // @ts-ignore
+      .selector(`node[color<=${midPoint}]`)
       .style('background-color', colorMap1)
-      .style('text-outline-color', colorMap1);
-    this.core
-      .elements(`node[color>${midPoint}]`)
+      .style('text-outline-color', colorMap1)
+      // @ts-ignore
+      .selector(`node[color>${midPoint}]`)
       .style('background-color', colorMap2)
       .style('text-outline-color', colorMap2);
   }
@@ -620,26 +622,28 @@ export class GraphService {
     const colorMapNonMet1 = `mapData(colorNonMet, ${minValueNonMet}, ${maxValueNonMet}, ${this.colors.blue}, ${this.colors.yellow})`;
     const colorMapNonMet2 = `mapData(colorNonMet, ${minValueNonMet}, ${maxValueNonMet}, ${this.colors.yellow}, ${this.colors.red})`;
     this.core
-      .elements('node.split[colorMet][colorNonMet]')
+      .style()
+      // @ts-ignore
+      .selector('node.split[colorMet][colorNonMet]')
       .style('width', '80px')
-      .style('height', '80px');
-    this.core
-      .elements(`node.split[colorMet<=${midPointMet}]`)
-      .style('pie-2-background-color', colorMapMet1);
-    this.core
-      .elements(`node.split[colorMet>${midPointMet}]`)
-      .style('pie-2-background-color', colorMapMet2);
-    this.core
-      .elements(`node.split[colorNonMet<=${midPointNonMet}]`)
-      .style('pie-1-background-color', colorMapNonMet1);
-    this.core
-      .elements(`node.split[colorNonMet>${midPointNonMet}]`)
-      .style('pie-1-background-color', colorMapNonMet2);
-    this.core
-      .elements('node.split[colorMet][^colorNonMet]')
-      .style('pie-1-background-color', this.colors.gray);
-    this.core
-      .elements('node.split[^colorMet][colorNonMet]')
+      .style('height', '80px')
+      // @ts-ignore
+      .selector(`node.split[colorMet<=${midPointMet}]`)
+      .style('pie-2-background-color', colorMapMet1)
+      // @ts-ignore
+      .selector(`node.split[colorMet>${midPointMet}]`)
+      .style('pie-2-background-color', colorMapMet2)
+      // @ts-ignore
+      .selector(`node.split[colorNonMet<=${midPointNonMet}]`)
+      .style('pie-1-background-color', colorMapNonMet1)
+      // @ts-ignore
+      .selector(`node.split[colorNonMet>${midPointNonMet}]`)
+      .style('pie-1-background-color', colorMapNonMet2)
+      // @ts-ignore
+      .selector('node.split[colorMet][^colorNonMet]')
+      .style('pie-1-background-color', this.colors.gray)
+      // @ts-ignore
+      .selector('node.split[^colorMet][colorNonMet]')
       .style('pie-2-background-color', this.colors.gray);
   }
 
@@ -672,7 +676,9 @@ export class GraphService {
     const sizeMap = `mapData(size, ${minValue}, ${maxValue}, 50, 130)`;
     const fontSizeMap = `mapData(size, ${minValue}, ${maxValue}, 18, 30)`;
     this.core
-      .elements('node[?member]')
+      .style()
+      // @ts-ignore
+      .selector('node[?member]')
       .style('width', sizeMap)
       .style('height', sizeMap)
       .style('font-size', fontSizeMap);
@@ -684,7 +690,9 @@ export class GraphService {
    */
   private removeSizeMap() {
     this.core
-      .elements('node[?member]')
+      .style()
+      // @ts-ignore
+      .selector('node[?member]')
       .style('width', '50px')
       .style('height', '50px')
       .style('font-size', '18px');
@@ -735,5 +743,18 @@ export class GraphService {
           .connectedEdges('edge[?shown]') as CollectionReturnValue
       ).data('shown', !this.visualizationConfig.showOnlySharedNodes);
     });
+  }
+
+  /**
+   * Updates the node style based on if the mtb property is to be displayed.
+   */
+  updateMtbNodes(): void {
+    const b = this.visualizationConfig.showMtbResults;
+    this.core
+      .style()
+      // @ts-ignore
+      .selector('node.mtb')
+      .style('border-width', b ? '7px' : '0px');
+    this.layoutPatient();
   }
 }

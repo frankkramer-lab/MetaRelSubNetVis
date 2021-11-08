@@ -1,10 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
 import { DataService } from './services/data.service';
 import { GraphService } from './services/graph.service';
 import { PatientCollection } from './models/patient-collection';
-import { Patient } from './models/patient';
-import { PatientItem } from './models/patient-item';
-import { Observable } from 'rxjs';
 import { Threshold } from './models/threshold';
 import { Node } from './models/node';
 
@@ -30,6 +28,8 @@ export class AppComponent implements OnInit {
 
   totalOccurrences: any = {};
 
+  thresholdData!: Threshold;
+
   /**
    * Constructor
    * @param dataService Needed to load network data
@@ -48,9 +48,10 @@ export class AppComponent implements OnInit {
     });
 
     this.patientData$ = this.dataService.loadPatientsClassified();
-    this.graphService.setGeRange(this.patientData$);
     this.dataService.loadThresholds().subscribe((data) => {
+      this.thresholdData = data;
       this.graphService.setThresholds(data);
     });
+    this.graphService.setGeRange(this.patientData$);
   }
 }

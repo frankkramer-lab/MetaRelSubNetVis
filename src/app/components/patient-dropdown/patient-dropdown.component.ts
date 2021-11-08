@@ -79,5 +79,6 @@ export class PatientDropdownComponent {
       this.graphService.visualizationConfig.patientDetailsNonmetastatic = null;
     }
     this.graphService.handlePatientSelection();
+    this.graphService.layoutPatient();
   }
 }

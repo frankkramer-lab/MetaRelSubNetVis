@@ -34,10 +34,18 @@ export class LayoutComponent {
   toggleShowMtbResults(): void {
     this.graphService.visualizationConfig.showMtbResults =
       !this.graphService.visualizationConfig.showMtbResults;
+    this.graphService.updateMtbNodes();
     this.graphService.updataShownNodes();
   }
 
   toggleShowOnlySharedNodes(): void {
+    if (
+      this.graphService.visualizationConfig.showAllNodes &&
+      !this.graphService.visualizationConfig.showOnlySharedNodes
+    ) {
+      this.toggleShowAllNodes();
+    }
+
     this.graphService.visualizationConfig.showOnlySharedNodes =
       !this.graphService.visualizationConfig.showOnlySharedNodes;
     this.graphService.updataShownNodes();

@@ -10,6 +10,7 @@
         [patients]="patientData$ | async"
         [nodes]="nodeData"
         [occ]="totalOccurrences"
+        [thresholds]="thresholdData"
       ></app-sidebar>
 
     </div>
@@ -26,6 +27,7 @@
 
         <!-- CANVAS -->
         <div class="col">
+          <h2>Patient Specific Molecular Sub-Networks Responsible for Metastasis in Breast Cancer</h2>
           <div #cy id="cy"></div>
         </div>
 

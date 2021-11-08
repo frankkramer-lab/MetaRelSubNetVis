@@ -46,7 +46,11 @@ export class UtilService {
    */
   cancerStatus = CancerStatus;
 
-  getMinGe(patientItems: PatientItem[]): number {
+  /**
+   * Returns a patient's minimal gene expression.
+   * @param patientItems List of this patient's details
+   */
+  getMinGe = (patientItems: PatientItem[]): number => {
     let min = Number.MAX_SAFE_INTEGER;
     patientItems.forEach((item) => {
       if (item.ge < min) {
@@ -54,9 +58,13 @@ export class UtilService {
       }
     });
     return min;
-  }
+  };
 
-  getMaxGe(patientItems: PatientItem[]): number {
+  /**
+   * Returns a patient's maximal gene expression.
+   * @param patientItems List of this patient's details
+   */
+  getMaxGe = (patientItems: PatientItem[]): number => {
     let max = Number.MIN_SAFE_INTEGER;
     patientItems.forEach((item) => {
       if (item.ge > max) {
@@ -64,12 +72,17 @@ export class UtilService {
       }
     });
     return max;
-  }
+  };
 
-  getColorByLiteral(colorNodesBy: ColorNodesBy): string {
+  /**
+   * Returns the enumeration {@link colorNodesBy} as string literal,
+   * which is used as an object key during rendering.
+   * @param colorNodesBy Possible enumeration option
+   */
+  getColorByLiteral = (colorNodesBy: ColorNodesBy): string => {
     switch (colorNodesBy) {
       case ColorNodesBy.relevance:
-        return 'rel';
+        return 'score';
       case ColorNodesBy.geneExpressionLevel:
         return 'geLevel';
       case ColorNodesBy.geneExpression:
@@ -77,9 +90,14 @@ export class UtilService {
       default:
         return '';
     }
-  }
+  };
 
-  getNodeSizeByLiteral(nodeSizeBy: NodeSizeBy): string {
+  /**
+   * Returns the enumeration {@link nodeSizeBy} as string literal,
+   * which is used as an object key during rendering.
+   * @param nodeSizeBy Possible enumeration option
+   */
+  getNodeSizeByLiteral = (nodeSizeBy: NodeSizeBy): string => {
     switch (nodeSizeBy) {
       case NodeSizeBy.relevance:
         return 'score';
@@ -88,16 +106,5 @@ export class UtilService {
       default:
         return '';
     }
-  }
-
-  getCancerStatusLiteral(cancerStatus: CancerStatus): string {
-    switch (cancerStatus) {
-      case CancerStatus.metastatic:
-        return 'metastatic';
-      case CancerStatus.nonmetastatic:
-        return 'nonmetastatic';
-      default:
-        return '';
-    }
-  }
+  };
 }

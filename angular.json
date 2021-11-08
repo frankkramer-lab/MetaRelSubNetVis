@@ -40,6 +40,9 @@
               "node_modules/bootstrap/dist/js/bootstrap.bundle.js",
               "node_modules/cytoscape/dist/cytoscape.min.js",
               "node_modules/cytoscape-svg/cytoscape-svg.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "cytoscape"
             ]
           },
           "configurations": {

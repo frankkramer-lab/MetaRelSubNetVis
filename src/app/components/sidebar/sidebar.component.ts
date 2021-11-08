@@ -11,6 +11,7 @@ import { PatientCollection } from '../../models/patient-collection';
 import { NodeCollection } from 'cytoscape';
 import * as cytoscape from 'cytoscape';
 import { Node } from '../../models/node';
+import { Threshold } from '../../models/threshold';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,13 +19,15 @@ import { Node } from '../../models/node';
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-  @Input() showSidebar!: boolean;
-
   @Input() patients!: PatientCollection | null;
+
+  @Input() thresholds!: Threshold;
 
   @Input() nodes!: Node[];
 
   @Input() occ!: any;
+
+  @Input() showSidebar!: boolean;
 
   @Output() showSidebarEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 

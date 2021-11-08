@@ -2,11 +2,15 @@ import { Injectable } from '@angular/core';
 import * as cytoscape from 'cytoscape';
 // @ts-ignore
 import * as svg from 'cytoscape-svg';
-import { Observable } from 'rxjs';
 import { Node } from '../models/node';
 import { Network } from '../models/network';
 import { DownloadConfig } from '../models/download-config';
 import { VisualizationConfig } from '../models/visualization-config';
+import { CancerStatus, UtilService } from './util.service';
+import { Patient } from '../models/patient';
+import { PatientItem } from '../models/patient-item';
+import { Threshold } from '../models/threshold';
+import { ThresholdItem } from '../models/threshold-item';
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +44,9 @@ export class GraphService {
     showAllNodes: false,
     showOnlySharedNodes: false,
     showMtbResults: true,
-    threshold: 0,
+    thresholdMin: 0,
+    thresholdMax: 0,
+    thresholdDefined: 0,
   };
 
   /**
@@ -50,10 +56,30 @@ export class GraphService {
   private core!: cytoscape.Core;
 
   /**
+   * List of thresholds for both metastatic and non-metastatic patients
+   * @private
+   */
+  private thresholds!: Threshold;
+
+  /**
    * Constructor, binding svg export library to cytoscape
    */
-  constructor() {
+  constructor(private utilService: UtilService) {
     cytoscape.use(svg);
+  }
+
+  /**
+   * Set the local threshold information
+   * @param data Thresholds encoded in the thresholds.json file, loaded during app start
+   */
+  setThresholds(data: Threshold): void {
+    this.thresholds = data;
+  }
+
+  getThresholds(cancerStatus: CancerStatus): ThresholdItem {
+    return this.thresholds[
+      cancerStatus === CancerStatus.metastatic ? 'metastatic' : 'nonmetastatic'
+    ];
   }
 
   /**
@@ -225,10 +251,8 @@ export class GraphService {
   /**
    * Returns the network's rendered core
    */
-  getCore(): Observable<cytoscape.Core> {
-    return new Observable<cytoscape.Core>((observer) => {
-      observer.next(this.core);
-    });
+  getCore(): cytoscape.Core {
+    return this.core;
   }
 
   /**
@@ -308,5 +332,159 @@ export class GraphService {
    */
   fitGraph(): void {
     this.core.fit();
+  }
+
+  layoutPatient() {
+    console.log(this.visualizationConfig);
+
+    if (this.visualizationConfig.patientsSelected === 2) {
+      this.clear();
+      this.visualizeTwo();
+    } else if (this.visualizationConfig.patientMetastatic !== undefined) {
+      this.visualizeOne(this.utilService.cancerStatus.metastatic);
+    } else if (this.visualizationConfig.patientNonmetastatic !== undefined) {
+      this.visualizeOne(this.utilService.cancerStatus.nonmetastatic);
+    } else {
+      this.clear();
+      this.core.elements('node').data('shown', true);
+    }
+  }
+
+  visualizeTwo(): void {
+    // todo
+  }
+
+  visualizeOne(cancerStatus: CancerStatus): void {
+    const patient =
+      this.visualizationConfig[
+        cancerStatus === this.utilService.cancerStatus.metastatic
+          ? 'patientMetastatic'
+          : 'patientNonmetastatic'
+      ];
+    const patientDetails =
+      this.visualizationConfig[
+        cancerStatus === this.utilService.cancerStatus.metastatic
+          ? 'patientDetailsMetastatic'
+          : 'patientDetailsNonmetastatic'
+      ];
+
+    console.log(patient);
+    console.log(patientDetails);
+
+    this.core.batch(() => {
+      this.clear();
+
+      // node sizes
+      let size: string;
+      switch (this.visualizationConfig.nodeSizeBy) {
+        case this.utilService.nodeSizeBy.geneExpression:
+          size = 'ge';
+          this.setSizeMap(
+            this.utilService.getMinGe(patientDetails ?? []),
+            this.utilService.getMaxGe(patientDetails ?? []),
+          );
+          break;
+        case this.utilService.nodeSizeBy.relevance:
+        default:
+          size = 'score';
+          // todo
+          // this.setSizeMap(threshold.threshold, threshold.max);
+          break;
+      }
+
+      // node colors
+      let color: string;
+      // switch (this.visualizationConfig.colorNodesBy) {
+      //   case this.utilService.colorNodesBy.geneExpression:
+      //     color = 'ge';
+      //     this.setColorMap(this.geMin, this.geMax);
+      //     break;
+      //   case this.utilService.colorNodesBy.geneExpressionLevel:
+      //     color = 'geLevel';
+      //     this.setColorDisc();
+      //     break;
+      //   case this.utilService.colorNodesBy.relevance:
+      //   default:
+      //     color = 'score';
+      //     this.setColorMap(threshold.threshold, threshold.max);
+      //     break;
+      // }
+      //
+      // for (const data of pat.patientData) {
+      //   // console.log("Score: " + data.score + " Threshold: " + (threshold.selected / this.thresholds.multiplier) + " IF: " + (data.score >= (threshold.selected / this.thresholds.multiplier)));
+      //   if (data.score >= threshold.selected / this.thresholds.multiplier) {
+      //     // console.log('size: ' + size);
+      //     // console.log('Patient Data: ' + data);
+      //     const node = this.cy
+      //       .getElementById(data.name)
+      //       .data('member', true)
+      //       .data('shown', true)
+      //       .data('size', data[size])
+      //       .data('color', data[color]);
+      //     if (data.mtb) {
+      //       node.addClass('mtb');
+      //     }
+      //   }
+      // }
+      //
+      // this.updataShownNodes();
+    });
+  }
+
+  private clear() {
+    this.core.batch(() => {
+      this.core
+        .elements('node')
+        .removeData('member')
+        .removeData('color')
+        .removeData('colorMet')
+        .removeData('colorNonMet')
+        .removeData('size')
+        .removeClass('mtb')
+        .removeClass('split');
+      this.removeSizeMap();
+      // this.updataShownNodes();
+    });
+  }
+
+  private setSizeMap(minValue: number, maxValue: number) {
+    // const sizeMap = 'mapData(size, ' + minValue + ', ' + maxValue + ', 50, 130)';
+    // const fontSizeMap = 'mapData(size, ' + minValue + ', ' + maxValue + ', 18, 30)';
+    // this.cy.style()
+    //   .selector('node[?member]')
+    //   .style('width', sizeMap)
+    //   .style('height', sizeMap)
+    //   .style('font-size', fontSizeMap);
+  }
+
+  private removeSizeMap() {
+    this.core
+      .style()
+      .json()
+      .selector('node[?member]')
+      .style('width', '50px')
+      .style('height', '50px')
+      .style('font-size', '18px');
+  }
+
+  /**
+   * Updates the number of selected patients when the user makes selections via dropdown.
+   * @private
+   */
+  handlePatientSelection(): void {
+    let count = 0;
+    if (this.visualizationConfig.patientMetastatic !== null) {
+      // this.visualizationConfig.threshold = this.thresholds.metastatic.threshold;
+      // eslint-disable-next-line no-plusplus
+      count++;
+    }
+    if (this.visualizationConfig.patientNonmetastatic !== null) {
+      // if (this.thresholds.nonmetastatic.threshold < this.visualizationConfig.threshold) {
+      //   this.visualizationConfig.threshold = this.thresholds.nonmetastatic.threshold;
+      // }
+      // eslint-disable-next-line no-plusplus
+      count++;
+    }
+    this.visualizationConfig.patientsSelected = count;
   }
 }

@@ -41,7 +41,8 @@ export class PatientDropdownComponent {
     private graphService: GraphService,
     private utilService: UtilService,
     private dataService: DataService,
-  ) {}
+  ) {
+  }
 
   /**
    * Selecting a patient via dropdown, which triggers the loading of this patient's detail.
@@ -55,34 +56,19 @@ export class PatientDropdownComponent {
       this.cancerStatus === this.utilService.cancerStatus.metastatic
         ? 'patientMetastatic'
         : 'patientNonmetastatic'
-    ] = patient;
+      ] = patient;
 
-    this.updateSelectedPatients();
+    this.graphService.handlePatientSelection();
 
-    this.dataService.loadPatient(patient.name).subscribe((patientDetails: PatientItem) => {
+    this.dataService.loadPatient(patient.name).subscribe((patientDetails: PatientItem[]) => {
       this.graphService.visualizationConfig[
         this.cancerStatus === this.utilService.cancerStatus.metastatic
           ? 'patientDetailsMetastatic'
           : 'patientDetailsNonmetastatic'
-      ] = patientDetails;
+        ] = patientDetails;
     });
-  }
 
-  /**
-   * Updates the number of selected patients when the user makes selections via dropdown
-   * @private
-   */
-  private updateSelectedPatients(): void {
-    let count = 0;
-    if (this.graphService.visualizationConfig.patientMetastatic !== null) {
-      // eslint-disable-next-line no-plusplus
-      count++;
-    }
-    if (this.graphService.visualizationConfig.patientNonmetastatic !== null) {
-      // eslint-disable-next-line no-plusplus
-      count++;
-    }
-    this.graphService.visualizationConfig.patientsSelected = count;
+    this.graphService.layoutPatient();
   }
 
   /**
@@ -97,6 +83,6 @@ export class PatientDropdownComponent {
       this.graphService.visualizationConfig.patientNonmetastatic = null;
       this.graphService.visualizationConfig.patientDetailsNonmetastatic = null;
     }
-    this.updateSelectedPatients();
+    this.graphService.handlePatientSelection();
   }
 }

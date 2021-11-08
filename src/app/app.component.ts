@@ -26,8 +26,6 @@ export class AppComponent implements OnInit {
 
   patientData$!: Observable<PatientCollection> | null;
 
-  thresholdData$!: Observable<Threshold> | null;
-
   nodeData: Node[] = [];
 
   totalOccurrences: any = {};
@@ -50,6 +48,8 @@ export class AppComponent implements OnInit {
     });
 
     this.patientData$ = this.dataService.loadPatientsClassified();
-    this.thresholdData$ = this.dataService.loadThresholds();
+    this.dataService.loadThresholds().subscribe((data) => {
+      this.graphService.setThresholds(data);
+    });
   }
 }

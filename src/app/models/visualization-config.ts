@@ -8,11 +8,11 @@ export interface VisualizationConfig {
   /**
    * Selected metastatic patient details
    */
-  patientDetailsMetastatic: PatientItem | null;
+  patientDetailsMetastatic: PatientItem[] | null;
   /**
    * Selected nonmetastatic patient details
    */
-  patientDetailsNonmetastatic: PatientItem | null;
+  patientDetailsNonmetastatic: PatientItem[] | null;
   /**
    * Selected metastatic patient
    */
@@ -28,9 +28,17 @@ export interface VisualizationConfig {
    */
   patientsSelected: number;
   /**
-   * Selected threshold
+   * Minimum threshold
    */
-  threshold: number;
+  thresholdMin: number;
+  /**
+   * Maximum threshold
+   */
+  thresholdMax: number;
+  /**
+   * User defined threshold. Defaults to lower border {@link thresholdMin}
+   */
+  thresholdDefined: number;
   /**
    * Selected nodes
    */

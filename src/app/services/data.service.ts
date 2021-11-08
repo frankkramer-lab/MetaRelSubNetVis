@@ -67,8 +67,8 @@ export class DataService {
    * Loading specific patients with protein details necessary for updating the network visualization
    * @param id Name of the specified patient
    */
-  loadPatient(id: string): Observable<PatientItem> {
-    return this.http.get<PatientItem>(`${this.urlPatientPrefix}${id}.json`);
+  loadPatient(id: string): Observable<PatientItem[]> {
+    return this.http.get<PatientItem[]>(`${this.urlPatientPrefix}${id}.json`);
   }
 
 }

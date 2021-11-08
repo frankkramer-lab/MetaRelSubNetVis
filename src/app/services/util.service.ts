@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { PatientItem } from '../models/patient-item';
 
 /**
  * Nodes are colored based on their gene expression, their abstract gene expression levels or
@@ -44,4 +45,24 @@ export class UtilService {
    * Cancer status enum
    */
   cancerStatus = CancerStatus;
+
+  getMinGe(patientItems: PatientItem[]): number {
+    let min = Number.MAX_SAFE_INTEGER;
+    patientItems.forEach((item) => {
+      if (item.ge < min) {
+        min = item.ge;
+      }
+    });
+    return min;
+  }
+
+  getMaxGe(patientItems: PatientItem[]): number {
+    let max = Number.MIN_SAFE_INTEGER;
+    patientItems.forEach((item) => {
+      if (item.ge > max) {
+        max = item.ge;
+      }
+    });
+    return max;
+  }
 }

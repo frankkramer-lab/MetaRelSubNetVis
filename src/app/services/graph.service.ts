@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import * as cytoscape from 'cytoscape';
+import { CollectionReturnValue } from 'cytoscape';
 // @ts-ignore
 import * as svg from 'cytoscape-svg';
+import { Observable } from 'rxjs';
 import { Node } from '../models/node';
 import { Network } from '../models/network';
 import { DownloadConfig } from '../models/download-config';
 import { VisualizationConfig } from '../models/visualization-config';
 import { CancerStatus, UtilService } from './util.service';
-import { Patient } from '../models/patient';
-import { PatientItem } from '../models/patient-item';
 import { Threshold } from '../models/threshold';
 import { ThresholdItem } from '../models/threshold-item';
+import { PatientCollection } from '../models/patient-collection';
+import { PatientItem } from '../models/patient-item';
 
 @Injectable({
   providedIn: 'root',
@@ -62,6 +64,20 @@ export class GraphService {
   private thresholds!: Threshold;
 
   /**
+   * Minimal gene expression.
+   * Data found in patients.json.
+   * @private
+   */
+  private geMin!: number;
+
+  /**
+   * Maximal gene expression.
+   * Data found in patients.json.
+   * @private
+   */
+  private geMax!: number;
+
+  /**
    * Constructor, binding svg export library to cytoscape
    */
   constructor(private utilService: UtilService) {
@@ -69,17 +85,35 @@ export class GraphService {
   }
 
   /**
-   * Set the local threshold information
+   * todo remove console.log
+   * Set the local threshold information. Adds the multiplier necessary for displaying a range.
    * @param data Thresholds encoded in the thresholds.json file, loaded during app start
    */
   setThresholds(data: Threshold): void {
     this.thresholds = data;
+    this.thresholds.multiplier = 1000000000;
+    console.log(data);
   }
 
+  /**
+   * Returns the defined threshold information.
+   * @param cancerStatus
+   */
   getThresholds(cancerStatus: CancerStatus): ThresholdItem {
     return this.thresholds[
       cancerStatus === CancerStatus.metastatic ? 'metastatic' : 'nonmetastatic'
     ];
+  }
+
+  /**
+   * Sets the gene expression range defined in the patients.json file.
+   * @param data$ Loaded data stream containing gene expression levels.
+   */
+  setGeRange(data$: Observable<PatientCollection>): void {
+    data$.subscribe((patientCollection) => {
+      this.geMin = patientCollection.geMin;
+      this.geMax = patientCollection.geMax;
+    });
   }
 
   /**
@@ -235,13 +269,10 @@ export class GraphService {
     const layer = this.buildLayer(nodes, 11);
     return {
       name: 'concentric',
-      levelWidth(nodes: any[]) {
-        // the letiation of concentric values in each level
+      levelWidth() {
         return 1;
       },
       concentric(node: any) {
-        // returns numeric value for each node, placing higher nodes in levels towards the centre
-        // console.log('Node: ' + node.data('id') + ' Layer: ' + layer[node.data('id')]);
         return layer[node.data('id')];
       },
       spacingFactor: 1.65,
@@ -256,6 +287,7 @@ export class GraphService {
   }
 
   /**
+   * todo remove console.log
    * Initializes the core for the given container
    * @param network Network elements
    * @param container HTML container where the network is to be rendered
@@ -272,23 +304,31 @@ export class GraphService {
   }
 
   /**
-   *
-   * todo: file name depending on rendered network
-   *
+   * todo remove console.log
    * Triggers the download for the specified download configuration
    * @param config Download configuration containing information about file extension, background and scale
    */
   downloadImage(config: DownloadConfig): void {
-    const filename = `network.${config.extension}`;
-    // if (this.selectedMetastaticPatient === undefined && this.selectedNonmetastaticPatient === undefined){
-    //   filename = 'PPI_network.' + type;
-    // } else if (this.selectedMetastaticPatient !== undefined && this.selectedNonmetastaticPatient === undefined) {
-    //   filename = this.selectedMetastaticPatient.name + '.' + type;
-    // } else if (this.selectedMetastaticPatient === undefined && this.selectedNonmetastaticPatient !== undefined) {
-    //   filename = this.selectedNonmetastaticPatient.name + '.' + type;
-    // } else {
-    //   filename = this.selectedMetastaticPatient.name + '_vs_' + this.selectedNonmetastaticPatient.name + '.' + type;
-    // }
+    let filename = `network`;
+
+    if (this.visualizationConfig.patientsSelected === 0) {
+      // no patient selected
+      filename = `PPI_network`;
+    } else if (
+      this.visualizationConfig.patientMetastatic !== null &&
+      this.visualizationConfig.patientNonmetastatic !== null
+    ) {
+      // both patients selected
+      filename = `${this.visualizationConfig.patientMetastatic.name}_vs_${this.visualizationConfig.patientNonmetastatic.name}`;
+    } else if (this.visualizationConfig.patientMetastatic !== null) {
+      // meta patient
+      filename = `${this.visualizationConfig.patientMetastatic.name}`;
+    } else if (this.visualizationConfig.patientNonmetastatic !== null) {
+      // non-meta patient
+      filename = `${this.visualizationConfig.patientNonmetastatic.name}`;
+    }
+    filename = `${filename}.${config.extension}`;
+    console.log(filename);
 
     let image = this.getImage(config);
     if (config.extension === 'SVG') {
@@ -296,10 +336,8 @@ export class GraphService {
     } else {
       image = this.getImage(config);
     }
-    console.log(image);
 
     const url = window.URL.createObjectURL(image);
-
     const a = document.createElement('a');
     a.href = url;
     a.setAttribute('download', filename);
@@ -334,15 +372,16 @@ export class GraphService {
     this.core.fit();
   }
 
+  /**
+   * Triggers the layout for zero, one or two selected patients depending on the user input.
+   */
   layoutPatient() {
-    console.log(this.visualizationConfig);
-
     if (this.visualizationConfig.patientsSelected === 2) {
       this.clear();
       this.visualizeTwo();
-    } else if (this.visualizationConfig.patientMetastatic !== undefined) {
+    } else if (this.visualizationConfig.patientMetastatic !== null) {
       this.visualizeOne(this.utilService.cancerStatus.metastatic);
-    } else if (this.visualizationConfig.patientNonmetastatic !== undefined) {
+    } else if (this.visualizationConfig.patientNonmetastatic !== null) {
       this.visualizeOne(this.utilService.cancerStatus.nonmetastatic);
     } else {
       this.clear();
@@ -350,17 +389,87 @@ export class GraphService {
     }
   }
 
-  visualizeTwo(): void {
-    // todo
+  /**
+   * Renders the network for two selected patients
+   * @private
+   */
+  private visualizeTwo() {
+    const thresholdsMetastatic = this.getThresholds(CancerStatus.metastatic);
+    const thresholdsNonmetastatic = this.getThresholds(CancerStatus.nonmetastatic);
+
+    const { patientDetailsMetastatic } = this.visualizationConfig;
+    const { patientDetailsNonmetastatic } = this.visualizationConfig;
+
+    this.core.batch(() => {
+      this.clear();
+
+      const color = this.utilService.getColorByLiteral(this.visualizationConfig.colorNodesBy);
+
+      switch (this.visualizationConfig.colorNodesBy) {
+        case this.utilService.colorNodesBy.relevance:
+          // eslint-disable-next-line no-case-declarations
+          const minValue = Math.min(
+            thresholdsMetastatic.threshold,
+            this.thresholds.nonmetastatic.threshold,
+          );
+          // eslint-disable-next-line no-case-declarations
+          const maxValue = Math.max(thresholdsNonmetastatic.max, this.thresholds.nonmetastatic.max);
+          this.setColorMap(minValue, maxValue);
+          this.setSplitColorMap(
+            thresholdsMetastatic.threshold,
+            thresholdsMetastatic.max,
+            thresholdsNonmetastatic.threshold,
+            thresholdsNonmetastatic.max,
+          );
+          break;
+        case this.utilService.colorNodesBy.geneExpression:
+          this.setSplitColorMap(this.geMin, this.geMax, this.geMin, this.geMax);
+          break;
+        case this.utilService.colorNodesBy.geneExpressionLevel:
+        default:
+          this.setColorDisc();
+          break;
+      }
+
+      // loop metastatic patient data
+      (patientDetailsMetastatic || []).forEach((data) => {
+        if (data.score >= this.visualizationConfig.thresholdDefined / this.thresholds.multiplier) {
+          const node = this.core
+            .getElementById(data.name)
+            .data('member', true)
+            .data('shown', true)
+            .addClass('split')
+            .data('colorMet', data[color as keyof PatientItem]);
+          if (data.mtb) {
+            node.addClass('mtb');
+          }
+        }
+      });
+
+      // loop non-metastatic patient data
+      (patientDetailsNonmetastatic || []).forEach((data) => {
+        if (data.score >= this.visualizationConfig.thresholdDefined / this.thresholds.multiplier) {
+          const node = this.core
+            .getElementById(data.name)
+            .data('member', true)
+            .data('shown', true)
+            .addClass('split')
+            .data('colorNonMet', data[color as keyof PatientItem]);
+          if (data.mtb) {
+            node.addClass('mtb');
+          }
+        }
+      });
+      this.updataShownNodes();
+    });
   }
 
-  visualizeOne(cancerStatus: CancerStatus): void {
-    const patient =
-      this.visualizationConfig[
-        cancerStatus === this.utilService.cancerStatus.metastatic
-          ? 'patientMetastatic'
-          : 'patientNonmetastatic'
-      ];
+  /**
+   * Renders the network for one selected patient with the specified cancer status
+   * @param cancerStatus Either metastatic or non-metastatic
+   * @private
+   */
+  private visualizeOne(cancerStatus: CancerStatus): void {
     const patientDetails =
       this.visualizationConfig[
         cancerStatus === this.utilService.cancerStatus.metastatic
@@ -368,17 +477,15 @@ export class GraphService {
           : 'patientDetailsNonmetastatic'
       ];
 
-    console.log(patient);
-    console.log(patientDetails);
+    const thresholds = this.getThresholds(cancerStatus);
 
     this.core.batch(() => {
       this.clear();
 
-      // node sizes
-      let size: string;
+      // node size
+      const size = this.utilService.getNodeSizeByLiteral(this.visualizationConfig.nodeSizeBy);
       switch (this.visualizationConfig.nodeSizeBy) {
         case this.utilService.nodeSizeBy.geneExpression:
-          size = 'ge';
           this.setSizeMap(
             this.utilService.getMinGe(patientDetails ?? []),
             this.utilService.getMaxGe(patientDetails ?? []),
@@ -386,51 +493,160 @@ export class GraphService {
           break;
         case this.utilService.nodeSizeBy.relevance:
         default:
-          size = 'score';
-          // todo
-          // this.setSizeMap(threshold.threshold, threshold.max);
+          this.setSizeMap(thresholds.threshold, thresholds.max);
           break;
       }
 
       // node colors
-      let color: string;
-      // switch (this.visualizationConfig.colorNodesBy) {
-      //   case this.utilService.colorNodesBy.geneExpression:
-      //     color = 'ge';
-      //     this.setColorMap(this.geMin, this.geMax);
-      //     break;
-      //   case this.utilService.colorNodesBy.geneExpressionLevel:
-      //     color = 'geLevel';
-      //     this.setColorDisc();
-      //     break;
-      //   case this.utilService.colorNodesBy.relevance:
-      //   default:
-      //     color = 'score';
-      //     this.setColorMap(threshold.threshold, threshold.max);
-      //     break;
-      // }
-      //
-      // for (const data of pat.patientData) {
-      //   // console.log("Score: " + data.score + " Threshold: " + (threshold.selected / this.thresholds.multiplier) + " IF: " + (data.score >= (threshold.selected / this.thresholds.multiplier)));
-      //   if (data.score >= threshold.selected / this.thresholds.multiplier) {
-      //     // console.log('size: ' + size);
-      //     // console.log('Patient Data: ' + data);
-      //     const node = this.cy
-      //       .getElementById(data.name)
-      //       .data('member', true)
-      //       .data('shown', true)
-      //       .data('size', data[size])
-      //       .data('color', data[color]);
-      //     if (data.mtb) {
-      //       node.addClass('mtb');
-      //     }
-      //   }
-      // }
-      //
-      // this.updataShownNodes();
+      const color = this.utilService.getColorByLiteral(this.visualizationConfig.colorNodesBy);
+      switch (this.visualizationConfig.colorNodesBy) {
+        case this.utilService.colorNodesBy.geneExpression:
+          this.setColorMap(this.geMin, this.geMax);
+          break;
+        case this.utilService.colorNodesBy.geneExpressionLevel:
+          this.setColorDisc();
+          break;
+        case this.utilService.colorNodesBy.relevance:
+        default:
+          this.setColorMap(thresholds.threshold, thresholds.max);
+          break;
+      }
+
+      // loop patient data
+      (patientDetails || []).forEach((data) => {
+        if (data.score >= this.visualizationConfig.thresholdDefined / this.thresholds.multiplier) {
+          const node = this.core
+            .getElementById(data.name)
+            .data('member', true)
+            .data('shown', true)
+            .data('size', data[size as keyof PatientItem])
+            .data('color', data[color as keyof PatientItem]);
+          if (data.mtb) {
+            node.addClass('mtb');
+          }
+        }
+      });
+
+      this.updataShownNodes();
     });
   }
 
+  /**
+   * Applies a visual style to nodes
+   * @private
+   */
+  private setColorDisc() {
+    // @ts-ignore
+    this.core.elements('node[color]').style('font-weight', 'bold');
+    this.core
+      .elements("node[color = 'LOW']")
+      .style('background-color', this.colors.blue)
+      .style('text-outline-color', this.colors.blue);
+    this.core
+      .elements("node[color = 'NORMAL']")
+      .style('background-color', this.colors.yellow)
+      .style('text-outline-color', this.colors.yellow);
+    this.core
+      .elements("node[color = 'HIGH']")
+      .style('background-color', this.colors.red)
+      .style('text-outline-color', this.colors.red);
+    this.core
+      .elements('node.split[colorMet][colorNonMet]')
+      .style('width', '80px')
+      .style('height', '80px');
+    this.core
+      .elements('node.split[^colorMet], node.split[^colorNonMet]')
+      .style('pie-2-background-color', this.colors.gray)
+      .style('pie-1-background-color', this.colors.gray);
+    this.core
+      .elements("node.split[colorMet = 'LOW']")
+      .style('pie-2-background-color', this.colors.blue);
+    this.core
+      .elements("node.split[colorNonMet = 'LOW']")
+      .style('pie-1-background-color', this.colors.blue);
+    this.core
+      .elements("node.split[colorMet = 'NORMAL']")
+      .style('pie-2-background-color', this.colors.yellow);
+    this.core
+      .elements("node.split[colorNonMet = 'NORMAL']")
+      .style('pie-1-background-color', this.colors.yellow);
+    this.core
+      .elements("node.split[colorMet = 'HIGH']")
+      .style('pie-2-background-color', this.colors.red);
+    this.core
+      .elements("node.split[colorNonMet = 'HIGH']")
+      .style('pie-1-background-color', this.colors.red);
+  }
+
+  /**
+   * Applies a visual style to nodes
+   * @param minValue
+   * @param maxValue
+   * @private
+   */
+  private setColorMap(minValue: number, maxValue: number) {
+    const midPoint = maxValue - (maxValue - minValue) / 2;
+    const colorMap1 = `mapData(color, ${minValue}, ${maxValue}, ${this.colors.blue}, ${this.colors.yellow})`;
+    const colorMap2 = `mapData(color, ${minValue}, ${maxValue}, ${this.colors.yellow}, ${this.colors.red})`;
+
+    this.core
+      .elements(`node[color<=${midPoint}]`)
+      .style('background-color', colorMap1)
+      .style('text-outline-color', colorMap1);
+    this.core
+      .elements(`node[color>${midPoint}]`)
+      .style('background-color', colorMap2)
+      .style('text-outline-color', colorMap2);
+  }
+
+  /**
+   * Applies a visual split style to nodes
+   * @param minValueMet
+   * @param maxValueMet
+   * @param minValueNonMet
+   * @param maxValueNonMet
+   * @private
+   */
+  private setSplitColorMap(
+    minValueMet: number,
+    maxValueMet: number,
+    minValueNonMet: number,
+    maxValueNonMet: number,
+  ) {
+    const midPointMet = maxValueMet - (maxValueMet - minValueMet) / 2;
+    const midPointNonMet = maxValueNonMet - (maxValueNonMet - minValueNonMet) / 2;
+    const colorMapMet1 = `mapData(colorMet, ${minValueMet}, ${maxValueMet}, ${this.colors.blue}, ${this.colors.yellow})`;
+    const colorMapMet2 = `mapData(colorMet, ${minValueMet}, ${maxValueMet}, ${this.colors.yellow}, ${this.colors.red})`;
+    const colorMapNonMet1 = `mapData(colorNonMet, ${minValueNonMet}, ${maxValueNonMet}, ${this.colors.blue}, ${this.colors.yellow})`;
+    const colorMapNonMet2 = `mapData(colorNonMet, ${minValueNonMet}, ${maxValueNonMet}, ${this.colors.yellow}, ${this.colors.red})`;
+    this.core
+      .elements('node.split[colorMet][colorNonMet]')
+      .style('width', '80px')
+      .style('height', '80px');
+    this.core
+      .elements(`node.split[colorMet<=${midPointMet}]`)
+      .style('pie-2-background-color', colorMapMet1);
+    this.core
+      .elements(`node.split[colorMet>${midPointMet}]`)
+      .style('pie-2-background-color', colorMapMet2);
+    this.core
+      .elements(`node.split[colorNonMet<=${midPointNonMet}]`)
+      .style('pie-1-background-color', colorMapNonMet1);
+    this.core
+      .elements(`node.split[colorNonMet>${midPointNonMet}]`)
+      .style('pie-1-background-color', colorMapNonMet2);
+    this.core
+      .elements('node.split[colorMet][^colorNonMet]')
+      .style('pie-1-background-color', this.colors.gray);
+    this.core
+      .elements('node.split[^colorMet][colorNonMet]')
+      .style('pie-2-background-color', this.colors.gray);
+  }
+
+  /**
+   * Clears all applied styles
+   * @private
+   */
   private clear() {
     this.core.batch(() => {
       this.core
@@ -443,25 +659,32 @@ export class GraphService {
         .removeClass('mtb')
         .removeClass('split');
       this.removeSizeMap();
-      // this.updataShownNodes();
     });
   }
 
+  /**
+   * Applies sizing to the nodes
+   * @param minValue
+   * @param maxValue
+   * @private
+   */
   private setSizeMap(minValue: number, maxValue: number) {
-    // const sizeMap = 'mapData(size, ' + minValue + ', ' + maxValue + ', 50, 130)';
-    // const fontSizeMap = 'mapData(size, ' + minValue + ', ' + maxValue + ', 18, 30)';
-    // this.cy.style()
-    //   .selector('node[?member]')
-    //   .style('width', sizeMap)
-    //   .style('height', sizeMap)
-    //   .style('font-size', fontSizeMap);
+    const sizeMap = `mapData(size, ${minValue}, ${maxValue}, 50, 130)`;
+    const fontSizeMap = `mapData(size, ${minValue}, ${maxValue}, 18, 30)`;
+    this.core
+      .elements('node[?member]')
+      .style('width', sizeMap)
+      .style('height', sizeMap)
+      .style('font-size', fontSizeMap);
   }
 
+  /**
+   * Removes sizing from the nodes
+   * @private
+   */
   private removeSizeMap() {
     this.core
-      .style()
-      .json()
-      .selector('node[?member]')
+      .elements('node[?member]')
       .style('width', '50px')
       .style('height', '50px')
       .style('font-size', '18px');
@@ -474,17 +697,43 @@ export class GraphService {
   handlePatientSelection(): void {
     let count = 0;
     if (this.visualizationConfig.patientMetastatic !== null) {
-      // this.visualizationConfig.threshold = this.thresholds.metastatic.threshold;
       // eslint-disable-next-line no-plusplus
       count++;
     }
     if (this.visualizationConfig.patientNonmetastatic !== null) {
-      // if (this.thresholds.nonmetastatic.threshold < this.visualizationConfig.threshold) {
-      //   this.visualizationConfig.threshold = this.thresholds.nonmetastatic.threshold;
-      // }
       // eslint-disable-next-line no-plusplus
       count++;
     }
     this.visualizationConfig.patientsSelected = count;
+  }
+
+  /**
+   * If the displayed nodes are not modified themselves,
+   * it's sufficient to update which nodes are displayed.
+   */
+  updataShownNodes() {
+    this.core.batch(() => {
+      this.core.elements('node[member]').data('shown', true);
+      this.core.elements('node[!member]').data('shown', this.visualizationConfig.showAllNodes);
+      (this.core.elements('node[member]').connectedEdges() as CollectionReturnValue).data(
+        'shown',
+        true,
+      );
+      (this.core.elements('node[!member]').connectedEdges() as CollectionReturnValue).data(
+        'shown',
+        this.visualizationConfig.showAllNodes,
+      );
+      this.core
+        .elements('node.split[colorMet][^colorNonMet]')
+        .data('shown', !this.visualizationConfig.showOnlySharedNodes);
+      this.core
+        .elements('node.split[^colorMet][colorNonMet]')
+        .data('shown', !this.visualizationConfig.showOnlySharedNodes);
+      (
+        this.core
+          .elements('node.split[colorMet][^colorNonMet], node.split[^colorMet][colorNonMet]')
+          .connectedEdges('edge[?shown]') as CollectionReturnValue
+      ).data('shown', !this.visualizationConfig.showOnlySharedNodes);
+    });
   }
 }

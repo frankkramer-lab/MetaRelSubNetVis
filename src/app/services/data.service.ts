@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Network } from '../models/network';
-import { Patient } from '../models/patient';
 import { PatientCollection } from '../models/patient-collection';
 import { Threshold } from '../models/threshold';
 import { PatientItem } from '../models/patient-item';
@@ -67,8 +66,14 @@ export class DataService {
    * Loading specific patients with protein details necessary for updating the network visualization
    * @param id Name of the specified patient
    */
-  loadPatient(id: string): Observable<PatientItem[]> {
-    return this.http.get<PatientItem[]>(`${this.urlPatientPrefix}${id}.json`);
+  async loadPatientDetails(id: string): Promise<PatientItem[]> {
+    return new Promise((resolve) => {
+      this.http
+        .get(`${this.urlPatientPrefix}${id}.json`)
+        .toPromise()
+        .then((res) => {
+          resolve(res as PatientItem[]);
+        });
+    });
   }
-
 }

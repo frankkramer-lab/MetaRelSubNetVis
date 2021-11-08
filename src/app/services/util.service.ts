@@ -65,4 +65,39 @@ export class UtilService {
     });
     return max;
   }
+
+  getColorByLiteral(colorNodesBy: ColorNodesBy): string {
+    switch (colorNodesBy) {
+      case ColorNodesBy.relevance:
+        return 'rel';
+      case ColorNodesBy.geneExpressionLevel:
+        return 'geLevel';
+      case ColorNodesBy.geneExpression:
+        return 'ge';
+      default:
+        return '';
+    }
+  }
+
+  getNodeSizeByLiteral(nodeSizeBy: NodeSizeBy): string {
+    switch (nodeSizeBy) {
+      case NodeSizeBy.relevance:
+        return 'score';
+      case NodeSizeBy.geneExpression:
+        return 'ge';
+      default:
+        return '';
+    }
+  }
+
+  getCancerStatusLiteral(cancerStatus: CancerStatus): string {
+    switch (cancerStatus) {
+      case CancerStatus.metastatic:
+        return 'metastatic';
+      case CancerStatus.nonmetastatic:
+        return 'nonmetastatic';
+      default:
+        return '';
+    }
+  }
 }

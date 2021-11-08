@@ -3,7 +3,6 @@ import { GraphService } from '../../services/graph.service';
 import { Patient } from '../../models/patient';
 import { CancerStatus, UtilService } from '../../services/util.service';
 import { DataService } from '../../services/data.service';
-import { PatientItem } from '../../models/patient-item';
 
 @Component({
   selector: 'app-patient-dropdown',
@@ -41,32 +40,28 @@ export class PatientDropdownComponent {
     private graphService: GraphService,
     private utilService: UtilService,
     private dataService: DataService,
-  ) {
-  }
+  ) {}
 
   /**
    * Selecting a patient via dropdown, which triggers the loading of this patient's detail.
    * Should improve performance upon loading all data on app start
    * @param patient The currently selected patient
    */
-  selectPatient(patient: Patient): void {
+  async selectPatient(patient: Patient): Promise<void> {
     this.selected = patient;
 
     this.graphService.visualizationConfig[
       this.cancerStatus === this.utilService.cancerStatus.metastatic
         ? 'patientMetastatic'
         : 'patientNonmetastatic'
-      ] = patient;
+    ] = patient;
 
     this.graphService.handlePatientSelection();
-
-    this.dataService.loadPatient(patient.name).subscribe((patientDetails: PatientItem[]) => {
-      this.graphService.visualizationConfig[
-        this.cancerStatus === this.utilService.cancerStatus.metastatic
-          ? 'patientDetailsMetastatic'
-          : 'patientDetailsNonmetastatic'
-        ] = patientDetails;
-    });
+    this.graphService.visualizationConfig[
+      this.cancerStatus === this.utilService.cancerStatus.metastatic
+        ? 'patientDetailsMetastatic'
+        : 'patientDetailsNonmetastatic'
+    ] = await this.dataService.loadPatientDetails(patient.name);
 
     this.graphService.layoutPatient();
   }

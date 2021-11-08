@@ -48,6 +48,7 @@ export class AppComponent implements OnInit {
     });
 
     this.patientData$ = this.dataService.loadPatientsClassified();
+    this.graphService.setGeRange(this.patientData$);
     this.dataService.loadThresholds().subscribe((data) => {
       this.graphService.setThresholds(data);
     });

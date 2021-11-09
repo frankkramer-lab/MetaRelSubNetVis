@@ -49,7 +49,8 @@ export class NodesComponent {
    */
   sortBySubtype(subtype: string): void {
     if (this.graphService.visibleNodes) {
-      this.graphService.visibleNodes.sort((a, b) => (a.occ[subtype] < b.occ[subtype] ? 1 : -1));
+      this.graphService.visibleNodes
+        .sort((a, b) => (a.occ[subtype] < b.occ[subtype] ? 1 : -1));
     }
   }
 
@@ -58,7 +59,8 @@ export class NodesComponent {
    */
   sortByTotal(): void {
     if (this.graphService.visibleNodes) {
-      this.graphService.visibleNodes.sort((a, b) => (a.occ.all < b.occ.all ? 1 : -1));
+      this.graphService.visibleNodes
+        .sort((a, b) => (a.occ.all < b.occ.all ? 1 : -1));
     }
   }
 

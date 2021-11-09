@@ -52,6 +52,11 @@ export class GraphService {
   };
 
   /**
+   * Collection of all available nodes
+   */
+  allNodes: Node[] | null = null;
+
+  /**
    * Currently visible nodes
    */
   visibleNodes: Node[] | null = null;
@@ -105,7 +110,7 @@ export class GraphService {
   getThresholds(cancerStatus: CancerStatus): ThresholdItem {
     return this.thresholds[
       cancerStatus === CancerStatus.metastatic ? 'metastatic' : 'nonmetastatic'
-    ];
+      ];
   }
 
   /**
@@ -303,6 +308,7 @@ export class GraphService {
     });
     this.core.elements('node,edge').data('shown', true);
     this.visibleNodes = network.nodes;
+    this.allNodes = network.nodes;
   }
 
   /**
@@ -476,7 +482,7 @@ export class GraphService {
         cancerStatus === this.utilService.cancerStatus.metastatic
           ? 'patientDetailsMetastatic'
           : 'patientDetailsNonmetastatic'
-      ];
+        ];
 
     const thresholds = this.getThresholds(cancerStatus);
 
@@ -541,15 +547,15 @@ export class GraphService {
     this.core
       .style()
       // @ts-ignore
-      .selector("node[color = 'LOW']")
+      .selector('node[color = \'LOW\']')
       .style('background-color', this.colors.blue)
       .style('text-outline-color', this.colors.blue)
       // @ts-ignore
-      .selector("node[color = 'NORMAL']")
+      .selector('node[color = \'NORMAL\']')
       .style('background-color', this.colors.yellow)
       .style('text-outline-color', this.colors.yellow)
       // @ts-ignore
-      .selector("node[color = 'HIGH']")
+      .selector('node[color = \'HIGH\']')
       .style('background-color', this.colors.red)
       .style('text-outline-color', this.colors.red)
       // @ts-ignore
@@ -561,22 +567,22 @@ export class GraphService {
       .style('pie-2-background-color', this.colors.gray)
       .style('pie-1-background-color', this.colors.gray)
       // @ts-ignore
-      .selector("node.split[colorMet = 'LOW']")
+      .selector('node.split[colorMet = \'LOW\']')
       .style('pie-2-background-color', this.colors.blue)
       // @ts-ignore
-      .selector("node.split[colorNonMet = 'LOW']")
+      .selector('node.split[colorNonMet = \'LOW\']')
       .style('pie-1-background-color', this.colors.blue)
       // @ts-ignore
-      .selector("node.split[colorMet = 'NORMAL']")
+      .selector('node.split[colorMet = \'NORMAL\']')
       .style('pie-2-background-color', this.colors.yellow)
       // @ts-ignore
-      .selector("node.split[colorNonMet = 'NORMAL']")
+      .selector('node.split[colorNonMet = \'NORMAL\']')
       .style('pie-1-background-color', this.colors.yellow)
       // @ts-ignore
-      .selector("node.split[colorMet = 'HIGH']")
+      .selector('node.split[colorMet = \'HIGH\']')
       .style('pie-2-background-color', this.colors.red)
       // @ts-ignore
-      .selector("node.split[colorNonMet = 'HIGH']")
+      .selector('node.split[colorNonMet = \'HIGH\']')
       .style('pie-1-background-color', this.colors.red);
   }
 
@@ -746,8 +752,8 @@ export class GraphService {
       ).data('shown', !this.visualizationConfig.showOnlySharedNodes);
     });
 
-    if (this.visibleNodes) {
-      this.visibleNodes = this.visibleNodes.filter(
+    if (this.allNodes) {
+      this.visibleNodes = this.allNodes.filter(
         (a) => this.core.getElementById(a.data.id).data('shown') === true,
       );
     }

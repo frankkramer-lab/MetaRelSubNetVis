@@ -23,6 +23,7 @@ import { NodesComponent } from './components/nodes/nodes.component';
 import { ThresholdComponent } from './components/threshold/threshold.component';
 import { PatientsComponent } from './components/patients/patients.component';
 import { PatientDropdownComponent } from './components/patient-dropdown/patient-dropdown.component';
+import { ThresholdSliderComponent } from './components/threshold-slider/threshold-slider.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { PatientDropdownComponent } from './components/patient-dropdown/patient-
     ThresholdComponent,
     PatientsComponent,
     PatientDropdownComponent,
+    ThresholdSliderComponent,
   ],
   imports: [
     BrowserModule,

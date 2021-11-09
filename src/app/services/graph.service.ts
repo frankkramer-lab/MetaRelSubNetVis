@@ -428,7 +428,7 @@ export class GraphService {
 
       // loop metastatic patient data
       (patientDetailsMetastatic || []).forEach((data) => {
-        if (data.score >= this.visualizationConfig.thresholdDefined / this.thresholds.multiplier) {
+        if (data.score >= this.visualizationConfig.thresholdDefined) {
           const node = this.core
             .nodes()
             .getElementById(data.name)
@@ -444,7 +444,7 @@ export class GraphService {
 
       // loop non-metastatic patient data
       (patientDetailsNonmetastatic || []).forEach((data) => {
-        if (data.score >= this.visualizationConfig.thresholdDefined / this.thresholds.multiplier) {
+        if (data.score >= this.visualizationConfig.thresholdDefined) {
           const node = this.core
             .nodes()
             .getElementById(data.name)
@@ -511,7 +511,7 @@ export class GraphService {
 
       // loop patient data
       (patientDetails || []).forEach((data) => {
-        if (data.score >= this.visualizationConfig.thresholdDefined / this.thresholds.multiplier) {
+        if (data.score >= this.visualizationConfig.thresholdDefined) {
           const node = this.core
             .nodes()
             .getElementById(data.name)
@@ -755,6 +755,15 @@ export class GraphService {
       // @ts-ignore
       .selector('node.mtb')
       .style('border-width', b ? '7px' : '0px');
+    this.layoutPatient();
+  }
+
+  /**
+   * Updates the rendered network to match the defined threshold.
+   * @param $event The user defined threshold (still modified by the modifier due to range issues)
+   */
+  updateThresholds($event: number) {
+    this.visualizationConfig.thresholdDefined = $event / this.thresholds.multiplier;
     this.layoutPatient();
   }
 }

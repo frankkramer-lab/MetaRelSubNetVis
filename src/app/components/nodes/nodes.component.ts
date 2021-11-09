@@ -9,11 +9,6 @@ import { Node } from '../../models/node';
 })
 export class NodesComponent {
   /**
-   * List of nodes within this network
-   */
-  @Input() nodes!: Node[];
-
-  /**
    * List of occurrences
    */
   @Input() occ!: any;
@@ -45,6 +40,7 @@ export class NodesComponent {
       const index = this.selectedNodes.indexOf(node);
       this.selectedNodes.splice(index, 1);
     }
+    this.graphService.highlightNode(this.selectedNodes.map((a) => a.data.id));
   }
 
   /**
@@ -52,13 +48,25 @@ export class NodesComponent {
    * @param subtype
    */
   sortBySubtype(subtype: string): void {
-    this.nodes.sort((a, b) => (a.occ[subtype] < b.occ[subtype] ? 1 : -1));
+    if (this.graphService.visibleNodes) {
+      this.graphService.visibleNodes.sort((a, b) => (a.occ[subtype] < b.occ[subtype] ? 1 : -1));
+    }
   }
 
   /**
    * Sort the list of nodes by total occurrences
    */
   sortByTotal(): void {
-    this.nodes.sort((a, b) => (a.occ.all < b.occ.all ? 1 : -1));
+    if (this.graphService.visibleNodes) {
+      this.graphService.visibleNodes.sort((a, b) => (a.occ.all < b.occ.all ? 1 : -1));
+    }
+  }
+
+  /**
+   * Clears the list of currently selected nodes and re-renders the network
+   */
+  clearSelectedNodes() {
+    this.selectedNodes = [];
+    this.graphService.highlightNode(this.selectedNodes.map((a) => a.data.id));
   }
 }

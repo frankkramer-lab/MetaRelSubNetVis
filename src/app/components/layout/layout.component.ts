@@ -28,14 +28,14 @@ export class LayoutComponent {
   toggleShowAllNodes(): void {
     this.graphService.visualizationConfig.showAllNodes =
       !this.graphService.visualizationConfig.showAllNodes;
-    this.graphService.updataShownNodes();
+    this.graphService.updateShownNodes();
   }
 
   toggleShowMtbResults(): void {
     this.graphService.visualizationConfig.showMtbResults =
       !this.graphService.visualizationConfig.showMtbResults;
     this.graphService.updateMtbNodes();
-    this.graphService.updataShownNodes();
+    this.graphService.updateShownNodes();
   }
 
   toggleShowOnlySharedNodes(): void {
@@ -48,7 +48,7 @@ export class LayoutComponent {
 
     this.graphService.visualizationConfig.showOnlySharedNodes =
       !this.graphService.visualizationConfig.showOnlySharedNodes;
-    this.graphService.updataShownNodes();
+    this.graphService.updateShownNodes();
   }
 
   fitGraph(): void {

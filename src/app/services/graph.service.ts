@@ -52,6 +52,11 @@ export class GraphService {
   };
 
   /**
+   * Currently visible nodes
+   */
+  visibleNodes: Node[] | null = null;
+
+  /**
    * Core object containing the rendered network
    * @private
    */
@@ -85,14 +90,12 @@ export class GraphService {
   }
 
   /**
-   * todo remove console.log
    * Set the local threshold information. Adds the multiplier necessary for displaying a range.
    * @param data Thresholds encoded in the thresholds.json file, loaded during app start
    */
   setThresholds(data: Threshold): void {
     this.thresholds = data;
     this.thresholds.multiplier = 1000000000;
-    console.log(data);
   }
 
   /**
@@ -287,7 +290,7 @@ export class GraphService {
   }
 
   /**
-   * Initializes the core for the given container
+   * Initializes the core for the given container.
    * @param network Network elements
    * @param container HTML container where the network is to be rendered
    */
@@ -299,6 +302,7 @@ export class GraphService {
       layout: this.getLayout(network.nodes),
     });
     this.core.elements('node,edge').data('shown', true);
+    this.visibleNodes = network.nodes;
   }
 
   /**
@@ -383,6 +387,7 @@ export class GraphService {
       this.clear();
       this.core.elements('node').data('shown', true);
     }
+    this.updateShownNodes();
   }
 
   /**
@@ -457,7 +462,6 @@ export class GraphService {
           }
         }
       });
-      this.updataShownNodes();
     });
   }
 
@@ -524,8 +528,6 @@ export class GraphService {
           }
         }
       });
-
-      this.updataShownNodes();
     });
   }
 
@@ -719,7 +721,7 @@ export class GraphService {
    * If the displayed nodes are not modified themselves,
    * it's sufficient to update which nodes are displayed.
    */
-  updataShownNodes() {
+  updateShownNodes() {
     this.core.batch(() => {
       this.core.elements('node[member]').data('shown', true);
       this.core.elements('node[!member]').data('shown', this.visualizationConfig.showAllNodes);
@@ -743,6 +745,12 @@ export class GraphService {
           .connectedEdges('edge[?shown]') as CollectionReturnValue
       ).data('shown', !this.visualizationConfig.showOnlySharedNodes);
     });
+
+    if (this.visibleNodes) {
+      this.visibleNodes = this.visibleNodes.filter(
+        (a) => this.core.getElementById(a.data.id).data('shown') === true,
+      );
+    }
   }
 
   /**
@@ -765,5 +773,25 @@ export class GraphService {
   updateThresholds($event: number) {
     this.visualizationConfig.thresholdDefined = $event / this.thresholds.multiplier;
     this.layoutPatient();
+  }
+
+  /**
+   * Applies the style for selected nodes to the list of currently selected nodes.
+   * All other styles are reset to their default.
+   * @param nodes List of currently selected nodes
+   */
+  highlightNode(nodes: string[]) {
+    this.core.elements('node').removeClass('highlight');
+    this.core.elements('edge').removeClass('highlight');
+    if (nodes !== undefined) {
+      nodes.forEach((node) => {
+        this.core
+          .nodes()
+          .getElementById(node)
+          .addClass('highlight')
+          .connectedEdges()
+          .addClass('highlight');
+      });
+    }
   }
 }

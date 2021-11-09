@@ -1,80 +1,17 @@
-<input
-  class="form-control"
-  type="text"
-  placeholder="Search..."
-  [(ngModel)]="filterTerm"
-  aria-label="Filter nodes"
-/>
+<div class="row p-3">
+  <input
+    class="form-control col"
+    type="text"
+    placeholder="Search..."
+    [(ngModel)]="filterTerm"
+    aria-label="Filter nodes"
+  />
+  <div class="col-auto" *ngIf="graphService.visibleNodes !== null">
+    <span class="badge bg-secondary pt-3 pb-3">{{graphService.visibleNodes.length}}</span>
+  </div>
+</div>
 
 <hr>
-
-<!-- ++++ DIV GRID ++++ -->
-
-<!--<div class="row mt-3">-->
-
-<!--  <div [ngClass]="graphService.visualizationConfig.patientsSelected === 0-->
-<!--  ? 'col-6'-->
-<!--  : (graphService.visualizationConfig.patientsSelected === 1-->
-<!--  ? 'col-4'-->
-<!--  : 'col-3')">-->
-<!--    <b>Protein</b>-->
-<!--  </div>-->
-
-<!--  <div *ngIf="graphService.visualizationConfig.patientMetastatic !== null"-->
-<!--       [ngClass]="graphService.visualizationConfig.patientsSelected === 1 ? 'col-4' : 'col-3'">-->
-<!--    <b>{{graphService.visualizationConfig.patientMetastatic.subtype}}&nbsp;-->
-<!--      ({{occ[graphService.visualizationConfig.patientMetastatic.subtype]}})</b>-->
-<!--  </div>-->
-
-
-<!--  <div *ngIf="graphService.visualizationConfig.patientNonmetastatic !== null"-->
-<!--       [ngClass]="graphService.visualizationConfig.patientsSelected === 1 ? 'col-4' : 'col-3'">-->
-<!--    <b>{{graphService.visualizationConfig.patientNonmetastatic.subtype}}&nbsp;-->
-<!--      ({{occ[graphService.visualizationConfig.patientNonmetastatic.subtype]}})-->
-<!--    </b>-->
-<!--  </div>-->
-
-<!--  <div [ngClass]="graphService.visualizationConfig.patientsSelected === 0-->
-<!--  ? 'col-6'-->
-<!--  : (graphService.visualizationConfig.patientsSelected === 1-->
-<!--  ? 'col-4'-->
-<!--  : 'col-3')">-->
-<!--    <b>All&nbsp;({{occ.all}})</b>-->
-<!--  </div>-->
-
-<!--</div>-->
-<!--<ng-container class="table-scrollable">-->
-<!--  <div class="row" *ngFor="let node of nodes">-->
-<!--    <div [ngClass]="graphService.visualizationConfig.patientsSelected === 0-->
-<!--  ? 'col-6'-->
-<!--  : (graphService.visualizationConfig.patientsSelected === 1-->
-<!--  ? 'col-4'-->
-<!--  : 'col-3')">-->
-<!--      {{node.data.id}}-->
-<!--    </div>-->
-
-<!--    <div *ngIf="graphService.visualizationConfig.patientMetastatic !== null"-->
-<!--         [ngClass]="graphService.visualizationConfig.patientsSelected === 1 ? 'col-4' : 'col-3'">-->
-<!--      {{node.occ[graphService.visualizationConfig.patientMetastatic.subtype]}}-->
-<!--    </div>-->
-
-<!--    <div *ngIf="graphService.visualizationConfig.patientNonmetastatic !== null"-->
-<!--         [ngClass]="graphService.visualizationConfig.patientsSelected === 1 ? 'col-4' : 'col-3'">-->
-<!--      {{node.occ[graphService.visualizationConfig.patientNonmetastatic.subtype]}}-->
-<!--    </div>-->
-
-<!--    <div [ngClass]="graphService.visualizationConfig.patientsSelected === 0-->
-<!--  ? 'col-6'-->
-<!--  : (graphService.visualizationConfig.patientsSelected === 1-->
-<!--  ? 'col-4'-->
-<!--  : 'col-3')">-->
-<!--      {{node.occ.all}}-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</ng-container>-->
-
-
-<!-- ++++ TABLE ++++ -->
 
 <!-- table head -->
 <table class="table table-borderless text-light">
@@ -114,7 +51,7 @@
 <div id="table-nodes" class="overflow-scroll">
   <table class="table table-borderless text-light">
     <tbody>
-    <ng-container *ngFor="let node of nodes">
+    <ng-container *ngFor="let node of graphService.visibleNodes">
       <tr
         *ngIf="(node.data.id | lowercase).includes(filterTerm | lowercase)"
         [ngClass]="selectedNodes.includes(node) ? 'bg-info' : ''"
@@ -139,38 +76,9 @@
   </table>
 </div>
 
-
-
-<!-- ++++ SELECT ++++ -->
-
-<!--<div class="row mt-3">-->
-<!--  -->
-<!--  &lt;!&ndash; Unselected nodes &ndash;&gt;-->
-<!--  <div [ngClass]="selectedNodes.length === 0 ? 'col-12' : 'col-6'">-->
-<!--    <h6>Unselected nodes</h6>-->
-<!--    <select class="form-select" size="7" aria-label="Unselected nodes">-->
-<!--      <ng-container *ngFor="let node of nodes">-->
-<!--        <option-->
-<!--          *ngIf="-->
-<!--            !selectedNodes.includes(node) &&-->
-<!--            (node.data.id | lowercase).includes(filterTerm | lowercase)-->
-<!--          "-->
-<!--          [value]="node.data.id"-->
-<!--          (click)="selectNode(node)"-->
-<!--        >-->
-<!--          {{ node.data.id }}-->
-<!--        </option>-->
-<!--      </ng-container>-->
-<!--    </select>-->
-<!--  </div>-->
-
-<!--  &lt;!&ndash; Selected nodes &ndash;&gt;-->
-<!--  <div class="col-6" *ngIf="selectedNodes.length > 0">-->
-<!--    <h6>Selected nodes</h6>-->
-<!--    <select class="form-select" size="7" aria-label="Selected nodes">-->
-<!--      <option *ngFor="let node of selectedNodes" [value]="node.data.id" (click)="selectNode(node)">-->
-<!--        {{ node.data.id }}-->
-<!--      </option>-->
-<!--    </select>-->
-<!--  </div>-->
-<!--</div>-->
+<!-- Unselect -->
+<div class="d-grid" *ngIf="selectedNodes.length > 0">
+  <button (click)="clearSelectedNodes()" class="btn btn-secondary">
+    <fa-icon icon="redo"></fa-icon>&nbsp;Unselect all
+  </button>
+</div>

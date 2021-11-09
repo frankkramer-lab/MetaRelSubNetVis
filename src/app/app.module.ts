@@ -8,7 +8,7 @@ import {
   faBars,
   faHospitalUser, faInfo, faInfoCircle,
   faPalette,
-  faProjectDiagram,
+  faProjectDiagram, faRedo,
   faSortAmountUp,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
@@ -59,6 +59,7 @@ export class AppModule {
       faSortAmountUp,
       faTimes,
       faInfo,
+      faRedo,
     );
   }
 }

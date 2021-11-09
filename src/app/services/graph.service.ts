@@ -13,6 +13,7 @@ import { Threshold } from '../models/threshold';
 import { ThresholdItem } from '../models/threshold-item';
 import { PatientCollection } from '../models/patient-collection';
 import { PatientItem } from '../models/patient-item';
+import { RoutingConfig } from '../models/routing-config';
 
 @Injectable({
   providedIn: 'root',
@@ -32,10 +33,18 @@ export class GraphService {
   };
 
   /**
+   * Configuration information gained during routing.
+   * Are only to be set during routing by {@link RoutingGuard}.
+   * Are applied after the default {@link visualizationConfig}
+   * to override default values.
+   */
+  private routingConfig!: RoutingConfig;
+
+  /**
    * Current configuration of the sidebar parameter that impact the network visualization
    */
   visualizationConfig: VisualizationConfig = {
-    colorNodesBy: 0,
+    nodeColorBy: 0,
     nodeSizeBy: 0,
     patientsSelected: 0,
     patientMetastatic: null,
@@ -60,6 +69,11 @@ export class GraphService {
    * Currently visible nodes
    */
   visibleNodes: Node[] | null = null;
+
+  /**
+   * List of nodes which were selected by the user
+   */
+  selectedNodes: Node[] = [];
 
   /**
    * Core object containing the rendered network
@@ -101,6 +115,14 @@ export class GraphService {
   setThresholds(data: Threshold): void {
     this.thresholds = data;
     this.thresholds.multiplier = 1000000000;
+  }
+
+  /**
+   * Setting routing config.
+   * @param config Config information communicated during routing.
+   */
+  setRoutingConfig(config: RoutingConfig): void {
+    this.routingConfig = config;
   }
 
   /**
@@ -288,13 +310,6 @@ export class GraphService {
   }
 
   /**
-   * Returns the network's rendered core
-   */
-  getCore(): cytoscape.Core {
-    return this.core;
-  }
-
-  /**
    * Initializes the core for the given container.
    * @param network Network elements
    * @param container HTML container where the network is to be rendered
@@ -410,9 +425,9 @@ export class GraphService {
     this.core.batch(() => {
       this.clear();
 
-      const color = this.utilService.getColorByLiteral(this.visualizationConfig.colorNodesBy);
-      switch (this.visualizationConfig.colorNodesBy) {
-        case this.utilService.colorNodesBy.relevance:
+      const color = this.utilService.getColorByLiteral(this.visualizationConfig.nodeColorBy);
+      switch (this.visualizationConfig.nodeColorBy) {
+        case this.utilService.nodeColorBy.relevance:
           // eslint-disable-next-line no-case-declarations
           const minValue = Math.min(
             thresholdsMetastatic.threshold,
@@ -428,10 +443,10 @@ export class GraphService {
             thresholdsNonmetastatic.max,
           );
           break;
-        case this.utilService.colorNodesBy.geneExpression:
+        case this.utilService.nodeColorBy.geneExpression:
           this.setSplitColorMap(this.geMin, this.geMax, this.geMin, this.geMax);
           break;
-        case this.utilService.colorNodesBy.geneExpressionLevel:
+        case this.utilService.nodeColorBy.geneExpressionLevel:
         default:
           this.setColorDisc();
           break;
@@ -505,15 +520,15 @@ export class GraphService {
       }
 
       // node colors
-      const color = this.utilService.getColorByLiteral(this.visualizationConfig.colorNodesBy);
-      switch (this.visualizationConfig.colorNodesBy) {
-        case this.utilService.colorNodesBy.geneExpression:
+      const color = this.utilService.getColorByLiteral(this.visualizationConfig.nodeColorBy);
+      switch (this.visualizationConfig.nodeColorBy) {
+        case this.utilService.nodeColorBy.geneExpression:
           this.setColorMap(this.geMin, this.geMax);
           break;
-        case this.utilService.colorNodesBy.geneExpressionLevel:
+        case this.utilService.nodeColorBy.geneExpressionLevel:
           this.setColorDisc();
           break;
-        case this.utilService.colorNodesBy.relevance:
+        case this.utilService.nodeColorBy.relevance:
         default:
           this.setColorMap(thresholds.threshold, thresholds.max);
           break;
@@ -799,5 +814,27 @@ export class GraphService {
           .addClass('highlight');
       });
     }
+  }
+
+  /**
+   * Selects or unselects nodes
+   * @param node Node to be added or removed from the list of {@link selectedNodes}
+   */
+  selectNode(node: Node): void {
+    if (!this.selectedNodes.includes(node)) {
+      this.selectedNodes.push(node);
+    } else {
+      const index = this.selectedNodes.indexOf(node);
+      this.selectedNodes.splice(index, 1);
+    }
+    this.highlightNode(this.selectedNodes.map((a) => a.data.id));
+  }
+
+  /**
+   * Clears the list of currently selected nodes and re-renders the network
+   */
+  clearSelectedNodes() {
+    this.selectedNodes = [];
+    this.highlightNode(this.selectedNodes.map((a) => a.data.id));
   }
 }

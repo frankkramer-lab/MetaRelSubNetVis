@@ -54,8 +54,8 @@
     <ng-container *ngFor="let node of graphService.visibleNodes">
       <tr
         *ngIf="(node.data.id | lowercase).includes(filterTerm | lowercase)"
-        [ngClass]="selectedNodes.includes(node) ? 'bg-info' : ''"
-        (click)="selectNode(node)"
+        [ngClass]="graphService.selectedNodes.includes(node) ? 'bg-info' : ''"
+        (click)="graphService.selectNode(node)"
       >
         <td class="w-{{graphService.visualizationConfig.patientsSelected < 2 ? '50' : '25'}}">
           {{ node.data.id }}
@@ -77,8 +77,8 @@
 </div>
 
 <!-- Unselect -->
-<div class="d-grid" *ngIf="selectedNodes.length > 0">
-  <button (click)="clearSelectedNodes()" class="btn btn-secondary">
+<div class="d-grid" *ngIf="graphService.selectedNodes.length > 0">
+  <button (click)="graphService.clearSelectedNodes()" class="btn btn-secondary">
     <fa-icon icon="redo"></fa-icon>&nbsp;Unselect all
   </button>
 </div>

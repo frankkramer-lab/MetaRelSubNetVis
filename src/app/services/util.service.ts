@@ -5,7 +5,7 @@ import { PatientItem } from '../models/patient-item';
  * Nodes are colored based on their gene expression, their abstract gene expression levels or
  * based on their relevance
  */
-export enum ColorNodesBy {
+export enum NodeColorBy {
   geneExpressionLevel,
   geneExpression,
   relevance,
@@ -34,7 +34,7 @@ export class UtilService {
   /**
    * Color nodes by enum
    */
-  colorNodesBy = ColorNodesBy;
+  nodeColorBy = NodeColorBy;
 
   /**
    * Node size by enum
@@ -75,17 +75,17 @@ export class UtilService {
   };
 
   /**
-   * Returns the enumeration {@link colorNodesBy} as string literal,
+   * Returns the enumeration {@link nodeColorBy} as string literal,
    * which is used as an object key during rendering.
    * @param colorNodesBy Possible enumeration option
    */
-  getColorByLiteral = (colorNodesBy: ColorNodesBy): string => {
+  getColorByLiteral = (colorNodesBy: NodeColorBy): string => {
     switch (colorNodesBy) {
-      case ColorNodesBy.relevance:
+      case NodeColorBy.relevance:
         return 'score';
-      case ColorNodesBy.geneExpressionLevel:
+      case NodeColorBy.geneExpressionLevel:
         return 'geLevel';
-      case ColorNodesBy.geneExpression:
+      case NodeColorBy.geneExpression:
         return 'ge';
       default:
         return '';
@@ -107,4 +107,5 @@ export class UtilService {
         return '';
     }
   };
+
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ColorNodesBy, NodeSizeBy, UtilService } from '../../services/util.service';
+import { NodeColorBy, NodeSizeBy, UtilService } from '../../services/util.service';
 import { GraphService } from '../../services/graph.service';
 
 @Component({
@@ -15,8 +15,8 @@ export class LayoutComponent {
    */
   constructor(public utilService: UtilService, public graphService: GraphService) {}
 
-  selectColorNodesBy(colorBy: ColorNodesBy): void {
-    this.graphService.visualizationConfig.colorNodesBy = colorBy;
+  selectColorNodesBy(colorBy: NodeColorBy): void {
+    this.graphService.visualizationConfig.nodeColorBy = colorBy;
     this.graphService.layoutPatient();
   }
 

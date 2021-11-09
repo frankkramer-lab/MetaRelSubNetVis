@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GraphService } from '../../services/graph.service';
 
@@ -8,6 +8,7 @@ import { GraphService } from '../../services/graph.service';
   styleUrls: ['./download.component.scss'],
 })
 export class DownloadComponent implements OnInit {
+
   /**
    * Getter for the scale form control, which is the only part that is bound to validation
    */
@@ -61,8 +62,6 @@ export class DownloadComponent implements OnInit {
    * Defaults to PNG data type
    */
   onSubmitDownload(): void {
-    console.log(this.downloadForm);
-
     this.graphService.downloadImage({
       extension: this.datatype?.value,
       transparent: this.transparent?.value,

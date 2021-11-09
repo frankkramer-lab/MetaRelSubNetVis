@@ -6,9 +6,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   faArrowCircleDown,
   faBars,
-  faHospitalUser, faInfo, faInfoCircle,
+  faHospitalUser,
+  faInfo,
+  faLink,
   faPalette,
-  faProjectDiagram, faRedo,
+  faProjectDiagram,
+  faRedo,
   faSortAmountUp,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
@@ -24,6 +27,7 @@ import { ThresholdComponent } from './components/threshold/threshold.component';
 import { PatientsComponent } from './components/patients/patients.component';
 import { PatientDropdownComponent } from './components/patient-dropdown/patient-dropdown.component';
 import { ThresholdSliderComponent } from './components/threshold-slider/threshold-slider.component';
+import { VisualizationConfigGeneratorComponent } from './components/visualization-config-generator/visualization-config-generator.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +40,7 @@ import { ThresholdSliderComponent } from './components/threshold-slider/threshol
     PatientsComponent,
     PatientDropdownComponent,
     ThresholdSliderComponent,
+    VisualizationConfigGeneratorComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,6 +65,7 @@ export class AppModule {
       faTimes,
       faInfo,
       faRedo,
+      faLink,
     );
   }
 }

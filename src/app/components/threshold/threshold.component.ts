@@ -61,7 +61,8 @@ export class ThresholdComponent implements OnChanges {
     );
     this.thresholdMax = Math.max(this.thresholds.metastatic.max, this.thresholds.nonmetastatic.max);
     this.thresholdSet = this.thresholdMin * this.thresholds.multiplier;
-
+    this.graphService.visualizationConfig.thresholdDefined =
+      this.thresholdSet / this.thresholds.multiplier;
     this.thresholdsInitialized = true;
   };
 }

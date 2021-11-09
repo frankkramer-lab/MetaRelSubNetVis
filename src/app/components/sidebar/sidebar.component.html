@@ -107,6 +107,26 @@
     <app-download></app-download>
   </div>
 
+  <!-- HASH GENERATOR -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseGenerator"
+    aria-expanded="false"
+    aria-controls="collapseGenerator"
+  >
+    <fa-icon
+      icon="link"
+      [ngClass]="collapseGenerator.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Hash generator
+  </button>
+  <div class="collapse" id="collapseGenerator" #collapseGenerator>
+    <app-visualization-config-generator [patients]="patients"></app-visualization-config-generator>
+  </div>
+
   <!-- IMPRESSUM -->
   <button
     class="btn btn-dark icon-hover"

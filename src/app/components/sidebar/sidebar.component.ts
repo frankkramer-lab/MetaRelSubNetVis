@@ -1,15 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PatientCollection } from '../../models/patient-collection';
-import { NodeCollection } from 'cytoscape';
-import * as cytoscape from 'cytoscape';
 import { Node } from '../../models/node';
 import { Threshold } from '../../models/threshold';
 
@@ -35,6 +25,4 @@ export class SidebarComponent {
     this.showSidebar = false;
     this.showSidebarEmitter.emit(false);
   }
-
-
 }

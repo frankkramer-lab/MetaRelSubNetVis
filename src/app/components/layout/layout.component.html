@@ -3,23 +3,23 @@
   <!-- by gene expression level -->
   <div class="form-check">
     <input
-      (click)="selectColorNodesBy(utilService.colorNodesBy.geneExpressionLevel)"
+      (click)="selectColorNodesBy(utilService.nodeColorBy.geneExpressionLevel)"
       class="form-check-input"
       type="radio"
       name="colorNodesBy"
       id="colorByGeneExpressionLevel"
       value="geneExpressionLevel"
       [checked]="
-        graphService.visualizationConfig.colorNodesBy ===
-        utilService.colorNodesBy.geneExpressionLevel
+        graphService.visualizationConfig.nodeColorBy ===
+        utilService.nodeColorBy.geneExpressionLevel
       "
     />
     <label class="form-check-label" for="colorByGeneExpressionLevel">
       by gene expression level
       <span
         *ngIf="
-          graphService.visualizationConfig.colorNodesBy ===
-          utilService.colorNodesBy.geneExpressionLevel
+          graphService.visualizationConfig.nodeColorBy ===
+          utilService.nodeColorBy.geneExpressionLevel
         "
       >( <span id="low">Low</span>, <span id="normal">Normal</span>, <span id="high">High</span>)
       </span>
@@ -28,14 +28,14 @@
   <!-- by gene expression -->
   <div class="form-check">
     <input
-      (click)="selectColorNodesBy(utilService.colorNodesBy.geneExpression)"
+      (click)="selectColorNodesBy(utilService.nodeColorBy.geneExpression)"
       class="form-check-input"
       type="radio"
       name="colorNodesBy"
       id="colorByGeneExpression"
       value="geneExpression"
       [checked]="
-        graphService.visualizationConfig.colorNodesBy === utilService.colorNodesBy.geneExpression
+        graphService.visualizationConfig.nodeColorBy === utilService.nodeColorBy.geneExpression
       "
     />
     <label class="form-check-label" for="colorByGeneExpression"> by gene expression </label>
@@ -43,14 +43,14 @@
   <!-- by relevance -->
   <div class="form-check">
     <input
-      (click)="selectColorNodesBy(utilService.colorNodesBy.relevance)"
+      (click)="selectColorNodesBy(utilService.nodeColorBy.relevance)"
       class="form-check-input"
       type="radio"
       name="colorNodesBy"
       id="colorByRelevance"
       value="relevance"
       [checked]="
-        graphService.visualizationConfig.colorNodesBy === utilService.colorNodesBy.relevance
+        graphService.visualizationConfig.nodeColorBy === utilService.nodeColorBy.relevance
       "
     />
     <label class="form-check-label" for="colorByRelevance"> by relevance </label>

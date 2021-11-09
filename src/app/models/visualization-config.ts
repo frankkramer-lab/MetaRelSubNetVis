@@ -1,5 +1,6 @@
 import { Patient } from './patient';
 import { PatientItem } from './patient-item';
+import { NodeColorBy, NodeSizeBy } from '../services/util.service';
 
 /**
  * Contains all aspects users can manipulate through the sidebar
@@ -56,11 +57,11 @@ export interface VisualizationConfig {
    */
   showOnlySharedNodes: boolean;
   /**
-   * Color nodes by {@link ColorNodesBy}
+   * Color nodes by {@link NodeColorBy}
    */
-  colorNodesBy: number;
+  nodeColorBy: NodeColorBy;
   /**
    * Node size by {@link NodeSizeBy}
    */
-  nodeSizeBy: number;
+  nodeSizeBy: NodeSizeBy;
 }

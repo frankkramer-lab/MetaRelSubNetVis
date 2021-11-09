@@ -22,12 +22,24 @@ export class AppComponent implements OnInit {
    */
   @ViewChild('cy') cyContainer!: ElementRef;
 
+  /**
+   * Containing basic patient information
+   */
   patientData$!: Observable<PatientCollection> | null;
 
+  /**
+   * List of nodes
+   */
   nodeData: Node[] = [];
 
+  /**
+   * List of protein occurrences
+   */
   totalOccurrences: any = {};
 
+  /**
+   * Treshold data
+   */
   thresholdData!: Threshold;
 
   /**

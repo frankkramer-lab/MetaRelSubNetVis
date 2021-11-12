@@ -28,6 +28,7 @@ import { PatientsComponent } from './components/patients/patients.component';
 import { PatientDropdownComponent } from './components/patient-dropdown/patient-dropdown.component';
 import { ThresholdSliderComponent } from './components/threshold-slider/threshold-slider.component';
 import { VisualizationConfigGeneratorComponent } from './components/visualization-config-generator/visualization-config-generator.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { VisualizationConfigGeneratorComponent } from './components/visualizatio
     PatientDropdownComponent,
     ThresholdSliderComponent,
     VisualizationConfigGeneratorComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

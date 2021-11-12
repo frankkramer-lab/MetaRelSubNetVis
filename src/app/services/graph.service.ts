@@ -126,6 +126,13 @@ export class GraphService {
   }
 
   /**
+   * Returns the routing config.
+   */
+  getRoutingConfig(): RoutingConfig {
+    return this.routingConfig;
+  }
+
+  /**
    * Returns the defined threshold information.
    * @param cancerStatus
    */
@@ -140,9 +147,9 @@ export class GraphService {
    * @param data$ Loaded data stream containing gene expression levels.
    */
   setGeRange(data$: Observable<PatientCollection>): void {
-    data$.subscribe((patientCollection) => {
-      this.geMin = patientCollection.geMin;
-      this.geMax = patientCollection.geMax;
+    data$.subscribe((patientData) => {
+      this.geMin = patientData.geMin;
+      this.geMax = patientData.geMax;
     });
   }
 

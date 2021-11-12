@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PatientItem } from '../models/patient-item';
+import { VisualizationConfig } from '../models/visualization-config';
 
 /**
  * Nodes are colored based on their gene expression, their abstract gene expression levels or

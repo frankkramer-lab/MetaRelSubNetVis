@@ -1,4 +1,6 @@
+import { Patient } from './patient';
+
 export interface PatientSelection {
-  metastatic: string;
-  nonmetastatic: string;
+  metastatic: Patient | null;
+  nonmetastatic: Patient | null;
 }

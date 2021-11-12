@@ -15,7 +15,6 @@ export class VisualizationConfigGeneratorComponent {
    * Collection of all patients, both metastatic and non-metastatic
    */
   @Input() patients!: PatientCollection | null;
-
   /**
    * List of available data types.
    */
@@ -83,12 +82,9 @@ export class VisualizationConfigGeneratorComponent {
     // selection
     urlParams.push(`sel=[${this.graphService.selectedNodes.map((a) => a.data.id).join(',')}]`);
 
-
-    console.log(urlParams);
+    const encoded = encodeURI(urlParams.join('&').replace(new RegExp('=', 'g'), '-'));
+    console.log(encoded);
 
   }
 
-  private getParamByKeyValue(key: string, value: string): string {
-    return `${key}=${value}`;
-  }
 }

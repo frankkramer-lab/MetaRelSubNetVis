@@ -1,15 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RoutingGuard } from './guards/routing.guard';
-import { VisualizationConfigGeneratorComponent } from './components/visualization-config-generator/visualization-config-generator.component';
+import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/', pathMatch: 'full' },
-  {
-    path: 'data/:data',
-    component: VisualizationConfigGeneratorComponent,
-    canActivate: [RoutingGuard],
-  },
+  { path: '', component: HomeComponent },
+  { path: ':data', component: HomeComponent, canActivate: [RoutingGuard] },
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({

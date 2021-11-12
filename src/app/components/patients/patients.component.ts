@@ -1,8 +1,7 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PatientCollection } from '../../models/patient-collection';
-import { GraphService } from '../../services/graph.service';
-import { PatientSelection } from '../../models/patient-selection';
 import { UtilService } from '../../services/util.service';
+import { PatientSelection } from '../../models/patient-selection';
 
 @Component({
   selector: 'app-patients',
@@ -12,17 +11,6 @@ import { UtilService } from '../../services/util.service';
 export class PatientsComponent {
   @Input() patients!: PatientCollection | null;
 
-  selectedMetastatic!: string;
+  constructor(public utilService: UtilService) {}
 
-  selectedNonmetastatic!: string;
-
-  constructor(private graphService: GraphService, public utilService: UtilService) {}
-
-  selectNonMetastatic(name: string) {
-    this.selectedMetastatic = name;
-  }
-
-  selectMetastatic(name: string) {
-    this.selectedNonmetastatic = name;
-  }
 }

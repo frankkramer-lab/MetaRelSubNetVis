@@ -34,6 +34,7 @@ export class DataService {
    */
   private readonly urlPatientPrefix = 'assets/data/patient/';
 
+
   /**
    * Constructor
    * @param http Loading network and patient data via HTTP
@@ -76,4 +77,5 @@ export class DataService {
         });
     });
   }
+
 }

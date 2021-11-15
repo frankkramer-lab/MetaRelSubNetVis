@@ -1,26 +1,27 @@
 <div class="container-fluid">
   <div class="row">
-
-    <div *ngIf="showSidebar"
-         class="col-4 text-light sidebar overflow-scroll">
-
-      <app-sidebar
-        (showSidebarEmitter)="showSidebar = false"
-        [showSidebar]="showSidebar"
-        [patients]="patientData$ | async"
-        [nodes]="nodeData"
-        [occ]="totalOccurrences"
-        [thresholds]="thresholdData"
-      ></app-sidebar>
-
+    <div
+      *ngIf="storeService.showSidebar === utilService.sidebarVisibility.full"
+      class="col-4 text-light sidebar overflow-scroll"
+    >
+      <app-sidebar [thresholds]="thresholdData"></app-sidebar>
     </div>
 
-    <div [ngClass]="showSidebar ? 'col-8' : 'col-12'">
+    <div
+      [ngClass]="
+        storeService.showSidebar === utilService.sidebarVisibility.full ? 'col-8' : 'col-12'
+      "
+    >
       <div class="row">
-
         <!-- BUTTON: show sidebar -->
-        <div class="col-auto mt-2" *ngIf="!showSidebar">
-          <button class="btn btn-outline-dark" (click)="showSidebar = true">
+        <div
+          class="col-auto mt-2"
+          *ngIf="storeService.showSidebar === utilService.sidebarVisibility.button"
+        >
+          <button
+            class="btn btn-dark"
+            (click)="storeService.showSidebar = utilService.sidebarVisibility.full"
+          >
             <fa-icon icon="bars"></fa-icon>
           </button>
         </div>
@@ -28,11 +29,13 @@
         <!-- CANVAS -->
         <div class="col">
           <h2 class="text-box">
-            <span class="text-nowrap">Patient Specific Molecular Sub-Networks Responsible for Metastasis in Breast Cancer</span>
+            <span class="text-nowrap"
+              >Patient Specific Molecular Sub-Networks Responsible for Metastasis in Breast
+              Cancer</span
+            >
           </h2>
           <div #cy id="cy"></div>
         </div>
-
       </div>
     </div>
   </div>

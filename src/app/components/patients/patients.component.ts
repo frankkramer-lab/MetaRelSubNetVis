@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PatientCollection } from '../../models/patient-collection';
 import { UtilService } from '../../services/util.service';
-import { PatientSelection } from '../../models/patient-selection';
 
 @Component({
   selector: 'app-patients',

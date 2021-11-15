@@ -1,17 +1,18 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GraphService } from '../../services/graph.service';
 import { Threshold } from '../../models/threshold';
+import { StoreService } from '../../services/store.service';
 
 @Component({
   selector: 'app-threshold',
   templateUrl: './threshold.component.html',
   styleUrls: ['./threshold.component.scss'],
 })
-export class ThresholdComponent implements OnChanges {
+export class ThresholdComponent implements OnInit {
   /**
-   * List of thresholds
+   * Local copy of the loaded thresholds
    */
-  @Input() thresholds!: Threshold;
+  thresholds!: Threshold;
 
   /**
    * Minimal threshold
@@ -36,33 +37,26 @@ export class ThresholdComponent implements OnChanges {
   /**
    * Constructor
    * @param graphService Needed to update the rendered network based on defined threshold
+   * @param storeService Needed to access the loaded thresholds
    */
-  constructor(public graphService: GraphService) {}
+  constructor(public graphService: GraphService, private storeService: StoreService) {}
 
-  /**
-   * Setting local thresholds variables as soon as data arrives
-   * @param changes
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this.thresholdsInitialized) {
-      if (changes.thresholds && changes.thresholds.currentValue) {
-        this.initThreshold();
-      }
-    }
+  ngOnInit(): void {
+    this.storeService.thresholdData.subscribe((data) => {
+      this.thresholds = data;
+      this.initThresholds(data);
+    });
   }
 
   /**
    * Initializes local threshold variables
    */
-  private initThreshold = (): void => {
-    this.thresholdMin = Math.min(
-      this.thresholds.metastatic.threshold,
-      this.thresholds.nonmetastatic.threshold,
-    );
-    this.thresholdMax = Math.max(this.thresholds.metastatic.max, this.thresholds.nonmetastatic.max);
-    this.thresholdSet = this.thresholdMin * this.thresholds.multiplier;
-    this.graphService.visualizationConfig.thresholdDefined =
-      this.thresholdSet / this.thresholds.multiplier;
+  private initThresholds = (data: Threshold): void => {
+    this.graphService.setThresholds(data);
+    this.thresholdMin = Math.min(data.metastatic.threshold, data.nonmetastatic.threshold);
+    this.thresholdMax = Math.max(data.metastatic.max, data.nonmetastatic.max);
+    this.thresholdSet = this.thresholdMin * data.multiplier;
+    this.graphService.visualizationConfig.thresholdDefined = this.thresholdSet / data.multiplier;
     this.thresholdsInitialized = true;
   };
 }

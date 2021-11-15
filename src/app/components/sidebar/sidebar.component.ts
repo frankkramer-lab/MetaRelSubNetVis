@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PatientCollection } from '../../models/patient-collection';
-import { Node } from '../../models/node';
+import { Component, Input } from '@angular/core';
 import { Threshold } from '../../models/threshold';
+import { StoreService } from '../../services/store.service';
+import { UtilService } from '../../services/util.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,20 +9,26 @@ import { Threshold } from '../../models/threshold';
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-  @Input() patients!: PatientCollection | null;
+  // @Input() patients!: PatientCollection | null;
 
   @Input() thresholds!: Threshold;
 
-  @Input() nodes!: Node[];
+  // @Input() nodes!: Node[];
 
-  @Input() occ!: any;
+  // @Input() occ!: any;
 
-  @Input() showSidebar!: boolean;
+  // @Input() showSidebar!: boolean;
 
-  @Output() showSidebarEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+  // @Output() showSidebarEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  constructor(private storeService: StoreService, private utilService: UtilService) {
+  }
 
   hideSidebar(): void {
-    this.showSidebar = false;
-    this.showSidebarEmitter.emit(false);
+    if (this.storeService.showSidebar === this.utilService.sidebarVisibility.full) {
+      this.storeService.showSidebar = this.utilService.sidebarVisibility.button;
+    } else {
+      this.storeService.showSidebar = this.utilService.sidebarVisibility.full;
+    }
   }
 }

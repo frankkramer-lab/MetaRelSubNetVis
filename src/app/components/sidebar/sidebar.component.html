@@ -24,7 +24,7 @@
     &nbsp;Patients
   </button>
   <div class="collapse" #collapsePatient id="collapsePatient">
-    <app-patients [patients]="patients"></app-patients>
+    <app-patients></app-patients>
   </div>
 
   <!-- THRESHOLD -->
@@ -44,7 +44,7 @@
     &nbsp;Threshold
   </button>
   <div class="collapse" id="collapseThreshold" #collapseThreshold>
-    <app-threshold [thresholds]="thresholds"></app-threshold>
+    <app-threshold></app-threshold>
   </div>
 
   <!-- NODES -->
@@ -64,7 +64,7 @@
     &nbsp;Nodes
   </button>
   <div class="collapse" id="collapseNodes" #collapseNodes>
-    <app-nodes [occ]="occ"></app-nodes>
+    <app-nodes></app-nodes>
   </div>
 
   <!-- LAYOUT -->
@@ -124,7 +124,7 @@
     &nbsp;Hash generator
   </button>
   <div class="collapse" id="collapseGenerator" #collapseGenerator>
-    <app-visualization-config-generator [patients]="patients"></app-visualization-config-generator>
+    <app-visualization-config-generator></app-visualization-config-generator>
   </div>
 
   <!-- IMPRESSUM -->

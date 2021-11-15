@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GraphService } from '../../services/graph.service';
 
@@ -44,17 +44,34 @@ export class DownloadComponent implements OnInit {
    * Constructor
    * @param graphService Needed to download images
    */
-  constructor(private graphService: GraphService) {}
+  constructor(private graphService: GraphService) {
+  }
 
   /**
    * Initializes the download form
    */
   ngOnInit(): void {
+    // const routingConfig = this.graphService.getRoutingConfig();
     this.downloadForm = new FormGroup({
       datatype: new FormControl('PNG'),
       backgroundTransparent: new FormControl(false),
       scale: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(10)]),
     });
+
+    // if (routingConfig) {
+    //   const routingDefinedExtension = routingConfig.imageDownloadConfig.extension;
+    //   const routingDefinedScale = routingConfig.imageDownloadConfig.scale;
+    //   const routingDefinedBackground = routingConfig.imageDownloadConfig.transparent;
+    //
+    //   if (this.availableDataTypes.includes(routingDefinedExtension)) {
+    //     this.datatype?.setValue(routingDefinedExtension);
+    //   }
+    //   if (routingDefinedScale > 0 && routingDefinedScale < 11) {
+    //     this.scale?.setValue(routingDefinedScale);
+    //   }
+    //   this.transparent?.setValue(routingDefinedBackground);
+    //   console.log(this.downloadForm.get('scale')?.value);
+    // }
   }
 
   /**

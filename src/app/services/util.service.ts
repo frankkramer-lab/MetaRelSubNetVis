@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { PatientItem } from '../models/patient-item';
-import { VisualizationConfig } from '../models/visualization-config';
 
 /**
  * Nodes are colored based on their gene expression, their abstract gene expression levels or
@@ -28,6 +27,15 @@ export enum CancerStatus {
   nonmetastatic,
 }
 
+/**
+ * Stages of sidebar visibility
+ */
+export enum SidebarVisibility {
+  full,
+  button,
+  none,
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -46,6 +54,11 @@ export class UtilService {
    * Cancer status enum
    */
   cancerStatus = CancerStatus;
+
+  /**
+   * Sidebar visibility enum
+   */
+  sidebarVisibility = SidebarVisibility;
 
   /**
    * Returns a patient's minimal gene expression.
@@ -109,4 +122,28 @@ export class UtilService {
     }
   };
 
+  /**
+   * Returns the enumeration {@link cancerStatus} as string literal,
+   * which ist used as an object key during rendering.
+   * @param cancerStatus Possible enumeration option
+   */
+  getCancerStatusLiteral = (cancerStatus: CancerStatus): string => {
+    return cancerStatus === this.cancerStatus.metastatic ? 'metastatic' : 'nonmetastatic';
+  };
+
+  /**
+   * Encodes a node's label by replacing all dashes with % sign.
+   * @param label Node's original label
+   */
+  encodeNodeLabel = (label: string): string => {
+    return label.replace(new RegExp('-', 'g'), '%');
+  };
+
+  /**
+   * Decodes a node's label by replacing all % with dashes.
+   * @param label Node's encoded label
+   */
+  decodeNodelabel = (label: string): string => {
+    return label.replace(new RegExp('%', 'g'), '-');
+  };
 }

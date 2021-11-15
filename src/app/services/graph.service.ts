@@ -3,7 +3,6 @@ import * as cytoscape from 'cytoscape';
 import { CollectionReturnValue } from 'cytoscape';
 // @ts-ignore
 import * as svg from 'cytoscape-svg';
-import { Observable } from 'rxjs';
 import { Node } from '../models/node';
 import { Network } from '../models/network';
 import { DownloadConfig } from '../models/download-config';
@@ -14,6 +13,9 @@ import { ThresholdItem } from '../models/threshold-item';
 import { PatientCollection } from '../models/patient-collection';
 import { PatientItem } from '../models/patient-item';
 import { RoutingConfig } from '../models/routing-config';
+import { Patient } from '../models/patient';
+import { DataService } from './data.service';
+import { StoreService } from './store.service';
 
 @Injectable({
   providedIn: 'root',
@@ -104,7 +106,11 @@ export class GraphService {
   /**
    * Constructor, binding svg export library to cytoscape
    */
-  constructor(private utilService: UtilService) {
+  constructor(
+    private utilService: UtilService,
+    private dataService: DataService,
+    private storeService: StoreService,
+  ) {
     cytoscape.use(svg);
   }
 
@@ -137,19 +143,17 @@ export class GraphService {
    * @param cancerStatus
    */
   getThresholds(cancerStatus: CancerStatus): ThresholdItem {
-    return this.thresholds[
-      cancerStatus === CancerStatus.metastatic ? 'metastatic' : 'nonmetastatic'
-    ];
+    const key = this.utilService.getCancerStatusLiteral(cancerStatus);
+    return this.thresholds[key as keyof Threshold] as ThresholdItem;
   }
 
   /**
    * Sets the gene expression range defined in the patients.json file.
-   * @param data$ Loaded data stream containing gene expression levels.
    */
-  setGeRange(data$: Observable<PatientCollection>): void {
-    data$.subscribe((patientData) => {
-      this.geMin = patientData.geMin;
-      this.geMax = patientData.geMax;
+  setGeRange(): void {
+    this.storeService.patientData.subscribe((data) => {
+      this.geMin = data.geMin;
+      this.geMax = data.geMax;
     });
   }
 
@@ -321,7 +325,7 @@ export class GraphService {
    * @param network Network elements
    * @param container HTML container where the network is to be rendered
    */
-  initializeCore(network: Network, container: HTMLElement): void {
+  async initializeCore(network: Network, container: HTMLElement): Promise<void> {
     this.core = cytoscape({
       container,
       elements: network,
@@ -331,6 +335,35 @@ export class GraphService {
     this.core.elements('node,edge').data('shown', true);
     this.visibleNodes = network.nodes;
     this.allNodes = network.nodes;
+
+    if (this.routingConfig) {
+      if (this.allNodes) {
+        // todo research if i need this line
+        this.routingConfig.selectedNodes?.forEach((nodeName) => {
+          const node = this.allNodes?.find(
+            (a) => a.data.id === this.utilService.decodeNodelabel(nodeName),
+          );
+          if (node) {
+            this.selectNode(node);
+          }
+        });
+      }
+
+      if (this.routingConfig.loadAndSelectMeta) {
+        await this.selectPatient(this.routingConfig.loadAndSelectMeta, CancerStatus.metastatic);
+      }
+      if (this.routingConfig.loadAndSelectNonmeta) {
+        await this.selectPatient(
+          this.routingConfig.loadAndSelectNonmeta,
+          CancerStatus.nonmetastatic,
+        );
+      }
+
+      // if (this.routingConfig.triggerImageDownload) {
+      //   this.downloadImage(this.routingConfig.imageDownloadConfig);
+      //   console.log(this.visualizationConfig);
+      // }
+    }
   }
 
   /**
@@ -843,5 +876,48 @@ export class GraphService {
   clearSelectedNodes() {
     this.selectedNodes = [];
     this.highlightNode(this.selectedNodes.map((a) => a.data.id));
+  }
+
+  /**
+   * Updates the basic visualization configuration by using the routing config entries.
+   * Might need validation, such as either show-all or show-shared.
+   */
+  updateBasicVisualizationByRoutingConfig(): void {
+    this.visualizationConfig.nodeColorBy = this.routingConfig.visualizationConfig.nodeColorBy;
+    this.visualizationConfig.nodeSizeBy = this.routingConfig.visualizationConfig.nodeSizeBy;
+    this.visualizationConfig.showOnlySharedNodes =
+      this.routingConfig.visualizationConfig.showOnlySharedNodes;
+    this.visualizationConfig.showAllNodes = this.routingConfig.visualizationConfig.showAllNodes;
+    this.visualizationConfig.showMtbResults = this.routingConfig.visualizationConfig.showMtbResults;
+    // console.log(this.core);
+  }
+
+  /**
+   * @param patientName
+   * @param cancerStatus
+   */
+  async selectPatient(patientName: string, cancerStatus: CancerStatus): Promise<void> {
+    const detailsKey =
+      cancerStatus === this.utilService.cancerStatus.metastatic
+        ? 'patientDetailsMetastatic'
+        : 'patientDetailsNonmetastatic';
+    const key =
+      cancerStatus === this.utilService.cancerStatus.metastatic
+        ? 'patientMetastatic'
+        : 'patientNonmetastatic';
+    const classKey = this.utilService.getCancerStatusLiteral(cancerStatus);
+
+    this.storeService.patientData.subscribe((data) => {
+      this.visualizationConfig[key] =
+        (data[classKey as keyof PatientCollection] as Patient[]).find(
+          (a) => a.name === patientName,
+        ) ?? null;
+
+      this.dataService.loadPatientDetails(patientName).then((details) => {
+        this.visualizationConfig[detailsKey] = details;
+        this.handlePatientSelection();
+        this.layoutPatient();
+      });
+    });
   }
 }

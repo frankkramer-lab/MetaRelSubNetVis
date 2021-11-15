@@ -42,7 +42,7 @@
     <!-- total -->
     <th class="cursor"
         [ngClass]="graphService.visualizationConfig.patientsSelected === 0 ? 'w-50' : 'w-25'"
-        (click)="sortByTotal()">All&nbsp;({{occ.all}})</th>
+        (click)="sortByTotal()">All&nbsp;({{occ?.all}})</th>
   </tr>
   </thead>
 </table>

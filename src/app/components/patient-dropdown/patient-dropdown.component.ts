@@ -3,6 +3,8 @@ import { GraphService } from '../../services/graph.service';
 import { Patient } from '../../models/patient';
 import { CancerStatus, UtilService } from '../../services/util.service';
 import { DataService } from '../../services/data.service';
+import { PatientCollection } from '../../models/patient-collection';
+import { StoreService } from '../../services/store.service';
 
 @Component({
   selector: 'app-patient-dropdown',
@@ -15,10 +17,7 @@ export class PatientDropdownComponent implements OnInit, OnChanges {
    */
   @Input() headline!: string;
 
-  /**
-   * List of available patients.
-   */
-  @Input() patients!: Patient[] | null;
+  patients!: Patient[] | null;
 
   /**
    * Cancer status, similar to {@link headline}, but encapsulated into an enum {@link CancerStatus}
@@ -35,7 +34,7 @@ export class PatientDropdownComponent implements OnInit, OnChanges {
    * and load the data as soon as the patient data is here.
    * @private
    */
-  private loadPatientOnLoad!: string;
+  // private loadPatientOnLoad!: string;
 
   /**
    * Constructor
@@ -45,8 +44,9 @@ export class PatientDropdownComponent implements OnInit, OnChanges {
    */
   constructor(
     private graphService: GraphService,
-    private utilService: UtilService,
-    private dataService: DataService,
+    public utilService: UtilService,
+    public dataService: DataService,
+    private storeService: StoreService,
   ) {}
 
   /**
@@ -55,20 +55,26 @@ export class PatientDropdownComponent implements OnInit, OnChanges {
    * We need to render these selection as soon as patient data has arrived.
    */
   ngOnInit(): void {
-    const routingConfig = this.graphService.getRoutingConfig();
-    if (
-      this.cancerStatus === this.utilService.cancerStatus.metastatic &&
-      routingConfig &&
-      routingConfig.loadAndSelectMeta
-    ) {
-      this.loadPatientOnLoad = routingConfig.loadAndSelectMeta;
-    } else if (
-      this.cancerStatus === this.utilService.cancerStatus.nonmetastatic &&
-      routingConfig &&
-      routingConfig.loadAndSelectNonmeta
-    ) {
-      this.loadPatientOnLoad = routingConfig.loadAndSelectNonmeta;
-    }
+
+    this.storeService.patientData.subscribe((data) => {
+      const key = this.utilService.getCancerStatusLiteral(this.cancerStatus);
+      this.patients = data[key as keyof PatientCollection] as Patient[];
+    });
+
+    // const routingConfig = this.graphService.getRoutingConfig();
+    // if (
+    //   this.cancerStatus === this.utilService.cancerStatus.metastatic &&
+    //   routingConfig &&
+    //   routingConfig.loadAndSelectMeta
+    // ) {
+    //   this.loadPatientOnLoad = routingConfig.loadAndSelectMeta;
+    // } else if (
+    //   this.cancerStatus === this.utilService.cancerStatus.nonmetastatic &&
+    //   routingConfig &&
+    //   routingConfig.loadAndSelectNonmeta
+    // ) {
+    //   this.loadPatientOnLoad = routingConfig.loadAndSelectNonmeta;
+    // }
   }
 
   /**
@@ -76,12 +82,12 @@ export class PatientDropdownComponent implements OnInit, OnChanges {
    * @param changes Listening for patient data
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.patients && this.loadPatientOnLoad && this.patients) {
-      const patient = this.patients.find((a) => a.name === this.loadPatientOnLoad);
-      this.selectPatient(patient)
-        .then()
-        .catch((e) => console.error(e));
-    }
+    // if (changes.patients && this.loadPatientOnLoad && this.patients) {
+    //   const patient = this.patients.find((a) => a.name === this.loadPatientOnLoad);
+    //   this.selectPatient(patient)
+    //     .then()
+    //     .catch((e) => console.error(e));
+    // }
   }
 
   /**
@@ -90,26 +96,30 @@ export class PatientDropdownComponent implements OnInit, OnChanges {
    * @param patient The currently selected patient
    */
   async selectPatient(patient: Patient | undefined): Promise<void> {
+    console.log(patient);
+
     if (!patient) {
       return;
     }
 
     this.selected = patient;
 
-    this.graphService.visualizationConfig[
-      this.cancerStatus === this.utilService.cancerStatus.metastatic
-        ? 'patientMetastatic'
-        : 'patientNonmetastatic'
-    ] = patient;
+    await this.graphService.selectPatient(patient.name, this.cancerStatus);
 
-    this.graphService.handlePatientSelection();
-    this.graphService.visualizationConfig[
-      this.cancerStatus === this.utilService.cancerStatus.metastatic
-        ? 'patientDetailsMetastatic'
-        : 'patientDetailsNonmetastatic'
-    ] = await this.dataService.loadPatientDetails(patient.name);
-
-    this.graphService.layoutPatient();
+    // this.graphService.visualizationConfig[
+    //   this.cancerStatus === this.utilService.cancerStatus.metastatic
+    //     ? 'patientMetastatic'
+    //     : 'patientNonmetastatic'
+    // ] = patient;
+    //
+    // this.graphService.handlePatientSelection();
+    // this.graphService.visualizationConfig[
+    //   this.cancerStatus === this.utilService.cancerStatus.metastatic
+    //     ? 'patientDetailsMetastatic'
+    //     : 'patientDetailsNonmetastatic'
+    // ] = await this.dataService.loadPatientDetails(patient.name);
+    //
+    // this.graphService.layoutPatient();
   }
 
   /**

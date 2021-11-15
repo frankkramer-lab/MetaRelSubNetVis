@@ -16,7 +16,8 @@ import { DownloadConfig } from '../models/download-config';
   providedIn: 'root',
 })
 export class RoutingGuard implements CanActivate {
-  constructor(private graphService: GraphService, private router: Router) {}
+  constructor(private graphService: GraphService, private router: Router) {
+  }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -28,9 +29,11 @@ export class RoutingGuard implements CanActivate {
       const imageDownloadConfig: DownloadConfig = { extension: '', scale: 0, transparent: false };
       const routingConfig: RoutingConfig = {
         collapsedSidebar: false,
+        collapsedSidebarButton: false,
         loadAndSelectMeta: null,
         loadAndSelectNonmeta: null,
         triggerImageDownload: false,
+        selectedNodes: null,
         imageDownloadConfig,
         visualizationConfig,
       };
@@ -41,13 +44,21 @@ export class RoutingGuard implements CanActivate {
       routeParts.forEach((part) => {
         const keyValuePair: string[] = part.split('-');
         switch (keyValuePair[0]) {
+          case 'sbb':
+            if (keyValuePair[1] === 'true') {
+              routingConfig.collapsedSidebarButton = true;
+              routingConfig.collapsedSidebar = true;
+            }
+            break;
           case 'sb':
             routingConfig.collapsedSidebar = keyValuePair[1] === 'true';
             break;
           case 'dwn':
+            // todo
             routingConfig.triggerImageDownload = keyValuePair[1] === 'true';
             break;
           case 'img':
+            // todo
             const imgConfigItems = keyValuePair[1].split('%');
             const scale = Number(imgConfigItems[1]);
             routingConfig.imageDownloadConfig.extension = imgConfigItems[0];
@@ -67,7 +78,7 @@ export class RoutingGuard implements CanActivate {
             routingConfig.loadAndSelectNonmeta = keyValuePair[1];
             break;
           case 'sel':
-            // todo select nodes
+            routingConfig.selectedNodes = keyValuePair[1].split(',') ?? null;
             break;
           case 'all':
             visualizationConfig.showAllNodes = keyValuePair[1] === 'true';

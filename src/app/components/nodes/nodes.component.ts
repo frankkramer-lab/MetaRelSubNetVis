@@ -8,21 +8,26 @@ import { StoreService } from '../../services/store.service';
   styleUrls: ['./nodes.component.scss'],
 })
 export class NodesComponent implements OnInit {
-
   /**
    * Term the user filtered the unselected nodes by
    */
   filterTerm = '';
 
+  /**
+   * Occurrences stored for this network. Accessible via store service
+   */
   occ: any;
 
   /**
    * Constructor
-   * @param graphService Necessary to access the current {@link graphService#visualizationConfig}
+   * @param graphService Needed for access to the current {@link graphService#visualizationConfig}
+   * @param storeService Needed for access to the stored data
    */
-  constructor(public graphService: GraphService, public storeService: StoreService) {}
+  constructor(public graphService: GraphService, private storeService: StoreService) {}
 
-
+  /**
+   * Sets the network's occurrences
+   */
   ngOnInit(): void {
     this.storeService.networkData.subscribe((data) => {
       this.occ = data.occ;
@@ -47,6 +52,4 @@ export class NodesComponent implements OnInit {
       this.graphService.visibleNodes.sort((a, b) => (a.occ.all < b.occ.all ? 1 : -1));
     }
   }
-
-
 }

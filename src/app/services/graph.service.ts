@@ -103,6 +103,8 @@ export class GraphService {
    */
   private geMax!: number;
 
+  private patientData!: PatientCollection;
+
   /**
    * Constructor, binding svg export library to cytoscape
    */
@@ -112,6 +114,9 @@ export class GraphService {
     private storeService: StoreService,
   ) {
     cytoscape.use(svg);
+    storeService.patientData.subscribe((data) => {
+      this.patientData = data;
+    });
   }
 
   /**
@@ -325,7 +330,7 @@ export class GraphService {
    * @param network Network elements
    * @param container HTML container where the network is to be rendered
    */
-  async initializeCore(network: Network, container: HTMLElement): Promise<void> {
+  initializeCore(network: Network, container: HTMLElement): void {
     this.core = cytoscape({
       container,
       elements: network,
@@ -337,33 +342,57 @@ export class GraphService {
     this.allNodes = network.nodes;
 
     if (this.routingConfig) {
-      if (this.allNodes) {
-        // todo research if i need this line
-        this.routingConfig.selectedNodes?.forEach((nodeName) => {
-          const node = this.allNodes?.find(
-            (a) => a.data.id === this.utilService.decodeNodelabel(nodeName),
-          );
-          if (node) {
-            this.selectNode(node);
-          }
-        });
-      }
-
-      if (this.routingConfig.loadAndSelectMeta) {
-        await this.selectPatient(this.routingConfig.loadAndSelectMeta, CancerStatus.metastatic);
-      }
-      if (this.routingConfig.loadAndSelectNonmeta) {
-        await this.selectPatient(
-          this.routingConfig.loadAndSelectNonmeta,
-          CancerStatus.nonmetastatic,
-        );
-      }
-
-      // if (this.routingConfig.triggerImageDownload) {
-      //   this.downloadImage(this.routingConfig.imageDownloadConfig);
-      //   console.log(this.visualizationConfig);
-      // }
+      this.handleVisualizationPreset().then(() => {
+        console.log('visualization finished!');
+      });
     }
+  }
+
+
+  private async handleVisualizationPreset(): Promise<void> {
+    // handle basic visualization
+    this.updateBasicVisualizationByRoutingConfig();
+
+    // handle selected nodes
+    // if (this.allNodes) {
+    this.routingConfig.selectedNodes?.forEach((nodeName) => {
+      const node = this.allNodes?.find(
+        (a) => a.data.id === this.utilService.decodeNodelabel(nodeName),
+      );
+      if (node) {
+        this.selectNode(node);
+      }
+    });
+    // }
+
+    // handle selected patient: meta
+    if (this.routingConfig.loadAndSelectMeta) {
+      await this.selectPatient(this.routingConfig.loadAndSelectMeta, CancerStatus.metastatic, false);
+    }
+
+    // handle selected patient: non-meta
+    if (this.routingConfig.loadAndSelectNonmeta) {
+      await this.selectPatient(
+        this.routingConfig.loadAndSelectNonmeta,
+        CancerStatus.nonmetastatic,
+        false,
+      );
+    }
+
+    this.layoutPatient();
+  }
+
+  /**
+   * Updates the basic visualization configuration by using the routing config entries.
+   * Might need validation, such as either show-all or show-shared.
+   */
+  private updateBasicVisualizationByRoutingConfig(): void {
+    this.visualizationConfig.nodeColorBy = this.routingConfig.visualizationConfig.nodeColorBy;
+    this.visualizationConfig.nodeSizeBy = this.routingConfig.visualizationConfig.nodeSizeBy;
+    this.visualizationConfig.showOnlySharedNodes =
+      this.routingConfig.visualizationConfig.showOnlySharedNodes;
+    this.visualizationConfig.showAllNodes = this.routingConfig.visualizationConfig.showAllNodes;
+    this.visualizationConfig.showMtbResults = this.routingConfig.visualizationConfig.showMtbResults;
   }
 
   /**
@@ -537,7 +566,7 @@ export class GraphService {
         cancerStatus === this.utilService.cancerStatus.metastatic
           ? 'patientDetailsMetastatic'
           : 'patientDetailsNonmetastatic'
-      ];
+        ];
 
     const thresholds = this.getThresholds(cancerStatus);
 
@@ -602,15 +631,15 @@ export class GraphService {
     this.core
       .style()
       // @ts-ignore
-      .selector("node[color = 'LOW']")
+      .selector('node[color = \'LOW\']')
       .style('background-color', this.colors.blue)
       .style('text-outline-color', this.colors.blue)
       // @ts-ignore
-      .selector("node[color = 'NORMAL']")
+      .selector('node[color = \'NORMAL\']')
       .style('background-color', this.colors.yellow)
       .style('text-outline-color', this.colors.yellow)
       // @ts-ignore
-      .selector("node[color = 'HIGH']")
+      .selector('node[color = \'HIGH\']')
       .style('background-color', this.colors.red)
       .style('text-outline-color', this.colors.red)
       // @ts-ignore
@@ -622,22 +651,22 @@ export class GraphService {
       .style('pie-2-background-color', this.colors.gray)
       .style('pie-1-background-color', this.colors.gray)
       // @ts-ignore
-      .selector("node.split[colorMet = 'LOW']")
+      .selector('node.split[colorMet = \'LOW\']')
       .style('pie-2-background-color', this.colors.blue)
       // @ts-ignore
-      .selector("node.split[colorNonMet = 'LOW']")
+      .selector('node.split[colorNonMet = \'LOW\']')
       .style('pie-1-background-color', this.colors.blue)
       // @ts-ignore
-      .selector("node.split[colorMet = 'NORMAL']")
+      .selector('node.split[colorMet = \'NORMAL\']')
       .style('pie-2-background-color', this.colors.yellow)
       // @ts-ignore
-      .selector("node.split[colorNonMet = 'NORMAL']")
+      .selector('node.split[colorNonMet = \'NORMAL\']')
       .style('pie-1-background-color', this.colors.yellow)
       // @ts-ignore
-      .selector("node.split[colorMet = 'HIGH']")
+      .selector('node.split[colorMet = \'HIGH\']')
       .style('pie-2-background-color', this.colors.red)
       // @ts-ignore
-      .selector("node.split[colorNonMet = 'HIGH']")
+      .selector('node.split[colorNonMet = \'HIGH\']')
       .style('pie-1-background-color', this.colors.red);
   }
 
@@ -816,24 +845,30 @@ export class GraphService {
 
   /**
    * Updates the node style based on if the mtb property is to be displayed.
+   * @param doLayout True, if the layout is to be applied
    */
-  updateMtbNodes(): void {
+  updateMtbNodes(doLayout: boolean = true): void {
     const b = this.visualizationConfig.showMtbResults;
     this.core
       .style()
       // @ts-ignore
       .selector('node.mtb')
       .style('border-width', b ? '7px' : '0px');
-    this.layoutPatient();
+    if (doLayout) {
+      this.layoutPatient();
+    }
   }
 
   /**
    * Updates the rendered network to match the defined threshold.
    * @param $event The user defined threshold (still modified by the modifier due to range issues)
+   * @param doLayout True, if the layout is to be applied
    */
-  updateThresholds($event: number) {
+  updateThresholds($event: number, doLayout: boolean = true) {
     this.visualizationConfig.thresholdDefined = $event / this.thresholds.multiplier;
-    this.layoutPatient();
+    if (doLayout) {
+      this.layoutPatient();
+    }
   }
 
   /**
@@ -879,24 +914,13 @@ export class GraphService {
   }
 
   /**
-   * Updates the basic visualization configuration by using the routing config entries.
-   * Might need validation, such as either show-all or show-shared.
+   * Selects a patient. This function is needed for both the dropdown menu in the sidebar,
+   * and the routing based patient preselection.
+   * @param patientName Name of the patient to be selected.
+   * @param cancerStatus Status of this patient.
+   * @param doLayout True, when the view is to be updated
    */
-  updateBasicVisualizationByRoutingConfig(): void {
-    this.visualizationConfig.nodeColorBy = this.routingConfig.visualizationConfig.nodeColorBy;
-    this.visualizationConfig.nodeSizeBy = this.routingConfig.visualizationConfig.nodeSizeBy;
-    this.visualizationConfig.showOnlySharedNodes =
-      this.routingConfig.visualizationConfig.showOnlySharedNodes;
-    this.visualizationConfig.showAllNodes = this.routingConfig.visualizationConfig.showAllNodes;
-    this.visualizationConfig.showMtbResults = this.routingConfig.visualizationConfig.showMtbResults;
-    // console.log(this.core);
-  }
-
-  /**
-   * @param patientName
-   * @param cancerStatus
-   */
-  async selectPatient(patientName: string, cancerStatus: CancerStatus): Promise<void> {
+  async selectPatient(patientName: string, cancerStatus: CancerStatus, doLayout: boolean = true): Promise<void> {
     const detailsKey =
       cancerStatus === this.utilService.cancerStatus.metastatic
         ? 'patientDetailsMetastatic'
@@ -907,17 +931,19 @@ export class GraphService {
         : 'patientNonmetastatic';
     const classKey = this.utilService.getCancerStatusLiteral(cancerStatus);
 
-    this.storeService.patientData.subscribe((data) => {
-      this.visualizationConfig[key] =
-        (data[classKey as keyof PatientCollection] as Patient[]).find(
-          (a) => a.name === patientName,
-        ) ?? null;
+    // this.storeService.patientData.subscribe((data) => {
+    this.visualizationConfig[key] =
+      (this.patientData[classKey as keyof PatientCollection] as Patient[]).find(
+        (a) => a.name === patientName,
+      ) ?? null;
 
-      this.dataService.loadPatientDetails(patientName).then((details) => {
-        this.visualizationConfig[detailsKey] = details;
-        this.handlePatientSelection();
+    this.dataService.loadPatientDetails(patientName).then((details) => {
+      this.visualizationConfig[detailsKey] = details;
+      this.handlePatientSelection();
+      if (doLayout) {
         this.layoutPatient();
-      });
+      }
     });
+    // });
   }
 }

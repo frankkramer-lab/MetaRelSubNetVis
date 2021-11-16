@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { PatientCollection } from '../../models/patient-collection';
+import { Component } from '@angular/core';
 import { UtilService } from '../../services/util.service';
 
 @Component({
@@ -8,7 +7,6 @@ import { UtilService } from '../../services/util.service';
   styleUrls: ['./patients.component.scss'],
 })
 export class PatientsComponent {
-  @Input() patients!: PatientCollection | null;
 
   constructor(public utilService: UtilService) {}
 

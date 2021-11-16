@@ -1,7 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { UtilService } from '../../services/util.service';
+import { Component } from '@angular/core';
+import { SidebarVisibility, UtilService } from '../../services/util.service';
 import { GraphService } from '../../services/graph.service';
-import { PatientCollection } from '../../models/patient-collection';
 import { DownloadConfig } from '../../models/download-config';
 
 @Component({
@@ -10,11 +9,6 @@ import { DownloadConfig } from '../../models/download-config';
   styleUrls: ['./visualization-config-generator.component.scss'],
 })
 export class VisualizationConfigGeneratorComponent {
-  /**
-   * Collection of all patients, both metastatic and non-metastatic
-   */
-  @Input() patients!: PatientCollection | null;
-
   /**
    * List of available data types.
    */
@@ -26,14 +20,14 @@ export class VisualizationConfigGeneratorComponent {
   triggerImageDownload = false;
 
   /**
-   * True, if the generated route should collapse the sidebar.
+   * True, if the generated route should have a visible sidebar.
    */
-  collapsedSidebar = false;
+  showSidebar = true;
 
   /**
-   * True, if the button during the collapsed sidebar is to be hidden.
+   * True, if the button during the collapsed sidebar is visible.
    */
-  collapsedSidebarButton = false;
+  showSidebarButton = true;
 
   /**
    * Config regarding image download
@@ -49,13 +43,38 @@ export class VisualizationConfigGeneratorComponent {
    * @param utilService Needed for access to custom enumerations.
    * @param graphService Needed for access to {@link graphService#visualizationConfig}
    */
-  constructor(public utilService: UtilService, public graphService: GraphService) {}
+  constructor(public utilService: UtilService, public graphService: GraphService) {
+  }
 
+  /**
+   * Todo change localhost to actual host
+   * @param encodedUrlParams
+   * @private
+   */
+  private copyToClipboard(encodedUrlParams: string): void {
+    const url = `localhost:4200/${encodedUrlParams}`;
+    console.log(url);
+    navigator.clipboard.writeText(url);
+    // todo show alert
+  }
+
+  /**
+   * Generates the hash for the current visualization config and copies the
+   * resulting URL to the clipboard.
+   */
   generateAndCopyHash(): void {
     const urlParams: string[] = [];
+    let sidebarVisibility: SidebarVisibility;
+    if (this.showSidebar) {
+      sidebarVisibility = SidebarVisibility.full;
+    } else if (!this.showSidebar && this.showSidebarButton) {
+      sidebarVisibility = SidebarVisibility.button;
+    } else {
+      sidebarVisibility = SidebarVisibility.none;
+    }
 
     // bools
-    urlParams.push(`sb=${this.collapsedSidebar}`);
+    urlParams.push(`sb=${sidebarVisibility}`);
     urlParams.push(`dwn=${this.triggerImageDownload}`);
 
     // image options
@@ -87,14 +106,15 @@ export class VisualizationConfigGeneratorComponent {
     urlParams.push(`col=${this.graphService.visualizationConfig.nodeColorBy}`);
     urlParams.push(`size=${this.graphService.visualizationConfig.nodeSizeBy}`);
 
-    // selection
-    urlParams.push(
-      `sel=${this.graphService.selectedNodes
-        .map((a) => this.utilService.encodeNodeLabel(a.data.id))
-        .join(',')}`,
-    );
-
+    if (this.graphService.selectedNodes.length > 0) {
+      // selection
+      urlParams.push(
+        `sel=${this.graphService.selectedNodes
+          .map((a) => this.utilService.encodeNodeLabel(a.data.id))
+          .join(',')}`,
+      );
+    }
     const encoded = encodeURI(urlParams.join('&').replace(new RegExp('=', 'g'), '-'));
-    console.log(encoded);
+    this.copyToClipboard(encoded);
   }
 }

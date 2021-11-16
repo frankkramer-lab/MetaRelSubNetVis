@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { Threshold } from '../../models/threshold';
+import { Component } from '@angular/core';
 import { StoreService } from '../../services/store.service';
 import { UtilService } from '../../services/util.service';
 
@@ -9,21 +8,14 @@ import { UtilService } from '../../services/util.service';
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-  // @Input() patients!: PatientCollection | null;
-
-  @Input() thresholds!: Threshold;
-
-  // @Input() nodes!: Node[];
-
-  // @Input() occ!: any;
-
-  // @Input() showSidebar!: boolean;
-
-  // @Output() showSidebarEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private storeService: StoreService, private utilService: UtilService) {
   }
 
+  /**
+   * Sets sidebar invisible, but still shows the button to re-open the sidebar.
+   * Fully hiding the sidebar can only be achieved via routing.
+   */
   hideSidebar(): void {
     if (this.storeService.showSidebar === this.utilService.sidebarVisibility.full) {
       this.storeService.showSidebar = this.utilService.sidebarVisibility.button;

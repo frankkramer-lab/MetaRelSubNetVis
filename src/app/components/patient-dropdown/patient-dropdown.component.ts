@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { GraphService } from '../../services/graph.service';
 import { Patient } from '../../models/patient';
 import { CancerStatus, UtilService } from '../../services/util.service';
@@ -11,7 +11,7 @@ import { StoreService } from '../../services/store.service';
   templateUrl: './patient-dropdown.component.html',
   styleUrls: ['./patient-dropdown.component.scss'],
 })
-export class PatientDropdownComponent implements OnInit, OnChanges {
+export class PatientDropdownComponent implements OnInit {
   /**
    * This sub component's headline, which should either be 'metastatic' or 'nonmetastatic'
    */
@@ -30,23 +30,17 @@ export class PatientDropdownComponent implements OnInit, OnChanges {
   selected!: Patient | null;
 
   /**
-   * If a patient is to be loaded via routing, we read that patient's ID
-   * and load the data as soon as the patient data is here.
-   * @private
-   */
-  // private loadPatientOnLoad!: string;
-
-  /**
    * Constructor
    * @param graphService Needed for access to {@link graphService#visualizationConfig}
+   * @param storeService Needed for access to patient data
    * @param utilService Needed for access to enum {@link CancerStatus}
    * @param dataService Needed for loading patient detail data on demand
    */
   constructor(
     private graphService: GraphService,
+    private storeService: StoreService,
     public utilService: UtilService,
     public dataService: DataService,
-    private storeService: StoreService,
   ) {}
 
   /**
@@ -55,39 +49,10 @@ export class PatientDropdownComponent implements OnInit, OnChanges {
    * We need to render these selection as soon as patient data has arrived.
    */
   ngOnInit(): void {
-
     this.storeService.patientData.subscribe((data) => {
       const key = this.utilService.getCancerStatusLiteral(this.cancerStatus);
       this.patients = data[key as keyof PatientCollection] as Patient[];
     });
-
-    // const routingConfig = this.graphService.getRoutingConfig();
-    // if (
-    //   this.cancerStatus === this.utilService.cancerStatus.metastatic &&
-    //   routingConfig &&
-    //   routingConfig.loadAndSelectMeta
-    // ) {
-    //   this.loadPatientOnLoad = routingConfig.loadAndSelectMeta;
-    // } else if (
-    //   this.cancerStatus === this.utilService.cancerStatus.nonmetastatic &&
-    //   routingConfig &&
-    //   routingConfig.loadAndSelectNonmeta
-    // ) {
-    //   this.loadPatientOnLoad = routingConfig.loadAndSelectNonmeta;
-    // }
-  }
-
-  /**
-   * Listening for arrival of patient data to apply preselected patients.
-   * @param changes Listening for patient data
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    // if (changes.patients && this.loadPatientOnLoad && this.patients) {
-    //   const patient = this.patients.find((a) => a.name === this.loadPatientOnLoad);
-    //   this.selectPatient(patient)
-    //     .then()
-    //     .catch((e) => console.error(e));
-    // }
   }
 
   /**
@@ -96,30 +61,12 @@ export class PatientDropdownComponent implements OnInit, OnChanges {
    * @param patient The currently selected patient
    */
   async selectPatient(patient: Patient | undefined): Promise<void> {
-    console.log(patient);
-
     if (!patient) {
       return;
     }
 
     this.selected = patient;
-
     await this.graphService.selectPatient(patient.name, this.cancerStatus);
-
-    // this.graphService.visualizationConfig[
-    //   this.cancerStatus === this.utilService.cancerStatus.metastatic
-    //     ? 'patientMetastatic'
-    //     : 'patientNonmetastatic'
-    // ] = patient;
-    //
-    // this.graphService.handlePatientSelection();
-    // this.graphService.visualizationConfig[
-    //   this.cancerStatus === this.utilService.cancerStatus.metastatic
-    //     ? 'patientDetailsMetastatic'
-    //     : 'patientDetailsNonmetastatic'
-    // ] = await this.dataService.loadPatientDetails(patient.name);
-    //
-    // this.graphService.layoutPatient();
   }
 
   /**

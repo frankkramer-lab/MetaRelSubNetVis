@@ -210,20 +210,20 @@
     class="form-check-input"
     type="checkbox"
     id="collapse-sidebar"
-    [(ngModel)]="collapsedSidebar"
+    [(ngModel)]="showSidebar"
   />
-  <label class="form-check-label" for="collapse-sidebar">Collapse sidebar</label>
+  <label class="form-check-label" for="collapse-sidebar">Show sidebar</label>
 </div>
 
 <!-- collapsed sidebar button -->
-<div class="form-check mt-2" *ngIf="collapsedSidebar">
+<div class="form-check mt-2" *ngIf="!showSidebar">
   <input
     class="form-check-input"
     type="checkbox"
     id="collapse-sidebar-button"
-    [(ngModel)]="collapsedSidebarButton"
+    [(ngModel)]="showSidebarButton"
   />
-  <label class="form-check-label" for="collapse-sidebar">Collapse sidebar's button</label>
+  <label class="form-check-label" for="collapse-sidebar">Show a button to open the sidebar</label>
 </div>
 
 <div class="d-grid mt-2">

@@ -8,7 +8,7 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { GraphService } from '../services/graph.service';
-import { NodeColorBy, NodeSizeBy } from '../services/util.service';
+import { NodeColorBy, NodeSizeBy, SidebarVisibility, UtilService } from '../services/util.service';
 import { RoutingConfig } from '../models/routing-config';
 import { DownloadConfig } from '../models/download-config';
 
@@ -16,7 +16,7 @@ import { DownloadConfig } from '../models/download-config';
   providedIn: 'root',
 })
 export class RoutingGuard implements CanActivate {
-  constructor(private graphService: GraphService, private router: Router) {
+  constructor(private graphService: GraphService, private utilService: UtilService, private router: Router) {
   }
 
   canActivate(
@@ -28,8 +28,7 @@ export class RoutingGuard implements CanActivate {
       const { visualizationConfig } = this.graphService;
       const imageDownloadConfig: DownloadConfig = { extension: '', scale: 0, transparent: false };
       const routingConfig: RoutingConfig = {
-        collapsedSidebar: false,
-        collapsedSidebarButton: false,
+        sidebarVisibility: this.utilService.sidebarVisibility.full,
         loadAndSelectMeta: null,
         loadAndSelectNonmeta: null,
         triggerImageDownload: false,
@@ -44,14 +43,8 @@ export class RoutingGuard implements CanActivate {
       routeParts.forEach((part) => {
         const keyValuePair: string[] = part.split('-');
         switch (keyValuePair[0]) {
-          case 'sbb':
-            if (keyValuePair[1] === 'true') {
-              routingConfig.collapsedSidebarButton = true;
-              routingConfig.collapsedSidebar = true;
-            }
-            break;
           case 'sb':
-            routingConfig.collapsedSidebar = keyValuePair[1] === 'true';
+            routingConfig.sidebarVisibility = Number(keyValuePair[1]) as SidebarVisibility;
             break;
           case 'dwn':
             // todo
@@ -100,6 +93,10 @@ export class RoutingGuard implements CanActivate {
 
       console.log(routingConfig);
       this.graphService.setRoutingConfig(routingConfig);
+
+      // todo sidebar visibility
+      // todo trigger image
+
       this.router
         .navigate([''])
         .then()

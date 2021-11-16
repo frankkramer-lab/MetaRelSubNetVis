@@ -1,9 +1,9 @@
 import { VisualizationConfig } from './visualization-config';
 import { DownloadConfig } from './download-config';
+import { SidebarVisibility } from '../services/util.service';
 
 export interface RoutingConfig {
-  collapsedSidebar: boolean;
-  collapsedSidebarButton: boolean;
+  sidebarVisibility: SidebarVisibility;
   triggerImageDownload: boolean;
   loadAndSelectMeta: string | null;
   loadAndSelectNonmeta: string | null;

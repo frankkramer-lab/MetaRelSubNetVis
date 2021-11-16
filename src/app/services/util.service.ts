@@ -146,4 +146,5 @@ export class UtilService {
   decodeNodelabel = (label: string): string => {
     return label.replace(new RegExp('%', 'g'), '-');
   };
+
 }

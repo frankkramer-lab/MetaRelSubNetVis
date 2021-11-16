@@ -41,6 +41,9 @@ export class ThresholdComponent implements OnInit {
    */
   constructor(public graphService: GraphService, private storeService: StoreService) {}
 
+  /**
+   * As soon as threshold data is available, we initialize the threshold's upper and lower bounds.
+   */
   ngOnInit(): void {
     this.storeService.thresholdData.subscribe((data) => {
       this.thresholds = data;

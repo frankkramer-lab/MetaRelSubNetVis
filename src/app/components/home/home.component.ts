@@ -60,16 +60,16 @@ export class HomeComponent implements OnInit {
    * Loading the network and rendering the initially displayed network
    */
   ngOnInit(): void {
-    const routingConfig = this.graphService.getRoutingConfig();
+    // const routingConfig = this.graphService.getRoutingConfig();
 
     this.storeService.networkData.subscribe((data) => {
       this.graphService.initializeCore(data, this.cyContainer.nativeElement);
     });
 
-    if (routingConfig) {
-      this.graphService.updateBasicVisualizationByRoutingConfig();
+    // if (routingConfig) {
+    //   this.graphService.updateBasicVisualizationByRoutingConfig();
       // this.storeService.showSidebar = !routingConfig.collapsedSidebar; // fixme
-    }
+    // }
   }
 
 }

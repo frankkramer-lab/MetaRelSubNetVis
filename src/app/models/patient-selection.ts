@@ -1,4 +1,4 @@
-import { Patient } from './patient';
+import { Patient } from '../data/schema/patient';
 
 /**
  * Contains for both metastatic and nonmetastatic a {@link Patient} item.

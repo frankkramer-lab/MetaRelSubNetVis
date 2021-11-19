@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RoutingGuard } from './guards/routing.guard';
-import { HomeComponent } from './components/home/home.component';
+import { LayoutComponent } from './layout/layout/layout.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: ':data', component: HomeComponent, canActivate: [RoutingGuard] },
+  { path: '', component: LayoutComponent },
+  { path: ':data', component: LayoutComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

@@ -20,7 +20,8 @@
         "airbnb-base",
         "airbnb-typescript/base",
         "prettier",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:ngrx/recommended"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
@@ -40,7 +41,10 @@
           }
         ],
         "import/prefer-default-export": "off"
-      }
+      },
+      "plugins": [
+        "ngrx"
+      ]
     },
     {
       "files": [

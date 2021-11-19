@@ -7,7 +7,7 @@ import {
   UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { GraphService } from '../services/graph.service';
+import { GraphService } from '../core/service/graph.service';
 import { NodeColorBy, NodeSizeBy, SidebarVisibility, UtilService } from '../services/util.service';
 import { RoutingConfig } from '../models/routing-config';
 import { DownloadConfig } from '../models/download-config';
@@ -16,14 +16,16 @@ import { DownloadConfig } from '../models/download-config';
   providedIn: 'root',
 })
 export class RoutingGuard implements CanActivate {
-  constructor(private graphService: GraphService, private utilService: UtilService, private router: Router) {
-  }
+  constructor(
+    private graphService: GraphService,
+    private utilService: UtilService,
+    private router: Router,
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
     if (route.params.data) {
       const { visualizationConfig } = this.graphService;
       const imageDownloadConfig: DownloadConfig = { extension: '', scale: 0, transparent: false };

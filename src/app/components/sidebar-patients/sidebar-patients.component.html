@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-6">
+    <app-sidebar-patients-dropdown
+      (patientReset)="patientAReset()"
+      (patientSelected)="patientASelected($event)"
+      [patient]="patientA$ | async"
+      [patients]="patientsGroupA$ | async"
+      headline="Metastatic"
+    ></app-sidebar-patients-dropdown>
+  </div>
+
+  <div class="col-6">
+    <app-sidebar-patients-dropdown
+      (patientReset)="patientBReset()"
+      (patientSelected)="patientBSelected($event)"
+      [patient]="patientB$ | async"
+      [patients]="patientsGroupB$ | async"
+      headline="Non-metastatic"
+    ></app-sidebar-patients-dropdown>
+  </div>
+</div>

@@ -1,5 +1,5 @@
-import { Patient } from './patient';
-import { PatientItem } from './patient-item';
+import { Patient } from '../data/schema/patient';
+import { PatientItem } from '../data/schema/patient-item';
 import { NodeColorBy, NodeSizeBy } from '../services/util.service';
 
 /**

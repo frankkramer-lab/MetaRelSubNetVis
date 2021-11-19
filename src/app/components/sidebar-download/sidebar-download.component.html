@@ -1,0 +1,9 @@
+<app-sidebar-download-form
+  [extension]="extension$ |async"
+  [scale]="scale$|async"
+  [transparentBackground]="transparentBackground$|async"
+  (extensionChanged)="triggerSetFileExtension($event)"
+  (scaleChanged)="triggerSetScale($event)"
+  (transparentBackgroundChanged)="toggleTransparentBackground()"
+  (triggerDownloadEmitter)="triggerDownload($event)"
+></app-sidebar-download-form>

@@ -1,4 +1,4 @@
-<ng-container *ngIf="patientsSelected !== 0">
+<ng-container *ngIf="patientsSelected !== 0; else emptyTemplate">
   <div class="input-group mb-3">
   <span class="input-group-text" id="thresholdLabel">
     {{
@@ -29,3 +29,6 @@
   />
 </ng-container>
 
+<ng-template #emptyTemplate>
+  <p>Select at least one patient above</p>
+</ng-template>

@@ -1,0 +1,30 @@
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap/scss/_variables.scss';
+
+:root {
+  --custom-red: #ff3d6a;
+  --custom-yellow: #e8e857;
+  --custom-blue: #599eff;
+  --custom-green: #0b0;
+  --custom-gray: #888;
+  --custom-dark: #0f0f0f;
+  --custom-highlight: #333;
+}
+
+.sidebar {
+  background-color: #3f3f3f;
+  height: 100vh;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.icon-hover:hover {
+  color: $info;
+}
+
+#table-nodes {
+  max-height: 200px;
+}

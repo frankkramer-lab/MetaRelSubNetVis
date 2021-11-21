@@ -1,7 +1,151 @@
-<app-sidebar-patients></app-sidebar-patients>
-<app-sidebar-threshold></app-sidebar-threshold>
-<app-sidebar-nodes></app-sidebar-nodes>
-<app-sidebar-layout></app-sidebar-layout>
-<app-sidebar-hash-generator></app-sidebar-hash-generator>
-<app-sidebar-download></app-sidebar-download>
-<app-sidebar-legal></app-sidebar-legal>
+<!-- headline -->
+<h3 class="mt-2 mb-4">
+  <span>Explore the networks</span>
+  <span class="float-end">
+      <fa-icon icon="times" class="cursor"></fa-icon>
+    </span>
+</h3>
+
+<div class="d-grid gap-2 mb-4">
+  <!-- PATIENTS -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapsePatient"
+    aria-expanded="false"
+    aria-controls="collapsePatient"
+  >
+    <fa-icon
+      icon="hospital-user"
+      [ngClass]="collapsePatient.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Patients
+  </button>
+  <div class="collapse" #collapsePatient id="collapsePatient">
+    <app-sidebar-patients></app-sidebar-patients>
+  </div>
+
+  <!-- THRESHOLD -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseThreshold"
+    aria-expanded="false"
+    aria-controls="collapseThreshold"
+  >
+    <fa-icon
+      icon="sort-amount-up"
+      [ngClass]="collapseThreshold.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Threshold
+  </button>
+  <div class="collapse" id="collapseThreshold" #collapseThreshold>
+    <app-sidebar-threshold></app-sidebar-threshold>
+  </div>
+
+  <!-- NODES -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseNodes"
+    aria-expanded="false"
+    aria-controls="collapseNodes"
+  >
+    <fa-icon
+      icon="project-diagram"
+      [ngClass]="collapseNodes.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Nodes
+  </button>
+  <div class="collapse" id="collapseNodes" #collapseNodes>
+    <app-sidebar-nodes></app-sidebar-nodes>
+  </div>
+
+  <!-- LAYOUT -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseLayout"
+    aria-expanded="false"
+    aria-controls="collapseLayout"
+  >
+    <fa-icon
+      icon="palette"
+      [ngClass]="collapseLayout.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Layout
+  </button>
+  <div class="collapse" id="collapseLayout" #collapseLayout>
+    <app-sidebar-layout></app-sidebar-layout>
+  </div>
+
+  <!-- DOWNLOAD -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseDownload"
+    aria-expanded="false"
+    aria-controls="collapseDownload"
+  >
+    <fa-icon
+      icon="arrow-circle-down"
+      [ngClass]="collapseDownload.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Download
+  </button>
+  <div class="collapse" id="collapseDownload" #collapseDownload>
+    <app-sidebar-download></app-sidebar-download>
+  </div>
+
+  <!-- HASH GENERATOR -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseGenerator"
+    aria-expanded="false"
+    aria-controls="collapseGenerator"
+  >
+    <fa-icon
+      icon="link"
+      [ngClass]="collapseGenerator.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Hash generator
+  </button>
+  <div class="collapse" id="collapseGenerator" #collapseGenerator>
+    <app-sidebar-hash-generator></app-sidebar-hash-generator>
+  </div>
+
+  <!-- IMPRESSUM -->
+  <button
+    class="btn btn-dark icon-hover"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseImpressum"
+    aria-expanded="false"
+    aria-controls="collapseImpressum"
+  >
+    <fa-icon
+      icon="info"
+      [ngClass]="collapseImpressum.className.includes('show') ? 'text-info' : ''"
+    >
+    </fa-icon>
+    &nbsp;Impressum
+  </button>
+  <div class="collapse" id="collapseImpressum" #collapseImpressum>
+    <app-sidebar-legal></app-sidebar-legal>
+  </div>
+
+</div>
+

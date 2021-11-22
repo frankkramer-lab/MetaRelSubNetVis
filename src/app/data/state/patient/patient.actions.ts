@@ -32,3 +32,4 @@ export const loadPatientBDetailsSuccess = createAction(
 export const loadPatientBDetailsFailure = createAction('[API] load patient B details failure');
 
 export const setPatientSelection = createAction('[Patient Effect] set patient selection');
+

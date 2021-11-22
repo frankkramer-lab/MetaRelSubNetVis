@@ -44,7 +44,12 @@ export class SidebarDownloadFormComponent {
   });
 
   triggerDownload() {
-    // fixme fill with values from form
+    if (this.formScale) {
+      this.scaleChanged.emit(this.formScale.value);
+    } else {
+      this.scaleChanged.emit(1);
+    }
+
     this.triggerDownloadEmitter.emit();
   }
 }

@@ -1,1 +1,12 @@
-<p>sidebar-nodes works!</p>
+<app-sidebar-nodes-form
+  [occurrences]="occurrences$|async"
+  [nodes]="nodes$ | async"
+  [markedNodes]="markedNodes$ |async"
+  [numberOfColumns]="numberOfColumns$ | async"
+  [subTypeColumnA]="subtypeColumnA$ | async"
+  [subTypeColumnB]="subtypeColumnB$ | async"
+  (sortingChanged)="triggerSorting($event)"
+  (nodeClicked)="triggerMarkNode($event)"
+  (unmarkAllNodes)="triggerUnmarkAllNodes()"
+  (filterTermChanged)="triggerFilterTermChanged($event)">
+</app-sidebar-nodes-form>

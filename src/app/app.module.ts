@@ -35,6 +35,9 @@ import { SidebarPatientsDropdownComponent } from './components/sidebar-patients-
 import { SidebarThresholdSelectorComponent } from './components/sidebar-threshold-selector/sidebar-threshold-selector.component';
 import { SidebarLayoutFormComponent } from './components/sidebar-layout-form/sidebar-layout-form.component';
 import { SidebarDownloadFormComponent } from './components/sidebar-download-form/sidebar-download-form.component';
+import { SidebarNodesFormComponent } from './components/sidebar-nodes-form/sidebar-nodes-form.component';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -53,6 +56,7 @@ import { SidebarDownloadFormComponent } from './components/sidebar-download-form
     SidebarThresholdSelectorComponent,
     SidebarLayoutFormComponent,
     SidebarDownloadFormComponent,
+    SidebarNodesFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,6 +65,11 @@ import { SidebarDownloadFormComponent } from './components/sidebar-download-form
     HttpClientModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers, {}),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production,
+      autoPause: true,
+    }),
     EffectsModule.forRoot(effects),
     FontAwesomeModule,
   ],

@@ -30,7 +30,8 @@ export class SidebarThresholdComponent implements OnInit {
 
   @Output() thresholdEmitter: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>) {
+  }
 
   ngOnInit(): void {
     this.min$ = this.store.select(selectMin);

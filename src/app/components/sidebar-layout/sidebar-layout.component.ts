@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../data/state/app.state';
 import { Observable } from 'rxjs';
+import { AppState } from '../../data/state/app.state';
 import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import {

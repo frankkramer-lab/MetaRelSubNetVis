@@ -22,6 +22,8 @@ const initialState: PatientState = {
   patientADetails: [],
   patientBDetails: [],
   patientSelection: PatientSelectionEnum.none,
+  geMin: null,
+  geMax: null,
   isLoading: false,
 };
 
@@ -35,6 +37,8 @@ export const patientReducer = createReducer(
       isLoading: false,
       patientsGroupA: collection.metastatic,
       patientsGroupB: collection.nonmetastatic,
+      geMin: collection.geMin,
+      geMax: collection.geMax,
     }),
   ),
   on(
@@ -43,8 +47,22 @@ export const patientReducer = createReducer(
   ),
   on(setPatientA, (state: PatientState, { patientA }): PatientState => ({ ...state, patientA })),
   on(setPatientB, (state: PatientState, { patientB }): PatientState => ({ ...state, patientB })),
-  on(resetPatientA, (state: PatientState): PatientState => ({ ...state, patientA: null })),
-  on(resetPatientB, (state: PatientState): PatientState => ({ ...state, patientB: null })),
+  on(
+    resetPatientA,
+    (state: PatientState): PatientState => ({
+      ...state,
+      patientA: null,
+      patientADetails: [],
+    }),
+  ),
+  on(
+    resetPatientB,
+    (state: PatientState): PatientState => ({
+      ...state,
+      patientB: null,
+      patientBDetails: [],
+    }),
+  ),
   on(
     loadPatientADetailsSuccess,
     (state: PatientState, { patientADetails }): PatientState => ({

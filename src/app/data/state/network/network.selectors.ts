@@ -15,7 +15,10 @@ export const selectIsLoading = createSelector(
   (state: NetworkState) => state.isLoading,
 );
 
-export const selectNodes = createSelector(
-  selectNetwork,
-  (network: Network | null) => network?.nodes,
-);
+export const selectNodes = createSelector(selectNetwork, (network: Network | null) => {
+  return network?.nodes || [];
+});
+
+export const selectOccurrences = createSelector(selectNetwork, (network: Network | null) => {
+  return network?.occ || {};
+});

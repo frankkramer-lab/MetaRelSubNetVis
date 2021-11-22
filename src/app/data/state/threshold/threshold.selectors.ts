@@ -49,3 +49,23 @@ export const selectMax = createSelector(
     }
   },
 );
+
+export const selectMinA = createSelector(
+  selectState,
+  (state: ThresholdState) => state.groupA?.threshold || null,
+);
+
+export const selectMaxA = createSelector(
+  selectState,
+  (state: ThresholdState) => state.groupA?.max || null,
+);
+
+export const selectMinB = createSelector(
+  selectState,
+  (state: ThresholdState) => state.groupB?.threshold || null,
+);
+
+export const selectMaxB = createSelector(
+  selectState,
+  (state: ThresholdState) => state.groupB?.max || null,
+);

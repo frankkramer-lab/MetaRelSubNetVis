@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { ApiService } from '../../service/api.service';
 import {
   loadPatientADetailsFailure,
@@ -17,6 +18,7 @@ import {
   setPatientSelection,
 } from './patient.actions';
 import { loadInitialAppData } from '../app.actions';
+import { AppState } from '../app.state';
 
 @Injectable()
 export class PatientEffects {
@@ -53,7 +55,6 @@ export class PatientEffects {
       mergeMap((action) => {
         return this.apiService.loadPatientDetails(action.patientB.name).pipe(
           map((patientBDetails) => {
-            console.log(patientBDetails);
             return loadPatientBDetailsSuccess({ patientBDetails });
           }),
           catchError(() => of(loadPatientBDetailsFailure())),
@@ -64,10 +65,14 @@ export class PatientEffects {
 
   setPatientSelection$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setPatientA, setPatientB, resetPatientA, resetPatientB),
+      ofType(loadPatientADetailsSuccess, loadPatientBDetailsSuccess, resetPatientA, resetPatientB),
       map(() => setPatientSelection()),
     );
   });
 
-  constructor(private actions$: Actions, private apiService: ApiService) {}
+  constructor(
+    private actions$: Actions,
+    private store: Store<AppState>,
+    private apiService: ApiService,
+  ) {}
 }

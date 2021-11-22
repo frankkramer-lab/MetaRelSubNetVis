@@ -1,0 +1,78 @@
+<div class="row p-3">
+  <input
+    #filterTerm
+    class="form-control col"
+    type="text"
+    placeholder="Search..."
+    aria-label="Filter nodes"
+    (input)="filterTermChanged.emit(filterTerm.value)"
+  />
+  <div class="col-auto" *ngIf="nodes">
+    <span class="badge bg-secondary pt-3 pb-3">{{nodes.length}}</span>
+  </div>
+</div>
+
+<hr />
+
+<ng-container *ngIf="occurrences && numberOfColumns && markedNodes && nodes">
+
+  <!-- table head -->
+  <table class="table table-borderless text-light">
+    <thead>
+    <tr class="border-bottom">
+      <!-- protein -->
+      <th class="w-{{ numberOfColumns < 4 ? '50' : '25' }}">Protein</th>
+      <!-- meta patient -->
+      <th class="cursor w-25" *ngIf="subTypeColumnA" (click)="sortingChanged.emit(0)">
+        {{ subTypeColumnA }}&nbsp; ({{occurrences[subTypeColumnA]}})
+      </th>
+      <!-- non-meta patient -->
+      <th class="cursor w-25" *ngIf="subTypeColumnB" (click)="sortingChanged.emit(1)">
+        {{ subTypeColumnB }}&nbsp; ({{occurrences[subTypeColumnB]}})
+      </th>
+      <!-- total -->
+      <th
+        class="cursor"
+        [ngClass]="numberOfColumns === 2 ? 'w-50' : 'w-25'"
+        (click)="sortingChanged.emit(2)"
+      >
+        All&nbsp;({{ occurrences.all }})
+      </th>
+    </tr>
+    </thead>
+  </table>
+
+  <!-- table body scrollable -->
+  <div id="table-nodes" class="overflow-scroll">
+    <table class="table table-borderless text-light">
+      <tbody>
+      <ng-container *ngFor="let node of nodes">
+        <tr class="cursor"
+            [ngClass]="markedNodes.includes(node) ? 'bg-info' : ''"
+            (click)="nodeClicked.emit(node)" >
+          <td class="w-{{ numberOfColumns < 4 ? '50' : '25' }}">
+            {{ node.data.id }}
+          </td>
+          <td class="w-25" *ngIf="subTypeColumnA">
+            {{ node.occ[subTypeColumnA] }}
+          </td>
+          <td class="w-25" *ngIf="subTypeColumnB">
+            {{ node.occ[subTypeColumnB] }}
+          </td>
+          <td [ngClass]="numberOfColumns === 2 ? 'w-50' : 'w-25'">
+            {{ node.occ.all }}
+          </td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+</ng-container>
+
+<!-- Unselect -->
+<div class="d-grid" *ngIf="markedNodes && markedNodes.length > 0">
+  <button (click)="unmarkAllNodes.emit()" class="btn btn-secondary">
+    <fa-icon icon="redo"></fa-icon>&nbsp;Unselect all
+  </button>
+</div>

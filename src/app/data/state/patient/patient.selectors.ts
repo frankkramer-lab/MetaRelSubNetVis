@@ -40,3 +40,13 @@ export const selectPatientSelection = createSelector(
   selectState,
   (state: PatientState) => state.patientSelection,
 );
+
+export const selectGeMin = createSelector(
+  selectState,
+  (state: PatientState) => state.geMin,
+);
+
+export const selectGeMax = createSelector(
+  selectState,
+  (state: PatientState) => state.geMax,
+);

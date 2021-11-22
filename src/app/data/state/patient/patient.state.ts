@@ -10,5 +10,7 @@ export interface PatientState {
   patientADetails: PatientItem[];
   patientBDetails: PatientItem[];
   patientSelection: PatientSelectionEnum;
+  geMin: number | null;
+  geMax: number | null;
   isLoading: boolean;
 }

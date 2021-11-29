@@ -17,14 +17,14 @@ import {
   setPatientB,
   setPatientSelection,
 } from './patient.actions';
-import { loadInitialAppData } from '../app.actions';
+import { loadDefaultAppData } from '../app.actions';
 import { AppState } from '../app.state';
 
 @Injectable()
 export class PatientEffects {
   loadPatientData$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadInitialAppData),
+      ofType(loadDefaultAppData),
       switchMap(() => {
         return this.apiService.loadPatientsClassified().pipe(
           map((collection) => loadPatientDataSuccess({ collection })),

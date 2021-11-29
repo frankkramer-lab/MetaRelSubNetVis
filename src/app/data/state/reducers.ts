@@ -6,8 +6,10 @@ import { layoutReducer } from './layout/layout.reducer';
 import { thresholdReducer } from './threshold/threshold.reducer';
 import { nodesReducer } from './nodes/nodes.reducer';
 import { downloadReducer } from './download/download.reducer';
+import { sidebarReducer } from './sidebar/sidebar.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
+  sidebar: sidebarReducer,
   patient: patientReducer,
   network: networkReducer,
   layout: layoutReducer,

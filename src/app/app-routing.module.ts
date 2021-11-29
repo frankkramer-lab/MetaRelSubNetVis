@@ -4,7 +4,7 @@ import { LayoutComponent } from './layout/layout/layout.component';
 
 const routes: Routes = [
   { path: '', component: LayoutComponent },
-  { path: ':data', component: LayoutComponent },
+  { path: 'cx/:uuid', component: LayoutComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

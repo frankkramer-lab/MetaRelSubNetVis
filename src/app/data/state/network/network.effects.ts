@@ -3,14 +3,14 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ApiService } from '../../service/api.service';
-import { loadInitialAppData } from '../app.actions';
+import { loadDefaultAppData } from '../app.actions';
 import { loadNetworkDataFailure, loadNetworkDataSuccess } from './network.actions';
 
 @Injectable()
 export class NetworkEffects {
   loadNetworkData$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadInitialAppData),
+      ofType(loadDefaultAppData),
       switchMap(() => {
         return this.apiService.loadNetwork().pipe(
           map((network) => loadNetworkDataSuccess({ network })),

@@ -1,9 +1,8 @@
 <div class="row">
-  <!--  fixme ngif -->
-  <div class="col-4 text-light sidebar overflow-scroll">
-    <app-sidebar></app-sidebar>
+  <div class="sidebar text-light" [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-4' : 'col-auto'">
+    <app-sidebar [sidebarVisible]="sidebarVisible$ | async"></app-sidebar>
   </div>
-  <div class="col">
+  <div [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-8' : 'col'">
     <app-graph></app-graph>
   </div>
 </div>

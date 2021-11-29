@@ -11,7 +11,7 @@ import {
   setPatientB,
   setPatientSelection,
 } from './patient.actions';
-import { loadInitialAppData } from '../app.actions';
+import { loadDefaultAppData } from '../app.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 
 const initialState: PatientState = {
@@ -29,7 +29,7 @@ const initialState: PatientState = {
 
 export const patientReducer = createReducer(
   initialState,
-  on(loadInitialAppData, (state: PatientState): PatientState => ({ ...state, isLoading: true })),
+  on(loadDefaultAppData, (state: PatientState): PatientState => ({ ...state, isLoading: true })),
   on(
     loadPatientDataSuccess,
     (state: PatientState, { collection }): PatientState => ({

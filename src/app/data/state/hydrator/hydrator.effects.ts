@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, map, mergeMap, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { AppState } from '../app.state';
@@ -46,72 +46,6 @@ import {
 
 @Injectable()
 export class HydratorEffects {
-  // hydrate$ = createEffect(() => {
-  //   return this.actions$.pipe(
-  //     ofType(setupVisualizationConfigByRoute),
-  //     mergeMap((action) => {
-  //       const visualizationConfig: VisualizationConfig = {};
-  //
-  //       // loop action.params
-  //       Object.keys(action.params).forEach((key) => {
-  //         switch (key) {
-  //           case 'sb':
-  //             visualizationConfig.sb = action.params[key];
-  //             break;
-  //           case 'dwn':
-  //             visualizationConfig.dwn = action.params[key] === 'true';
-  //             break;
-  //           case 'img':
-  //             // todo
-  //             // visualizationConfig.img = action.params[key];
-  //             break;
-  //           case 'col':
-  //             visualizationConfig.col = action.params[key];
-  //             break;
-  //           case 'size':
-  //             visualizationConfig.size = action.params[key];
-  //             break;
-  //           case 'pa':
-  //             visualizationConfig.pa = action.params[key];
-  //             break;
-  //           case 'pb':
-  //             visualizationConfig.pb = action.params[key];
-  //             break;
-  //           case 'sel':
-  //             // todo
-  //             visualizationConfig.sel = action.params[key];
-  //             break;
-  //           case 'all':
-  //             visualizationConfig.all = action.params[key] === 'true';
-  //             break;
-  //           case 'mtb':
-  //             visualizationConfig.mtb = action.params[key] === 'true';
-  //             break;
-  //           case 'shared':
-  //             visualizationConfig.shared = action.params[key] === 'true';
-  //             break;
-  //           case 'th':
-  //             if (!Number.isNaN(action.params[key])) {
-  //               visualizationConfig.th = Number(action.params[key]);
-  //             }
-  //             break;
-  //           default:
-  //             console.log('Unknown key ...');
-  //             break;
-  //         }
-  //       });
-  //
-  //       // todo concatMap? assure that image config is set before download
-  //       const actions = [];
-  //       if (visualizationConfig.sb) {
-  //         actions.push(setSidebarVisibility({ visibility: visualizationConfig.sb }));
-  //       }
-  //
-  //       return actions;
-  //     }),
-  //   );
-  // });
-
   loadData$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadQueryParams),
@@ -127,19 +61,6 @@ export class HydratorEffects {
       }),
     );
   });
-
-  // 3.1: hydratePatientA
-  // 3.2: hydratePatientB
-  // 3.3: hydrateThreshold
-  // 3.4: hydrateSelectedNodes
-  // 3.5: hydrateNodesColorBy
-  // 3.6: hydrateNodesSizeBy
-  // 3.7: hydrateShowAllNodes
-  // 3.8: hydrateShowOnlySharedNodes
-  // 3.9: hydrateShowMtbResults
-  // 3.10: hydrateSidebarVisibility
-  // 3.11: hydrateImageDownloadConfig
-  // 3.12: hydrateTriggerImageDownload
 
   hydratePatientAPatientB$ = createEffect(() => {
     return this.actions$.pipe(
@@ -191,9 +112,6 @@ export class HydratorEffects {
     );
   });
 
-  // todo testing: http://localhost:4200?pa=GSM615195&th=0.0003
-
-  // skip this, if patient hydration failed
   hydrateThreshold$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(hydratePatientAPatientBSuccess),
@@ -207,7 +125,7 @@ export class HydratorEffects {
 
   hydrateLayout$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(hydrateThresholdSuccess, hydratePatientAPatientBFailure),
+      ofType(hydrateThresholdSuccess, hydrateThresholdFailure, hydratePatientAPatientBFailure),
       concatLatestFrom(() => this.store.select(selectConfig)),
       map(([, config]) => {
         if (
@@ -229,7 +147,7 @@ export class HydratorEffects {
 
   hydrateNodes$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(hydrateLayoutSuccess, hydrateThresholdFailure),
+      ofType(hydrateLayoutSuccess, hydrateLayoutFailure),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
         this.store.select(selectNodes),
@@ -250,7 +168,7 @@ export class HydratorEffects {
 
   hydrateDownload$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(hydrateNodesSuccess, hydrateLayoutFailure),
+      ofType(hydrateNodesSuccess, hydrateNodesFailure),
       concatLatestFrom(() => this.store.select(selectConfig)),
       map(([, config]) => {
         if (!config || !config.img) return hydrateDownloadConfigFailure();
@@ -261,7 +179,7 @@ export class HydratorEffects {
 
   hydrateSidebarVisibility$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(hydrateDownloadConfigSuccess, hydrateNodesFailure),
+      ofType(hydrateDownloadConfigSuccess, hydrateDownloadConfigFailure),
       concatLatestFrom(() => this.store.select(selectConfig)),
       map(([, config]) => {
         if (!config || !config.sb) return hydrateSidebarVisibilityFailure();
@@ -270,24 +188,25 @@ export class HydratorEffects {
     );
   });
 
-  triggerImageDownload$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(renderingSuccess),
-        concatLatestFrom(() => [
-          this.store.select(selectConfig),
-          this.store.select(selectExtension),
-          this.store.select(selectScale),
-          this.store.select(selectTransparentBackground),
-        ]),
-        map(([, config, extension, scale, transparent]) => {
-          if (!config || !config.dwn) return hydrationEnded();
-          return triggerImageDownload({ imageDownloadConfig: { extension, scale, transparent } });
-        }),
-      );
-    },
-    { dispatch: false },
-  );
+  triggerImageDownload$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(renderingSuccess),
+      concatLatestFrom(() => [
+        this.store.select(selectConfig),
+        this.store.select(selectExtension),
+        this.store.select(selectScale),
+        this.store.select(selectTransparentBackground),
+      ]),
+      mergeMap(([, config, extension, scale, transparent]) => {
+        if (!config || !config.dwn) return [hydrationEnded()];
+
+        return [
+          hydrationEnded(),
+          triggerImageDownload({ imageDownloadConfig: { extension, scale, transparent } }),
+        ];
+      }),
+    );
+  });
 
   constructor(
     private actions$: Actions,

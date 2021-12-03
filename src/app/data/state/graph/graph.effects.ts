@@ -51,7 +51,7 @@ import {
 } from '../download/download.selectors';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 import {
-  hydrateDownloadConfigFailure,
+  hydrateDownloadConfigFailure, hydrateSidebarVisibilityFailure,
   hydrateSidebarVisibilitySuccess,
   loadDataSuccess,
 } from '../hydrator/hydrator.actions';
@@ -84,7 +84,7 @@ export class GraphEffects {
         setNodeColorBy,
         setNodeSizeBy,
         hydrateSidebarVisibilitySuccess,
-        hydrateDownloadConfigFailure,
+        hydrateSidebarVisibilityFailure,
       ),
       concatLatestFrom(() => [
         this.store.select(selectPatientADetails),

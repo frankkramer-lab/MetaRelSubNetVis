@@ -43,7 +43,7 @@ export const hydrateThresholdSuccess = createAction(
 export const hydrateThresholdFailure = createAction('[Hydrator Effects] hydrate threshold failure');
 
 export const hydrateLayoutSuccess = createAction(
-  '[Hydrator Effects] set layout component',
+  '[Hydrator Effects] hydrate layout success',
   props<{
     showAll: boolean;
     showShared: boolean;
@@ -81,5 +81,7 @@ export const hydrateSidebarVisibilitySuccess = createAction(
 export const hydrateSidebarVisibilityFailure = createAction(
   '[Hydrator Effects] hydrate sidebar visibility failure',
 );
+
+export const hydrateTriggerDownloadSuccess = createAction('[Hydrator Effects] hydrate trigger download success');
 
 export const hydrationEnded = createAction('[Hydrator Effects] hydration ended');

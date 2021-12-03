@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { catchError, concatMap, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { AppState } from '../app.state';
@@ -18,6 +18,7 @@ import {
   hydrateSidebarVisibilitySuccess,
   hydrateThresholdFailure,
   hydrateThresholdSuccess,
+  hydrateTriggerDownloadSuccess,
   hydrationEnded,
   loadDataFailure,
   loadDataSuccess,
@@ -197,14 +198,18 @@ export class HydratorEffects {
         this.store.select(selectScale),
         this.store.select(selectTransparentBackground),
       ]),
-      mergeMap(([, config, extension, scale, transparent]) => {
-        if (!config || !config.dwn) return [hydrationEnded()];
+      map(([, config, extension, scale, transparent]) => {
+        if (!config || !config.dwn) return hydrationEnded();
 
-        return [
-          hydrationEnded(),
-          triggerImageDownload({ imageDownloadConfig: { extension, scale, transparent } }),
-        ];
+        return triggerImageDownload({ imageDownloadConfig: { extension, scale, transparent } });
       }),
+    );
+  });
+
+  imageDownloaded$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(hydrateTriggerDownloadSuccess),
+      map(() => hydrationEnded()),
     );
   });
 

@@ -51,8 +51,10 @@ import {
 } from '../download/download.selectors';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 import {
-  hydrateDownloadConfigFailure, hydrateSidebarVisibilityFailure,
+  hydrateDownloadConfigFailure,
+  hydrateSidebarVisibilityFailure,
   hydrateSidebarVisibilitySuccess,
+  hydrateTriggerDownloadSuccess,
   loadDataSuccess,
 } from '../hydrator/hydrator.actions';
 import { renderingFailure, renderingSuccess } from './graph.actions';
@@ -193,30 +195,28 @@ export class GraphEffects {
     { dispatch: false },
   );
 
-  downloadTriggered$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(triggerImageDownload),
-        concatLatestFrom(() => [
-          this.store.select(selectExtension),
-          this.store.select(selectScale),
-          this.store.select(selectTransparentBackground),
-          this.store.select(selectPatientA),
-          this.store.select(selectPatientB),
-          this.store.select(selectPatientSelection),
-        ]),
-        map(([, extension, scale, transparent, patientA, patientB, patientSelection]) => {
-          const config: ImageDownloadConfig = {
-            extension,
-            scale,
-            transparent,
-          };
-          this.graphService.downloadImage(config, patientA, patientB, patientSelection);
-        }),
-      );
-    },
-    { dispatch: false },
-  );
+  downloadTriggered$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(triggerImageDownload),
+      concatLatestFrom(() => [
+        this.store.select(selectExtension),
+        this.store.select(selectScale),
+        this.store.select(selectTransparentBackground),
+        this.store.select(selectPatientA),
+        this.store.select(selectPatientB),
+        this.store.select(selectPatientSelection),
+      ]),
+      map(([, extension, scale, transparent, patientA, patientB, patientSelection]) => {
+        const config: ImageDownloadConfig = {
+          extension,
+          scale,
+          transparent,
+        };
+        this.graphService.downloadImage(config, patientA, patientB, patientSelection);
+        return hydrateTriggerDownloadSuccess();
+      }),
+    );
+  });
 
   constructor(
     private actions$: Actions,

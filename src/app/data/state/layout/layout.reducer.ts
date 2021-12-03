@@ -44,27 +44,34 @@ export const layoutReducer = createReducer(
       showAllNodes: showOnlySharedNodes ? false : state.showAllNodes,
     };
   }),
-  on(setNodeColorBy, hydrateLayoutSuccess, (state: LayoutState, { nodeColorBy }): LayoutState => {
-    if (nodeColorBy) {
+  on(
+    setNodeColorBy,
+    (state: LayoutState, { nodeColorBy }): LayoutState => ({
+      ...state,
+      nodeColorBy,
+    }),
+  ),
+  on(
+    setNodeSizeBy,
+    (state: LayoutState, { nodeSizeBy }): LayoutState => ({
+      ...state,
+      nodeSizeBy,
+    }),
+  ),
+  on(
+    hydrateLayoutSuccess,
+    (
+      state: LayoutState,
+      { showAll, showShared, showMtb, nodeSizeBy, nodeColorBy },
+    ): LayoutState => {
       return {
         ...state,
-        nodeColorBy,
+        nodeSizeBy: nodeSizeBy ?? NodeSizeByEnum.relevance,
+        nodeColorBy: nodeColorBy ?? NodeColorByEnum.geneExpressionLevel,
+        showAllNodes: showAll && showShared ? false : showAll,
+        showOnlySharedNodes: showShared,
+        showMtbResults: showMtb,
       };
-    }
-    return { ...state };
-  }),
-  on(setNodeSizeBy, hydrateLayoutSuccess, (state: LayoutState, { nodeSizeBy }): LayoutState => {
-    if (nodeSizeBy) {
-      return { ...state, nodeSizeBy };
-    }
-    return { ...state };
-  }),
-  on(hydrateLayoutSuccess, (state: LayoutState, { showAll, showShared, showMtb }): LayoutState => {
-    return {
-      ...state,
-      showAllNodes: showAll && showShared ? false : showAll,
-      showOnlySharedNodes: showShared,
-      showMtbResults: showMtb,
-    };
-  }),
+    },
+  ),
 );

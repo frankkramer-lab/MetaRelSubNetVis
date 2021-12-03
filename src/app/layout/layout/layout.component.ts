@@ -23,6 +23,5 @@ export class LayoutComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.store.dispatch(loadQueryParams({ params }));
     });
-
   }
 }

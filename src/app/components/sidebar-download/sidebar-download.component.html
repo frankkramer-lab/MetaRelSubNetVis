@@ -1,9 +1,10 @@
 <app-sidebar-download-form
+  buttonLabel="Download image"
   [extension]="extension$ |async"
   [scale]="scale$|async"
   [transparentBackground]="transparentBackground$|async"
   (extensionChanged)="triggerSetFileExtension($event)"
   (scaleChanged)="triggerSetScale($event)"
   (transparentBackgroundChanged)="toggleTransparentBackground()"
-  (triggerDownloadEmitter)="triggerDownload($event)"
+  (imageConfigButtonAction)="triggerDownload($event)"
 ></app-sidebar-download-form>

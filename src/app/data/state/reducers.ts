@@ -8,6 +8,7 @@ import { nodesReducer } from './nodes/nodes.reducer';
 import { downloadReducer } from './download/download.reducer';
 import { sidebarReducer } from './sidebar/sidebar.reducer';
 import { hydratorReducer } from './hydrator/hydrator.reducer';
+import { generatorReducer } from './generator/generator.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   sidebar: sidebarReducer,
@@ -18,4 +19,5 @@ export const reducers: ActionReducerMap<AppState> = {
   nodes: nodesReducer,
   download: downloadReducer,
   hydrator: hydratorReducer,
+  generator: generatorReducer,
 };

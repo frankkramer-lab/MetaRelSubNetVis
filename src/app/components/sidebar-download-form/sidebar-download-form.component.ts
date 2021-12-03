@@ -8,6 +8,8 @@ import { ImageDownloadConfig } from '../../data/schema/image-download-config';
   styleUrls: ['./sidebar-download-form.component.scss'],
 })
 export class SidebarDownloadFormComponent {
+  @Input() buttonLabel!: string;
+
   @Input() extension!: string | null;
 
   @Input() scale!: number | null;
@@ -20,7 +22,7 @@ export class SidebarDownloadFormComponent {
 
   @Output() transparentBackgroundChanged: EventEmitter<void> = new EventEmitter<void>();
 
-  @Output() triggerDownloadEmitter: EventEmitter<ImageDownloadConfig> =
+  @Output() imageConfigButtonAction: EventEmitter<ImageDownloadConfig> =
     new EventEmitter<ImageDownloadConfig>();
 
   readonly availableDatatypes: string[] = ['PNG', 'JPEG', 'SVG'];
@@ -50,6 +52,6 @@ export class SidebarDownloadFormComponent {
       this.scaleChanged.emit(1);
     }
 
-    this.triggerDownloadEmitter.emit();
+    this.imageConfigButtonAction.emit();
   }
 }

@@ -51,7 +51,7 @@ import {
 } from '../download/download.selectors';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 import {
-  hydrateDownloadConfigFailure,
+  hydrateDownloadConfigFailure, hydrateNodesSuccess,
   hydrateSidebarVisibilityFailure,
   hydrateSidebarVisibilitySuccess,
   hydrateTriggerDownloadSuccess,

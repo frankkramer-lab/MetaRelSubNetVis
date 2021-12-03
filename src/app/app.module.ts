@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   faArrowCircleDown,
-  faBars,
+  faBars, faCopy,
   faHospitalUser,
   faInfo,
   faLink,
@@ -28,7 +28,6 @@ import { SidebarLayoutComponent } from './components/sidebar-layout/sidebar-layo
 import { SidebarThresholdComponent } from './components/sidebar-threshold/sidebar-threshold.component';
 import { SidebarDownloadComponent } from './components/sidebar-download/sidebar-download.component';
 import { SidebarLegalComponent } from './components/sidebar-legal/sidebar-legal.component';
-import { SidebarHashGeneratorComponent } from './components/sidebar-hash-generator/sidebar-hash-generator.component';
 import { reducers } from './data/state/reducers';
 import { effects } from './data/state/effects';
 import { SidebarPatientsDropdownComponent } from './components/sidebar-patients-dropdown/sidebar-patients-dropdown.component';
@@ -38,6 +37,8 @@ import { SidebarDownloadFormComponent } from './components/sidebar-download-form
 import { SidebarNodesFormComponent } from './components/sidebar-nodes-form/sidebar-nodes-form.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { SidebarGeneratorComponent } from './components/sidebar-generator/sidebar-generator.component';
+import { SidebarGeneratorFormComponent } from './components/sidebar-generator-form/sidebar-generator-form.component';
 
 @NgModule({
   declarations: [
@@ -51,12 +52,13 @@ import { environment } from '../environments/environment';
     SidebarThresholdComponent,
     SidebarDownloadComponent,
     SidebarLegalComponent,
-    SidebarHashGeneratorComponent,
     SidebarPatientsDropdownComponent,
     SidebarThresholdSelectorComponent,
     SidebarLayoutFormComponent,
     SidebarDownloadFormComponent,
     SidebarNodesFormComponent,
+    SidebarGeneratorComponent,
+    SidebarGeneratorFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,6 +90,7 @@ export class AppModule {
       faInfo,
       faRedo,
       faLink,
+      faCopy,
     );
   }
 }

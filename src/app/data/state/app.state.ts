@@ -6,6 +6,7 @@ import { NodesState } from './nodes/nodes.state';
 import { DownloadState } from './download/download.state';
 import { SidebarState } from './sidebar/sidebar.state';
 import { HydratorState } from './hydrator/hydrator.state';
+import { GeneratorState } from './generator/generator.state';
 
 export interface AppState {
   sidebar: SidebarState;
@@ -16,4 +17,5 @@ export interface AppState {
   nodes: NodesState;
   download: DownloadState;
   hydrator: HydratorState;
+  generator: GeneratorState;
 }

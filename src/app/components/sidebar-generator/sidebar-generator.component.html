@@ -1,0 +1,18 @@
+<app-sidebar-generator-form
+  [patientA]="patientA$ | async"
+  [patientB]="patientB$ | async"
+  [threshold]="threshold$ | async"
+  [nodes]="nodes$ | async"
+  [nodesColorBy]="nodesColorBy$ | async"
+  [nodesSizeBy]="nodesSizeBy$ | async"
+  [showAll]="showAll$ | async"
+  [showShared]="showShared$ | async"
+  [showMtb]="showMtb$ | async"
+  [imageDownloadConfig]="imageDownloadConfig$ | async"
+  [triggerImmediateImageDownload]="triggerImmediateImageDownload$ | async"
+  [sidebarVisibility]="sidebarVisibility$ | async"
+  (triggerDownloadChanged)="toggleTriggerImmediateDownload()"
+  (sidebarVisibilityChanged)="setSidebarVisibility($event)"
+  (copyTrigger)="buildAndCopyUrl($event)"
+>
+</app-sidebar-generator-form>

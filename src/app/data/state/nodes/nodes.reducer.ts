@@ -73,4 +73,11 @@ export const nodesReducer = createReducer(
     return { ...state, markedNodes };
   }),
   on(clearMarkedNodes, (state: NodesState): NodesState => ({ ...state, markedNodes: [] })),
+  on(
+    hydrateNodesSuccess,
+    (state: NodesState, { selection }): NodesState => ({
+      ...state,
+      markedNodes: selection,
+    }),
+  ),
 );

@@ -7,6 +7,7 @@ import { thresholdReducer } from './threshold/threshold.reducer';
 import { nodesReducer } from './nodes/nodes.reducer';
 import { downloadReducer } from './download/download.reducer';
 import { sidebarReducer } from './sidebar/sidebar.reducer';
+import { hydratorReducer } from './hydrator/hydrator.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   sidebar: sidebarReducer,
@@ -16,4 +17,5 @@ export const reducers: ActionReducerMap<AppState> = {
   threshold: thresholdReducer,
   nodes: nodesReducer,
   download: downloadReducer,
+  hydrator: hydratorReducer,
 };

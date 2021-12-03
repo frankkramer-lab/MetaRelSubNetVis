@@ -1,7 +1,6 @@
-import { NetworkState } from './network.state';
 import { createReducer, on } from '@ngrx/store';
-import { loadDefaultAppData } from '../app.actions';
-import { loadNetworkDataFailure, loadNetworkDataSuccess } from './network.actions';
+import { NetworkState } from './network.state';
+import { loadDataFailure, loadDataSuccess, loadQueryParams } from '../hydrator/hydrator.actions';
 
 const initialState: NetworkState = {
   network: null,
@@ -10,13 +9,10 @@ const initialState: NetworkState = {
 
 export const networkReducer = createReducer(
   initialState,
-  on(loadDefaultAppData, (state: NetworkState): NetworkState => ({ ...state, isLoading: true })),
+  on(loadQueryParams, (state: NetworkState): NetworkState => ({ ...state, isLoading: true })),
   on(
-    loadNetworkDataSuccess,
+    loadDataSuccess,
     (state: NetworkState, { network }): NetworkState => ({ ...state, isLoading: false, network }),
   ),
-  on(
-    loadNetworkDataFailure,
-    (state: NetworkState): NetworkState => ({ ...state, isLoading: false }),
-  ),
+  on(loadDataFailure, (state: NetworkState): NetworkState => ({ ...state, isLoading: false })),
 );

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { debounceTime, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { loadNetworkDataSuccess } from '../network/network.actions';
 import { selectNetwork } from '../network/network.selectors';
 import { AppState } from '../app.state';
 import { ApiService } from '../../service/api.service';
@@ -51,19 +50,24 @@ import {
   selectTransparentBackground,
 } from '../download/download.selectors';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
+import {
+  hydrateDownloadConfigFailure,
+  hydrateSidebarVisibilitySuccess,
+  loadDataSuccess,
+} from '../hydrator/hydrator.actions';
+import { renderingFailure, renderingSuccess } from './graph.actions';
 
 @Injectable()
 export class GraphEffects {
   processGraphCore$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(loadNetworkDataSuccess),
+        ofType(loadDataSuccess),
         concatLatestFrom(() => this.store.select(selectNetwork)),
         map(([, network]) => {
           if (!network) {
             return;
           }
-
           this.graphService.initializeCore(network);
         }),
       );
@@ -71,33 +75,61 @@ export class GraphEffects {
     { dispatch: false },
   );
 
-  patientSelectionChanged$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(setDefined, toggleShowMtbResults, setNodeColorBy, setNodeSizeBy),
-        concatLatestFrom(() => [
-          this.store.select(selectPatientADetails),
-          this.store.select(selectPatientBDetails),
-          this.store.select(selectPatientGroupA),
-          this.store.select(selectPatientGroupB),
-          this.store.select(selectGeMin),
-          this.store.select(selectGeMax),
-          this.store.select(selectNetwork),
-          this.store.select(selectDefined),
-          this.store.select(selectMinA),
-          this.store.select(selectMaxA),
-          this.store.select(selectMinB),
-          this.store.select(selectMaxB),
-          this.store.select(selectMarkedNodes),
-          this.store.select(selectNodeColorBy),
-          this.store.select(selectNodeSizeBy),
-          this.store.select(selectShowAllNodes),
-          this.store.select(selectShowOnlySharedNodes),
-          this.store.select(selectShowMtbResults),
-        ]),
-        map(
-          ([
-            ,
+  // is also called during hydration
+  patientSelectionChanged$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(
+        setDefined,
+        toggleShowMtbResults,
+        setNodeColorBy,
+        setNodeSizeBy,
+        hydrateSidebarVisibilitySuccess,
+        hydrateDownloadConfigFailure,
+      ),
+      concatLatestFrom(() => [
+        this.store.select(selectPatientADetails),
+        this.store.select(selectPatientBDetails),
+        this.store.select(selectPatientGroupA),
+        this.store.select(selectPatientGroupB),
+        this.store.select(selectGeMin),
+        this.store.select(selectGeMax),
+        this.store.select(selectNetwork),
+        this.store.select(selectDefined),
+        this.store.select(selectMinA),
+        this.store.select(selectMaxA),
+        this.store.select(selectMinB),
+        this.store.select(selectMaxB),
+        this.store.select(selectMarkedNodes),
+        this.store.select(selectNodeColorBy),
+        this.store.select(selectNodeSizeBy),
+        this.store.select(selectShowAllNodes),
+        this.store.select(selectShowOnlySharedNodes),
+        this.store.select(selectShowMtbResults),
+      ]),
+      map(
+        ([
+          ,
+          patientADetails,
+          patientBDetails,
+          patientGroupA,
+          patientGroupB,
+          geMin,
+          geMax,
+          network,
+          defined,
+          minA,
+          maxA,
+          minB,
+          maxB,
+          markedNodes,
+          nodeColorBy,
+          nodeSizeBy,
+          showAllNodes,
+          showOnlySharedNodes,
+          showMtbResults,
+        ]) => {
+          if (!network) return renderingFailure();
+          this.graphService.layoutPatient(
             patientADetails,
             patientBDetails,
             patientGroupA,
@@ -116,35 +148,13 @@ export class GraphEffects {
             showAllNodes,
             showOnlySharedNodes,
             showMtbResults,
-          ]) => {
-            if (!network) return;
-            this.graphService.layoutPatient(
-              patientADetails,
-              patientBDetails,
-              patientGroupA,
-              patientGroupB,
-              geMin,
-              geMax,
-              network,
-              defined,
-              minA,
-              maxA,
-              minB,
-              maxB,
-              markedNodes,
-              nodeColorBy,
-              nodeSizeBy,
-              showAllNodes,
-              showOnlySharedNodes,
-              showMtbResults,
-            );
-          },
-        ),
-        debounceTime(1000),
-      );
-    },
-    { dispatch: false },
-  );
+          );
+          return renderingSuccess();
+        },
+      ),
+      debounceTime(1000),
+    );
+  });
 
   showAllOrSharedNodesToggled$ = createEffect(
     () => {

@@ -11,6 +11,7 @@ import {
   sortBy,
 } from './nodes.actions';
 import { SortByEnum } from '../../../core/enum/sort-by.enum';
+import { hydrateNodesSuccess } from '../hydrator/hydrator.actions';
 
 const initialState: NodesState = {
   numberOfColumns: 2,
@@ -23,22 +24,26 @@ const initialState: NodesState = {
 
 export const nodesReducer = createReducer(
   initialState,
-  on(
-    setColumnGroupA,
-    (state: NodesState, { subtypeColumnA }): NodesState => ({
-      ...state,
-      numberOfColumns: state.numberOfColumns + 1,
-      subtypeColumnA,
-    }),
-  ),
-  on(
-    setColumnGroupB,
-    (state: NodesState, { subtypeColumnB }): NodesState => ({
-      ...state,
-      numberOfColumns: state.numberOfColumns + 1,
-      subtypeColumnB,
-    }),
-  ),
+  on(setColumnGroupA, hydrateNodesSuccess, (state: NodesState, { subtypeColumnA }): NodesState => {
+    if (subtypeColumnA) {
+      return {
+        ...state,
+        numberOfColumns: state.numberOfColumns + 1,
+        subtypeColumnA,
+      };
+    }
+    return { ...state };
+  }),
+  on(setColumnGroupB, hydrateNodesSuccess, (state: NodesState, { subtypeColumnB }): NodesState => {
+    if (subtypeColumnB) {
+      return {
+        ...state,
+        numberOfColumns: state.numberOfColumns + 1,
+        subtypeColumnB,
+      };
+    }
+    return { ...state };
+  }),
   on(
     resetColumnGroupA,
     (state: NodesState): NodesState => ({

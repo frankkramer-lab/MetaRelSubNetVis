@@ -3,16 +3,19 @@ import { PatientState } from './patient.state';
 import {
   loadPatientADetailsSuccess,
   loadPatientBDetailsSuccess,
-  loadPatientDataFailure,
-  loadPatientDataSuccess,
   resetPatientA,
   resetPatientB,
   setPatientA,
   setPatientB,
   setPatientSelection,
 } from './patient.actions';
-import { loadDefaultAppData } from '../app.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
+import {
+  hydratePatientAPatientBSuccess,
+  loadDataFailure,
+  loadDataSuccess,
+  loadQueryParams,
+} from '../hydrator/hydrator.actions';
 
 const initialState: PatientState = {
   patientsGroupA: [],
@@ -29,24 +32,39 @@ const initialState: PatientState = {
 
 export const patientReducer = createReducer(
   initialState,
-  on(loadDefaultAppData, (state: PatientState): PatientState => ({ ...state, isLoading: true })),
+  on(loadQueryParams, (state: PatientState): PatientState => ({ ...state, isLoading: true })),
   on(
-    loadPatientDataSuccess,
-    (state: PatientState, { collection }): PatientState => ({
+    loadDataSuccess,
+    (state: PatientState, { patients }): PatientState => ({
       ...state,
       isLoading: false,
-      patientsGroupA: collection.metastatic,
-      patientsGroupB: collection.nonmetastatic,
-      geMin: collection.geMin,
-      geMax: collection.geMax,
+      patientsGroupA: patients.metastatic,
+      patientsGroupB: patients.nonmetastatic,
+      geMin: patients.geMin,
+      geMax: patients.geMax,
     }),
   ),
+  on(loadDataFailure, (state: PatientState): PatientState => ({ ...state, isLoading: false })),
   on(
-    loadPatientDataFailure,
-    (state: PatientState): PatientState => ({ ...state, isLoading: false }),
+    setPatientA,
+    hydratePatientAPatientBSuccess,
+    (state: PatientState, { patientA }): PatientState => {
+      if (patientA) {
+        return { ...state, patientA };
+      }
+      return { ...state, patientA };
+    },
   ),
-  on(setPatientA, (state: PatientState, { patientA }): PatientState => ({ ...state, patientA })),
-  on(setPatientB, (state: PatientState, { patientB }): PatientState => ({ ...state, patientB })),
+  on(
+    setPatientB,
+    hydratePatientAPatientBSuccess,
+    (state: PatientState, { patientB }): PatientState => {
+      if (patientB) {
+        return { ...state, patientB };
+      }
+      return { ...state, patientB };
+    },
+  ),
   on(
     resetPatientA,
     (state: PatientState): PatientState => ({
@@ -65,6 +83,7 @@ export const patientReducer = createReducer(
   ),
   on(
     loadPatientADetailsSuccess,
+    hydratePatientAPatientBSuccess,
     (state: PatientState, { patientADetails }): PatientState => ({
       ...state,
       patientADetails,
@@ -72,12 +91,13 @@ export const patientReducer = createReducer(
   ),
   on(
     loadPatientBDetailsSuccess,
+    hydratePatientAPatientBSuccess,
     (state: PatientState, { patientBDetails }): PatientState => ({
       ...state,
       patientBDetails,
     }),
   ),
-  on(setPatientSelection, (state: PatientState): PatientState => {
+  on(setPatientSelection, hydratePatientAPatientBSuccess, (state: PatientState): PatientState => {
     let patientSelection: PatientSelectionEnum = PatientSelectionEnum.none;
 
     if (state.patientA && state.patientB) {

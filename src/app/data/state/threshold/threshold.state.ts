@@ -5,4 +5,5 @@ export interface ThresholdState {
   groupB: ThresholdItem | null;
   defined: number | null;
   multiplier: number;
+  isLoading: boolean;
 }

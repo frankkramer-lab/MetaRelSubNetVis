@@ -1,13 +1,7 @@
 import { createAction, props } from '@ngrx/store';
-import { PatientCollection } from '../../schema/patient-collection';
 import { Patient } from '../../schema/patient';
 import { PatientItem } from '../../schema/patient-item';
 
-export const loadPatientDataSuccess = createAction(
-  '[API] load patient data success',
-  props<{ collection: PatientCollection }>(),
-);
-export const loadPatientDataFailure = createAction('[API] load patient data failure');
 export const setPatientA = createAction(
   '[Sidebar Patient Component] set patient A',
   props<{ patientA: Patient }>(),
@@ -32,4 +26,3 @@ export const loadPatientBDetailsSuccess = createAction(
 export const loadPatientBDetailsFailure = createAction('[API] load patient B details failure');
 
 export const setPatientSelection = createAction('[Patient Effect] set patient selection');
-

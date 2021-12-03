@@ -9,6 +9,7 @@ import {
   toggleShowMtbResults,
   toggleShowOnlySharedNodes,
 } from './layout.actions';
+import { hydrateLayoutSuccess } from '../hydrator/hydrator.actions';
 
 const initialState: LayoutState = {
   nodeColorBy: NodeColorByEnum.geneExpressionLevel,
@@ -43,18 +44,27 @@ export const layoutReducer = createReducer(
       showAllNodes: showOnlySharedNodes ? false : state.showAllNodes,
     };
   }),
-  on(
-    setNodeColorBy,
-    (state: LayoutState, { nodeColorBy }): LayoutState => ({
+  on(setNodeColorBy, hydrateLayoutSuccess, (state: LayoutState, { nodeColorBy }): LayoutState => {
+    if (nodeColorBy) {
+      return {
+        ...state,
+        nodeColorBy,
+      };
+    }
+    return { ...state };
+  }),
+  on(setNodeSizeBy, hydrateLayoutSuccess, (state: LayoutState, { nodeSizeBy }): LayoutState => {
+    if (nodeSizeBy) {
+      return { ...state, nodeSizeBy };
+    }
+    return { ...state };
+  }),
+  on(hydrateLayoutSuccess, (state: LayoutState, { showAll, showShared, showMtb }): LayoutState => {
+    return {
       ...state,
-      nodeColorBy,
-    }),
-  ),
-  on(
-    setNodeSizeBy,
-    (state: LayoutState, { nodeSizeBy }): LayoutState => ({
-      ...state,
-      nodeSizeBy,
-    }),
-  ),
+      showAllNodes: showAll && showShared ? false : showAll,
+      showOnlySharedNodes: showShared,
+      showMtbResults: showMtb,
+    };
+  }),
 );

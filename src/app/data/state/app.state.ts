@@ -5,6 +5,7 @@ import { ThresholdState } from './threshold/threshold.state';
 import { NodesState } from './nodes/nodes.state';
 import { DownloadState } from './download/download.state';
 import { SidebarState } from './sidebar/sidebar.state';
+import { HydratorState } from './hydrator/hydrator.state';
 
 export interface AppState {
   sidebar: SidebarState;
@@ -14,4 +15,5 @@ export interface AppState {
   threshold: ThresholdState;
   nodes: NodesState;
   download: DownloadState;
+  hydrator: HydratorState;
 }

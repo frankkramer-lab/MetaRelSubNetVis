@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ApiService } from '../../service/api.service';
@@ -9,40 +9,23 @@ import {
   loadPatientADetailsSuccess,
   loadPatientBDetailsFailure,
   loadPatientBDetailsSuccess,
-  loadPatientDataFailure,
-  loadPatientDataSuccess,
   resetPatientA,
   resetPatientB,
   setPatientA,
   setPatientB,
   setPatientSelection,
 } from './patient.actions';
-import { loadDefaultAppData } from '../app.actions';
 import { AppState } from '../app.state';
+import { hydratePatientAPatientBSuccess } from '../hydrator/hydrator.actions';
 
 @Injectable()
 export class PatientEffects {
-  loadPatientData$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(loadDefaultAppData),
-      switchMap(() => {
-        return this.apiService.loadPatientsClassified().pipe(
-          map((collection) => loadPatientDataSuccess({ collection })),
-          catchError(() => of(loadPatientDataFailure())),
-        );
-      }),
-    );
-  });
-
   loadPatientADetails$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setPatientA),
       mergeMap((action) => {
         return this.apiService.loadPatientDetails(action.patientA.name).pipe(
-          map((patientADetails) => {
-            console.log(patientADetails);
-            return loadPatientADetailsSuccess({ patientADetails });
-          }),
+          map((patientADetails) => loadPatientADetailsSuccess({ patientADetails })),
           catchError(() => of(loadPatientADetailsFailure())),
         );
       }),
@@ -54,9 +37,7 @@ export class PatientEffects {
       ofType(setPatientB),
       mergeMap((action) => {
         return this.apiService.loadPatientDetails(action.patientB.name).pipe(
-          map((patientBDetails) => {
-            return loadPatientBDetailsSuccess({ patientBDetails });
-          }),
+          map((patientBDetails) => loadPatientBDetailsSuccess({ patientBDetails })),
           catchError(() => of(loadPatientBDetailsFailure())),
         );
       }),
@@ -65,7 +46,12 @@ export class PatientEffects {
 
   setPatientSelection$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadPatientADetailsSuccess, loadPatientBDetailsSuccess, resetPatientA, resetPatientB),
+      ofType(
+        loadPatientADetailsSuccess,
+        loadPatientBDetailsSuccess,
+        resetPatientA,
+        resetPatientB,
+      ),
       map(() => setPatientSelection()),
     );
   });

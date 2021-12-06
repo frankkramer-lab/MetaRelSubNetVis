@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="sidebar text-light" [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-4' : 'col-auto'">
+  <div class="p-0" [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-4' : 'col-auto'">
     <app-sidebar [sidebarVisible]="sidebarVisible$ | async"></app-sidebar>
   </div>
   <div [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-8' : 'col'">

@@ -19,8 +19,10 @@ import {
   selectShowOnlySharedNodes,
 } from '../../data/state/layout/layout.selectors';
 import {
+  selectDomain,
   selectImageDownloadConfig,
   selectIsImageDownloadConfigValid,
+  selectQueryParams,
   selectSidebarVisibility,
   selectTriggerImmediateDownload,
 } from '../../data/state/generator/generator.selectors';
@@ -28,10 +30,10 @@ import {
   copyToClipboard,
   setGeneratorImageExtension,
   setGeneratorImageScale,
-  setGeneratorSidebarVisibility, toggleGeneratorImageBackground,
+  setGeneratorSidebarVisibility,
+  toggleGeneratorImageBackground,
   toggleGeneratorTriggerImmediateDownload,
 } from '../../data/state/generator/generator.actions';
-import { toggleBackgroundTransparent } from '../../data/state/download/download.actions';
 
 @Component({
   selector: 'app-sidebar-generator',
@@ -65,6 +67,10 @@ export class SidebarGeneratorComponent implements OnInit {
 
   triggerImmediateImageDownload$!: Observable<boolean>;
 
+  domain$!: Observable<string>;
+
+  queryParams$!: Observable<string>;
+
   constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
@@ -81,6 +87,8 @@ export class SidebarGeneratorComponent implements OnInit {
     this.isImageFormValid$ = this.store.select(selectIsImageDownloadConfigValid);
     this.sidebarVisibility$ = this.store.select(selectSidebarVisibility);
     this.triggerImmediateImageDownload$ = this.store.select(selectTriggerImmediateDownload);
+    this.domain$ = this.store.select(selectDomain);
+    this.queryParams$ = this.store.select(selectQueryParams);
   }
 
   toggleTriggerImmediateDownload() {
@@ -92,7 +100,6 @@ export class SidebarGeneratorComponent implements OnInit {
   }
 
   setImageExtension(extension: string) {
-    console.log("generator: " + extension);
     this.store.dispatch(setGeneratorImageExtension({ extension }));
   }
 

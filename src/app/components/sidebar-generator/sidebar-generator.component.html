@@ -16,6 +16,8 @@
 </app-sidebar-generator-table>
 
 <app-sidebar-generator-form
+  [domain]="domain$ | async"
+  [queryParams]="queryParams$ | async"
   [isImageFormValid]="isImageFormValid$ | async"
   [imageDownloadConfig]="imageDownloadConfig$ | async"
   (copyTrigger)="buildAndCopyUrl()"

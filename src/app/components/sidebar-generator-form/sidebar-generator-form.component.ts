@@ -12,6 +12,10 @@ export class SidebarGeneratorFormComponent {
 
   @Input() isImageFormValid!: boolean | null;
 
+  @Input() domain!: string | null;
+
+  @Input() queryParams!: string | null;
+
   @Output() imageExtensionChanged: EventEmitter<string> = new EventEmitter<string>();
 
   @Output() imageScaleChanged: EventEmitter<number> = new EventEmitter<number>();

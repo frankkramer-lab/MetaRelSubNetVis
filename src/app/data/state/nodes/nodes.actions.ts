@@ -20,6 +20,7 @@ export const markNode = createAction(
   '[Sidebar Nodes Component] mark node',
   props<{ node: NetworkNode }>(),
 );
+
 export const clearMarkedNodes = createAction('[Sidebar Nodes Component] reset marked nodes');
 
 export const setFilterTerm = createAction(

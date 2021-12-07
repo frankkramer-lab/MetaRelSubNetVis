@@ -40,7 +40,6 @@ export class SidebarDownloadComponent implements OnInit {
   }
 
   triggerSetFileExtension(extension: string) {
-    console.log(extension);
     this.store.dispatch(setFileExtension({ extension }));
   }
 

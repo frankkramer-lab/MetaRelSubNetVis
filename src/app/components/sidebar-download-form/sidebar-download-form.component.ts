@@ -8,7 +8,6 @@ import { ImageDownloadConfig } from '../../data/schema/image-download-config';
   styleUrls: ['./sidebar-download-form.component.scss'],
 })
 export class SidebarDownloadFormComponent {
-  test = 'PNG';
 
   @Input() buttonVisible!: boolean;
 
@@ -49,13 +48,4 @@ export class SidebarDownloadFormComponent {
     transparent: new FormControl(false),
   });
 
-  triggerDownload() {
-    // if (this.formScale) {
-    //   this.scaleChanged.emit(this.formScale.value);
-    // } else {
-    //   this.scaleChanged.emit(1);
-    // }
-
-    this.triggerImageDownload.emit();
-  }
 }

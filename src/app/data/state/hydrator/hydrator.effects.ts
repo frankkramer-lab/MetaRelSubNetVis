@@ -23,6 +23,7 @@ import {
   loadDataFailure,
   loadDataSuccess,
   loadQueryParams,
+  markMultipleNodes,
 } from './hydrator.actions';
 import { ApiService } from '../../service/api.service';
 import { selectConfig } from './hydrator.selectors';
@@ -37,13 +38,14 @@ import { PatientItem } from '../../schema/patient-item';
 import { NodeColorByEnum } from '../../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import { selectNodes } from '../network/network.selectors';
-import { renderingSuccess } from '../graph/graph.actions';
+import { markingNodesSuccess, renderingSuccess } from '../graph/graph.actions';
 import { triggerImageDownload } from '../download/download.actions';
 import {
   selectExtension,
   selectScale,
   selectTransparentBackground,
 } from '../download/download.selectors';
+import { selectMarkedNodes } from '../nodes/nodes.selectors';
 
 @Injectable()
 export class HydratorEffects {
@@ -156,7 +158,7 @@ export class HydratorEffects {
         this.store.select(selectPatientB),
       ]),
       map(([, config, nodes, patientA, patientB]) => {
-        if (!config) return hydrateNodesFailure();
+        if (!config || (!config.sel && !config.pa && !config.pb)) return hydrateNodesFailure();
 
         return hydrateNodesSuccess({
           selection: nodes.filter((a) => config.sel?.includes(a.data.id)) ?? [],
@@ -183,15 +185,26 @@ export class HydratorEffects {
       ofType(hydrateDownloadConfigSuccess, hydrateDownloadConfigFailure),
       concatLatestFrom(() => this.store.select(selectConfig)),
       map(([, config]) => {
-        if (!config || !config.sb) return hydrateSidebarVisibilityFailure();
-        return hydrateSidebarVisibilitySuccess({ visibility: config.sb });
+        if (!config || config.sb === null) return hydrateSidebarVisibilityFailure();
+        return hydrateSidebarVisibilitySuccess({ visibility: config.sb ?? 0 });
+      }),
+    );
+  });
+
+  markNodes$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(renderingSuccess),
+      concatLatestFrom(() => this.store.select(selectMarkedNodes)),
+      map(([, nodes]) => {
+        console.log(nodes);
+        return markMultipleNodes({ nodes });
       }),
     );
   });
 
   triggerImageDownload$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(renderingSuccess),
+      ofType(markingNodesSuccess),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
         this.store.select(selectExtension),
@@ -217,5 +230,6 @@ export class HydratorEffects {
     private actions$: Actions,
     private store: Store<AppState>,
     private apiService: ApiService,
-  ) {}
+  ) {
+  }
 }

@@ -82,6 +82,12 @@ export const hydrateSidebarVisibilityFailure = createAction(
   '[Hydrator Effects] hydrate sidebar visibility failure',
 );
 
-export const hydrateTriggerDownloadSuccess = createAction('[Hydrator Effects] hydrate trigger download success');
+export const hydrateTriggerDownloadSuccess = createAction(
+  '[Hydrator Effects] hydrate trigger download success',
+);
 
 export const hydrationEnded = createAction('[Hydrator Effects] hydration ended');
+export const markMultipleNodes = createAction(
+  '[Hydrator Effects] mark multiple nodes',
+  props<{ nodes: NetworkNode[] }>(),
+);

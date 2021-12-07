@@ -55,8 +55,9 @@ import {
   hydrateSidebarVisibilitySuccess,
   hydrateTriggerDownloadSuccess,
   loadDataSuccess,
+  markMultipleNodes,
 } from '../hydrator/hydrator.actions';
-import { renderingFailure, renderingSuccess } from './graph.actions';
+import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
 
 @Injectable()
 export class GraphEffects {
@@ -77,7 +78,7 @@ export class GraphEffects {
   );
 
   // is also called during hydration
-  patientSelectionChanged$ = createEffect(() => {
+  renderGraph$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(
         setDefined,
@@ -100,7 +101,6 @@ export class GraphEffects {
         this.store.select(selectMaxA),
         this.store.select(selectMinB),
         this.store.select(selectMaxB),
-        this.store.select(selectMarkedNodes),
         this.store.select(selectNodeColorBy),
         this.store.select(selectNodeSizeBy),
         this.store.select(selectShowAllNodes),
@@ -109,26 +109,29 @@ export class GraphEffects {
       ]),
       map(
         ([
-          ,
-          patientADetails,
-          patientBDetails,
-          patientGroupA,
-          patientGroupB,
-          geMin,
-          geMax,
-          network,
-          defined,
-          minA,
-          maxA,
-          minB,
-          maxB,
-          markedNodes,
-          nodeColorBy,
-          nodeSizeBy,
-          showAllNodes,
-          showOnlySharedNodes,
-          showMtbResults,
-        ]) => {
+           ,
+           patientADetails,
+           patientBDetails,
+           patientGroupA,
+           patientGroupB,
+           geMin,
+           geMax,
+           network,
+           defined,
+           minA,
+           maxA,
+           minB,
+           maxB,
+           nodeColorBy,
+           nodeSizeBy,
+           showAllNodes,
+           showOnlySharedNodes,
+           showMtbResults,
+         ]) => {
+
+
+          console.log(network);
+
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
             patientADetails,
@@ -143,7 +146,6 @@ export class GraphEffects {
             maxA,
             minB,
             maxB,
-            markedNodes,
             nodeColorBy,
             nodeSizeBy,
             showAllNodes,
@@ -194,6 +196,17 @@ export class GraphEffects {
     { dispatch: false },
   );
 
+  markMultipleNodes$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(markMultipleNodes),
+      concatLatestFrom(() => this.store.select(selectMarkedNodes)),
+      map(([, nodes]) => {
+        this.graphService.highlightNode(nodes);
+        return markingNodesSuccess();
+      }),
+    );
+  });
+
   downloadTriggered$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(triggerImageDownload),
@@ -222,5 +235,6 @@ export class GraphEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private graphService: GraphService,
-  ) {}
+  ) {
+  }
 }

@@ -13,7 +13,7 @@
 }
 
 .sidebar {
-  background-color: #3f3f3f;
+  background-color: #2f2f2f;
   height: 100vh;
   overflow-y: scroll;
 }
@@ -29,3 +29,6 @@
 #table-nodes {
   max-height: 200px;
 }
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';

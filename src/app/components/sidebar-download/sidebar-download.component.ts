@@ -9,7 +9,7 @@ import {
   triggerImageDownload,
 } from '../../data/state/download/download.actions';
 import {
-  selectExtension,
+  selectExtension, selectIsFormValid,
   selectScale,
   selectTransparentBackground,
 } from '../../data/state/download/download.selectors';
@@ -27,6 +27,8 @@ export class SidebarDownloadComponent implements OnInit {
 
   @Input() transparentBackground$!: Observable<boolean>;
 
+  @Input() isFormValid$!: Observable<boolean>;
+
   constructor(private store: Store<AppState>) {
   }
 
@@ -34,9 +36,11 @@ export class SidebarDownloadComponent implements OnInit {
     this.extension$ = this.store.select(selectExtension);
     this.scale$ = this.store.select(selectScale);
     this.transparentBackground$ = this.store.select(selectTransparentBackground);
+    this.isFormValid$ = this.store.select(selectIsFormValid);
   }
 
   triggerSetFileExtension(extension: string) {
+    console.log(extension);
     this.store.dispatch(setFileExtension({ extension }));
   }
 

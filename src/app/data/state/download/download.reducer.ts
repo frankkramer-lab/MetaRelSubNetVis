@@ -7,6 +7,7 @@ const initialState: DownloadState = {
   extension: 'PNG',
   scale: 1,
   transparentBackground: false,
+  isFormValid: true,
 };
 
 export const downloadReducer = createReducer(
@@ -18,7 +19,13 @@ export const downloadReducer = createReducer(
       extension,
     }),
   ),
-  on(setScale, (state: DownloadState, { scale }): DownloadState => ({ ...state, scale })),
+  on(setScale, (state: DownloadState, { scale }): DownloadState => {
+    if (scale <= 0 || scale > 10) {
+      return { ...state, scale, isFormValid: false };
+    }
+    ;
+    return { ...state, scale, isFormValid: true };
+  }),
   on(
     toggleBackgroundTransparent,
     (state: DownloadState): DownloadState => ({

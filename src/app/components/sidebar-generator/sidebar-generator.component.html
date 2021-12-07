@@ -1,4 +1,4 @@
-<app-sidebar-generator-form
+<app-sidebar-generator-table
   [patientA]="patientA$ | async"
   [patientB]="patientB$ | async"
   [threshold]="threshold$ | async"
@@ -8,11 +8,19 @@
   [showAll]="showAll$ | async"
   [showShared]="showShared$ | async"
   [showMtb]="showMtb$ | async"
-  [imageDownloadConfig]="imageDownloadConfig$ | async"
   [triggerImmediateImageDownload]="triggerImmediateImageDownload$ | async"
   [sidebarVisibility]="sidebarVisibility$ | async"
   (triggerDownloadChanged)="toggleTriggerImmediateDownload()"
   (sidebarVisibilityChanged)="setSidebarVisibility($event)"
-  (copyTrigger)="buildAndCopyUrl($event)"
+>
+</app-sidebar-generator-table>
+
+<app-sidebar-generator-form
+  [isImageFormValid]="isImageFormValid$ | async"
+  [imageDownloadConfig]="imageDownloadConfig$ | async"
+  (copyTrigger)="buildAndCopyUrl()"
+  (imageExtensionChanged)="setImageExtension($event)"
+  (imageScaleChanged)="setImageScale($event)"
+  (imageTransparencyChanged)="setImageTransparentBackground()"
 >
 </app-sidebar-generator-form>

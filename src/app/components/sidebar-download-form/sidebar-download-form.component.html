@@ -1,24 +1,10 @@
-<form [formGroup]="downloadForm" (ngSubmit)="triggerDownload()">
+
   <!-- select: data type -->
   <div class="d-grid mb-3">
-    <div class="btn-group" role="group" aria-label="Basic example">
-      <ng-container *ngFor="let datatype of availableDatatypes; let index">
-        <input
-          type="radio"
-          class="btn-check"
-          formControlName="extension"
-          id="type{{ index }}"
-          autocomplete="off"
-          [value]="datatype"
-        />
-        <label
-          class="btn btn-secondary"
-          for="type{{ index }}"
-          (click)="extensionChanged.emit(datatype)"
-        >
-          {{ datatype }}</label
-        >
-      </ng-container>
+    <div class="btn-group btn-group-toggle" ngbRadioGroup name="datatypes" [ngModel]="extension">
+      <label ngbButtonLabel class="btn-secondary" *ngFor="let type of availableDatatypes">
+        <input ngbButton type="radio" (change)="extensionChanged.emit(type)" [value]="type"> {{type}}
+      </label>
     </div>
   </div>
 
@@ -27,49 +13,37 @@
     <span class="input-group-text" id="scaleLabel">Scale image by</span>
     <input
       type="number"
-      formControlName="scale"
       class="form-control"
       id="scale"
       aria-label="Scale image by"
       aria-describedby="scaleLabel"
+      [ngModel]="scale"
+      (ngModelChange)="scaleChanged.emit($event)"
     />
   </div>
 
   <!-- error handling: scale -->
-  <div
-    *ngIf="formScale?.invalid && (formScale?.dirty || formScale?.touched)"
-    class="alert alert-danger"
-  >
-    <div *ngIf="formScale?.errors?.required">Scale is required</div>
-    <div *ngIf="formScale?.errors?.min">Scale cannot be lower than 1</div>
-    <div *ngIf="formScale?.errors?.max">Scale cannot be greater than 10</div>
-  </div>
+  <p *ngIf="!isFormValid" class="alert alert-danger">
+    Scale is required and has to be greater than 0 and cannot be greater than 10.
+  </p>
 
   <!-- select: background transparent -->
-  <div *ngIf="downloadForm.getRawValue().extension === 'PNG'" class="mb-3">
+  <div *ngIf="extension === 'PNG'" class="mb-3">
     <div class="form-check form-switch">
       <input
         class="form-check-input"
         type="checkbox"
         id="transparent"
-        formControlName="transparent"
+        [ngModel]="transparentBackground"
+        (ngModelChange)="transparentBackgroundChanged.emit()"
       />
-      <label
-        class="form-check-label"
-        for="transparent"
-        (click)="transparentBackgroundChanged.emit()"
-        >Transparent background</label
-      >
+      <label class="form-check-label" for="transparent">Transparent background</label>
     </div>
   </div>
 
   <!-- SUBMIT -->
-  <div class="d-grid">
-    <button
-      class="btn btn-success"
-      [disabled]="(downloadForm.touched || downloadForm.dirty) && downloadForm.invalid"
-    >
-      {{buttonLabel}}
+  <div class="d-grid" *ngIf="buttonVisible">
+    <button class="btn btn-success" [disabled]="!isFormValid" (click)="triggerImageDownload.emit()">
+      <fa-icon icon="download"></fa-icon>&nbsp; Download image
     </button>
   </div>
-</form>

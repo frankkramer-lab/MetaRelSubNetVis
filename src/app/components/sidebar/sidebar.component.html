@@ -14,7 +14,7 @@
     </div>
   </h3>
 
-  <div class="d-grid gap-2 mb-4">
+  <div class="d-grid gap-0 mb-4">
     <!-- PATIENTS -->
     <button
       class="btn btn-dark icon-hover btn-lg text-start rounded-0"
@@ -32,11 +32,9 @@
       &nbsp;Patients
     </button>
     <div class="collapse" #collapsePatient id="collapsePatient">
-
-      <div class="ps-3 pe-3 pb-2">
+      <div class="p-3">
         <app-sidebar-patients></app-sidebar-patients>
       </div>
-
     </div>
 
     <!-- THRESHOLD -->
@@ -56,7 +54,9 @@
       &nbsp;Threshold
     </button>
     <div class="collapse" id="collapseThreshold" #collapseThreshold>
-      <app-sidebar-threshold></app-sidebar-threshold>
+      <div class="p-3">
+        <app-sidebar-threshold></app-sidebar-threshold>
+      </div>
     </div>
 
     <!-- NODES -->
@@ -76,7 +76,9 @@
       &nbsp;Nodes
     </button>
     <div class="collapse" id="collapseNodes" #collapseNodes>
-      <app-sidebar-nodes></app-sidebar-nodes>
+      <div class="p-3">
+        <app-sidebar-nodes></app-sidebar-nodes>
+      </div>
     </div>
 
     <!-- LAYOUT -->
@@ -96,7 +98,9 @@
       &nbsp;Layout
     </button>
     <div class="collapse" id="collapseLayout" #collapseLayout>
-      <app-sidebar-layout></app-sidebar-layout>
+      <div class="p-3">
+        <app-sidebar-layout></app-sidebar-layout>
+      </div>
     </div>
 
     <!-- DOWNLOAD -->
@@ -116,7 +120,9 @@
       &nbsp;Download
     </button>
     <div class="collapse" id="collapseDownload" #collapseDownload>
-      <app-sidebar-download></app-sidebar-download>
+      <div class="p-3">
+        <app-sidebar-download></app-sidebar-download>
+      </div>
     </div>
 
     <!-- HASH GENERATOR -->
@@ -136,7 +142,9 @@
       &nbsp;Hash generator
     </button>
     <div class="collapse" id="collapseGenerator" #collapseGenerator>
-      <app-sidebar-generator></app-sidebar-generator>
+      <div class="p-3">
+        <app-sidebar-generator></app-sidebar-generator>
+      </div>
     </div>
 
     <!-- IMPRESSUM -->
@@ -156,7 +164,9 @@
       &nbsp;Impressum
     </button>
     <div class="collapse" id="collapseImpressum" #collapseImpressum>
-      <app-sidebar-legal></app-sidebar-legal>
+      <div class="p-3">
+        <app-sidebar-legal></app-sidebar-legal>
+      </div>
     </div>
 
   </div>

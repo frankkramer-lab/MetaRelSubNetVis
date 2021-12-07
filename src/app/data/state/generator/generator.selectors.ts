@@ -7,6 +7,11 @@ const selectState = createSelector(
   (state: GeneratorState) => state,
 );
 
+export const selectIsImageDownloadConfigValid = createSelector(
+  selectState,
+  (state: GeneratorState) => state.isImageDownloadConfigValid,
+);
+
 export const selectImageDownloadConfig = createSelector(
   selectState,
   (state: GeneratorState) => state.imageDownloadConfig,
@@ -18,4 +23,12 @@ export const selectSidebarVisibility = createSelector(
 export const selectTriggerImmediateDownload = createSelector(
   selectState,
   (state: GeneratorState) => state.triggerImageDownload,
+);
+export const selectQueryParams = createSelector(
+  selectState,
+  (state: GeneratorState) => state.queryParams,
+);
+export const selectDomain = createSelector(
+  selectState,
+  (state: GeneratorState) => state.domain,
 );

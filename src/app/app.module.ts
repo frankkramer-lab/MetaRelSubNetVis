@@ -5,9 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   faArrowCircleDown,
-  faBars, faCopy,
+  faBars,
+  faClone,
+  faDownload,
   faHospitalUser,
-  faInfo, faInfoCircle,
+  faInfo,
+  faInfoCircle,
   faLink,
   faPalette,
   faProjectDiagram,
@@ -17,6 +20,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -35,10 +40,10 @@ import { SidebarThresholdSelectorComponent } from './components/sidebar-threshol
 import { SidebarLayoutFormComponent } from './components/sidebar-layout-form/sidebar-layout-form.component';
 import { SidebarDownloadFormComponent } from './components/sidebar-download-form/sidebar-download-form.component';
 import { SidebarNodesFormComponent } from './components/sidebar-nodes-form/sidebar-nodes-form.component';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { SidebarGeneratorComponent } from './components/sidebar-generator/sidebar-generator.component';
 import { SidebarGeneratorFormComponent } from './components/sidebar-generator-form/sidebar-generator-form.component';
+import { SidebarGeneratorTableComponent } from './components/sidebar-generator-table/sidebar-generator-table.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +64,7 @@ import { SidebarGeneratorFormComponent } from './components/sidebar-generator-fo
     SidebarNodesFormComponent,
     SidebarGeneratorComponent,
     SidebarGeneratorFormComponent,
+    SidebarGeneratorTableComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,6 +79,7 @@ import { SidebarGeneratorFormComponent } from './components/sidebar-generator-fo
       autoPause: true,
     }),
     EffectsModule.forRoot(effects),
+    NgbModule,
     FontAwesomeModule,
   ],
   bootstrap: [AppComponent],
@@ -91,7 +98,8 @@ export class AppModule {
       faInfoCircle,
       faRedo,
       faLink,
-      faCopy,
+      faClone,
+      faDownload,
     );
   }
 }

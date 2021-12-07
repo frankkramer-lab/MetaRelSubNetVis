@@ -20,14 +20,18 @@ import {
 } from '../../data/state/layout/layout.selectors';
 import {
   selectImageDownloadConfig,
+  selectIsImageDownloadConfigValid,
   selectSidebarVisibility,
   selectTriggerImmediateDownload,
 } from '../../data/state/generator/generator.selectors';
 import {
-  setImageDownloadConfig,
-  setSidebarVisibility,
-  toggleTriggerImmediateDownload,
+  copyToClipboard,
+  setGeneratorImageExtension,
+  setGeneratorImageScale,
+  setGeneratorSidebarVisibility, toggleGeneratorImageBackground,
+  toggleGeneratorTriggerImmediateDownload,
 } from '../../data/state/generator/generator.actions';
+import { toggleBackgroundTransparent } from '../../data/state/download/download.actions';
 
 @Component({
   selector: 'app-sidebar-generator',
@@ -53,14 +57,15 @@ export class SidebarGeneratorComponent implements OnInit {
 
   showMtb$!: Observable<boolean>;
 
+  isImageFormValid$!: Observable<boolean>;
+
   imageDownloadConfig$!: Observable<ImageDownloadConfig>;
 
   sidebarVisibility$!: Observable<SidebarVisibilityEnum>;
 
   triggerImmediateImageDownload$!: Observable<boolean>;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.patientA$ = this.store.select(selectPatientA);
@@ -73,28 +78,33 @@ export class SidebarGeneratorComponent implements OnInit {
     this.showShared$ = this.store.select(selectShowOnlySharedNodes);
     this.showMtb$ = this.store.select(selectShowMtbResults);
     this.imageDownloadConfig$ = this.store.select(selectImageDownloadConfig);
+    this.isImageFormValid$ = this.store.select(selectIsImageDownloadConfigValid);
     this.sidebarVisibility$ = this.store.select(selectSidebarVisibility);
     this.triggerImmediateImageDownload$ = this.store.select(selectTriggerImmediateDownload);
   }
 
   toggleTriggerImmediateDownload() {
-    this.store.dispatch(toggleTriggerImmediateDownload());
+    this.store.dispatch(toggleGeneratorTriggerImmediateDownload());
   }
 
   setSidebarVisibility(sidebarVisibility: SidebarVisibilityEnum) {
-    this.store.dispatch(setSidebarVisibility({ sidebarVisibility }));
+    this.store.dispatch(setGeneratorSidebarVisibility({ sidebarVisibility }));
   }
 
-  buildAndCopyUrl(imageDownloadConfig: ImageDownloadConfig) {
-    this.store.dispatch(setImageDownloadConfig({ imageDownloadConfig }));
-    // todo copy to clipboard
+  setImageExtension(extension: string) {
+    console.log("generator: " + extension);
+    this.store.dispatch(setGeneratorImageExtension({ extension }));
   }
 
-  private copyToClipboard(encodedUrlParams: string): void {
-    const url = `localhost:4200/${encodedUrlParams}`;
-    console.log(url);
-    navigator.clipboard.writeText(url);
-    // todo show alert
+  setImageScale(scale: number) {
+    this.store.dispatch(setGeneratorImageScale({ scale }));
   }
 
+  setImageTransparentBackground() {
+    this.store.dispatch(toggleGeneratorImageBackground());
+  }
+
+  buildAndCopyUrl() {
+    this.store.dispatch(copyToClipboard());
+  }
 }

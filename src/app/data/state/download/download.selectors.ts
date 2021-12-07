@@ -16,3 +16,7 @@ export const selectTransparentBackground = createSelector(
   selectState,
   (state: DownloadState) => state.transparentBackground,
 );
+export const selectIsFormValid = createSelector(
+  selectState,
+  (state: DownloadState) => state.isFormValid,
+);

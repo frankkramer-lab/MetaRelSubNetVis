@@ -291,7 +291,6 @@ export class GraphService {
     });
 
     this.cyCore.elements('node,edge').data('shown', true);
-    console.log(this.cyCore);
   }
 
   /**
@@ -391,7 +390,6 @@ export class GraphService {
     showOnlySharedNodes: boolean,
     showMtbResults: boolean,
   ) {
-
     this.updateMtbNodes(showMtbResults);
 
     if (
@@ -439,7 +437,10 @@ export class GraphService {
       this.clear();
       this.cyCore.elements('node').data('shown', true);
     }
-    this.updateShownNodes(showAllNodes, showOnlySharedNodes);
+    const patientSelected =
+      (patientADetails && patientADetails.length > 0) ||
+      (patientBDetails && patientBDetails.length > 0);
+    this.updateShownNodes(showAllNodes, showOnlySharedNodes, patientSelected);
   }
 
   /**
@@ -588,15 +589,15 @@ export class GraphService {
     this.cyCore
       .style()
       // @ts-ignore
-      .selector('node[color = \'LOW\']')
+      .selector("node[color = 'LOW']")
       .style('background-color', this.colors.blue)
       .style('text-outline-color', this.colors.blue)
       // @ts-ignore
-      .selector('node[color = \'NORMAL\']')
+      .selector("node[color = 'NORMAL']")
       .style('background-color', this.colors.yellow)
       .style('text-outline-color', this.colors.yellow)
       // @ts-ignore
-      .selector('node[color = \'HIGH\']')
+      .selector("node[color = 'HIGH']")
       .style('background-color', this.colors.red)
       .style('text-outline-color', this.colors.red)
       // @ts-ignore
@@ -608,22 +609,22 @@ export class GraphService {
       .style('pie-2-background-color', this.colors.gray)
       .style('pie-1-background-color', this.colors.gray)
       // @ts-ignore
-      .selector('node.split[colorMet = \'LOW\']')
+      .selector("node.split[colorMet = 'LOW']")
       .style('pie-2-background-color', this.colors.blue)
       // @ts-ignore
-      .selector('node.split[colorNonMet = \'LOW\']')
+      .selector("node.split[colorNonMet = 'LOW']")
       .style('pie-1-background-color', this.colors.blue)
       // @ts-ignore
-      .selector('node.split[colorMet = \'NORMAL\']')
+      .selector("node.split[colorMet = 'NORMAL']")
       .style('pie-2-background-color', this.colors.yellow)
       // @ts-ignore
-      .selector('node.split[colorNonMet = \'NORMAL\']')
+      .selector("node.split[colorNonMet = 'NORMAL']")
       .style('pie-1-background-color', this.colors.yellow)
       // @ts-ignore
-      .selector('node.split[colorMet = \'HIGH\']')
+      .selector("node.split[colorMet = 'HIGH']")
       .style('pie-2-background-color', this.colors.red)
       // @ts-ignore
-      .selector('node.split[colorNonMet = \'HIGH\']')
+      .selector("node.split[colorNonMet = 'HIGH']")
       .style('pie-1-background-color', this.colors.red);
   }
 
@@ -751,17 +752,17 @@ export class GraphService {
    * If the displayed nodes are not modified themselves,
    * it's sufficient to update which nodes are displayed.
    */
-  updateShownNodes(showAllNodes: boolean, showOnlySharedNodes: boolean) {
+  updateShownNodes(showAllNodes: boolean, showOnlySharedNodes: boolean, patientSelected: boolean) {
     this.cyCore.batch(() => {
       this.cyCore.elements('node[member]').data('shown', true);
-      this.cyCore.elements('node[!member]').data('shown', showAllNodes);
+      this.cyCore.elements('node[!member]').data('shown', patientSelected ? showAllNodes : true);
       (this.cyCore.elements('node[member]').connectedEdges() as CollectionReturnValue).data(
         'shown',
         true,
       );
       (this.cyCore.elements('node[!member]').connectedEdges() as CollectionReturnValue).data(
         'shown',
-        showAllNodes,
+        patientSelected ? showAllNodes : true,
       );
       this.cyCore
         .elements('node.split[colorMet][^colorNonMet]')
@@ -795,7 +796,6 @@ export class GraphService {
    * @param markedNodes List of currently selected nodes
    */
   highlightNode(markedNodes: NetworkNode[]) {
-
     console.log(this.cyCore);
 
     const nodes: string[] = markedNodes.map((a) => a.data.id);

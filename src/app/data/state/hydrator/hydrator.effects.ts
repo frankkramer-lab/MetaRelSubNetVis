@@ -117,7 +117,7 @@ export class HydratorEffects {
 
   hydrateThreshold$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(hydratePatientAPatientBSuccess),
+      ofType(hydratePatientAPatientBSuccess, hydratePatientAPatientBFailure),
       concatLatestFrom(() => this.store.select(selectConfig)),
       map(([, config]) => {
         if (!config || !config.th || Number.isNaN(config.th)) return hydrateThresholdFailure();
@@ -128,7 +128,7 @@ export class HydratorEffects {
 
   hydrateLayout$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(hydrateThresholdSuccess, hydrateThresholdFailure, hydratePatientAPatientBFailure),
+      ofType(hydrateThresholdSuccess, hydrateThresholdFailure),
       concatLatestFrom(() => this.store.select(selectConfig)),
       map(([, config]) => {
         if (

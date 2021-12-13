@@ -58,6 +58,7 @@ import {
   markMultipleNodes,
 } from '../hydrator/hydrator.actions';
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
+import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 
 @Injectable()
 export class GraphEffects {
@@ -109,27 +110,25 @@ export class GraphEffects {
       ]),
       map(
         ([
-           ,
-           patientADetails,
-           patientBDetails,
-           patientGroupA,
-           patientGroupB,
-           geMin,
-           geMax,
-           network,
-           defined,
-           minA,
-           maxA,
-           minB,
-           maxB,
-           nodeColorBy,
-           nodeSizeBy,
-           showAllNodes,
-           showOnlySharedNodes,
-           showMtbResults,
-         ]) => {
-
-
+          ,
+          patientADetails,
+          patientBDetails,
+          patientGroupA,
+          patientGroupB,
+          geMin,
+          geMax,
+          network,
+          defined,
+          minA,
+          maxA,
+          minB,
+          maxB,
+          nodeColorBy,
+          nodeSizeBy,
+          showAllNodes,
+          showOnlySharedNodes,
+          showMtbResults,
+        ]) => {
           console.log(network);
 
           if (!network) return renderingFailure();
@@ -166,9 +165,14 @@ export class GraphEffects {
         concatLatestFrom(() => [
           this.store.select(selectShowAllNodes),
           this.store.select(selectShowOnlySharedNodes),
+          this.store.select(selectPatientSelection),
         ]),
-        map(([, showAllNodes, showOnlySharedNodes]) =>
-          this.graphService.updateShownNodes(showAllNodes, showOnlySharedNodes),
+        map(([, showAllNodes, showOnlySharedNodes, patientSelection]) =>
+          this.graphService.updateShownNodes(
+            showAllNodes,
+            showOnlySharedNodes,
+            patientSelection !== PatientSelectionEnum.none,
+          ),
         ),
       );
     },
@@ -235,6 +239,5 @@ export class GraphEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private graphService: GraphService,
-  ) {
-  }
+  ) {}
 }

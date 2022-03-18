@@ -29,4 +29,12 @@ export interface PatientCollection {
    * Maximal gene expression
    */
   geMax: number;
+  /**
+   * Label for patient group A
+   */
+  labelA: string;
+  /**
+   * Label for patient group B
+   */
+  labelB: string;
 }

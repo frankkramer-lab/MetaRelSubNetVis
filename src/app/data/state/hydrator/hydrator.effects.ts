@@ -58,6 +58,8 @@ export class HydratorEffects {
     return this.actions$.pipe(
       ofType(loadQueryParams),
       switchMap(() =>
+
+        // todo move to input field
         this.apiService.loadDataNdex('a420aaee-4be9-11ec-b3be-0ac135e8bacf').pipe(
           map((data) => {
             console.log(data);
@@ -67,6 +69,7 @@ export class HydratorEffects {
             let edgesRaw: any[] = [];
             let nodeAttributes: any;
             let networkAttributes: any;
+            const labels: string[] = [];
 
             (data as any[]).forEach((aspect) => {
               if (aspect.nodes) {
@@ -86,56 +89,62 @@ export class HydratorEffects {
             const network: Network = {
               edges: [],
               nodes: [],
-              occ: {}, // todo
+              occ: {},
             };
-
 
             let patients: PatientCollection = {
               detailsA: {}, // { patient-name => PatientItem[] } , list of patients with each a list of all this patient's protein expressions
               detailsB: {},
               groupA: [], // { name: '', mfsYears: 0, subtype: '' }, basics for each patient
               groupB: [],
+              labelA: '',
+              labelB: '',
               geMin: Number.MAX_SAFE_INTEGER,
               geMax: Number.MIN_SAFE_INTEGER,
-            };
-
-            const patientDetails: PatientItem[][] = [];
-
-            const thresholds: Threshold = {
-              groupA: {
-                threshold: 0,
-                max: 0,
-              }, groupB: {
-                threshold: 0,
-                max: 0,
-              },
             };
 
             let subtypes: string[] = [];
 
             nodesDictionary = this.hydratorService.hydrateNodesMap(nodesRaw); // contains id => name map for each node
             network.edges = this.hydratorService.hydrateEdges(edgesRaw);
-            network.occ = this.hydratorService.hydrateOccurrences(patients);
 
-            subtypes = this.hydratorService.hydrateNetworkAttributes(networkAttributes, patients);
+            subtypes = this.hydratorService.hydrateNetworkAttributes(
+              networkAttributes,
+              patients,
+              labels,
+            );
+
+            patients = { ...patients, labelA: labels[0], labelB: labels[1] };
+
             patients = this.hydratorService.hydrateNodeAttributes(
               nodeAttributes,
               patients,
               nodesDictionary,
             );
 
+            network.occ = this.hydratorService.hydrateOccurrences(patients);
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
 
             console.log(network);
             console.log(patients);
-            return loadDataSuccess();
+
+
+            // todo
+            // const patientDetails: PatientItem[][] = [];
+            const thresholds: Threshold = this.hydratorService.hydrateThresholds(patients);
+
+            return loadDataSuccess({
+              network,
+              patients,
+              thresholds,
+            });
 
             // todo payload
             // {
             //   network: Network, // contains nodes, edges, occurrences
             //   patients: PatientCollection, // contains patients and basic info
-            //   patientDetails: PatientItem[][], // contains a list of patients and for each patient his / her network config
-            //   thresholds: Threshold
+            //   patientDetails: PatientItem[][], // todo not sure, contains a list of patients and for each patient his / her network config
+            //   thresholds: Threshold // min and max scores per group
             // }
           }),
           catchError(() => of(loadDataFailure())),
@@ -162,7 +171,7 @@ export class HydratorEffects {
 
   hydratePatientAPatientB$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadDataJsonSuccess),
+      ofType(loadDataJsonSuccess, loadDataSuccess),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
         this.store.select(selectPatientGroupA),

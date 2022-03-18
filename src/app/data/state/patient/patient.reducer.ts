@@ -10,15 +10,19 @@ import {
   setPatientSelection,
 } from './patient.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
-import { hydratePatientAPatientBSuccess, loadQueryParams } from '../hydrator/hydrator.actions';
+import {
+  hydratePatientAPatientBSuccess,
+  loadDataSuccess,
+  loadQueryParams,
+} from '../hydrator/hydrator.actions';
 
 const initialState: PatientState = {
   groupALabel: '',
   groupBLabel: '',
   groupA: [],
   groupB: [],
-  groupADetails: [],
-  groupBDetails: [],
+  groupADetails: {},
+  groupBDetails: {},
   patientA: null,
   patientB: null,
   patientADetails: [],
@@ -32,6 +36,20 @@ const initialState: PatientState = {
 export const patientReducer = createReducer(
   initialState,
   on(loadQueryParams, (state: PatientState): PatientState => ({ ...state, isLoading: true })),
+  on(loadDataSuccess, (state: PatientState, payload): PatientState => {
+    return {
+      ...state,
+      isLoading: false,
+      groupA: payload.patients.groupA,
+      groupB: payload.patients.groupB,
+      groupADetails: payload.patients.detailsA,
+      groupBDetails: payload.patients.detailsB,
+      geMin: payload.patients.geMin,
+      geMax: payload.patients.geMax,
+      groupALabel: payload.patients.labelA,
+      groupBLabel: payload.patients.labelB,
+    };
+  }),
   on(
     setPatientA,
     hydratePatientAPatientBSuccess,

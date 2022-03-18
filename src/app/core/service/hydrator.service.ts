@@ -8,6 +8,7 @@ import { NodeRaw } from '../../data/schema/node-raw';
 import { NetworkEdge } from '../../data/schema/network-edge';
 import { NetworkNode } from '../../data/schema/network-node';
 import { NetworkOccurrences } from '../../data/schema/network-occurrences';
+import { Threshold } from '../../data/schema/threshold';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class HydratorService {
   hydrateNetworkAttributes(
     networkAttributes: any,
     patients: PatientCollection,
+    labels: string[]
   ) {
     let patientGroups: string[] = [];
     let patientNames: string[] = [];
@@ -40,6 +42,8 @@ export class HydratorService {
     const groupLabels = [...new Set(patientGroups)];
     const groupLabelA = groupLabels[0];
     const groupLabelB = groupLabels[1];
+    labels.push(groupLabelA);
+    labels.push(groupLabelB);
 
     for (let i = 0; i < patientGroups.length; i++) {
       const patient: Patient = {
@@ -257,9 +261,6 @@ export class HydratorService {
 
     const patientsAll = patients.groupA.concat(patients.groupB);
     patientsAll.forEach((a) => {
-      // if (!subtypes.includes(a.subtype)) {
-      //   subtypes.push(a.subtype);
-      // }
       if (!Object.keys(occurrences).includes(a.subtype)) {
         occurrences[a.subtype] = 0;
       }
@@ -267,5 +268,57 @@ export class HydratorService {
       occurrences.all += 1;
     });
     return occurrences;
+  }
+
+  hydrateThresholds(patients: PatientCollection): Threshold {
+    console.log(patients);
+    const threshold: Threshold = {
+      groupA: {
+        threshold: 0,
+        max: 0,
+      },
+      groupB: {
+        threshold: 0,
+        max: 0,
+      },
+    };
+
+    let aMin = Number.MAX_SAFE_INTEGER;
+    let aMax = Number.MIN_SAFE_INTEGER;
+    Object.entries(patients.detailsA).forEach((a) => {
+      const patientNodes = a[1];
+      patientNodes.forEach((node) => {
+        if (node.score < aMin) {
+          aMin = node.score;
+        }
+        if (node.score > aMax) {
+          aMax = node.score;
+        }
+      });
+    });
+
+    let bMin = Number.MAX_SAFE_INTEGER;
+    let bMax = Number.MIN_SAFE_INTEGER;
+    Object.entries(patients.detailsB).forEach((a) => {
+      const patientNodes = a[1];
+      patientNodes.forEach((node) => {
+        if (node.score < bMin) {
+          bMin = node.score;
+        }
+        if (node.score > bMax) {
+          bMax = node.score;
+        }
+      });
+    });
+
+    console.log(aMin);
+    console.log(aMax);
+    console.log(bMin);
+    console.log(bMax);
+    threshold.groupA.threshold = aMin;
+    threshold.groupA.max = aMax;
+    threshold.groupB.threshold = bMin;
+    threshold.groupB.max = bMax;
+    return threshold;
   }
 }

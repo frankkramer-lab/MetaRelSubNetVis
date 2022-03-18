@@ -8,8 +8,8 @@ export interface PatientState {
   groupBLabel: string;
   groupA: Patient[];
   groupB: Patient[];
-  groupADetails: PatientDetails[];
-  groupBDetails: PatientDetails[];
+  groupADetails: PatientDetails;
+  groupBDetails: PatientDetails;
   patientA: Patient | null; // should be number | null
   patientB: Patient | null;
   patientADetails: PatientItem[]; // should be PatientItem[][]

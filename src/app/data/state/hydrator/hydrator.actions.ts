@@ -15,11 +15,14 @@ export const loadQueryParams = createAction(
   props<{ params: any }>(),
 );
 
-export const loadDataSuccess = createAction(
-  '[Hydrator Effects] load data success',
+export const loadDataFailure = createAction('[Hydrator Effects] load data failure');
+export const loadDataSuccess = createAction('[Hydrator Effects] load data success');
+
+export const loadDataJsonSuccess = createAction(
+  '[Hydrator Effects] load data JSON success',
   props<{ network: Network; patients: PatientCollection; thresholds: Threshold }>(),
 );
-export const loadDataFailure = createAction('[Hydrator Effects] load data failure');
+export const loadDataJsonFailure = createAction('[Hydrator Effects] load data JSON failure');
 
 export const hydrateAbort = createAction('[Hydrator Effects] hydrate abort');
 

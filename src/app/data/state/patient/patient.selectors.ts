@@ -9,12 +9,12 @@ const selectState = createSelector(
 
 export const selectPatientGroupA = createSelector(
   selectState,
-  (state: PatientState) => state.patientsGroupA,
+  (state: PatientState) => state.groupA,
 );
 
 export const selectPatientGroupB = createSelector(
   selectState,
-  (state: PatientState) => state.patientsGroupB,
+  (state: PatientState) => state.groupB,
 );
 
 export const selectPatientA = createSelector(selectState, (state: PatientState) => state.patientA);

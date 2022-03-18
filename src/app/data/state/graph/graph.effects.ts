@@ -54,7 +54,7 @@ import {
   hydrateSidebarVisibilityFailure,
   hydrateSidebarVisibilitySuccess,
   hydrateTriggerDownloadSuccess,
-  loadDataSuccess,
+  loadDataJsonSuccess,
   markMultipleNodes,
 } from '../hydrator/hydrator.actions';
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
@@ -65,7 +65,7 @@ export class GraphEffects {
   processGraphCore$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(loadDataSuccess),
+        ofType(loadDataJsonSuccess),
         concatLatestFrom(() => this.store.select(selectNetwork)),
         map(([, network]) => {
           if (!network) {
@@ -129,7 +129,6 @@ export class GraphEffects {
           showOnlySharedNodes,
           showMtbResults,
         ]) => {
-          console.log(network);
 
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(

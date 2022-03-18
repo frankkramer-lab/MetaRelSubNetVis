@@ -35,6 +35,12 @@ export class ApiService {
   private readonly urlPatientPrefix = 'assets/data/patient/';
 
   /**
+   * Public NDExBio API.
+   * @private
+   */
+  private readonly ndexPublicApi = 'https://public.ndexbio.org/v2/network/';
+
+  /**
    * Constructor
    * @param http Loading network.ts and patient data via HTTP
    */
@@ -68,5 +74,13 @@ export class ApiService {
    */
   loadPatientDetails(id: string): Observable<PatientItem[]> {
     return this.http.get<PatientItem[]>(`${this.urlPatientPrefix}${id}.json`);
+  }
+
+  /**
+   * Loading data from NDEx by a specified UUID.
+   * @param uuid identifier for the network of interest
+   */
+  loadDataNdex(uuid: string): Observable<Object> {
+    return this.http.get(this.ndexPublicApi + uuid);
   }
 }

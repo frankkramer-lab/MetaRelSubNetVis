@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { AppState } from '../app.state';
@@ -21,6 +21,7 @@ import {
   hydrateTriggerDownloadSuccess,
   hydrationEnded,
   loadDataFailure,
+  loadDataJsonSuccess,
   loadDataSuccess,
   loadQueryParams,
   markMultipleNodes,
@@ -46,28 +47,122 @@ import {
   selectTransparentBackground,
 } from '../download/download.selectors';
 import { selectMarkedNodes } from '../nodes/nodes.selectors';
+import { PatientCollection } from '../../schema/patient-collection';
+import { HydratorService } from '../../../core/service/hydrator.service';
+import { Network } from '../../schema/network';
+import { Threshold } from '../../schema/threshold';
 
 @Injectable()
 export class HydratorEffects {
-  loadData$ = createEffect(() => {
+  loadDataNdex$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadQueryParams),
-      concatMap(() => {
-        return forkJoin({
-          network: this.apiService.loadNetwork(),
-          patients: this.apiService.loadPatientsClassified(),
-          thresholds: this.apiService.loadThresholds(),
-        }).pipe(
-          map((payload) => loadDataSuccess(payload)),
+      switchMap(() =>
+        this.apiService.loadDataNdex('a420aaee-4be9-11ec-b3be-0ac135e8bacf').pipe(
+          map((data) => {
+            console.log(data);
+
+            let nodesDictionary: any = {};
+            let nodesRaw: any[] = [];
+            let edgesRaw: any[] = [];
+            let nodeAttributes: any;
+            let networkAttributes: any;
+
+            (data as any[]).forEach((aspect) => {
+              if (aspect.nodes) {
+                nodesRaw = aspect.nodes;
+              }
+              if (aspect.networkAttributes) {
+                networkAttributes = aspect.networkAttributes;
+              }
+              if (aspect.nodeAttributes) {
+                nodeAttributes = aspect.nodeAttributes;
+              }
+              if (aspect.edges) {
+                edgesRaw = aspect.edges;
+              }
+            });
+
+            const network: Network = {
+              edges: [],
+              nodes: [],
+              occ: {}, // todo
+            };
+
+
+            let patients: PatientCollection = {
+              detailsA: {}, // { patient-name => PatientItem[] } , list of patients with each a list of all this patient's protein expressions
+              detailsB: {},
+              groupA: [], // { name: '', mfsYears: 0, subtype: '' }, basics for each patient
+              groupB: [],
+              geMin: Number.MAX_SAFE_INTEGER,
+              geMax: Number.MIN_SAFE_INTEGER,
+            };
+
+            const patientDetails: PatientItem[][] = [];
+
+            const thresholds: Threshold = {
+              groupA: {
+                threshold: 0,
+                max: 0,
+              }, groupB: {
+                threshold: 0,
+                max: 0,
+              },
+            };
+
+            let subtypes: string[] = [];
+
+            nodesDictionary = this.hydratorService.hydrateNodesMap(nodesRaw); // contains id => name map for each node
+            network.edges = this.hydratorService.hydrateEdges(edgesRaw);
+            network.occ = this.hydratorService.hydrateOccurrences(patients);
+
+            subtypes = this.hydratorService.hydrateNetworkAttributes(networkAttributes, patients);
+            patients = this.hydratorService.hydrateNodeAttributes(
+              nodeAttributes,
+              patients,
+              nodesDictionary,
+            );
+
+            network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
+
+            console.log(network);
+            console.log(patients);
+            return loadDataSuccess();
+
+            // todo payload
+            // {
+            //   network: Network, // contains nodes, edges, occurrences
+            //   patients: PatientCollection, // contains patients and basic info
+            //   patientDetails: PatientItem[][], // contains a list of patients and for each patient his / her network config
+            //   thresholds: Threshold
+            // }
+          }),
           catchError(() => of(loadDataFailure())),
-        );
-      }),
+        ),
+      ),
     );
   });
 
+  // loadData$ = createEffect(() => {
+  //   return this.actions$.pipe(
+  //     ofType(loadQueryParams),
+  //     concatMap(() => {
+  //       return forkJoin({
+  //         network: this.apiService.loadNetwork(),
+  //         patients: this.apiService.loadPatientsClassified(),
+  //         thresholds: this.apiService.loadThresholds(),
+  //       }).pipe(
+  //         map((payload) => loadDataSuccess(payload)),
+  //         catchError(() => of(loadDataFailure())),
+  //       );
+  //     }),
+  //   );
+  // });
+
   hydratePatientAPatientB$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadDataSuccess),
+      ofType(loadDataJsonSuccess),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
         this.store.select(selectPatientGroupA),
@@ -196,7 +291,6 @@ export class HydratorEffects {
       ofType(renderingSuccess),
       concatLatestFrom(() => this.store.select(selectMarkedNodes)),
       map(([, nodes]) => {
-        console.log(nodes);
         return markMultipleNodes({ nodes });
       }),
     );
@@ -230,6 +324,7 @@ export class HydratorEffects {
     private actions$: Actions,
     private store: Store<AppState>,
     private apiService: ApiService,
+    private hydratorService: HydratorService,
   ) {
   }
 }

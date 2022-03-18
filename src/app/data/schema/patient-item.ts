@@ -3,7 +3,7 @@
  */
 export interface PatientItem {
   /**
-   * Identifier
+   * Protein's identifier
    */
   name: string;
   /**

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { PatientItem } from '../../data/schema/patient-item';
 import { NodeColorByEnum } from '../enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../enum/node-size-by.enum';
-import { CancerStatusEnum } from '../enum/cancer-status.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -70,28 +69,4 @@ export class UtilService {
     }
   };
 
-  /**
-   * Returns the enumeration {@link CancerStatusEnum} as string literal,
-   * which ist used as an object key during rendering.
-   * @param cancerStatus Possible enumeration option
-   */
-  getCancerStatusLiteral = (cancerStatus: CancerStatusEnum): string => {
-    return cancerStatus === CancerStatusEnum.metastatic ? 'metastatic' : 'nonmetastatic';
-  };
-
-  /**
-   * Encodes a node's label by replacing all dashes with % sign.
-   * @param label Node's original label
-   */
-  encodeNodeLabel = (label: string): string => {
-    return label.replace(new RegExp('-', 'g'), '%');
-  };
-
-  /**
-   * Decodes a node's label by replacing all % with dashes.
-   * @param label Node's encoded label
-   */
-  decodeNodelabel = (label: string): string => {
-    return label.replace(new RegExp('%', 'g'), '-');
-  };
 }

@@ -12,7 +12,8 @@ export interface Network {
    */
   edges: NetworkEdge[];
   /**
-   * List of occurrences
+   * Indicates, in how many patients a specified node occurs,
+   * thus it's basically a dictionary with all possible nodes as keys.
    */
   occ: NetworkOccurrences;
 }

@@ -796,8 +796,6 @@ export class GraphService {
    * @param markedNodes List of currently selected nodes
    */
   highlightNode(markedNodes: NetworkNode[]) {
-    console.log(this.cyCore);
-
     const nodes: string[] = markedNodes.map((a) => a.data.id);
     this.cyCore.elements('node').removeClass('highlight');
     this.cyCore.elements('edge').removeClass('highlight');

@@ -45,6 +45,8 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
 - **PatientSurvivalYears**: Double list of each patient's metastasis free survival
 - **PatientGroups**: String list of each patient's group (in sum there can only be **two** different types of groups!)
 
+Furthermore the property **name** contains the network's name that will be used as a headline for this application.
+
 ## Example
 
 ```
@@ -104,7 +106,11 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
     ],
     networkAttributes: [
         {
-            n: Patients,
+            n: 'name',
+            v: 'This network is an example'
+        },
+        {
+            n: 'Patients',
             d: 'list_of_strings',
             v: [
                 'Patient1',
@@ -116,7 +122,7 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
             ]
         },
         {
-            n: PatientSubtype,
+            n: 'PatientSubtype',
             d: 'list_of_strings',
             v: [
                 'Type_1',
@@ -128,7 +134,7 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
             ]
         },
         {
-            n: PatientGroups,
+            n: 'PatientGroups',
             d: 'list_of_strings',
             v: [
                 'Group_B',

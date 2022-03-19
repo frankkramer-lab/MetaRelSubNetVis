@@ -41,6 +41,11 @@ export class HydratorService {
     const groupLabels = [...new Set(patientGroups)];
     const groupLabelA = groupLabels[0];
     const groupLabelB = groupLabels[1];
+
+    // default headline, if there was no headline given
+    if (labels.length === 0) {
+      labels.push('');
+    }
     labels.push(groupLabelA);
     labels.push(groupLabelB);
 

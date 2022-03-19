@@ -5,7 +5,7 @@ import { loadDataSuccess, loadQueryParams } from '../hydrator/hydrator.actions';
 const initialState: NetworkState = {
   network: null,
   isLoading: false,
-  headline: null
+  headline: null,
 };
 
 export const networkReducer = createReducer(

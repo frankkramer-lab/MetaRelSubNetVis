@@ -18,4 +18,3 @@ export const setNodeSizeBy = createAction(
   props<{ nodeSizeBy: NodeSizeByEnum }>(),
 );
 export const fitGraph = createAction('[Sidebar Layout Component] fit graph');
-

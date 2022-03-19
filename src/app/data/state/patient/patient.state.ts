@@ -10,9 +10,9 @@ export interface PatientState {
   groupB: Patient[];
   groupADetails: PatientDetails;
   groupBDetails: PatientDetails;
-  patientA: Patient | null; // should be number | null
+  patientA: Patient | null;
   patientB: Patient | null;
-  patientADetails: PatientItem[]; // contains one entry from groupADetails
+  patientADetails: PatientItem[];
   patientBDetails: PatientItem[];
   patientSelection: PatientSelectionEnum;
   geMin: number | null;

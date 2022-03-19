@@ -58,12 +58,9 @@ export class HydratorEffects {
     return this.actions$.pipe(
       ofType(loadQueryParams),
       switchMap(() =>
-
         // todo move to input field
         this.apiService.loadDataNdex('a420aaee-4be9-11ec-b3be-0ac135e8bacf').pipe(
           map((data) => {
-            console.log(data);
-
             let nodesDictionary: any = {};
             let nodesRaw: any[] = [];
             let edgesRaw: any[] = [];
@@ -93,9 +90,9 @@ export class HydratorEffects {
             };
 
             let patients: PatientCollection = {
-              detailsA: {}, // { patient-name => PatientItem[] } , list of patients with each a list of all this patient's protein expressions
+              detailsA: {},
               detailsB: {},
-              groupA: [], // { name: '', mfsYears: 0, subtype: '' }, basics for each patient
+              groupA: [],
               groupB: [],
               labelA: '',
               labelB: '',
@@ -105,7 +102,7 @@ export class HydratorEffects {
 
             let subtypes: string[] = [];
 
-            nodesDictionary = this.hydratorService.hydrateNodesMap(nodesRaw); // contains id => name map for each node
+            nodesDictionary = this.hydratorService.hydrateNodesMap(nodesRaw);
 
             subtypes = this.hydratorService.hydrateNetworkAttributes(
               networkAttributes,
@@ -125,12 +122,6 @@ export class HydratorEffects {
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
             network.edges = this.hydratorService.hydrateEdges(edgesRaw);
 
-            console.log(network);
-            console.log(patients);
-
-
-            // todo
-            // const patientDetails: PatientItem[][] = [];
             const thresholds: Threshold = this.hydratorService.hydrateThresholds(patients);
 
             return loadDataSuccess({
@@ -138,35 +129,12 @@ export class HydratorEffects {
               patients,
               thresholds,
             });
-
-            // todo payload
-            // {
-            //   network: Network, // contains nodes, edges, occurrences
-            //   patients: PatientCollection, // contains patients and basic info
-            //   thresholds: Threshold // min and max scores per group
-            // }
           }),
           catchError(() => of(loadDataFailure())),
         ),
       ),
     );
   });
-
-  // loadData$ = createEffect(() => {
-  //   return this.actions$.pipe(
-  //     ofType(loadQueryParams),
-  //     concatMap(() => {
-  //       return forkJoin({
-  //         network: this.apiService.loadNetwork(),
-  //         patients: this.apiService.loadPatientsClassified(),
-  //         thresholds: this.apiService.loadThresholds(),
-  //       }).pipe(
-  //         map((payload) => loadDataSuccess(payload)),
-  //         catchError(() => of(loadDataFailure())),
-  //       );
-  //     }),
-  //   );
-  // });
 
   hydratePatientAPatientB$ = createEffect(() => {
     return this.actions$.pipe(
@@ -333,6 +301,5 @@ export class HydratorEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private hydratorService: HydratorService,
-  ) {
-  }
+  ) {}
 }

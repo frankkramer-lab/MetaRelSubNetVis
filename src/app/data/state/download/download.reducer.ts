@@ -23,7 +23,6 @@ export const downloadReducer = createReducer(
     if (scale <= 0 || scale > 10) {
       return { ...state, scale, isFormValid: false };
     }
-    ;
     return { ...state, scale, isFormValid: true };
   }),
   on(

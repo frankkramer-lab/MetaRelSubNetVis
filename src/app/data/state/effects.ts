@@ -11,5 +11,5 @@ export const effects: any[] = [
   ThresholdEffects,
   NodesEffects,
   HydratorEffects,
-  GeneratorEffects
+  GeneratorEffects,
 ];

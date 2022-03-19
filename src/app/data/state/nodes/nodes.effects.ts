@@ -47,6 +47,5 @@ export class NodesEffects {
     );
   });
 
-  constructor(private actions$: Actions) {
-  }
+  constructor(private actions$: Actions) {}
 }

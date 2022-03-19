@@ -110,7 +110,6 @@ export const selectVisibleNodes = createSelector(
       visibleNodes = [];
       for (const node of nodes) {
         const nodeLabel = node.data.name.toLowerCase();
-        // const cleanNodeLabel = nodeLabel.trim().toLowerCase();
 
         // there is no filter term or filterterm can be applied
         if (!filterTerm || (filterTerm && nodeLabel.includes(filterTerm.toLowerCase()))) {

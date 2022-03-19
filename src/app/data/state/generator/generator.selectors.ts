@@ -28,7 +28,4 @@ export const selectQueryParams = createSelector(
   selectState,
   (state: GeneratorState) => state.queryParams,
 );
-export const selectDomain = createSelector(
-  selectState,
-  (state: GeneratorState) => state.domain,
-);
+export const selectDomain = createSelector(selectState, (state: GeneratorState) => state.domain);

@@ -54,7 +54,8 @@ import {
   hydrateSidebarVisibilityFailure,
   hydrateSidebarVisibilitySuccess,
   hydrateTriggerDownloadSuccess,
-  loadDataJsonSuccess, loadDataSuccess,
+  loadDataJsonSuccess,
+  loadDataSuccess,
   markMultipleNodes,
 } from '../hydrator/hydrator.actions';
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
@@ -129,7 +130,6 @@ export class GraphEffects {
           showOnlySharedNodes,
           showMtbResults,
         ]) => {
-
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
             patientADetails,

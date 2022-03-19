@@ -34,78 +34,6 @@ export class GraphService {
     highlight: '#333',
   };
 
-  //
-  //   /**
-  //    * Configuration information gained during routing.
-  //    * Are only to be set during routing by {@link RoutingGuard}.
-  //    * Are applied after the default {@link visualizationConfig}
-  //    * to override default values.
-  //    */
-  //   private routingConfig!: RoutingConfig;
-  //
-  //   /**
-  //    * Current configuration of the sidebar parameter that impact the network.ts visualization
-  //    */
-  //   visualizationConfig: VisualizationConfig = {
-  //     nodeColorBy: 0,
-  //     nodeSizeBy: 0,
-  //     patientsSelected: 0,
-  //     patientMetastatic: null,
-  //     patientDetailsMetastatic: null,
-  //     patientNonmetastatic: null,
-  //     patientDetailsNonmetastatic: null,
-  //     selectedNodes: [],
-  //     showAllNodes: false,
-  //     showOnlySharedNodes: false,
-  //     showMtbResults: true,
-  //     thresholdMin: 0,
-  //     thresholdMax: 0,
-  //     thresholdDefined: 0,
-  //   };
-  //
-  //   /**
-  //    * Collection of all available nodes
-  //    */
-  //   allNodes: Node[] | null = null;
-  //
-  //   /**
-  //    * Currently visible nodes
-  //    */
-  //   visibleNodes: Node[] | null = null;
-  //
-  //   /**
-  //    * List of nodes which were selected by the user
-  //    */
-  //   selectedNodes: Node[] = [];
-  //
-  //   /**
-  //    * Core object containing the rendered network.ts
-  //    * @private
-  //    */
-  //   private core!: cytoscape.Core;
-  //
-  //   /**
-  //    * List of thresholds for both metastatic and non-metastatic patients
-  //    * @private
-  //    */
-  //   private thresholds!: Threshold;
-  //
-  //   /**
-  //    * Minimal gene expression.
-  //    * Data found in patients.json.
-  //    * @private
-  //    */
-  //   private geMin!: number;
-  //
-  //   /**
-  //    * Maximal gene expression.
-  //    * Data found in patients.json.
-  //    * @private
-  //    */
-  //   private geMax!: number;
-  //
-  //   private patientData!: PatientCollection;
-  //
   /**
    * Constructor, binding svg export library to cytoscape
    */
@@ -523,7 +451,6 @@ export class GraphService {
     geMax: number | null,
     defined: number | null,
   ): void {
-
     this.cyCore.batch(() => {
       this.clear();
 

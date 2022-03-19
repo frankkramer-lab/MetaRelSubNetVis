@@ -1,8 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { PatientState } from './patient.state';
 import {
-  // loadPatientADetailsSuccess,
-  // loadPatientBDetailsSuccess,
   resetPatientA,
   resetPatientB,
   setPatientA,
@@ -47,7 +45,7 @@ export const patientReducer = createReducer(
       geMin: payload.patients.geMin,
       geMax: payload.patients.geMax,
       groupALabel: payload.patients.labelA,
-      groupBLabel: payload.patients.labelB, // todo patientADetails, patientBDetails
+      groupBLabel: payload.patients.labelB,
     };
   }),
   on(
@@ -87,7 +85,6 @@ export const patientReducer = createReducer(
     }),
   ),
   on(
-    // loadPatientADetailsSuccess,
     hydratePatientAPatientBSuccess,
     (state: PatientState, { patientADetails }): PatientState => ({
       ...state,
@@ -95,7 +92,6 @@ export const patientReducer = createReducer(
     }),
   ),
   on(
-    // loadPatientBDetailsSuccess,
     hydratePatientAPatientBSuccess,
     (state: PatientState, { patientBDetails }): PatientState => ({
       ...state,

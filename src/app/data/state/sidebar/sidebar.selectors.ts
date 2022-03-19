@@ -7,4 +7,7 @@ const selectState = createSelector(
   (state: SidebarState) => state,
 );
 
-export const selectSidebarVisibility = createSelector(selectState, (state: SidebarState) => state.visibility);
+export const selectSidebarVisibility = createSelector(
+  selectState,
+  (state: SidebarState) => state.visibility,
+);

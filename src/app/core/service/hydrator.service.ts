@@ -14,11 +14,7 @@ import { Threshold } from '../../data/schema/threshold';
   providedIn: 'root',
 })
 export class HydratorService {
-  hydrateNetworkAttributes(
-    networkAttributes: any,
-    patients: PatientCollection,
-    labels: string[],
-  ) {
+  hydrateNetworkAttributes(networkAttributes: any, patients: PatientCollection, labels: string[]) {
     let patientGroups: string[] = [];
     let patientNames: string[] = [];
     let patientSurvivalYears: number[] = [];

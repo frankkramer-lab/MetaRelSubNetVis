@@ -260,11 +260,7 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
             n: 'Patient1_Score',
             v: '9.51',
             d: 'double'
-        }
-
-
-
-
+        },
         {
             po: 1,
             n: 'Patient2_GE',
@@ -373,9 +369,6 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
             v: '9.51',
             d: 'double'
         },
-
-
-
         {
             po: 1,
             n: 'Patient3_GE',
@@ -484,10 +477,6 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
             v: '9.51',
             d: 'double'
         },
-
-
-
-
         {
             po: 1,
             n: 'Patient4_GE',
@@ -596,9 +585,6 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
             v: '9.51',
             d: 'double'
         },
-
-
-
         {
             po: 1,
             n: 'Patient5_GE',
@@ -707,9 +693,6 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
             v: '9.51',
             d: 'double'
         },
-
-
-
         {
             po: 1,
             n: 'Patient6_GE',
@@ -820,7 +803,5 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
         }
     ]
 }
-
-
 
 ```

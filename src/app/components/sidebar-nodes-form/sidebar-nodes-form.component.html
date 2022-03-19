@@ -51,7 +51,7 @@
             [ngClass]="markedNodes.includes(node) ? 'bg-info' : ''"
             (click)="nodeClicked.emit(node)" >
           <td class="w-{{ numberOfColumns < 4 ? '50' : '25' }}">
-            {{ node.data.id }}
+            {{ node.data.name }}
           </td>
           <td class="w-25" *ngIf="subTypeColumnA">
             {{ node.occ[subTypeColumnA] }}

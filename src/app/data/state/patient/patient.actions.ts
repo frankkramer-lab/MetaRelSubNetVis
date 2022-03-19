@@ -12,17 +12,17 @@ export const setPatientB = createAction(
 );
 export const resetPatientA = createAction('[Sidebar Patient Component] reset patient A');
 export const resetPatientB = createAction('[Sidebar Patient Component] reset patient B');
-
-export const loadPatientADetailsSuccess = createAction(
-  '[API] load patient A details success',
-  props<{ patientADetails: PatientItem[] }>(),
-);
-export const loadPatientADetailsFailure = createAction('[API] load patient A details failure');
-
-export const loadPatientBDetailsSuccess = createAction(
-  '[API] load patient B details success',
-  props<{ patientBDetails: PatientItem[] }>(),
-);
-export const loadPatientBDetailsFailure = createAction('[API] load patient B details failure');
+//
+// export const loadPatientADetailsSuccess = createAction(
+//   '[API] load patient A details success',
+//   props<{ patientADetails: PatientItem[] }>(),
+// );
+// export const loadPatientADetailsFailure = createAction('[API] load patient A details failure');
+//
+// export const loadPatientBDetailsSuccess = createAction(
+//   '[API] load patient B details success',
+//   props<{ patientBDetails: PatientItem[] }>(),
+// );
+// export const loadPatientBDetailsFailure = createAction('[API] load patient B details failure');
 
 export const setPatientSelection = createAction('[Patient Effect] set patient selection');

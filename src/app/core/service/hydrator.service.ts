@@ -17,7 +17,7 @@ export class HydratorService {
   hydrateNetworkAttributes(
     networkAttributes: any,
     patients: PatientCollection,
-    labels: string[]
+    labels: string[],
   ) {
     let patientGroups: string[] = [];
     let patientNames: string[] = [];
@@ -93,6 +93,7 @@ export class HydratorService {
         const proteinName = nodesDictionary[detail.po];
         if (!patientDetailItemA[patient.name].map((a) => a.name).includes(proteinName)) {
           patientDetailItemA[patient.name].push({
+            id: detail.po,
             name: proteinName,
             score: 0,
             ge: 0,
@@ -133,6 +134,7 @@ export class HydratorService {
         const proteinName = nodesDictionary[detail.po];
         if (!patientDetailItemB[patient.name].map((a) => a.name).includes(proteinName)) {
           patientDetailItemB[patient.name].push({
+            id: detail.po,
             name: proteinName,
             score: 0,
             ge: 0,
@@ -229,7 +231,8 @@ export class HydratorService {
       const n = nodes[i];
       const node: NetworkNode = {
         data: {
-          id: n.n,
+          id: n['@id'],
+          name: n.n,
         },
         occ: occurrences[n.n],
       };
@@ -245,6 +248,7 @@ export class HydratorService {
       const edge: NetworkEdge = {
         data: {
           id: e['@id'],
+          name: e['@id'],
           source: e.s,
           target: e.t,
         },
@@ -271,7 +275,6 @@ export class HydratorService {
   }
 
   hydrateThresholds(patients: PatientCollection): Threshold {
-    console.log(patients);
     const threshold: Threshold = {
       groupA: {
         threshold: 0,
@@ -311,10 +314,6 @@ export class HydratorService {
       });
     });
 
-    console.log(aMin);
-    console.log(aMax);
-    console.log(bMin);
-    console.log(bMax);
     threshold.groupA.threshold = aMin;
     threshold.groupA.max = aMax;
     threshold.groupB.threshold = bMin;

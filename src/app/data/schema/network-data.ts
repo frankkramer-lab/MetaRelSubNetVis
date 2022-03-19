@@ -2,5 +2,10 @@ export interface NetworkData {
   /**
    * This element's id
    */
-  id: string;
+  id: number;
+
+  /**
+   * This element's name used as label
+   */
+  name: string;
 }

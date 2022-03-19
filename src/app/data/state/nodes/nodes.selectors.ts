@@ -78,7 +78,7 @@ export const selectVisibleNodes = createSelector(
           if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
             // threshold check
             if (defined && nodeA.score >= defined) {
-              const node = nodes.find((a) => a.data.id === nodeLabel);
+              const node = nodes.find((a) => a.data.name === nodeLabel);
               // no duplicates
               if (node && !visibleNodes.includes(node)) {
                 visibleNodes.push(node);
@@ -97,7 +97,7 @@ export const selectVisibleNodes = createSelector(
           if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
             // threshold check
             if (defined && nodeB.score >= defined) {
-              const node = nodes.find((a) => a.data.id === nodeLabel);
+              const node = nodes.find((a) => a.data.name === nodeLabel);
               // no duplicates
               if (node && !visibleNodes.includes(node)) {
                 visibleNodes.push(node);
@@ -109,7 +109,7 @@ export const selectVisibleNodes = createSelector(
     } else {
       visibleNodes = [];
       for (const node of nodes) {
-        const nodeLabel = node.data.id.toLowerCase();
+        const nodeLabel = node.data.name.toLowerCase();
         // const cleanNodeLabel = nodeLabel.trim().toLowerCase();
 
         // there is no filter term or filterterm can be applied

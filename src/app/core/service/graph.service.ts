@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 // @ts-ignore
 import * as svg from 'cytoscape-svg';
 import * as cytoscape from 'cytoscape';
-import { CollectionReturnValue } from 'cytoscape';
+import { CollectionReturnValue, ElementsDefinition } from 'cytoscape';
 import { NetworkNode } from '../../data/schema/network-node';
 import { Network } from '../../data/schema/network';
 import { Patient } from '../../data/schema/patient';
@@ -281,13 +281,13 @@ export class GraphService {
    * @param network Network elements
    */
   initializeCore(network: Network): void {
-    const networkCopy = JSON.parse(JSON.stringify(network)) as Network;
+    const networkCopy = JSON.parse(JSON.stringify(network)) as ElementsDefinition;
 
     this.cyCore = cytoscape({
       container: this.cyContainer,
       elements: networkCopy,
       style: this.getStyle(),
-      layout: this.getLayout(networkCopy.nodes),
+      layout: this.getLayout(network.nodes),
     });
 
     this.cyCore.elements('node,edge').data('shown', true);
@@ -484,7 +484,7 @@ export class GraphService {
         if (defined && data.score >= defined) {
           const node = this.cyCore
             .nodes()
-            .getElementById(data.name)
+            .getElementById(data.id.toString())
             .data('member', true)
             .data('shown', true)
             .addClass('split')
@@ -500,7 +500,7 @@ export class GraphService {
         if (defined && data.score >= defined) {
           const node = this.cyCore
             .nodes()
-            .getElementById(data.name)
+            .getElementById(data.id.toString())
             .data('member', true)
             .data('shown', true)
             .addClass('split')
@@ -523,6 +523,7 @@ export class GraphService {
     geMax: number | null,
     defined: number | null,
   ): void {
+
     this.cyCore.batch(() => {
       this.clear();
 
@@ -566,7 +567,7 @@ export class GraphService {
         if (defined && data.score >= defined) {
           const node = this.cyCore
             .nodes()
-            .getElementById(data.name)
+            .getElementById(data.id.toString())
             .data('member', true)
             .data('shown', true)
             .data('size', data[size as keyof PatientItem])
@@ -589,15 +590,15 @@ export class GraphService {
     this.cyCore
       .style()
       // @ts-ignore
-      .selector("node[color = 'LOW']")
+      .selector('node[color = \'LOW\']')
       .style('background-color', this.colors.blue)
       .style('text-outline-color', this.colors.blue)
       // @ts-ignore
-      .selector("node[color = 'NORMAL']")
+      .selector('node[color = \'NORMAL\']')
       .style('background-color', this.colors.yellow)
       .style('text-outline-color', this.colors.yellow)
       // @ts-ignore
-      .selector("node[color = 'HIGH']")
+      .selector('node[color = \'HIGH\']')
       .style('background-color', this.colors.red)
       .style('text-outline-color', this.colors.red)
       // @ts-ignore
@@ -609,22 +610,22 @@ export class GraphService {
       .style('pie-2-background-color', this.colors.gray)
       .style('pie-1-background-color', this.colors.gray)
       // @ts-ignore
-      .selector("node.split[colorMet = 'LOW']")
+      .selector('node.split[colorMet = \'LOW\']')
       .style('pie-2-background-color', this.colors.blue)
       // @ts-ignore
-      .selector("node.split[colorNonMet = 'LOW']")
+      .selector('node.split[colorNonMet = \'LOW\']')
       .style('pie-1-background-color', this.colors.blue)
       // @ts-ignore
-      .selector("node.split[colorMet = 'NORMAL']")
+      .selector('node.split[colorMet = \'NORMAL\']')
       .style('pie-2-background-color', this.colors.yellow)
       // @ts-ignore
-      .selector("node.split[colorNonMet = 'NORMAL']")
+      .selector('node.split[colorNonMet = \'NORMAL\']')
       .style('pie-1-background-color', this.colors.yellow)
       // @ts-ignore
-      .selector("node.split[colorMet = 'HIGH']")
+      .selector('node.split[colorMet = \'HIGH\']')
       .style('pie-2-background-color', this.colors.red)
       // @ts-ignore
-      .selector("node.split[colorNonMet = 'HIGH']")
+      .selector('node.split[colorNonMet = \'HIGH\']')
       .style('pie-1-background-color', this.colors.red);
   }
 
@@ -796,7 +797,7 @@ export class GraphService {
    * @param markedNodes List of currently selected nodes
    */
   highlightNode(markedNodes: NetworkNode[]) {
-    const nodes: string[] = markedNodes.map((a) => a.data.id);
+    const nodes: string[] = markedNodes.map((a) => a.data.id.toString());
     this.cyCore.elements('node').removeClass('highlight');
     this.cyCore.elements('edge').removeClass('highlight');
     if (nodes !== undefined) {

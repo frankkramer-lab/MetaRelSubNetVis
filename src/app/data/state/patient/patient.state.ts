@@ -12,7 +12,7 @@ export interface PatientState {
   groupBDetails: PatientDetails;
   patientA: Patient | null; // should be number | null
   patientB: Patient | null;
-  patientADetails: PatientItem[]; // should be PatientItem[][]
+  patientADetails: PatientItem[]; // contains one entry from groupADetails
   patientBDetails: PatientItem[];
   patientSelection: PatientSelectionEnum;
   geMin: number | null;

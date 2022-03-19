@@ -1,8 +1,8 @@
 import { createReducer, on } from '@ngrx/store';
 import { PatientState } from './patient.state';
 import {
-  loadPatientADetailsSuccess,
-  loadPatientBDetailsSuccess,
+  // loadPatientADetailsSuccess,
+  // loadPatientBDetailsSuccess,
   resetPatientA,
   resetPatientB,
   setPatientA,
@@ -47,7 +47,7 @@ export const patientReducer = createReducer(
       geMin: payload.patients.geMin,
       geMax: payload.patients.geMax,
       groupALabel: payload.patients.labelA,
-      groupBLabel: payload.patients.labelB,
+      groupBLabel: payload.patients.labelB, // todo patientADetails, patientBDetails
     };
   }),
   on(
@@ -55,9 +55,9 @@ export const patientReducer = createReducer(
     hydratePatientAPatientBSuccess,
     (state: PatientState, { patientA }): PatientState => {
       if (patientA) {
-        return { ...state, patientA };
+        return { ...state, patientA, patientADetails: state.groupADetails[patientA.name] };
       }
-      return { ...state, patientA };
+      return { ...state, patientA, patientADetails: [] };
     },
   ),
   on(
@@ -65,9 +65,9 @@ export const patientReducer = createReducer(
     hydratePatientAPatientBSuccess,
     (state: PatientState, { patientB }): PatientState => {
       if (patientB) {
-        return { ...state, patientB };
+        return { ...state, patientB, patientBDetails: state.groupBDetails[patientB.name] };
       }
-      return { ...state, patientB };
+      return { ...state, patientB, patientBDetails: [] };
     },
   ),
   on(
@@ -87,7 +87,7 @@ export const patientReducer = createReducer(
     }),
   ),
   on(
-    loadPatientADetailsSuccess,
+    // loadPatientADetailsSuccess,
     hydratePatientAPatientBSuccess,
     (state: PatientState, { patientADetails }): PatientState => ({
       ...state,
@@ -95,7 +95,7 @@ export const patientReducer = createReducer(
     }),
   ),
   on(
-    loadPatientBDetailsSuccess,
+    // loadPatientBDetailsSuccess,
     hydratePatientAPatientBSuccess,
     (state: PatientState, { patientBDetails }): PatientState => ({
       ...state,

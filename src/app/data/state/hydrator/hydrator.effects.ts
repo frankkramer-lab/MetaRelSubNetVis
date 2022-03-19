@@ -106,7 +106,6 @@ export class HydratorEffects {
             let subtypes: string[] = [];
 
             nodesDictionary = this.hydratorService.hydrateNodesMap(nodesRaw); // contains id => name map for each node
-            network.edges = this.hydratorService.hydrateEdges(edgesRaw);
 
             subtypes = this.hydratorService.hydrateNetworkAttributes(
               networkAttributes,
@@ -124,6 +123,7 @@ export class HydratorEffects {
 
             network.occ = this.hydratorService.hydrateOccurrences(patients);
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
+            network.edges = this.hydratorService.hydrateEdges(edgesRaw);
 
             console.log(network);
             console.log(patients);
@@ -143,7 +143,6 @@ export class HydratorEffects {
             // {
             //   network: Network, // contains nodes, edges, occurrences
             //   patients: PatientCollection, // contains patients and basic info
-            //   patientDetails: PatientItem[][], // todo not sure, contains a list of patients and for each patient his / her network config
             //   thresholds: Threshold // min and max scores per group
             // }
           }),
@@ -265,7 +264,7 @@ export class HydratorEffects {
         if (!config || (!config.sel && !config.pa && !config.pb)) return hydrateNodesFailure();
 
         return hydrateNodesSuccess({
-          selection: nodes.filter((a) => config.sel?.includes(a.data.id)) ?? [],
+          selection: nodes.filter((a) => config.sel?.includes(a.data.id.toString())) ?? [],
           subtypeColumnA: patientA?.subtype ?? null,
           subtypeColumnB: patientB?.subtype ?? null,
         });

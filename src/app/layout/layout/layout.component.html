@@ -3,7 +3,7 @@
     <app-sidebar [sidebarVisible]="sidebarVisible$ | async"></app-sidebar>
   </div>
   <div [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-8' : 'col'">
-    <h1>Patient specific Molecular Sub-Networks Responsible for Metastasis in Breast Cancer</h1>
+    <h1>{{headline$ | async}}</h1>
     <app-graph></app-graph>
   </div>
 </div>

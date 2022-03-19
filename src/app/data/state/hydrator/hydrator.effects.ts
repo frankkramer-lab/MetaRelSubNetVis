@@ -61,6 +61,7 @@ export class HydratorEffects {
         // todo move to input field
         this.apiService.loadDataNdex('a420aaee-4be9-11ec-b3be-0ac135e8bacf').pipe(
           map((data) => {
+
             let nodesDictionary: any = {};
             let nodesRaw: any[] = [];
             let edgesRaw: any[] = [];
@@ -110,7 +111,7 @@ export class HydratorEffects {
               labels,
             );
 
-            patients = { ...patients, labelA: labels[0], labelB: labels[1] };
+            patients = { ...patients, labelA: labels[1], labelB: labels[2] };
 
             patients = this.hydratorService.hydrateNodeAttributes(
               nodeAttributes,
@@ -128,6 +129,7 @@ export class HydratorEffects {
               network,
               patients,
               thresholds,
+              headline: labels[0],
             });
           }),
           catchError(() => of(loadDataFailure())),
@@ -301,5 +303,6 @@ export class HydratorEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private hydratorService: HydratorService,
-  ) {}
+  ) {
+  }
 }

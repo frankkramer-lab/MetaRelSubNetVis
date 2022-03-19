@@ -33,6 +33,9 @@ export class HydratorService {
       if (attribute.n === 'PatientSubtype') {
         patientSubtypes = attribute.v as unknown as string[];
       }
+      if (attribute.n === 'name') {
+        labels.push(attribute.v);
+      }
     });
 
     const groupLabels = [...new Set(patientGroups)];

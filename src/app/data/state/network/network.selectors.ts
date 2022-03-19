@@ -10,6 +10,8 @@ const selectState = createSelector(
 
 export const selectNetwork = createSelector(selectState, (state: NetworkState) => state.network);
 
+export const selectHeadline = createSelector(selectState, (state: NetworkState) => state.headline);
+
 export const selectIsLoading = createSelector(
   selectState,
   (state: NetworkState) => state.isLoading,

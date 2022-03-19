@@ -4,6 +4,8 @@ import { Store } from '@ngrx/store';
 import { Patient } from '../../data/schema/patient';
 import { AppState } from '../../data/state/app.state';
 import {
+  selectGroupLabelA,
+  selectGroupLabelB,
   selectPatientA,
   selectPatientB,
   selectPatientGroupA,
@@ -26,6 +28,10 @@ export class SidebarPatientsComponent implements OnInit {
 
   patientsGroupB$!: Observable<Patient[]>;
 
+  groupLabelA$!: Observable<string>;
+
+  groupLabelB$!: Observable<string>;
+
   patientA$!: Observable<Patient | null>;
 
   patientB$!: Observable<Patient | null>;
@@ -35,6 +41,8 @@ export class SidebarPatientsComponent implements OnInit {
   ngOnInit(): void {
     this.patientsGroupA$ = this.store.select(selectPatientGroupA);
     this.patientsGroupB$ = this.store.select(selectPatientGroupB);
+    this.groupLabelA$ = this.store.select(selectGroupLabelA);
+    this.groupLabelB$ = this.store.select(selectGroupLabelB);
     this.patientA$ = this.store.select(selectPatientA);
     this.patientB$ = this.store.select(selectPatientB);
   }

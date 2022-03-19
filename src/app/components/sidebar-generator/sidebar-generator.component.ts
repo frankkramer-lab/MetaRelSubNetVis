@@ -8,7 +8,11 @@ import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { ImageDownloadConfig } from '../../data/schema/image-download-config';
 import { SidebarVisibilityEnum } from '../../core/enum/sidebar-visibility.enum';
-import { selectPatientA, selectPatientB } from '../../data/state/patient/patient.selectors';
+import {
+  selectGroupLabelA, selectGroupLabelB,
+  selectPatientA,
+  selectPatientB,
+} from '../../data/state/patient/patient.selectors';
 import { selectDefined } from '../../data/state/threshold/threshold.selectors';
 import { selectMarkedNodes } from '../../data/state/nodes/nodes.selectors';
 import {
@@ -34,6 +38,7 @@ import {
   toggleGeneratorImageBackground,
   toggleGeneratorTriggerImmediateDownload,
 } from '../../data/state/generator/generator.actions';
+import { selectUuid } from '../../data/state/network/network.selectors';
 
 @Component({
   selector: 'app-sidebar-generator',
@@ -41,6 +46,12 @@ import {
   styleUrls: ['./sidebar-generator.component.scss'],
 })
 export class SidebarGeneratorComponent implements OnInit {
+  uuid$!: Observable<string>;
+
+  groupLabelA$!: Observable<string>;
+
+  groupLabelB$!: Observable<string>;
+
   patientA$!: Observable<Patient | null>;
 
   patientB$!: Observable<Patient | null>;
@@ -74,6 +85,9 @@ export class SidebarGeneratorComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
+    this.uuid$ = this.store.select(selectUuid);
+    this.groupLabelA$ = this.store.select(selectGroupLabelA);
+    this.groupLabelB$ = this.store.select(selectGroupLabelB);
     this.patientA$ = this.store.select(selectPatientA);
     this.patientB$ = this.store.select(selectPatientB);
     this.threshold$ = this.store.select(selectDefined);

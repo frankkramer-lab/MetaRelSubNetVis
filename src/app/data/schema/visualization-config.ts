@@ -4,6 +4,7 @@ import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { ImageDownloadConfig } from './image-download-config';
 
 export interface VisualizationConfig {
+  uuid: string;
   sb?: SidebarVisibilityEnum;
   dwn?: boolean;
   img?: ImageDownloadConfig;

@@ -5,7 +5,8 @@
       (patientSelected)="patientASelected($event)"
       [patient]="patientA$ | async"
       [patients]="patientsGroupA$ | async"
-      headline="Metastatic"
+      [label]="groupLabelA$ | async"
+      labelFallback="Group A"
     ></app-sidebar-patients-dropdown>
   </div>
 
@@ -15,7 +16,8 @@
       (patientSelected)="patientBSelected($event)"
       [patient]="patientB$ | async"
       [patients]="patientsGroupB$ | async"
-      headline="Non-metastatic"
+      [label]="groupLabelB$ | async"
+      labelFallback="Group B"
     ></app-sidebar-patients-dropdown>
   </div>
 </div>

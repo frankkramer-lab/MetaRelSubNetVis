@@ -9,9 +9,11 @@ import { Patient } from '../../data/schema/patient';
 export class SidebarPatientsDropdownComponent {
   @Input() patients!: Patient[] | null;
 
-  @Input() headline!: string;
-
   @Input() patient!: Patient | null;
+
+  @Input() label!: string | null;
+
+  @Input() labelFallback!: string;
 
   @Output() patientSelected: EventEmitter<Patient> = new EventEmitter<Patient>();
 

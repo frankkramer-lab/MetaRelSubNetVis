@@ -1,4 +1,4 @@
-<label class="h5" for="patientMetastatic">{{ headline }}</label>
+<label class="h5" for="patientMetastatic">{{ label === '' ? labelFallback : label }}</label>
 <div class="dropdown">
   <button
     aria-expanded="false"
@@ -7,7 +7,7 @@
     id="patientMetastatic"
     type="button"
   >
-    <span *ngIf="!patient">{{ headline }} patient</span>
+    <span *ngIf="!patient">Patient {{ label === '' ? labelFallback : label }}</span>
     <span *ngIf="patient">{{ patient.name }} ({{ patient.subtype }})</span>
   </button>
   <ul aria-labelledby="patientMetastatic" class="dropdown-menu">

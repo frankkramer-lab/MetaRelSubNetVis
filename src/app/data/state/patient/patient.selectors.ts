@@ -17,6 +17,15 @@ export const selectPatientGroupB = createSelector(
   (state: PatientState) => state.groupB,
 );
 
+export const selectGroupLabelA = createSelector(
+  selectState,
+  (state: PatientState) => state.groupALabel,
+);
+export const selectGroupLabelB = createSelector(
+  selectState,
+  (state: PatientState) => state.groupBLabel,
+);
+
 export const selectPatientA = createSelector(selectState, (state: PatientState) => state.patientA);
 
 export const selectPatientB = createSelector(selectState, (state: PatientState) => state.patientB);

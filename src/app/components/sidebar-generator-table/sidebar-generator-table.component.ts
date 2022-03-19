@@ -11,6 +11,12 @@ import { SidebarVisibilityEnum } from '../../core/enum/sidebar-visibility.enum';
   styleUrls: ['./sidebar-generator-table.component.scss'],
 })
 export class SidebarGeneratorTableComponent {
+  @Input() uuid!: string | null;
+
+  @Input() groupLabelA!: string | null;
+
+  @Input() groupLabelB!: string | null;
+
   @Input() patientA!: Patient | null;
 
   @Input() patientB!: Patient | null;

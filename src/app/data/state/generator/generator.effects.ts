@@ -39,6 +39,7 @@ import {
 import { hydrateAbort, hydrationEnded } from '../hydrator/hydrator.actions';
 import { selectDefined } from '../threshold/threshold.selectors';
 import { NetworkNode } from '../../schema/network-node';
+import { selectUuid } from '../network/network.selectors';
 
 @Injectable()
 export class GeneratorEffects {
@@ -60,6 +61,7 @@ export class GeneratorEffects {
         hydrationEnded,
       ),
       concatLatestFrom(() => [
+        this.store.select(selectUuid),
         this.store.select(selectImageDownloadConfig),
         this.store.select(selectTriggerImmediateDownload),
         this.store.select(selectSidebarVisibility),
@@ -76,6 +78,7 @@ export class GeneratorEffects {
       map(
         ([
           ,
+          uuid,
           imageDownloadConfig,
           triggerImageDownload,
           sidebarVisibility,
@@ -90,6 +93,13 @@ export class GeneratorEffects {
           showMtb,
         ]) => {
           const queryParams: string[] = [];
+
+          if (!uuid) {
+            return setQueryParams({ queryParams: `?${queryParams.join('&')}` });
+          }
+
+          queryParams.push(`uuid=${uuid}`);
+
           if (patientA) {
             queryParams.push(`pa=${patientA.name}`);
           }

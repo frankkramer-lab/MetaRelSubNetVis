@@ -12,7 +12,16 @@ export const hydratorReducer = createReducer(
   on(loadQueryParams, (state: HydratorState, { params }): HydratorState => {
     if (Object.keys(params).length === 0) return { ...state };
 
-    const config: VisualizationConfig = {};
+    const config: VisualizationConfig = {
+      uuid: '',
+    };
+
+    // if there is no UUID, none of the config settings are valid
+    if (params.uuid === undefined) {
+      return { ...state, config: null };
+    }
+
+    config.uuid = params.uuid;
 
     if (params.sb !== undefined) {
       config.sb = Number(params.sb);

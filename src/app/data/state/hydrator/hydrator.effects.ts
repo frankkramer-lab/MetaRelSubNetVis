@@ -55,14 +55,26 @@ import { setUuid } from '../network/network.actions';
 
 @Injectable()
 export class HydratorEffects {
+  loadQueryParams$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadQueryParams),
+      concatLatestFrom(() => [this.store.select(selectConfig)]),
+      map(([, config]) => {
+        if (!config || !config.uuid) {
+          return hydrateAbort();
+        }
+        return setUuid({ uuid: config.uuid });
+      }),
+      catchError(() => of(hydrateAbort())),
+    );
+  });
+
   loadDataNdex$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setUuid),
       concatLatestFrom(() => [this.store.select(selectUuid)]),
       switchMap(([, uuid]) => {
-
-        if (uuid === null) {
-          console.log('No UUID given');
+        if (uuid === null || uuid === '') {
           return of(loadDataFailure());
         }
 
@@ -115,6 +127,7 @@ export class HydratorEffects {
               networkAttributes,
               patients,
               labels,
+              uuid,
             );
 
             patients = { ...patients, labelA: labels[1], labelB: labels[2] };
@@ -309,5 +322,6 @@ export class HydratorEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private hydratorService: HydratorService,
-  ) {}
+  ) {
+  }
 }

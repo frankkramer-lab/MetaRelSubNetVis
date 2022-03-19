@@ -9,6 +9,8 @@ export class SidebarImportFormComponent {
 
   @Input() uuid!: string | null;
 
+  @Input() isLoading!: boolean | null;
+
   @Output() uuidSubmitted: EventEmitter<string> = new EventEmitter<string>();
 
 }

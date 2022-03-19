@@ -20,7 +20,7 @@ export const networkReducer = createReducer(
       isLoading: true,
     }),
   ),
-  on(loadQueryParams, (state: NetworkState): NetworkState => ({ ...state, isLoading: true })),
+  on(loadQueryParams, (state: NetworkState): NetworkState => ({ ...state })), // todo add isLoading check
   on(
     loadDataSuccess,
     (state: NetworkState, { network, headline }): NetworkState => ({

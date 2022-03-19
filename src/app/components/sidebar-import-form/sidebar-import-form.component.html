@@ -1,0 +1,20 @@
+<div class="input-group mb-3">
+  <input
+    [(ngModel)]="uuid"
+    name="uuid"
+    id="uuid"
+    type="text"
+    class="form-control"
+    placeholder="UUID"
+    aria-label="UUID"
+    aria-describedby="submitUuid"
+  />
+  <button
+    class="btn btn-dark"
+    type="button"
+    id="submitUuid"
+    (click)="uuidSubmitted.emit(uuid ?? '')"
+  >
+    Load
+  </button>
+</div>

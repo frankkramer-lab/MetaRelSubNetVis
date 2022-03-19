@@ -64,6 +64,7 @@ import {
   SidebarGeneratorTableComponent,
 } from './components/sidebar-generator-table/sidebar-generator-table.component';
 import { SidebarImportComponent } from './components/sidebar-import/sidebar-import.component';
+import { SidebarImportFormComponent } from './components/sidebar-import-form/sidebar-import-form.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { SidebarImportComponent } from './components/sidebar-import/sidebar-impo
     SidebarGeneratorFormComponent,
     SidebarGeneratorTableComponent,
     SidebarImportComponent,
+    SidebarImportFormComponent,
   ],
   imports: [
     BrowserModule,

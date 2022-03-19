@@ -7,7 +7,7 @@ const initialState: NetworkState = {
   network: null,
   isLoading: false,
   headline: null,
-  uuid: null,
+  uuid: 'a420aaee-4be9-11ec-b3be-0ac135e8bacf',
 };
 
 export const networkReducer = createReducer(

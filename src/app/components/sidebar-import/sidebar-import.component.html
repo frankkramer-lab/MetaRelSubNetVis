@@ -1,20 +1,4 @@
-<div class="input-group mb-3">
-  <input
-    type="text"
-    class="form-control"
-    id="uuid"
-    name="uuid"
-    [(ngModel)]="uuid"
-    placeholder="UUID"
-    aria-label="UUID"
-    aria-describedby="loadByUuid"
-  />
-  <button
-    class="btn btn-outline-secondary"
-    type="button"
-    id="loadByUuid"
-    (click)="triggerUuidSubmitted()"
-  >
-    Load network
-  </button>
-</div>
+<app-sidebar-import-form
+  (uuidSubmitted)="triggerUuidSubmitted($event)"
+  [uuid]="uuid$ | async"
+></app-sidebar-import-form>

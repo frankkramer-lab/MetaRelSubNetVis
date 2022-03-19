@@ -48,6 +48,9 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
 Furthermore the property **name** contains the network's name that will be used as a headline for this application.
 
 ## Example
+<details>
+  <summary>Click to see the example network</summary>
+
 
 ```
 {
@@ -811,3 +814,5 @@ Furthermore the property **name** contains the network's name that will be used 
 }
 
 ```
+  
+</details>

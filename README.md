@@ -47,7 +47,7 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
 
 ## Example
 
-`
+```
 {
     nodes: [
         {
@@ -823,4 +823,4 @@ NetworkAttributes are used to describe the patient samples. Please note: The **o
 
 
 
-`
+```

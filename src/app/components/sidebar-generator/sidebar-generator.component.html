@@ -1,4 +1,7 @@
 <app-sidebar-generator-table
+  [uuid]="uuid$ | async"
+  [groupLabelA]="groupLabelA$ | async"
+  [groupLabelB]="groupLabelB$ | async"
   [patientA]="patientA$ | async"
   [patientB]="patientB$ | async"
   [threshold]="threshold$ | async"

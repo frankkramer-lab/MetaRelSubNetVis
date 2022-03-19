@@ -9,7 +9,8 @@ import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { ImageDownloadConfig } from '../../data/schema/image-download-config';
 import { SidebarVisibilityEnum } from '../../core/enum/sidebar-visibility.enum';
 import {
-  selectGroupLabelA, selectGroupLabelB,
+  selectGroupLabelA,
+  selectGroupLabelB,
   selectPatientA,
   selectPatientB,
 } from '../../data/state/patient/patient.selectors';

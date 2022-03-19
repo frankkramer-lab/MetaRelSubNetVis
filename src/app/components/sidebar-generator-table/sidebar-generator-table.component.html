@@ -11,11 +11,11 @@
     <td><b>{{ uuid }}</b></td>
   </tr>
   <tr>
-    <td>Patient {{ groupLabelA ?? 'Group A' }}</td>
+    <td>Patient {{ groupLabelA === '' ? 'Group A' : groupLabelA }}</td>
     <td>{{ patientA?.name }}</td>
   </tr>
   <tr>
-    <td>Patient {{ groupLabelB ?? 'Group B' }}</td>
+    <td>Patient {{ groupLabelB === '' ? 'Group B' : groupLabelB }}</td>
     <td>{{ patientB?.name }}</td>
   </tr>
   <tr *ngIf="patientA !== null || patientB !== null">
@@ -26,7 +26,7 @@
     <td>Selected nodes ({{ nodes.length }} selected)</td>
     <td>
       <ul *ngIf="nodes.length > 0">
-        <li *ngFor="let node of nodes">{{ node.data.id }}</li>
+        <li *ngFor="let node of nodes">{{ node.data.name }}</li>
       </ul>
     </td>
   </tr>

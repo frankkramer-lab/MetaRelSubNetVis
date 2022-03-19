@@ -12,6 +12,8 @@ export const selectNetwork = createSelector(selectState, (state: NetworkState) =
 
 export const selectHeadline = createSelector(selectState, (state: NetworkState) => state.headline);
 
+export const selectUuid = createSelector(selectState, (state: NetworkState) => state.uuid);
+
 export const selectIsLoading = createSelector(
   selectState,
   (state: NetworkState) => state.isLoading,

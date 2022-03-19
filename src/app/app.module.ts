@@ -8,6 +8,7 @@ import {
   faBars,
   faClone,
   faDownload,
+  faFileImport,
   faHospitalUser,
   faInfo,
   faInfoCircle,
@@ -30,20 +31,39 @@ import { LayoutComponent } from './layout/layout/layout.component';
 import { SidebarPatientsComponent } from './components/sidebar-patients/sidebar-patients.component';
 import { SidebarNodesComponent } from './components/sidebar-nodes/sidebar-nodes.component';
 import { SidebarLayoutComponent } from './components/sidebar-layout/sidebar-layout.component';
-import { SidebarThresholdComponent } from './components/sidebar-threshold/sidebar-threshold.component';
+import {
+  SidebarThresholdComponent,
+} from './components/sidebar-threshold/sidebar-threshold.component';
 import { SidebarDownloadComponent } from './components/sidebar-download/sidebar-download.component';
 import { SidebarLegalComponent } from './components/sidebar-legal/sidebar-legal.component';
 import { reducers } from './data/state/reducers';
 import { effects } from './data/state/effects';
-import { SidebarPatientsDropdownComponent } from './components/sidebar-patients-dropdown/sidebar-patients-dropdown.component';
-import { SidebarThresholdSelectorComponent } from './components/sidebar-threshold-selector/sidebar-threshold-selector.component';
-import { SidebarLayoutFormComponent } from './components/sidebar-layout-form/sidebar-layout-form.component';
-import { SidebarDownloadFormComponent } from './components/sidebar-download-form/sidebar-download-form.component';
-import { SidebarNodesFormComponent } from './components/sidebar-nodes-form/sidebar-nodes-form.component';
+import {
+  SidebarPatientsDropdownComponent,
+} from './components/sidebar-patients-dropdown/sidebar-patients-dropdown.component';
+import {
+  SidebarThresholdSelectorComponent,
+} from './components/sidebar-threshold-selector/sidebar-threshold-selector.component';
+import {
+  SidebarLayoutFormComponent,
+} from './components/sidebar-layout-form/sidebar-layout-form.component';
+import {
+  SidebarDownloadFormComponent,
+} from './components/sidebar-download-form/sidebar-download-form.component';
+import {
+  SidebarNodesFormComponent,
+} from './components/sidebar-nodes-form/sidebar-nodes-form.component';
 import { environment } from '../environments/environment';
-import { SidebarGeneratorComponent } from './components/sidebar-generator/sidebar-generator.component';
-import { SidebarGeneratorFormComponent } from './components/sidebar-generator-form/sidebar-generator-form.component';
-import { SidebarGeneratorTableComponent } from './components/sidebar-generator-table/sidebar-generator-table.component';
+import {
+  SidebarGeneratorComponent,
+} from './components/sidebar-generator/sidebar-generator.component';
+import {
+  SidebarGeneratorFormComponent,
+} from './components/sidebar-generator-form/sidebar-generator-form.component';
+import {
+  SidebarGeneratorTableComponent,
+} from './components/sidebar-generator-table/sidebar-generator-table.component';
+import { SidebarImportComponent } from './components/sidebar-import/sidebar-import.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +85,7 @@ import { SidebarGeneratorTableComponent } from './components/sidebar-generator-t
     SidebarGeneratorComponent,
     SidebarGeneratorFormComponent,
     SidebarGeneratorTableComponent,
+    SidebarImportComponent,
   ],
   imports: [
     BrowserModule,
@@ -100,6 +121,7 @@ export class AppModule {
       faLink,
       faClone,
       faDownload,
+      faFileImport,
     );
   }
 }

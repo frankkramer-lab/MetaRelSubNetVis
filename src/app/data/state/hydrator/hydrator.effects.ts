@@ -38,7 +38,7 @@ import { Patient } from '../../schema/patient';
 import { PatientItem } from '../../schema/patient-item';
 import { NodeColorByEnum } from '../../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
-import { selectNodes } from '../network/network.selectors';
+import { selectNodes, selectUuid } from '../network/network.selectors';
 import { markingNodesSuccess, renderingSuccess } from '../graph/graph.actions';
 import { triggerImageDownload } from '../download/download.actions';
 import {
@@ -51,17 +51,23 @@ import { PatientCollection } from '../../schema/patient-collection';
 import { HydratorService } from '../../../core/service/hydrator.service';
 import { Network } from '../../schema/network';
 import { Threshold } from '../../schema/threshold';
+import { setUuid } from '../network/network.actions';
 
 @Injectable()
 export class HydratorEffects {
   loadDataNdex$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadQueryParams),
-      switchMap(() =>
-        // todo move to input field
-        this.apiService.loadDataNdex('a420aaee-4be9-11ec-b3be-0ac135e8bacf').pipe(
-          map((data) => {
+      ofType(setUuid),
+      concatLatestFrom(() => [this.store.select(selectUuid)]),
+      switchMap(([, uuid]) => {
 
+        if (uuid === null) {
+          console.log('No UUID given');
+          return of(loadDataFailure());
+        }
+
+        return this.apiService.loadDataNdex(uuid).pipe(
+          map((data) => {
             let nodesDictionary: any = {};
             let nodesRaw: any[] = [];
             let edgesRaw: any[] = [];
@@ -133,8 +139,8 @@ export class HydratorEffects {
             });
           }),
           catchError(() => of(loadDataFailure())),
-        ),
-      ),
+        );
+      }),
     );
   });
 
@@ -303,6 +309,5 @@ export class HydratorEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private hydratorService: HydratorService,
-  ) {
-  }
+  ) {}
 }

@@ -15,6 +15,30 @@
   </h3>
 
   <div class="d-grid gap-0 mb-4">
+
+
+    <!-- IMPORT -->
+    <button
+      class="btn btn-dark icon-hover btn-lg text-start rounded-0"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapseImport"
+      aria-expanded="false"
+      aria-controls="collapseImport"
+    >
+      <fa-icon
+        icon="file-import"
+        [ngClass]="collapseImport.className.includes('show') ? 'text-info' : ''"
+      >
+      </fa-icon>
+      &nbsp;Import
+    </button>
+    <div class="collapse" #collapseImport id="collapseImport">
+      <div class="p-3">
+        <app-sidebar-import></app-sidebar-import>
+      </div>
+    </div>
+
     <!-- PATIENTS -->
     <button
       class="btn btn-dark icon-hover btn-lg text-start rounded-0"

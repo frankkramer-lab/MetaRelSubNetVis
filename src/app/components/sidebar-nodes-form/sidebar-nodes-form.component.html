@@ -43,7 +43,7 @@
   </table>
 
   <!-- table body scrollable -->
-  <div id="table-nodes">
+  <div id="table-nodes" class="scroll-style">
     <table class="table table-borderless text-light">
       <tbody>
       <ng-container *ngFor="let node of nodes">
@@ -71,7 +71,7 @@
 </ng-container>
 
 <!-- Unselect -->
-<div class="d-grid" *ngIf="markedNodes && markedNodes.length > 0">
+<div class="d-grid mt-2" *ngIf="markedNodes && markedNodes.length > 0">
   <button (click)="unmarkAllNodes.emit()" class="btn btn-secondary">
     <fa-icon icon="redo"></fa-icon>&nbsp;Unselect all
   </button>

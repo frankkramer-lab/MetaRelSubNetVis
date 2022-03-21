@@ -12,6 +12,7 @@ import { NodeSizeByEnum } from '../enum/node-size-by.enum';
 import { PatientItem } from '../../data/schema/patient-item';
 import { PatientSelectionEnum } from '../enum/patient-selection-enum';
 import { ImageDownloadConfig } from '../../data/schema/image-download-config';
+import { NetworkLayer } from '../../data/schema/network-layer';
 
 @Injectable({
   providedIn: 'root',
@@ -44,42 +45,65 @@ export class GraphService {
   /**
    * Builds the layers for the concentric layout
    * @param nodes List of existing nodes within the network.ts
-   * @param numberOfLayers Number of layers
    */
-  private buildLayer = (nodes: NetworkNode[], numberOfLayers: number): any => {
-    const layer: any = {};
-    nodes.forEach((node, i) => {
-      if (i < 1) {
-        layer[node.data.id] = numberOfLayers; // 1
-      } else if (i < 5) {
-        // 5=4+1
-        layer[node.data.id] = numberOfLayers - 1; // 4
-      } else if (i < 17) {
-        // 17=12+5
-        layer[node.data.id] = numberOfLayers - 2; // 12=4*3
-      } else if (i < 37) {
-        // 53=36+17
-        layer[node.data.id] = numberOfLayers - 3; // 36=12*3
-      } else if (i < 61) {
-        // 161=108+53
-        layer[node.data.id] = numberOfLayers - 4; // 108=36*3
-      } else if (i < 93) {
-        layer[node.data.id] = numberOfLayers - 5;
-      } else if (i < 133) {
-        layer[node.data.id] = numberOfLayers - 6;
-      } else if (i < 173) {
-        layer[node.data.id] = numberOfLayers - 7;
-      } else if (i < 225) {
-        layer[node.data.id] = numberOfLayers - 8;
-      } else if (i < 285) {
-        layer[node.data.id] = numberOfLayers - 9;
-      } else if (i < 335) {
-        layer[node.data.id] = numberOfLayers - 10;
-      } else {
-        layer[node.data.id] = numberOfLayers - 11;
+  private buildLayer = (nodes: NetworkNode[]): any => {
+    const layer: NetworkLayer = {};
+
+    let nodesInLayer = 0;
+    let layerIndex = 0;
+    let counter = 0;
+    let remaining = nodes.length;
+
+    nodes.forEach((node) => {
+      nodesInLayer += 1;
+      counter += 1;
+
+      layer[node.data.id] = layerIndex;
+
+      let maxNodesInCurrentLayer = this.getMaxNodesInLayer(layerIndex);
+      const maxNodesInNextLayer = this.getMaxNodesInLayer(layerIndex + 1);
+
+      if (nodesInLayer === maxNodesInCurrentLayer) {
+        remaining = nodes.length - counter;
+        nodesInLayer = 0;
+        layerIndex += 1;
+
+        if (
+          remaining > maxNodesInCurrentLayer &&
+          remaining < maxNodesInCurrentLayer + maxNodesInNextLayer
+        ) {
+          maxNodesInCurrentLayer = Math.min(
+            Math.floor(
+              remaining * (maxNodesInCurrentLayer / maxNodesInCurrentLayer + maxNodesInNextLayer),
+            ),
+            maxNodesInCurrentLayer,
+          );
+        }
       }
     });
+
+    (Object.keys(layer) as unknown as number[]).forEach((key: number) => {
+      layer[key] = layerIndex + 1 - layer[key];
+    });
+
     return layer;
+  };
+
+  /**
+   * Returns the maximum valid number of nodes for a given layer
+   * @param layer
+   */
+  private getMaxNodesInLayer = (layer: number): number => {
+    switch (layer) {
+      case 0:
+        return 1;
+      case 1:
+        return 4;
+      case 2:
+        return 12;
+      default:
+        return 8 * (layer - 1) - 4 * Math.floor(Math.log2(layer) / Math.log2(8));
+    }
   };
 
   /**
@@ -90,7 +114,7 @@ export class GraphService {
       {
         selector: 'node',
         style: {
-          label: 'data(id)',
+          label: 'data(name)',
           'text-valign': 'center',
           'background-color': this.colors.gray,
           color: '#fff',
@@ -191,7 +215,7 @@ export class GraphService {
    * @param nodes
    */
   private getLayout(nodes: NetworkNode[]): any {
-    const layer = this.buildLayer(nodes, 11);
+    const layer = this.buildLayer(nodes);
     return {
       name: 'concentric',
       levelWidth() {

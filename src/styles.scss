@@ -1,5 +1,6 @@
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 
 :root {
   --custom-red: #ff3d6a;
@@ -22,7 +23,7 @@
 }
 
 .icon-hover:hover {
-  color: $info;
+  color: $info !important;
 }
 
 #table-nodes {

@@ -35,7 +35,12 @@
       value="geneExpression"
       [checked]="nodeColorBy === 1"
     />
-    <label class="form-check-label" for="colorByGeneExpression"> by gene expression </label>
+    <label class="form-check-label w-100" for="colorByGeneExpression">
+      <span> by gene expression </span>
+      <div *ngIf="nodeColorBy === 1" class="w-auto gradient"></div>
+      <small *ngIf="nodeColorBy === 1" class="float-start">wip</small>
+      <small *ngIf="nodeColorBy === 1" class="float-end">wip</small>
+    </label>
   </div>
 
   <!-- by relevance -->
@@ -49,7 +54,12 @@
       value="relevance"
       [checked]="nodeColorBy === 2"
     />
-    <label class="form-check-label" for="colorByRelevance"> by relevance </label>
+    <label class="form-check-label w-100" for="colorByRelevance">
+      <span> by relevance </span>
+      <div *ngIf="nodeColorBy === 2" class="w-auto gradient"></div>
+      <small *ngIf="nodeColorBy === 2" class="float-start">wip</small>
+      <small *ngIf="nodeColorBy === 2" class="float-end">wip</small>
+    </label>
   </div>
 
   <hr />

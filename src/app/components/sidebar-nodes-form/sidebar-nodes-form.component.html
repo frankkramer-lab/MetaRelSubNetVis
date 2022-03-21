@@ -1,15 +1,23 @@
-<div class="row p-3">
-  <input
-    #filterTerm
-    class="form-control col"
-    type="text"
-    placeholder="Search..."
-    aria-label="Filter nodes"
-    (input)="filterTermChanged.emit(filterTerm.value)"
-  />
-  <div class="col-auto" *ngIf="nodes">
-    <span class="badge bg-secondary pt-3 pb-3">{{nodes.length}}</span>
-  </div>
+<!-- filter form -->
+<div class="input-group">
+  <input type="text"
+         class="form-control"
+         placeholder="Search..."
+         (input)="filterTermChanged.emit(filterTerm.value)"
+         id="filterTerm"
+         #filterTerm
+         aria-label="Filter nodes">
+  <button *ngIf="filterTerm.value.length > 0"
+          (click)="filterTerm.value = ''; filterTermChanged.emit('')"
+          class="btn btn-dark" type="button" id="clearSearch">
+    <fa-icon icon="times"></fa-icon>
+  </button>
+  <button *ngIf="nodes"
+          class="btn btn-dark"
+          disabled="true"
+          type="button">
+    {{nodes.length}}
+  </button>
 </div>
 
 <hr />

@@ -39,7 +39,10 @@ export const hydratorReducer = createReducer(
         extension: validExtensions.includes(items[0].toUpperCase())
           ? items[0].toUpperCase()
           : 'PNG',
-        scale: Number.isNaN(scale) || scale > 10 || scale < 1 ? 1 : scale,
+        scale:
+          Number.isNaN(scale) || scale > 10 || scale < 1 || items[0].toUpperCase() === 'SVG'
+            ? 1
+            : scale,
         transparent: items[2] === 'true',
       };
     }

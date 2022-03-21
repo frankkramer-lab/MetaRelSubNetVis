@@ -1,16 +1,16 @@
-<label class="h5" for="patientMetastatic">{{ label === '' ? labelFallback : label }}</label>
+<label class="h5" for="patient">{{ label === '' ? labelFallback : label }}</label>
 <div class="dropdown">
   <button
     aria-expanded="false"
     class="btn btn-secondary dropdown-toggle"
     data-bs-toggle="dropdown"
-    id="patientMetastatic"
+    id="patient"
     type="button"
   >
     <span *ngIf="!patient">Patient {{ label === '' ? labelFallback : label }}</span>
     <span *ngIf="patient">{{ patient.name }} ({{ patient.subtype }})</span>
   </button>
-  <ul aria-labelledby="patientMetastatic" class="dropdown-menu">
+  <ul aria-labelledby="patient" class="dropdown-menu">
     <li>
       <button (click)="patientReset.emit()" class="dropdown-item">Reset</button>
     </li>

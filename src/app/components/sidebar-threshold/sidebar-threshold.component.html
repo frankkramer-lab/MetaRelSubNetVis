@@ -4,5 +4,7 @@
   [multiplier]="multiplier$ | async"
   [defined]="defined$ | async"
   [patientsSelected]="patientSelection$ | async"
+  [groupLabelA]="groupLabelA$ | async"
+  [groupLabelB]="groupLabelB$ | async"
   (definedChangedEmitter)="definedChanged($event)"
 ></app-sidebar-threshold-selector>

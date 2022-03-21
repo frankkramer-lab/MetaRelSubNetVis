@@ -9,7 +9,7 @@
   </div>
 
   <!-- select: scale -->
-  <div class="input-group mb-3">
+  <div class="input-group mb-3" *ngIf="extension !== 'SVG'">
     <span class="input-group-text" id="scaleLabel">Scale image by</span>
     <input
       type="number"

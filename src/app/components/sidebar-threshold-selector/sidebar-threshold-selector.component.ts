@@ -12,6 +12,10 @@ export class SidebarThresholdSelectorComponent {
 
   @Input() max!: number | null;
 
+  @Input() groupLabelA!: string | null;
+
+  @Input() groupLabelB!: string | null;
+
   @Input() patientsSelected!: PatientSelectionEnum | null;
 
   @Input() defined!: number | null;

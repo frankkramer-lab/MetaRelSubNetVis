@@ -8,7 +8,11 @@ import {
   selectMin,
   selectMultiplier,
 } from '../../data/state/threshold/threshold.selectors';
-import { selectPatientSelection } from '../../data/state/patient/patient.selectors';
+import {
+  selectGroupLabelA,
+  selectGroupLabelB,
+  selectPatientSelection,
+} from '../../data/state/patient/patient.selectors';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
 import { setDefined } from '../../data/state/threshold/threshold.action';
 
@@ -28,6 +32,10 @@ export class SidebarThresholdComponent implements OnInit {
 
   patientSelection$!: Observable<PatientSelectionEnum>;
 
+  groupLabelA$!: Observable<string>;
+
+  groupLabelB$!: Observable<string>;
+
   @Output() thresholdEmitter: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private store: Store<AppState>) {
@@ -39,6 +47,8 @@ export class SidebarThresholdComponent implements OnInit {
     this.multiplier$ = this.store.select(selectMultiplier);
     this.defined$ = this.store.select(selectDefined);
     this.patientSelection$ = this.store.select(selectPatientSelection);
+    this.groupLabelA$ = this.store.select(selectGroupLabelA);
+    this.groupLabelB$ = this.store.select(selectGroupLabelB);
   }
 
   definedChanged(defined: number) {

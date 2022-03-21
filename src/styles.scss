@@ -49,3 +49,20 @@
 {
   background-color: black;
 }
+
+.ge {
+  > #normal {
+    color: $dark;
+    background-color: var(--custom-yellow);
+  }
+
+  > #high {
+    color: $dark;
+    background-color: var(--custom-red);
+  }
+
+  > #low {
+    color: $dark;
+    background-color: var(--custom-blue);
+  }
+}

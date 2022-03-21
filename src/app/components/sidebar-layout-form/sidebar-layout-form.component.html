@@ -4,6 +4,7 @@
 
 <ng-template #nodeTemplate>
   <h6>Color nodes</h6>
+
   <!-- by gene expression level -->
   <div class="form-check">
     <input
@@ -17,12 +18,12 @@
     />
     <label class="form-check-label" for="colorByGeneExpressionLevel">
       by gene expression level
-      <span
-        *ngIf="nodeColorBy === 0"
-      >( <span id="low">Low</span>, <span id="normal">Normal</span>, <span id="high">High</span>)
+      <span class="ge text-light" *ngIf="nodeColorBy === 0"
+        >( <b id="low">Low</b>, <b id="normal">Normal</b>, <b id="high">High</b> )
       </span>
     </label>
   </div>
+
   <!-- by gene expression -->
   <div class="form-check">
     <input
@@ -36,6 +37,7 @@
     />
     <label class="form-check-label" for="colorByGeneExpression"> by gene expression </label>
   </div>
+
   <!-- by relevance -->
   <div class="form-check">
     <input
@@ -68,7 +70,7 @@
   <!-- TOGGLE: show MTB results -->
   <div class="form-check form-switch mt-2">
     <label class="form-check-label" for="showMtbResults"
-    >Show MTB results
+      >Show MTB results
       <span class="circle"></span>
     </label>
     <input
@@ -82,8 +84,7 @@
   </div>
 
   <!-- TOGGLE: show only shared nodes -->
-  <div class="form-check form-switch mt-2"
-       *ngIf="patientSelection === 3">
+  <div class="form-check form-switch mt-2" *ngIf="patientSelection === 3">
     <label class="form-check-label" for="showOnlyShared">Show only shared nodes</label>
     <input
       (click)="showOnlySharedNodesChanged.emit()"

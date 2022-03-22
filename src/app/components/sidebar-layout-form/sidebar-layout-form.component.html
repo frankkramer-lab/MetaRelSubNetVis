@@ -19,7 +19,7 @@
     <label class="form-check-label" for="colorByGeneExpressionLevel">
       by gene expression level
       <span class="ge text-light" *ngIf="nodeColorBy === 0"
-        >( <b id="low">Low</b>, <b id="normal">Normal</b>, <b id="high">High</b> )
+      >( <b id="low">Low</b>, <b id="normal">Normal</b>, <b id="high">High</b> )
       </span>
     </label>
   </div>
@@ -38,8 +38,11 @@
     <label class="form-check-label w-100" for="colorByGeneExpression">
       <span> by gene expression </span>
       <div *ngIf="nodeColorBy === 1" class="w-auto gradient"></div>
-      <small *ngIf="nodeColorBy === 1" class="float-start">wip</small>
-      <small *ngIf="nodeColorBy === 1" class="float-end">wip</small>
+      <div class="row" *ngIf="nodeColorBy === 1">
+        <small class="col text-start">{{geMin | number}}</small>
+        <small class="col text-center">{{geMidRange | number }}</small>
+        <small class="col text-end">{{geMax | number }}</small>
+      </div>
     </label>
   </div>
 
@@ -57,8 +60,11 @@
     <label class="form-check-label w-100" for="colorByRelevance">
       <span> by relevance </span>
       <div *ngIf="nodeColorBy === 2" class="w-auto gradient"></div>
-      <small *ngIf="nodeColorBy === 2" class="float-start">wip</small>
-      <small *ngIf="nodeColorBy === 2" class="float-end">wip</small>
+      <div class="row" *ngIf="nodeColorBy === 2">
+        <small class="col text-start">{{scoreMin | number }}</small>
+        <small class="col text-center">{{scoreMidRange | number }}</small>
+        <small class="col text-end">{{scoreMax | number }}</small>
+      </div>
     </label>
   </div>
 
@@ -80,7 +86,7 @@
   <!-- TOGGLE: show MTB results -->
   <div class="form-check form-switch mt-2">
     <label class="form-check-label" for="showMtbResults"
-      >Show MTB results
+    >Show MTB results
       <span class="circle"></span>
     </label>
     <input

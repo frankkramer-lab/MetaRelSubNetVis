@@ -75,20 +75,6 @@ export class HydratorService {
     nodesDictionary: any,
   ) {
     const patients = { ...patientCollection };
-    const geneExpressionValues = nodeAttributes.filter((a: NodeAttributesItem) =>
-      a.n.endsWith('_GE'),
-    );
-
-    // find geMin and geMax
-    geneExpressionValues.forEach((ge: NodeAttributesItem) => {
-      const geVal: number = Number.parseFloat(ge.v);
-      if (!Number.isNaN(geVal) && geVal < patients.geMin) {
-        patients.geMin = geVal;
-      }
-      if (!Number.isNaN(geVal) && geVal > patients.geMax) {
-        patients.geMax = geVal;
-      }
-    });
 
     const patientDetailItemA: PatientDetails = {};
     patients.groupA.forEach((patient) => {
@@ -116,6 +102,13 @@ export class HydratorService {
             const geValue = Number(detail.v);
             if (!Number.isNaN(geValue)) {
               relevantDetail.ge = geValue;
+
+              if (geValue < patients.geMin) {
+                patients.geMin = geValue;
+              }
+              if (geValue > patients.geMax) {
+                patients.geMax = geValue;
+              }
             }
           } else if (detail.n.endsWith('_GE_Level')) {
             relevantDetail.geLevel = detail.v;
@@ -123,6 +116,12 @@ export class HydratorService {
             const scoreValue = Number(detail.v);
             if (!Number.isNaN(scoreValue)) {
               relevantDetail.score = scoreValue;
+              if (scoreValue < patients.scoreMin) {
+                patients.scoreMin = scoreValue;
+              }
+              if (scoreValue > patients.scoreMax) {
+                patients.scoreMax = scoreValue;
+              }
             }
           } else if (detail.n.endsWith('_MTB')) {
             relevantDetail.mtb = detail.v === 'true';
@@ -157,6 +156,13 @@ export class HydratorService {
             const geValue = Number(detail.v);
             if (!Number.isNaN(geValue)) {
               relevantDetail.ge = geValue;
+
+              if (geValue < patients.geMin) {
+                patients.geMin = geValue;
+              }
+              if (geValue > patients.geMax) {
+                patients.geMax = geValue;
+              }
             }
           } else if (detail.n.endsWith('_GE_Level')) {
             relevantDetail.geLevel = detail.v;
@@ -164,6 +170,12 @@ export class HydratorService {
             const scoreValue = Number(detail.v);
             if (!Number.isNaN(scoreValue)) {
               relevantDetail.score = scoreValue;
+              if (scoreValue < patients.scoreMin) {
+                patients.scoreMin = scoreValue;
+              }
+              if (scoreValue > patients.scoreMax) {
+                patients.scoreMax = scoreValue;
+              }
             }
           } else if (detail.n.endsWith('_MTB')) {
             relevantDetail.mtb = detail.v === 'true';
@@ -172,8 +184,11 @@ export class HydratorService {
       });
     });
 
+    patients.geMidRange = (patients.geMax + patients.geMin) / 2;
+    patients.scoreMidRange = (patients.scoreMax + patients.scoreMin) / 2;
     patients.detailsA = patientDetailItemA;
     patients.detailsB = patientDetailItemB;
+    console.log(patients);
     return patients;
   }
 

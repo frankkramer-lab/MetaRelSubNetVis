@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar-layout-form',
@@ -10,7 +9,6 @@ import { Observable } from 'rxjs';
   styleUrls: ['./sidebar-layout-form.component.scss'],
 })
 export class SidebarLayoutFormComponent {
-
   @Input() patientSelection!: PatientSelectionEnum | null;
 
   @Input() nodeColorBy!: NodeColorByEnum | null;
@@ -23,6 +21,18 @@ export class SidebarLayoutFormComponent {
 
   @Input() showOnlySharedNodes!: boolean | null;
 
+  @Input() geMin!: number | null;
+
+  @Input() geMidRange!: number | null;
+
+  @Input() geMax!: number | null;
+
+  @Input() scoreMin!: number | null;
+
+  @Input() scoreMidRange!: number | null;
+
+  @Input() scoreMax!: number | null;
+
   @Output() nodeColorByChanged: EventEmitter<NodeColorByEnum> = new EventEmitter<NodeColorByEnum>();
 
   @Output() nodeSizeByChanged: EventEmitter<NodeSizeByEnum> = new EventEmitter<NodeSizeByEnum>();
@@ -34,5 +44,4 @@ export class SidebarLayoutFormComponent {
   @Output() showOnlySharedNodesChanged: EventEmitter<void> = new EventEmitter<void>();
 
   @Output() fitGraphPressed: EventEmitter<void> = new EventEmitter<void>();
-
 }

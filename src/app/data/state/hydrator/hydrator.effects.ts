@@ -116,7 +116,11 @@ export class HydratorEffects {
               labelA: '',
               labelB: '',
               geMin: Number.MAX_SAFE_INTEGER,
+              geMidRange: 0,
               geMax: Number.MIN_SAFE_INTEGER,
+              scoreMin: Number.MAX_SAFE_INTEGER,
+              scoreMidRange: 0,
+              scoreMax: Number.MIN_SAFE_INTEGER,
             };
 
             let subtypes: string[] = [];

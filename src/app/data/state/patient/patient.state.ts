@@ -16,6 +16,10 @@ export interface PatientState {
   patientBDetails: PatientItem[];
   patientSelection: PatientSelectionEnum;
   geMin: number | null;
+  geMidRange: number | null;
   geMax: number | null;
+  scoreMin: number | null;
+  scoreMidRange: number | null;
+  scoreMax: number | null;
   isLoading: boolean;
 }

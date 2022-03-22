@@ -20,7 +20,13 @@ import {
   toggleShowOnlySharedNodes,
 } from '../../data/state/layout/layout.actions';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
-import { selectPatientSelection } from '../../data/state/patient/patient.selectors';
+import {
+  selectGeMax, selectGeMidRange,
+  selectGeMin,
+  selectPatientSelection,
+  selectScoreMax, selectScoreMidRange,
+  selectScoreMin,
+} from '../../data/state/patient/patient.selectors';
 
 @Component({
   selector: 'app-sidebar-layout',
@@ -40,6 +46,18 @@ export class SidebarLayoutComponent implements OnInit {
 
   showOnlySharedNodes$!: Observable<boolean>;
 
+  scoreMin$!: Observable<number | null>;
+
+  scoreMidRange$!: Observable<number | null>;
+
+  scoreMax$!: Observable<number | null>;
+
+  geMin$!: Observable<number | null>;
+
+  geMidRange$!: Observable<number | null>;
+
+  geMax$!: Observable<number | null>;
+
   constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
@@ -49,6 +67,12 @@ export class SidebarLayoutComponent implements OnInit {
     this.showMtbResult$ = this.store.select(selectShowMtbResults);
     this.showAllNodes$ = this.store.select(selectShowAllNodes);
     this.showOnlySharedNodes$ = this.store.select(selectShowOnlySharedNodes);
+    this.scoreMin$ = this.store.select(selectScoreMin);
+    this.scoreMidRange$ = this.store.select(selectScoreMidRange)
+    this.scoreMax$ = this.store.select(selectScoreMax);
+    this.geMin$ = this.store.select(selectGeMin);
+    this.geMidRange$ = this.store.select(selectGeMidRange);
+    this.geMax$ = this.store.select(selectGeMax);
   }
 
   setNodeColorBy(nodeColorBy: NodeColorByEnum) {

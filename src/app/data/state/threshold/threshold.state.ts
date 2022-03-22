@@ -6,4 +6,6 @@ export interface ThresholdState {
   defined: number | null;
   multiplier: number;
   isLoading: boolean;
+  labelMin: string | null;
+  labelMax: string | null;
 }

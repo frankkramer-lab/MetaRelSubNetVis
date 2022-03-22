@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../../data/state/app.state';
 import {
-  selectDefined,
+  selectDefined, selectLabelMax, selectLabelMin,
   selectMax,
   selectMin,
   selectMultiplier,
@@ -36,6 +36,10 @@ export class SidebarThresholdComponent implements OnInit {
 
   groupLabelB$!: Observable<string>;
 
+  thresholdMinLabel$!: Observable<string | null>;
+
+  thresholdMaxLabel$!: Observable<string | null>;
+
   @Output() thresholdEmitter: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private store: Store<AppState>) {
@@ -49,6 +53,8 @@ export class SidebarThresholdComponent implements OnInit {
     this.patientSelection$ = this.store.select(selectPatientSelection);
     this.groupLabelA$ = this.store.select(selectGroupLabelA);
     this.groupLabelB$ = this.store.select(selectGroupLabelB);
+    this.thresholdMinLabel$ = this.store.select(selectLabelMin);
+    this.thresholdMaxLabel$ = this.store.select(selectLabelMax);
   }
 
   definedChanged(defined: number) {

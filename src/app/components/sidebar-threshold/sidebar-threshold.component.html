@@ -6,5 +6,7 @@
   [patientsSelected]="patientSelection$ | async"
   [groupLabelA]="groupLabelA$ | async"
   [groupLabelB]="groupLabelB$ | async"
+  [labelMin]="thresholdMinLabel$ | async"
+  [labelMax]="thresholdMaxLabel$ | async"
   (definedChangedEmitter)="definedChanged($event)"
 ></app-sidebar-threshold-selector>

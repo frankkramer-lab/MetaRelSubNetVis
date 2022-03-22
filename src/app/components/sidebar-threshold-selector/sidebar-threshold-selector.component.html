@@ -27,6 +27,8 @@
     [max]="(max ?? 1) * (multiplier ?? 1)"
     [ngModel]="(defined ?? 0) * (multiplier ?? 0)"
   />
+  <small class="float-start">{{labelMin}}</small>
+  <small class="float-end">{{labelMax}}</small>
 </ng-container>
 
 <ng-template #emptyTemplate>

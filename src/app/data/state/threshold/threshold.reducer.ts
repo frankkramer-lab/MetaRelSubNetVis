@@ -13,6 +13,8 @@ const initialState: ThresholdState = {
   defined: null,
   multiplier: 1000000000,
   isLoading: false,
+  labelMin: null,
+  labelMax: null,
 };
 
 export const thresholdReducer = createReducer(
@@ -24,11 +26,16 @@ export const thresholdReducer = createReducer(
       isLoading: false,
       groupA: payload.thresholds.groupA,
       groupB: payload.thresholds.groupB,
+      labelMax: Math.max(payload.thresholds.groupA.max, payload.thresholds.groupB.max).toString(),
     };
   }),
   on(
     setDefined,
     hydrateThresholdSuccess,
-    (state: ThresholdState, { defined }): ThresholdState => ({ ...state, defined }),
+    (state: ThresholdState, { defined }): ThresholdState => ({
+      ...state,
+      defined,
+      labelMin: defined.toString(),
+    }),
   ),
 );

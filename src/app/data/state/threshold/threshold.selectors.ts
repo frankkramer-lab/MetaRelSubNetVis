@@ -69,3 +69,12 @@ export const selectMaxB = createSelector(
   selectState,
   (state: ThresholdState) => state.groupB?.max || null,
 );
+
+export const selectLabelMin = createSelector(
+  selectState,
+  (state: ThresholdState) => state.labelMin,
+);
+export const selectLabelMax = createSelector(
+  selectState,
+  (state: ThresholdState) => state.labelMax,
+);

@@ -22,6 +22,10 @@ export class SidebarThresholdSelectorComponent {
 
   @Input() multiplier!: number | null;
 
+  @Input() labelMin!: string | null;
+
+  @Input() labelMax!: string | null;
+
   @Output() definedChangedEmitter: EventEmitter<number> = new EventEmitter<number>();
 
 }

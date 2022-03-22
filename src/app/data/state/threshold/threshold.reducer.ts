@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { ThresholdState } from './threshold.state';
-import { setDefined } from './threshold.action';
+import { setDefined, setLabelMin } from './threshold.action';
 import {
   hydrateThresholdSuccess,
   loadDataSuccess,
@@ -26,6 +26,10 @@ export const thresholdReducer = createReducer(
       isLoading: false,
       groupA: payload.thresholds.groupA,
       groupB: payload.thresholds.groupB,
+      labelMin: Math.min(
+        payload.thresholds.groupA.threshold,
+        payload.thresholds.groupB.threshold,
+      ).toString(),
       labelMax: Math.max(payload.thresholds.groupA.max, payload.thresholds.groupB.max).toString(),
     };
   }),
@@ -35,7 +39,10 @@ export const thresholdReducer = createReducer(
     (state: ThresholdState, { defined }): ThresholdState => ({
       ...state,
       defined,
-      labelMin: defined.toString(),
     }),
+  ),
+  on(
+    setLabelMin,
+    (state: ThresholdState, { labelMin }): ThresholdState => ({ ...state, labelMin }),
   ),
 );

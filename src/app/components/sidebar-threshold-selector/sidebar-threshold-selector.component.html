@@ -1,6 +1,6 @@
 <ng-container *ngIf="patientsSelected !== 0; else emptyTemplate">
   <div class="input-group mb-3">
-  <span class="input-group-text" id="thresholdLabel">
+    <span class="input-group-text" id="thresholdLabel">
     {{
     patientsSelected === 3
       ? 'Both patients:'
@@ -27,8 +27,14 @@
     [max]="(max ?? 1) * (multiplier ?? 1)"
     [ngModel]="(defined ?? 0) * (multiplier ?? 0)"
   />
-  <small class="float-start">{{labelMin}}</small>
-  <small class="float-end">{{labelMax}}</small>
+
+  <div class="row mb-1">
+    <div class="col">
+      <small class="float-start">{{labelMin}}</small>
+      <small class="float-end">{{labelMax}}</small>
+    </div>
+  </div>
+
 </ng-container>
 
 <ng-template #emptyTemplate>

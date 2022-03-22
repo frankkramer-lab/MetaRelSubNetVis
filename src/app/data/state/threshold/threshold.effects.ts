@@ -12,11 +12,6 @@ import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum'
 
 @Injectable()
 export class ThresholdEffects {
-  // should only be triggered, if the group-config changes!
-  // a + b
-  // a
-  // b
-  // none
   resetDefined$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setPatientSelection),
@@ -27,10 +22,8 @@ export class ThresholdEffects {
         this.store.select(selectDefined),
       ]),
       map(([action, patientSelection, minA, minB, defined]) => {
-
         // there was a change in patient group selection
         if (action.previousSelection !== patientSelection) {
-
           if (patientSelection === PatientSelectionEnum.both && minA !== null && minB !== null) {
             return setDefined({
               defined: Math.min(minA, minB),
@@ -58,6 +51,5 @@ export class ThresholdEffects {
     private actions$: Actions,
     private apiService: ApiService,
     private store: Store<AppState>,
-  ) {
-  }
+  ) {}
 }

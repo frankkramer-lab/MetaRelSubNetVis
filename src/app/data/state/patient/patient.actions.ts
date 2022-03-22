@@ -14,4 +14,7 @@ export const resetPatientA = createAction('[Sidebar Patient Component] reset pat
 
 export const resetPatientB = createAction('[Sidebar Patient Component] reset patient B');
 
-export const setPatientSelection = createAction('[Patient Effect] set patient selection', props<{previousSelection: PatientSelectionEnum}>());
+export const setPatientSelection = createAction(
+  '[Patient Effect] set patient selection',
+  props<{ previousSelection: PatientSelectionEnum }>(),
+);

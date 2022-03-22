@@ -3,7 +3,7 @@
   <div class="d-grid mb-3">
     <div class="btn-group btn-group-toggle" ngbRadioGroup name="datatypes" [ngModel]="extension">
       <label ngbButtonLabel class="btn-secondary" *ngFor="let type of availableDatatypes">
-        <input ngbButton type="radio" (change)="extensionChanged.emit(type)" [value]="type"> {{type}}
+        <input class="btn-radio-hidden" ngbButton type="radio" (change)="extensionChanged.emit(type)" [value]="type"> {{type}}
       </label>
     </div>
   </div>

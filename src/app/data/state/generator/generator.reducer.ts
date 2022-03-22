@@ -20,7 +20,8 @@ const initialState: GeneratorState = {
   sidebarVisibility: ComponentVisibilityEnum.full,
   triggerImageDownload: false,
   queryParams: '',
-  domain: 'http://localhost:4200',
+  // eslint-disable-next-line no-restricted-globals
+  domain: `https://${location.host}`,
 };
 
 export const generatorReducer = createReducer(

@@ -8,7 +8,7 @@ import { NodeColorByEnum } from '../../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import { NetworkNode } from '../../schema/network-node';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
-import { SidebarVisibilityEnum } from '../../../core/enum/sidebar-visibility.enum';
+import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 
 export const loadQueryParams = createAction(
   '[Layout Component] load query params',
@@ -87,7 +87,7 @@ export const hydrateDownloadConfigFailure = createAction(
 
 export const hydrateSidebarVisibilitySuccess = createAction(
   '[Hydrator Effects] hydrate sidebar visibility success',
-  props<{ visibility: SidebarVisibilityEnum }>(),
+  props<{ visibility: ComponentVisibilityEnum }>(),
 );
 export const hydrateSidebarVisibilityFailure = createAction(
   '[Hydrator Effects] hydrate sidebar visibility failure',

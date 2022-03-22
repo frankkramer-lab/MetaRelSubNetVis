@@ -1,6 +1,16 @@
 <div class="row">
   <div class="p-0" [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-4' : 'col-auto'">
-    <app-sidebar [sidebarVisible]="sidebarVisible$ | async"></app-sidebar>
+    <app-sidebar
+      [sidebarVisible]="sidebarVisible$ | async"
+      [sidebarImportVisible]="sidebarImportVisible$ | async"
+      [sidebarPatientsVisible]="sidebarPatientsVisible$ | async"
+      [sidebarThresholdVisible]="sidebarThresholdVisible$ | async"
+      [sidebarNodesVisible]="sidebarNodesVisible$ | async"
+      [sidebarLayoutVisible]="sidebarLayoutVisible$ | async"
+      [sidebarDownloadVisible]="sidebarDownloadVisible$ | async"
+      [sidebarGeneratorVisible]="sidebarGeneratorVisible$ | async"
+      [sidebarImpressumVisible]="sidebarImpressumVisible$ | async"
+    ></app-sidebar>
   </div>
   <div [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-8' : 'col'">
     <h1>{{headline$ | async}}</h1>

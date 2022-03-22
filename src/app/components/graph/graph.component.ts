@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { GraphService } from '../../core/service/graph.service';
-import { SidebarVisibilityEnum } from '../../core/enum/sidebar-visibility.enum';
+import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
 
 @Component({
   selector: 'app-graph',
@@ -13,7 +13,7 @@ export class GraphComponent implements AfterViewInit {
    */
   @ViewChild('cy') cyContainer!: ElementRef;
 
-  @Input() sidebarVisible!: SidebarVisibilityEnum | null;
+  @Input() sidebarVisible!: ComponentVisibilityEnum | null;
 
   constructor(private graphService: GraphService) {}
 

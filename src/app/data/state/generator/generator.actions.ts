@@ -1,9 +1,9 @@
 import { createAction, props } from '@ngrx/store';
-import { SidebarVisibilityEnum } from '../../../core/enum/sidebar-visibility.enum';
+import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 
 export const setGeneratorSidebarVisibility = createAction(
   '[Generator Component] set generator sidebar visibility',
-  props<{ sidebarVisibility: SidebarVisibilityEnum }>(),
+  props<{ sidebarVisibility: ComponentVisibilityEnum }>(),
 );
 
 export const setGeneratorImageScale = createAction(

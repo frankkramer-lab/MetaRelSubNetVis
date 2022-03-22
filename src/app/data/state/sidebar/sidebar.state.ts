@@ -1,5 +1,13 @@
-import { SidebarVisibilityEnum } from '../../../core/enum/sidebar-visibility.enum';
+import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 
 export interface SidebarState {
-  visibility: SidebarVisibilityEnum;
+  visibility: ComponentVisibilityEnum;
+  visibilityImport: ComponentVisibilityEnum;
+  visibilityPatients: ComponentVisibilityEnum;
+  visibilityThreshold: ComponentVisibilityEnum;
+  visibilityNodes: ComponentVisibilityEnum;
+  visibilityLayout: ComponentVisibilityEnum;
+  visibilityDownload: ComponentVisibilityEnum;
+  visibilityGenerator: ComponentVisibilityEnum;
+  visibilityImpressum: ComponentVisibilityEnum;
 }

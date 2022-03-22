@@ -1,11 +1,30 @@
 import { createReducer, on } from '@ngrx/store';
 import { SidebarState } from './sidebar.state';
-import { SidebarVisibilityEnum } from '../../../core/enum/sidebar-visibility.enum';
-import { setSidebarVisibility, toggleSidebarVisibility } from './sidebar.actions';
+import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
+import {
+  setSidebarVisibility,
+  toggleSidebarVisibility,
+  toggleSidebarVisibilityDownload,
+  toggleSidebarVisibilityGenerator,
+  toggleSidebarVisibilityImport,
+  toggleSidebarVisibilityImpressum,
+  toggleSidebarVisibilityLayout,
+  toggleSidebarVisibilityNodes,
+  toggleSidebarVisibilityPatients,
+  toggleSidebarVisibilityThreshold,
+} from './sidebar.actions';
 import { hydrateSidebarVisibilitySuccess } from '../hydrator/hydrator.actions';
 
 const initialState: SidebarState = {
-  visibility: SidebarVisibilityEnum.full,
+  visibility: ComponentVisibilityEnum.full,
+  visibilityImport: ComponentVisibilityEnum.button,
+  visibilityPatients: ComponentVisibilityEnum.button,
+  visibilityThreshold: ComponentVisibilityEnum.button,
+  visibilityNodes: ComponentVisibilityEnum.button,
+  visibilityLayout: ComponentVisibilityEnum.button,
+  visibilityDownload: ComponentVisibilityEnum.button,
+  visibilityGenerator: ComponentVisibilityEnum.button,
+  visibilityImpressum: ComponentVisibilityEnum.button,
 };
 
 export const sidebarReducer = createReducer(
@@ -15,6 +34,55 @@ export const sidebarReducer = createReducer(
     (state: SidebarState, { visibility }): SidebarState => ({
       ...state,
       visibility,
+    }),
+  ),
+  on(
+    toggleSidebarVisibilityImport,
+    (state: SidebarState, { visibilityImport }): SidebarState => {
+      return {...state, visibilityImport}
+    },
+  ),
+  on(
+    toggleSidebarVisibilityPatients,
+    (state: SidebarState, { visibilityPatients }): SidebarState => ({
+      ...state,
+      visibilityPatients,
+    }),
+  ),
+  on(
+    toggleSidebarVisibilityThreshold,
+    (state: SidebarState, { visibilityThreshold }): SidebarState => ({
+      ...state,
+      visibilityThreshold,
+    }),
+  ),
+  on(
+    toggleSidebarVisibilityNodes,
+    (state: SidebarState, { visibilityNodes }): SidebarState => ({ ...state, visibilityNodes }),
+  ),
+  on(
+    toggleSidebarVisibilityLayout,
+    (state: SidebarState, { visibilityLayout }): SidebarState => ({ ...state, visibilityLayout }),
+  ),
+  on(
+    toggleSidebarVisibilityDownload,
+    (state: SidebarState, { visibilityDownload }): SidebarState => ({
+      ...state,
+      visibilityDownload,
+    }),
+  ),
+  on(
+    toggleSidebarVisibilityGenerator,
+    (state: SidebarState, { visibilityGenerator }): SidebarState => ({
+      ...state,
+      visibilityGenerator,
+    }),
+  ),
+  on(
+    toggleSidebarVisibilityImpressum,
+    (state: SidebarState, { visibilityImpressum }): SidebarState => ({
+      ...state,
+      visibilityImpressum,
     }),
   ),
   on(

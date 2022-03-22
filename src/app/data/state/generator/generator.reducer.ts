@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { GeneratorState } from './generator.state';
-import { SidebarVisibilityEnum } from '../../../core/enum/sidebar-visibility.enum';
+import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 import {
   setGeneratorImageExtension,
   setGeneratorImageScale,
@@ -17,7 +17,7 @@ const initialState: GeneratorState = {
     transparent: false,
   },
   isImageDownloadConfigValid: true,
-  sidebarVisibility: SidebarVisibilityEnum.full,
+  sidebarVisibility: ComponentVisibilityEnum.full,
   triggerImageDownload: false,
   queryParams: '',
   domain: 'http://localhost:4200',

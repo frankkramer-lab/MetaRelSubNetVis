@@ -1,8 +1,8 @@
-import { SidebarVisibilityEnum } from '../../../core/enum/sidebar-visibility.enum';
+import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 
 export interface GeneratorState {
-  sidebarVisibility: SidebarVisibilityEnum;
+  sidebarVisibility: ComponentVisibilityEnum;
   imageDownloadConfig: ImageDownloadConfig;
   isImageDownloadConfigValid: boolean;
   triggerImageDownload: boolean;

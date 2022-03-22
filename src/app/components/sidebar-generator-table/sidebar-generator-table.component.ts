@@ -3,7 +3,7 @@ import { Patient } from '../../data/schema/patient';
 import { NetworkNode } from '../../data/schema/network-node';
 import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
-import { SidebarVisibilityEnum } from '../../core/enum/sidebar-visibility.enum';
+import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
 
 @Component({
   selector: 'app-sidebar-generator-table',
@@ -35,12 +35,12 @@ export class SidebarGeneratorTableComponent {
 
   @Input() showMtb!: boolean | null;
 
-  @Input() sidebarVisibility!: SidebarVisibilityEnum | null;
+  @Input() sidebarVisibility!: ComponentVisibilityEnum | null;
 
   @Input() triggerImmediateImageDownload!: boolean | null;
 
-  @Output() sidebarVisibilityChanged: EventEmitter<SidebarVisibilityEnum> =
-    new EventEmitter<SidebarVisibilityEnum>();
+  @Output() sidebarVisibilityChanged: EventEmitter<ComponentVisibilityEnum> =
+    new EventEmitter<ComponentVisibilityEnum>();
 
   @Output() triggerDownloadChanged: EventEmitter<void> = new EventEmitter<void>();
 }

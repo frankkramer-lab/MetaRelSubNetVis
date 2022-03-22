@@ -7,7 +7,7 @@ import { NetworkNode } from '../../data/schema/network-node';
 import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { ImageDownloadConfig } from '../../data/schema/image-download-config';
-import { SidebarVisibilityEnum } from '../../core/enum/sidebar-visibility.enum';
+import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
 import {
   selectGroupLabelA,
   selectGroupLabelB,
@@ -75,7 +75,7 @@ export class SidebarGeneratorComponent implements OnInit {
 
   imageDownloadConfig$!: Observable<ImageDownloadConfig>;
 
-  sidebarVisibility$!: Observable<SidebarVisibilityEnum>;
+  sidebarVisibility$!: Observable<ComponentVisibilityEnum>;
 
   triggerImmediateImageDownload$!: Observable<boolean>;
 
@@ -110,7 +110,7 @@ export class SidebarGeneratorComponent implements OnInit {
     this.store.dispatch(toggleGeneratorTriggerImmediateDownload());
   }
 
-  setSidebarVisibility(sidebarVisibility: SidebarVisibilityEnum) {
+  setSidebarVisibility(sidebarVisibility: ComponentVisibilityEnum) {
     this.store.dispatch(setGeneratorSidebarVisibility({ sidebarVisibility }));
   }
 

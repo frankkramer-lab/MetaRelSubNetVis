@@ -1,13 +1,9 @@
 <!-- sidebar visible -->
-<div *ngIf="sidebarVisible === 0"
-              class="text-light sidebar scroll-style">
-
+<div *ngIf="sidebarVisible === 0" class="text-light sidebar scroll-style">
   <!-- headline -->
   <h3 class="mt-2 m-2">
     <div class="row">
-      <div class="col">
-        EXPLORE THE NETWORKS
-      </div>
+      <div class="col">EXPLORE THE NETWORKS</div>
       <div class="col-auto">
         <fa-icon (click)="toggleSidebar(1)" class="cursor" icon="times"></fa-icon>
       </div>
@@ -15,24 +11,17 @@
   </h3>
 
   <div class="d-grid gap-0 mb-4">
-
     <!-- IMPORT -->
     <button
       class="btn btn-dark icon-hover btn-lg text-start rounded-0"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#collapseImport"
-      aria-expanded="false"
-      aria-controls="collapseImport"
+      (click)="toggleImport(sidebarImportVisible)"
     >
-      <fa-icon
-        icon="file-import"
-        [ngClass]="collapseImport.className.includes('show') ? 'text-info' : ''"
-      >
+      <fa-icon icon="file-import" [ngClass]="sidebarImportVisible === 0 ? 'text-info' : ''">
       </fa-icon>
       &nbsp;Import
     </button>
-    <div class="collapse" #collapseImport id="collapseImport">
+    <div *ngIf="sidebarImportVisible === 0">
       <div class="p-3">
         <app-sidebar-import></app-sidebar-import>
       </div>
@@ -42,19 +31,13 @@
     <button
       class="btn btn-dark icon-hover btn-lg text-start rounded-0"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#collapsePatient"
-      aria-expanded="false"
-      aria-controls="collapsePatient"
+      (click)="togglePatients(sidebarPatientsVisible)"
     >
-      <fa-icon
-        icon="hospital-user"
-        [ngClass]="collapsePatient.className.includes('show') ? 'text-info' : ''"
-      >
+      <fa-icon icon="hospital-user" [ngClass]="sidebarPatientsVisible === 0 ? 'text-info' : ''">
       </fa-icon>
       &nbsp;Patients
     </button>
-    <div class="collapse" #collapsePatient id="collapsePatient">
+    <div *ngIf="sidebarPatientsVisible === 0">
       <div class="p-3">
         <app-sidebar-patients></app-sidebar-patients>
       </div>
@@ -64,19 +47,13 @@
     <button
       class="btn btn-dark icon-hover btn-lg text-start rounded-0"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#collapseThreshold"
-      aria-expanded="false"
-      aria-controls="collapseThreshold"
+      (click)="toggleThreshold(sidebarThresholdVisible)"
     >
-      <fa-icon
-        icon="sort-amount-up"
-        [ngClass]="collapseThreshold.className.includes('show') ? 'text-info' : ''"
-      >
+      <fa-icon icon="sort-amount-up" [ngClass]="sidebarThresholdVisible === 0 ? 'text-info' : ''">
       </fa-icon>
       &nbsp;Threshold
     </button>
-    <div class="collapse" id="collapseThreshold" #collapseThreshold>
+    <div *ngIf="sidebarThresholdVisible === 0">
       <div class="p-3">
         <app-sidebar-threshold></app-sidebar-threshold>
       </div>
@@ -86,19 +63,13 @@
     <button
       class="btn btn-dark icon-hover btn-lg text-start rounded-0"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#collapseNodes"
-      aria-expanded="false"
-      aria-controls="collapseNodes"
+      (click)="toggleNodes(sidebarNodesVisible)"
     >
-      <fa-icon
-        icon="project-diagram"
-        [ngClass]="collapseNodes.className.includes('show') ? 'text-info' : ''"
-      >
+      <fa-icon icon="project-diagram" [ngClass]="sidebarNodesVisible === 0 ? 'text-info' : ''">
       </fa-icon>
       &nbsp;Nodes
     </button>
-    <div class="collapse" id="collapseNodes" #collapseNodes>
+    <div *ngIf="sidebarNodesVisible === 0">
       <div class="p-3">
         <app-sidebar-nodes></app-sidebar-nodes>
       </div>
@@ -108,19 +79,12 @@
     <button
       class="btn btn-dark icon-hover btn-lg text-start rounded-0"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#collapseLayout"
-      aria-expanded="false"
-      aria-controls="collapseLayout"
+      (click)="toggleLayout(sidebarLayoutVisible)"
     >
-      <fa-icon
-        icon="palette"
-        [ngClass]="collapseLayout.className.includes('show') ? 'text-info' : ''"
-      >
-      </fa-icon>
+      <fa-icon icon="palette" [ngClass]="sidebarLayoutVisible === 0 ? 'text-info' : ''"> </fa-icon>
       &nbsp;Layout
     </button>
-    <div class="collapse" id="collapseLayout" #collapseLayout>
+    <div *ngIf="sidebarLayoutVisible === 0">
       <div class="p-3">
         <app-sidebar-layout></app-sidebar-layout>
       </div>
@@ -130,19 +94,13 @@
     <button
       class="btn btn-dark icon-hover btn-lg text-start rounded-0"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#collapseDownload"
-      aria-expanded="false"
-      aria-controls="collapseDownload"
+      (click)="toggleDownload(sidebarDownloadVisible)"
     >
-      <fa-icon
-        icon="arrow-circle-down"
-        [ngClass]="collapseDownload.className.includes('show') ? 'text-info' : ''"
-      >
+      <fa-icon icon="arrow-circle-down" [ngClass]="sidebarDownloadVisible === 0 ? 'text-info' : ''">
       </fa-icon>
       &nbsp;Download
     </button>
-    <div class="collapse" id="collapseDownload" #collapseDownload>
+    <div *ngIf="sidebarDownloadVisible === 0">
       <div class="p-3">
         <app-sidebar-download></app-sidebar-download>
       </div>
@@ -152,19 +110,12 @@
     <button
       class="btn btn-dark icon-hover btn-lg text-start rounded-0"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#collapseGenerator"
-      aria-expanded="false"
-      aria-controls="collapseGenerator"
+      (click)="toggleGenerator(sidebarGeneratorVisible)"
     >
-      <fa-icon
-        icon="link"
-        [ngClass]="collapseGenerator.className.includes('show') ? 'text-info' : ''"
-      >
-      </fa-icon>
+      <fa-icon icon="link" [ngClass]="sidebarGeneratorVisible === 0 ? 'text-info' : ''"> </fa-icon>
       &nbsp;Link generator
     </button>
-    <div class="collapse" id="collapseGenerator" #collapseGenerator>
+    <div *ngIf="sidebarGeneratorVisible === 0">
       <div class="p-3">
         <app-sidebar-generator></app-sidebar-generator>
       </div>
@@ -174,26 +125,18 @@
     <button
       class="btn btn-dark icon-hover btn-lg text-start rounded-0"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#collapseImpressum"
-      aria-expanded="false"
-      aria-controls="collapseImpressum"
+      (click)="toggleImpressum(sidebarImpressumVisible)"
     >
-      <fa-icon
-        icon="info-circle"
-        [ngClass]="collapseImpressum.className.includes('show') ? 'text-info' : ''"
-      >
+      <fa-icon icon="info-circle" [ngClass]="sidebarImpressumVisible === 0 ? 'text-info' : ''">
       </fa-icon>
       &nbsp;Impressum
     </button>
-    <div class="collapse" id="collapseImpressum" #collapseImpressum>
+    <div *ngIf="sidebarImpressumVisible === 0">
       <div class="p-3">
         <app-sidebar-legal></app-sidebar-legal>
       </div>
     </div>
-
   </div>
-
 </div>
 
 <!-- sidebar button visible -->
@@ -202,7 +145,3 @@
     <fa-icon icon="bars"></fa-icon>
   </button>
 </ng-container>
-
-
-
-

@@ -64,7 +64,10 @@ import {
   SidebarGeneratorTableComponent,
 } from './components/sidebar-generator-table/sidebar-generator-table.component';
 import { SidebarImportComponent } from './components/sidebar-import/sidebar-import.component';
-import { SidebarImportFormComponent } from './components/sidebar-import-form/sidebar-import-form.component';
+import {
+  SidebarImportFormComponent,
+} from './components/sidebar-import-form/sidebar-import-form.component';
+import { NormPipe } from './core/pipe/norm.pipe';
 
 @NgModule({
   declarations: [
@@ -88,6 +91,7 @@ import { SidebarImportFormComponent } from './components/sidebar-import-form/sid
     SidebarGeneratorTableComponent,
     SidebarImportComponent,
     SidebarImportFormComponent,
+    NormPipe,
   ],
   imports: [
     BrowserModule,

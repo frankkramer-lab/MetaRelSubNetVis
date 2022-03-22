@@ -188,7 +188,6 @@ export class HydratorService {
     patients.scoreMidRange = (patients.scoreMax + patients.scoreMin) / 2;
     patients.detailsA = patientDetailItemA;
     patients.detailsB = patientDetailItemB;
-    console.log(patients);
     return patients;
   }
 

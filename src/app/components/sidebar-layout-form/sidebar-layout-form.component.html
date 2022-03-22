@@ -39,9 +39,9 @@
       <span> by gene expression </span>
       <div *ngIf="nodeColorBy === 1" class="w-auto gradient"></div>
       <div class="row" *ngIf="nodeColorBy === 1">
-        <small class="col text-start">{{geMin | number}}</small>
-        <small class="col text-center">{{geMidRange | number }}</small>
-        <small class="col text-end">{{geMax | number }}</small>
+        <small class="col text-start">{{geMin | norm : 2}}</small>
+        <small class="col text-center">{{geMidRange | norm : 2 }}</small>
+        <small class="col text-end">{{geMax | norm : 2 }}</small>
       </div>
     </label>
   </div>
@@ -61,9 +61,9 @@
       <span> by relevance </span>
       <div *ngIf="nodeColorBy === 2" class="w-auto gradient"></div>
       <div class="row" *ngIf="nodeColorBy === 2">
-        <small class="col text-start">{{scoreMin | number }}</small>
-        <small class="col text-center">{{scoreMidRange | number }}</small>
-        <small class="col text-end">{{scoreMax | number }}</small>
+        <small class="col text-start">{{scoreMin | norm : 2 }}</small>
+        <small class="col text-center">{{scoreMidRange | norm : 2 }}</small>
+        <small class="col text-end">{{scoreMax | norm : 2 }}</small>
       </div>
     </label>
   </div>

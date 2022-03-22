@@ -98,6 +98,19 @@ export const patientReducer = createReducer(
       patientBDetails,
     }),
   ),
+  // on(setPatientSelection, (state: PatientState, { previousSelection }): PatientState => {
+  //
+  //   let patientSelection: PatientSelectionEnum = PatientSelectionEnum.none;
+  //   if (state.patientA && state.patientB) {
+  //     patientSelection = PatientSelectionEnum.both;
+  //   } else if (state.patientA) {
+  //     patientSelection = PatientSelectionEnum.groupA;
+  //   } else if (state.patientB) {
+  //     patientSelection = PatientSelectionEnum.groupB;
+  //   }
+  //
+  //   return { ...state, patientSelection };
+  // }),
   on(setPatientSelection, hydratePatientAPatientBSuccess, (state: PatientState): PatientState => {
     let patientSelection: PatientSelectionEnum = PatientSelectionEnum.none;
 

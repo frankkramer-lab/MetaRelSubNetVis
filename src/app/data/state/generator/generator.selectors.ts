@@ -30,35 +30,35 @@ export const selectQueryParams = createSelector(
 );
 export const selectDomain = createSelector(selectState, (state: GeneratorState) => state.domain);
 
-export const selectComponentVisibilityImport = createSelector(
+export const selectGenCmpVisImport = createSelector(
   selectState,
   (state: GeneratorState) => state.componentImportVisibility,
 );
-export const selectComponentVisibilityPatients = createSelector(
+export const selectGenCmpVisPatients = createSelector(
   selectState,
   (state: GeneratorState) => state.componentPatientsVisibility,
 );
-export const selectComponentVisibilityThreshold = createSelector(
+export const selectGenCmpVisThreshold = createSelector(
   selectState,
   (state: GeneratorState) => state.componentThresholdVisibility,
 );
-export const selectComponentVisibilityNodes = createSelector(
+export const selectGenCmpVisNodes = createSelector(
   selectState,
   (state: GeneratorState) => state.componentNodesVisibility,
 );
-export const selectComponentVisibilityLayout = createSelector(
+export const selectGenCmpVisLayout = createSelector(
   selectState,
   (state: GeneratorState) => state.componentLayoutVisibility,
 );
-export const selectComponentVisibilityDownload = createSelector(
+export const selectGenCmpVisDownload = createSelector(
   selectState,
   (state: GeneratorState) => state.componentDownloadVisibility,
 );
-export const selectComponentVisibilityGenerator = createSelector(
+export const selectGenCmpVisGenerator = createSelector(
   selectState,
   (state: GeneratorState) => state.componentGeneratorVisibility,
 );
-export const selectComponentVisibilityImpressum = createSelector(
+export const selectGenCmpVisImpressum = createSelector(
   selectState,
   (state: GeneratorState) => state.componentImpressumVisibility,
 );

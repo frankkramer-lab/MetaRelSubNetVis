@@ -68,6 +68,8 @@ import {
   SidebarImportFormComponent,
 } from './components/sidebar-import-form/sidebar-import-form.component';
 import { NormPipe } from './core/pipe/norm.pipe';
+import { SidebarGeneratorComponentVisibilityComponent } from './components/sidebar-generator-component-visibility/sidebar-generator-component-visibility.component';
+import { SidebarGeneratorResultComponent } from './components/sidebar-generator-result/sidebar-generator-result.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +94,8 @@ import { NormPipe } from './core/pipe/norm.pipe';
     SidebarImportComponent,
     SidebarImportFormComponent,
     NormPipe,
+    SidebarGeneratorComponentVisibilityComponent,
+    SidebarGeneratorResultComponent,
   ],
   imports: [
     BrowserModule,

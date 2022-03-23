@@ -1,0 +1,57 @@
+<div class="row mb-2">
+  <div class="col">
+    <b>{{ name }}</b>
+  </div>
+  <div class="col-auto">
+    <div class="btn-group" role="group" ngbRadioGroup>
+      <label class="btn-outline-info" ngbButtonLabel>
+        <input
+          type="radio"
+          class="btn-check"
+          ngbButton
+          value="2"
+          [checked]="model === 2"
+          (click)="modelEmitter.emit(2)"
+        />
+        None
+      </label>
+      <label class="btn-outline-info" ngbButtonLabel>
+        <input
+          type="radio"
+          class="btn-check"
+          ngbButton
+          value="1"
+          [checked]="model === 1"
+          (click)="modelEmitter.emit(1)"
+        />
+        Button
+      </label>
+      <label class="btn-outline-info" ngbButtonLabel>
+        <input
+          type="radio"
+          class="btn-check"
+          ngbButton
+          value="0"
+          [checked]="model === 0"
+          (click)="modelEmitter.emit(0)"
+        />
+        Full
+      </label>
+    </div>
+  </div>
+  <div class="col-auto pl-3">
+    <fa-icon
+      size="2x"
+      class="text-secondary"
+      icon="info-circle"
+      container="body"
+      [openDelay]="1000"
+      placement="bottom"
+      [ngbTooltip]="tooltipContent"
+    ></fa-icon>
+  </div>
+</div>
+
+<ng-template #tooltipContent>
+  <div class="text-start" [innerHTML]="tooltip"></div>
+</ng-template>

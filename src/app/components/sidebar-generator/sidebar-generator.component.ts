@@ -25,6 +25,14 @@ import {
 } from '../../data/state/layout/layout.selectors';
 import {
   selectDomain,
+  selectGenCmpVisDownload,
+  selectGenCmpVisGenerator,
+  selectGenCmpVisImport,
+  selectGenCmpVisImpressum,
+  selectGenCmpVisLayout,
+  selectGenCmpVisNodes,
+  selectGenCmpVisPatients,
+  selectGenCmpVisThreshold,
   selectImageDownloadConfig,
   selectIsImageDownloadConfigValid,
   selectQueryParams,
@@ -33,6 +41,14 @@ import {
 } from '../../data/state/generator/generator.selectors';
 import {
   copyToClipboard,
+  setComponentVisibilityDownload,
+  setComponentVisibilityGenerator,
+  setComponentVisibilityImport,
+  setComponentVisibilityImpressum,
+  setComponentVisibilityLayout,
+  setComponentVisibilityNodes,
+  setComponentVisibilityPatients,
+  setComponentVisibilityThreshold,
   setGeneratorImageExtension,
   setGeneratorImageScale,
   setGeneratorSidebarVisibility,
@@ -75,15 +91,32 @@ export class SidebarGeneratorComponent implements OnInit {
 
   imageDownloadConfig$!: Observable<ImageDownloadConfig>;
 
-  sidebarVisibility$!: Observable<ComponentVisibilityEnum>;
-
   triggerImmediateImageDownload$!: Observable<boolean>;
 
   domain$!: Observable<string>;
 
   queryParams$!: Observable<string>;
 
-  constructor(private store: Store<AppState>) {}
+  sidebarVisibility$!: Observable<ComponentVisibilityEnum>;
+
+  cmpImportVisibility$!: Observable<ComponentVisibilityEnum>;
+
+  cmpPatientsVisibility$!: Observable<ComponentVisibilityEnum>;
+
+  cmpThresholdVisibility$!: Observable<ComponentVisibilityEnum>;
+
+  cmpNodesVisibility$!: Observable<ComponentVisibilityEnum>;
+
+  cmpLayoutVisibility$!: Observable<ComponentVisibilityEnum>;
+
+  cmpDownloadVisibility$!: Observable<ComponentVisibilityEnum>;
+
+  cmpGeneratorVisibility$!: Observable<ComponentVisibilityEnum>;
+
+  cmpImpressumVisibility$!: Observable<ComponentVisibilityEnum>;
+
+  constructor(private store: Store<AppState>) {
+  }
 
   ngOnInit(): void {
     this.uuid$ = this.store.select(selectUuid);
@@ -100,10 +133,18 @@ export class SidebarGeneratorComponent implements OnInit {
     this.showMtb$ = this.store.select(selectShowMtbResults);
     this.imageDownloadConfig$ = this.store.select(selectImageDownloadConfig);
     this.isImageFormValid$ = this.store.select(selectIsImageDownloadConfigValid);
-    this.sidebarVisibility$ = this.store.select(selectSidebarVisibility);
     this.triggerImmediateImageDownload$ = this.store.select(selectTriggerImmediateDownload);
     this.domain$ = this.store.select(selectDomain);
     this.queryParams$ = this.store.select(selectQueryParams);
+    this.sidebarVisibility$ = this.store.select(selectSidebarVisibility);
+    this.cmpImportVisibility$ = this.store.select(selectGenCmpVisImport);
+    this.cmpPatientsVisibility$ = this.store.select(selectGenCmpVisPatients);
+    this.cmpThresholdVisibility$ = this.store.select(selectGenCmpVisThreshold);
+    this.cmpNodesVisibility$ = this.store.select(selectGenCmpVisNodes);
+    this.cmpLayoutVisibility$ = this.store.select(selectGenCmpVisLayout);
+    this.cmpDownloadVisibility$ = this.store.select(selectGenCmpVisDownload);
+    this.cmpGeneratorVisibility$ = this.store.select(selectGenCmpVisGenerator);
+    this.cmpImpressumVisibility$ = this.store.select(selectGenCmpVisImpressum);
   }
 
   toggleTriggerImmediateDownload() {
@@ -128,5 +169,37 @@ export class SidebarGeneratorComponent implements OnInit {
 
   buildAndCopyUrl() {
     this.store.dispatch(copyToClipboard());
+  }
+
+  setVisibilityImport(visibility: ComponentVisibilityEnum) {
+    this.store.dispatch(setComponentVisibilityImport({ visibility }));
+  }
+
+  setVisibilityPatients(visibility: ComponentVisibilityEnum) {
+    this.store.dispatch(setComponentVisibilityPatients({ visibility }));
+  }
+
+  setVisibilityThreshold(visibility: ComponentVisibilityEnum) {
+    this.store.dispatch(setComponentVisibilityThreshold({ visibility }));
+  }
+
+  setVisibilityNodes(visibility: ComponentVisibilityEnum) {
+    this.store.dispatch(setComponentVisibilityNodes({ visibility }));
+  }
+
+  setVisibilityLayout(visibility: ComponentVisibilityEnum) {
+    this.store.dispatch(setComponentVisibilityLayout({ visibility }));
+  }
+
+  setVisibilityDownload(visibility: ComponentVisibilityEnum) {
+    this.store.dispatch(setComponentVisibilityDownload({ visibility }));
+  }
+
+  setVisibilityGenerator(visibility: ComponentVisibilityEnum) {
+    this.store.dispatch(setComponentVisibilityGenerator({ visibility }));
+  }
+
+  setVisibilityImpressum(visibility: ComponentVisibilityEnum) {
+    this.store.dispatch(setComponentVisibilityImpressum({ visibility }));
   }
 }

@@ -58,25 +58,28 @@
 
 <div class="row mb-2">
   <div class="col-6">
-    <div class="dropdown">
-      <button
-        class="btn btn-secondary dropdown-toggle"
-        type="button"
-        id="selectSidebarVisibility"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
-        SidebarVisibility:
-        <span *ngIf="sidebarVisibility === 0">Full</span>
-        <span *ngIf="sidebarVisibility === 1">Button</span>
-        <span *ngIf="sidebarVisibility === 2">None</span>
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="selectSidebarVisibility">
-        <li><a class="dropdown-item" (click)="sidebarVisibilityChanged.emit(0)">Full</a></li>
-        <li><a class="dropdown-item" (click)="sidebarVisibilityChanged.emit(1)">Button</a></li>
-        <li><a class="dropdown-item" (click)="sidebarVisibilityChanged.emit(2)">None</a></li>
-      </ul>
-    </div>
+
+<!--    <app-sidebar-generator-component-visibility [model]="test" (modelEmitter)="handleModelChange($event)"></app-sidebar-generator-component-visibility>-->
+
+<!--    <div class="dropdown">-->
+<!--      <button-->
+<!--        class="btn btn-secondary dropdown-toggle"-->
+<!--        type="button"-->
+<!--        id="selectSidebarVisibility"-->
+<!--        data-bs-toggle="dropdown"-->
+<!--        aria-expanded="false"-->
+<!--      >-->
+<!--        SidebarVisibility:-->
+<!--        <span *ngIf="sidebarVisibility === 0">Full</span>-->
+<!--        <span *ngIf="sidebarVisibility === 1">Button</span>-->
+<!--        <span *ngIf="sidebarVisibility === 2">None</span>-->
+<!--      </button>-->
+<!--      <ul class="dropdown-menu" aria-labelledby="selectSidebarVisibility">-->
+<!--        <li><a class="dropdown-item" (click)="sidebarVisibilityChanged.emit(0)">Full</a></li>-->
+<!--        <li><a class="dropdown-item" (click)="sidebarVisibilityChanged.emit(1)">Button</a></li>-->
+<!--        <li><a class="dropdown-item" (click)="sidebarVisibilityChanged.emit(2)">None</a></li>-->
+<!--      </ul>-->
+<!--    </div>-->
   </div>
   <div class="col-auto">
     <div class="mb-3 form-check">

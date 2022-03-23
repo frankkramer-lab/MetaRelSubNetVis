@@ -60,7 +60,7 @@ export const generatorReducer = createReducer(
     setComponentVisibilityThreshold,
     (state: GeneratorState, { visibility }): GeneratorState => ({
       ...state,
-      componentPatientsVisibility: visibility,
+      componentThresholdVisibility: visibility,
     }),
   ),
   on(
@@ -126,13 +126,26 @@ export const generatorReducer = createReducer(
       isImageDownloadConfigValid: true,
     };
   }),
-  on(
-    setGeneratorImageExtension,
-    (state: GeneratorState, { extension }): GeneratorState => ({
+  on(setGeneratorImageExtension, (state: GeneratorState, { extension }): GeneratorState => {
+    if (extension === 'SVG') {
+      return {
+        ...state,
+        isImageDownloadConfigValid: true,
+        imageDownloadConfig: {
+          ...state.imageDownloadConfig,
+          scale: 1,
+          extension,
+        },
+      };
+    }
+    return {
       ...state,
-      imageDownloadConfig: { ...state.imageDownloadConfig, extension },
-    }),
-  ),
+      imageDownloadConfig: {
+        ...state.imageDownloadConfig,
+        extension,
+      },
+    };
+  }),
   on(
     setQueryParams,
     (state: GeneratorState, { queryParams }): GeneratorState => ({

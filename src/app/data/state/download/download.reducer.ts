@@ -12,13 +12,20 @@ const initialState: DownloadState = {
 
 export const downloadReducer = createReducer(
   initialState,
-  on(
-    setFileExtension,
-    (state: DownloadState, { extension }): DownloadState => ({
+  on(setFileExtension, (state: DownloadState, { extension }): DownloadState => {
+    if (extension === 'SVG') {
+      return {
+        ...state,
+        extension,
+        scale: 1,
+        isFormValid: true,
+      };
+    }
+    return {
       ...state,
       extension,
-    }),
-  ),
+    };
+  }),
   on(setScale, (state: DownloadState, { scale }): DownloadState => {
     if (scale <= 0 || scale > 10) {
       return { ...state, scale, isFormValid: false };

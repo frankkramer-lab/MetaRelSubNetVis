@@ -22,6 +22,14 @@ import {
 import { AppState } from '../app.state';
 import {
   selectDomain,
+  selectGenCmpVisDownload,
+  selectGenCmpVisGenerator,
+  selectGenCmpVisImport,
+  selectGenCmpVisImpressum,
+  selectGenCmpVisLayout,
+  selectGenCmpVisNodes,
+  selectGenCmpVisPatients,
+  selectGenCmpVisThreshold,
   selectImageDownloadConfig,
   selectQueryParams,
   selectSidebarVisibility,
@@ -48,16 +56,7 @@ import { hydrateAbort, hydrationEnded } from '../hydrator/hydrator.actions';
 import { selectDefined } from '../threshold/threshold.selectors';
 import { NetworkNode } from '../../schema/network-node';
 import { selectUuid } from '../network/network.selectors';
-import {
-  selectSidebarVisibilityDownload,
-  selectSidebarVisibilityGenerator,
-  selectSidebarVisibilityImport,
-  selectSidebarVisibilityImpressum,
-  selectSidebarVisibilityLayout,
-  selectSidebarVisibilityNodes,
-  selectSidebarVisibilityPatients,
-  selectSidebarVisibilityThreshold,
-} from '../sidebar/sidebar.selectors';
+import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 
 @Injectable()
 export class GeneratorEffects {
@@ -100,40 +99,40 @@ export class GeneratorEffects {
         this.store.select(selectShowAllNodes),
         this.store.select(selectShowOnlySharedNodes),
         this.store.select(selectShowMtbResults),
-        this.store.select(selectSidebarVisibilityImport),
-        this.store.select(selectSidebarVisibilityPatients),
-        this.store.select(selectSidebarVisibilityThreshold),
-        this.store.select(selectSidebarVisibilityNodes),
-        this.store.select(selectSidebarVisibilityLayout),
-        this.store.select(selectSidebarVisibilityDownload),
-        this.store.select(selectSidebarVisibilityGenerator),
-        this.store.select(selectSidebarVisibilityImpressum),
+        this.store.select(selectGenCmpVisImport),
+        this.store.select(selectGenCmpVisPatients),
+        this.store.select(selectGenCmpVisThreshold),
+        this.store.select(selectGenCmpVisNodes),
+        this.store.select(selectGenCmpVisLayout),
+        this.store.select(selectGenCmpVisDownload),
+        this.store.select(selectGenCmpVisGenerator),
+        this.store.select(selectGenCmpVisImpressum),
       ]),
       map(
         ([
-          ,
-          uuid,
-          imageDownloadConfig,
-          triggerImageDownload,
-          sidebarVisibility,
-          patientA,
-          patientB,
-          defined,
-          markedNodes,
-          nodeColorBy,
-          nodeSizeBy,
-          showAll,
-          showShared,
-          showMtb,
-          cmpImport,
-          cmpPatients,
-          cmpThreshold,
-          cmpNodes,
-          cmpLayout,
-          cmpDownload,
-          cmpGenerator,
-          cmpImpressum,
-        ]) => {
+           ,
+           uuid,
+           imageDownloadConfig,
+           triggerImageDownload,
+           sidebarVisibility,
+           patientA,
+           patientB,
+           defined,
+           markedNodes,
+           nodeColorBy,
+           nodeSizeBy,
+           showAll,
+           showShared,
+           showMtb,
+           cmpImport,
+           cmpPatients,
+           cmpThreshold,
+           cmpNodes,
+           cmpLayout,
+           cmpDownload,
+           cmpGenerator,
+           cmpImpressum,
+         ]) => {
           const queryParams: string[] = [];
           if (!uuid) {
             return setQueryParams({ queryParams: `?${queryParams.join('&')}` });
@@ -168,9 +167,6 @@ export class GeneratorEffects {
           if (showMtb !== null) {
             queryParams.push(`mtb=${showMtb}`);
           }
-          if (sidebarVisibility !== null) {
-            queryParams.push(`sb=${sidebarVisibility}`);
-          }
           if (triggerImageDownload) {
             queryParams.push(`dwn=${triggerImageDownload}`);
             if (imageDownloadConfig) {
@@ -179,14 +175,20 @@ export class GeneratorEffects {
               );
             }
           }
-          queryParams.push(`cIn=${cmpImport}`);
-          queryParams.push(`cP=${cmpPatients}`);
-          queryParams.push(`cT=${cmpThreshold}`);
-          queryParams.push(`cN=${cmpNodes}`);
-          queryParams.push(`cL=${cmpLayout}`);
-          queryParams.push(`cD=${cmpDownload}`);
-          queryParams.push(`cG=${cmpGenerator}`);
-          queryParams.push(`cIm=${cmpImpressum}`);
+
+          if (sidebarVisibility !== null) {
+            queryParams.push(`sb=${sidebarVisibility}`);
+            if (sidebarVisibility !== ComponentVisibilityEnum.none) {
+              queryParams.push(`cIn=${cmpImport}`);
+              queryParams.push(`cP=${cmpPatients}`);
+              queryParams.push(`cT=${cmpThreshold}`);
+              queryParams.push(`cN=${cmpNodes}`);
+              queryParams.push(`cL=${cmpLayout}`);
+              queryParams.push(`cD=${cmpDownload}`);
+              queryParams.push(`cG=${cmpGenerator}`);
+              queryParams.push(`cIm=${cmpImpressum}`);
+            }
+          }
 
           return setQueryParams({ queryParams: `?${queryParams.join('&')}` });
         },
@@ -210,5 +212,6 @@ export class GeneratorEffects {
     { dispatch: false },
   );
 
-  constructor(private actions$: Actions, private store: Store<AppState>) {}
+  constructor(private actions$: Actions, private store: Store<AppState>) {
+  }
 }

@@ -4,6 +4,14 @@ import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import {
   copyToClipboard,
+  setComponentVisibilityDownload,
+  setComponentVisibilityGenerator,
+  setComponentVisibilityImport,
+  setComponentVisibilityImpressum,
+  setComponentVisibilityLayout,
+  setComponentVisibilityNodes,
+  setComponentVisibilityPatients,
+  setComponentVisibilityThreshold,
   setGeneratorImageExtension,
   setGeneratorImageScale,
   setGeneratorSidebarVisibility,
@@ -40,6 +48,16 @@ import { hydrateAbort, hydrationEnded } from '../hydrator/hydrator.actions';
 import { selectDefined } from '../threshold/threshold.selectors';
 import { NetworkNode } from '../../schema/network-node';
 import { selectUuid } from '../network/network.selectors';
+import {
+  selectSidebarVisibilityDownload,
+  selectSidebarVisibilityGenerator,
+  selectSidebarVisibilityImport,
+  selectSidebarVisibilityImpressum,
+  selectSidebarVisibilityLayout,
+  selectSidebarVisibilityNodes,
+  selectSidebarVisibilityPatients,
+  selectSidebarVisibilityThreshold,
+} from '../sidebar/sidebar.selectors';
 
 @Injectable()
 export class GeneratorEffects {
@@ -59,6 +77,14 @@ export class GeneratorEffects {
         toggleShowMtbResults,
         hydrateAbort,
         hydrationEnded,
+        setComponentVisibilityImport,
+        setComponentVisibilityPatients,
+        setComponentVisibilityThreshold,
+        setComponentVisibilityNodes,
+        setComponentVisibilityLayout,
+        setComponentVisibilityDownload,
+        setComponentVisibilityGenerator,
+        setComponentVisibilityImpressum,
       ),
       concatLatestFrom(() => [
         this.store.select(selectUuid),
@@ -74,6 +100,14 @@ export class GeneratorEffects {
         this.store.select(selectShowAllNodes),
         this.store.select(selectShowOnlySharedNodes),
         this.store.select(selectShowMtbResults),
+        this.store.select(selectSidebarVisibilityImport),
+        this.store.select(selectSidebarVisibilityPatients),
+        this.store.select(selectSidebarVisibilityThreshold),
+        this.store.select(selectSidebarVisibilityNodes),
+        this.store.select(selectSidebarVisibilityLayout),
+        this.store.select(selectSidebarVisibilityDownload),
+        this.store.select(selectSidebarVisibilityGenerator),
+        this.store.select(selectSidebarVisibilityImpressum),
       ]),
       map(
         ([
@@ -91,9 +125,16 @@ export class GeneratorEffects {
           showAll,
           showShared,
           showMtb,
+          cmpImport,
+          cmpPatients,
+          cmpThreshold,
+          cmpNodes,
+          cmpLayout,
+          cmpDownload,
+          cmpGenerator,
+          cmpImpressum,
         ]) => {
           const queryParams: string[] = [];
-
           if (!uuid) {
             return setQueryParams({ queryParams: `?${queryParams.join('&')}` });
           }
@@ -138,6 +179,15 @@ export class GeneratorEffects {
               );
             }
           }
+          queryParams.push(`cIn=${cmpImport}`);
+          queryParams.push(`cP=${cmpPatients}`);
+          queryParams.push(`cT=${cmpThreshold}`);
+          queryParams.push(`cN=${cmpNodes}`);
+          queryParams.push(`cL=${cmpLayout}`);
+          queryParams.push(`cD=${cmpDownload}`);
+          queryParams.push(`cG=${cmpGenerator}`);
+          queryParams.push(`cIm=${cmpImpressum}`);
+
           return setQueryParams({ queryParams: `?${queryParams.join('&')}` });
         },
       ),

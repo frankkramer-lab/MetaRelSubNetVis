@@ -29,3 +29,36 @@ export const selectQueryParams = createSelector(
   (state: GeneratorState) => state.queryParams,
 );
 export const selectDomain = createSelector(selectState, (state: GeneratorState) => state.domain);
+
+export const selectComponentVisibilityImport = createSelector(
+  selectState,
+  (state: GeneratorState) => state.componentImportVisibility,
+);
+export const selectComponentVisibilityPatients = createSelector(
+  selectState,
+  (state: GeneratorState) => state.componentPatientsVisibility,
+);
+export const selectComponentVisibilityThreshold = createSelector(
+  selectState,
+  (state: GeneratorState) => state.componentThresholdVisibility,
+);
+export const selectComponentVisibilityNodes = createSelector(
+  selectState,
+  (state: GeneratorState) => state.componentNodesVisibility,
+);
+export const selectComponentVisibilityLayout = createSelector(
+  selectState,
+  (state: GeneratorState) => state.componentLayoutVisibility,
+);
+export const selectComponentVisibilityDownload = createSelector(
+  selectState,
+  (state: GeneratorState) => state.componentDownloadVisibility,
+);
+export const selectComponentVisibilityGenerator = createSelector(
+  selectState,
+  (state: GeneratorState) => state.componentGeneratorVisibility,
+);
+export const selectComponentVisibilityImpressum = createSelector(
+  selectState,
+  (state: GeneratorState) => state.componentImpressumVisibility,
+);

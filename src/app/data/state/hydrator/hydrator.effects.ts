@@ -38,7 +38,7 @@ import { Patient } from '../../schema/patient';
 import { PatientItem } from '../../schema/patient-item';
 import { NodeColorByEnum } from '../../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
-import { selectNodes, selectUuid } from '../network/network.selectors';
+import { selectNodes } from '../network/network.selectors';
 import { markingNodesSuccess, renderingSuccess } from '../graph/graph.actions';
 import { triggerImageDownload } from '../download/download.actions';
 import {
@@ -72,13 +72,12 @@ export class HydratorEffects {
   loadDataNdex$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setUuid),
-      concatLatestFrom(() => [this.store.select(selectUuid)]),
-      switchMap(([, uuid]) => {
-        if (uuid === null || uuid === '') {
+      switchMap((action) => {
+        if (action.uuid === null || action.uuid === '') {
           return of(loadDataFailure());
         }
 
-        return this.apiService.loadDataNdex(uuid).pipe(
+        return this.apiService.loadDataNdex(action.uuid).pipe(
           map((data) => {
             let nodesDictionary: any = {};
             let nodesRaw: any[] = [];
@@ -131,7 +130,7 @@ export class HydratorEffects {
               networkAttributes,
               patients,
               labels,
-              uuid,
+              action.uuid,
             );
 
             patients = { ...patients, labelA: labels[1], labelB: labels[2] };
@@ -326,6 +325,5 @@ export class HydratorEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private hydratorService: HydratorService,
-  ) {
-  }
+  ) {}
 }

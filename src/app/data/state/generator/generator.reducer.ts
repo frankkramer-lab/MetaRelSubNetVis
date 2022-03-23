@@ -2,6 +2,14 @@ import { createReducer, on } from '@ngrx/store';
 import { GeneratorState } from './generator.state';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 import {
+  setComponentVisibilityDownload,
+  setComponentVisibilityGenerator,
+  setComponentVisibilityImport,
+  setComponentVisibilityImpressum,
+  setComponentVisibilityLayout,
+  setComponentVisibilityNodes,
+  setComponentVisibilityPatients,
+  setComponentVisibilityThreshold,
   setGeneratorImageExtension,
   setGeneratorImageScale,
   setGeneratorSidebarVisibility,
@@ -18,6 +26,14 @@ const initialState: GeneratorState = {
   },
   isImageDownloadConfigValid: true,
   sidebarVisibility: ComponentVisibilityEnum.full,
+  componentImportVisibility: ComponentVisibilityEnum.button,
+  componentPatientsVisibility: ComponentVisibilityEnum.button,
+  componentThresholdVisibility: ComponentVisibilityEnum.button,
+  componentNodesVisibility: ComponentVisibilityEnum.button,
+  componentLayoutVisibility: ComponentVisibilityEnum.button,
+  componentDownloadVisibility: ComponentVisibilityEnum.button,
+  componentGeneratorVisibility: ComponentVisibilityEnum.button,
+  componentImpressumVisibility: ComponentVisibilityEnum.button,
   triggerImageDownload: false,
   queryParams: '',
   // eslint-disable-next-line no-restricted-globals
@@ -26,6 +42,62 @@ const initialState: GeneratorState = {
 
 export const generatorReducer = createReducer(
   initialState,
+  on(
+    setComponentVisibilityImport,
+    (state: GeneratorState, { visibility }): GeneratorState => ({
+      ...state,
+      componentImportVisibility: visibility,
+    }),
+  ),
+  on(
+    setComponentVisibilityPatients,
+    (state: GeneratorState, { visibility }): GeneratorState => ({
+      ...state,
+      componentPatientsVisibility: visibility,
+    }),
+  ),
+  on(
+    setComponentVisibilityThreshold,
+    (state: GeneratorState, { visibility }): GeneratorState => ({
+      ...state,
+      componentPatientsVisibility: visibility,
+    }),
+  ),
+  on(
+    setComponentVisibilityNodes,
+    (state: GeneratorState, { visibility }): GeneratorState => ({
+      ...state,
+      componentNodesVisibility: visibility,
+    }),
+  ),
+  on(
+    setComponentVisibilityLayout,
+    (state: GeneratorState, { visibility }): GeneratorState => ({
+      ...state,
+      componentLayoutVisibility: visibility,
+    }),
+  ),
+  on(
+    setComponentVisibilityDownload,
+    (state: GeneratorState, { visibility }): GeneratorState => ({
+      ...state,
+      componentDownloadVisibility: visibility,
+    }),
+  ),
+  on(
+    setComponentVisibilityGenerator,
+    (state: GeneratorState, { visibility }): GeneratorState => ({
+      ...state,
+      componentGeneratorVisibility: visibility,
+    }),
+  ),
+  on(
+    setComponentVisibilityImpressum,
+    (state: GeneratorState, { visibility }): GeneratorState => ({
+      ...state,
+      componentImpressumVisibility: visibility,
+    }),
+  ),
   on(
     setGeneratorSidebarVisibility,
     (state: GeneratorState, { sidebarVisibility }): GeneratorState => ({

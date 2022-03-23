@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Input, OnInit,
+  ViewChild,
+} from '@angular/core';
 import { GraphService } from '../../core/service/graph.service';
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
 
@@ -13,11 +20,24 @@ export class GraphComponent implements AfterViewInit {
    */
   @ViewChild('cy') cyContainer!: ElementRef;
 
+  @ViewChild('heading') heading!: ElementRef;
+
+  windowHeight: number = window.innerHeight;
+
+  @Input() headline!: string | null;
+
   @Input() sidebarVisible!: ComponentVisibilityEnum | null;
+
+  @HostListener('window:resize') onResize() {
+    if (this.cyContainer) {
+      this.windowHeight = window.innerHeight;
+    }
+  }
 
   constructor(private graphService: GraphService) {}
 
   ngAfterViewInit(): void {
     this.graphService.cyContainer = this.cyContainer.nativeElement;
   }
+
 }

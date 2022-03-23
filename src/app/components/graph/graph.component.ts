@@ -3,7 +3,7 @@ import {
   Component,
   ElementRef,
   HostListener,
-  Input, OnInit,
+  Input,
   ViewChild,
 } from '@angular/core';
 import { GraphService } from '../../core/service/graph.service';
@@ -19,8 +19,6 @@ export class GraphComponent implements AfterViewInit {
    * Cytoscape container used for rendering the network
    */
   @ViewChild('cy') cyContainer!: ElementRef;
-
-  @ViewChild('heading') heading!: ElementRef;
 
   windowHeight: number = window.innerHeight;
 

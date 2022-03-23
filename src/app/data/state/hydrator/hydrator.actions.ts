@@ -87,7 +87,17 @@ export const hydrateDownloadConfigFailure = createAction(
 
 export const hydrateSidebarVisibilitySuccess = createAction(
   '[Hydrator Effects] hydrate sidebar visibility success',
-  props<{ visibility: ComponentVisibilityEnum }>(),
+  props<{
+    visibility: ComponentVisibilityEnum;
+    cmpImportVis: ComponentVisibilityEnum;
+    cmpPatientsVis: ComponentVisibilityEnum;
+    cmpThresholdVis: ComponentVisibilityEnum;
+    cmpNodesVis: ComponentVisibilityEnum;
+    cmpLayoutVis: ComponentVisibilityEnum;
+    cmpDownloadVis: ComponentVisibilityEnum;
+    cmpGeneratorVis: ComponentVisibilityEnum;
+    cmpImpressumVis: ComponentVisibilityEnum;
+  }>(),
 );
 export const hydrateSidebarVisibilityFailure = createAction(
   '[Hydrator Effects] hydrate sidebar visibility failure',

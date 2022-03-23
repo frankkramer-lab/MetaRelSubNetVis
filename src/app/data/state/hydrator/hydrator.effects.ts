@@ -281,7 +281,20 @@ export class HydratorEffects {
       concatLatestFrom(() => this.store.select(selectConfig)),
       map(([, config]) => {
         if (!config || config.sb === null) return hydrateSidebarVisibilityFailure();
-        return hydrateSidebarVisibilitySuccess({ visibility: config.sb ?? 0 });
+
+        console.log(config);
+
+        return hydrateSidebarVisibilitySuccess({
+          visibility: config.sb ?? 0,
+          cmpImportVis: config.cIn ?? 1,
+          cmpPatientsVis: config.cP ?? 1,
+          cmpThresholdVis: config.cT ?? 1,
+          cmpNodesVis: config.cN ?? 1,
+          cmpLayoutVis: config.cL ?? 1,
+          cmpDownloadVis: config.cD ?? 1,
+          cmpGeneratorVis: config.cG ?? 1,
+          cmpImpressumVis: config.cIm ?? 1,
+        });
       }),
     );
   });
@@ -307,7 +320,6 @@ export class HydratorEffects {
       ]),
       map(([, config, extension, scale, transparent]) => {
         if (!config || !config.dwn) return hydrationEnded();
-
         return triggerImageDownload({ imageDownloadConfig: { extension, scale, transparent } });
       }),
     );

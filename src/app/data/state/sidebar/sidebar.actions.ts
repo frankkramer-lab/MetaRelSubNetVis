@@ -6,6 +6,11 @@ export const toggleSidebarVisibility = createAction(
   props<{ visibility: ComponentVisibilityEnum }>(),
 );
 
+export const setSidebarVisibility = createAction(
+  '[Hydrator Effects] set sidebar visibility',
+  props<{ visibility: ComponentVisibilityEnum }>(),
+);
+
 export const toggleSidebarVisibilityImport = createAction(
   "[Sidebar Component] change sidebar's import component visibility",
   props<{ visibilityImport: ComponentVisibilityEnum }>(),
@@ -46,7 +51,3 @@ export const toggleSidebarVisibilityImpressum = createAction(
   props<{ visibilityImpressum: ComponentVisibilityEnum }>(),
 );
 
-export const setSidebarVisibility = createAction(
-  '[Hydrator Effects] set sidebar visibility',
-  props<{ visibility: ComponentVisibilityEnum }>(),
-);

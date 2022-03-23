@@ -36,12 +36,9 @@ export const sidebarReducer = createReducer(
       visibility,
     }),
   ),
-  on(
-    toggleSidebarVisibilityImport,
-    (state: SidebarState, { visibilityImport }): SidebarState => {
-      return {...state, visibilityImport}
-    },
-  ),
+  on(toggleSidebarVisibilityImport, (state: SidebarState, { visibilityImport }): SidebarState => {
+    return { ...state, visibilityImport };
+  }),
   on(
     toggleSidebarVisibilityPatients,
     (state: SidebarState, { visibilityPatients }): SidebarState => ({
@@ -87,10 +84,39 @@ export const sidebarReducer = createReducer(
   ),
   on(
     setSidebarVisibility,
-    hydrateSidebarVisibilitySuccess,
     (state: SidebarState, { visibility }): SidebarState => ({
       ...state,
       visibility,
     }),
+  ),
+  on(
+    hydrateSidebarVisibilitySuccess,
+    (
+      state: SidebarState,
+      {
+        visibility,
+        cmpImportVis,
+        cmpPatientsVis,
+        cmpThresholdVis,
+        cmpNodesVis,
+        cmpLayoutVis,
+        cmpDownloadVis,
+        cmpGeneratorVis,
+        cmpImpressumVis,
+      },
+    ): SidebarState => {
+      return {
+        ...state,
+        visibility,
+        visibilityImport: cmpImportVis,
+        visibilityPatients: cmpPatientsVis,
+        visibilityThreshold: cmpThresholdVis,
+        visibilityNodes: cmpNodesVis,
+        visibilityLayout: cmpLayoutVis,
+        visibilityDownload: cmpDownloadVis,
+        visibilityGenerator: cmpGeneratorVis,
+        visibilityImpressum: cmpImpressumVis,
+      };
+    },
   ),
 );

@@ -12,130 +12,148 @@
 
   <div class="d-grid gap-0 mb-4">
     <!-- IMPORT -->
-    <button
-      class="btn btn-dark icon-hover btn-lg text-start rounded-0"
-      type="button"
-      (click)="toggleImport(sidebarImportVisible)"
-    >
-      <fa-icon icon="file-import" [ngClass]="sidebarImportVisible === 0 ? 'text-info' : ''">
-      </fa-icon>
-      &nbsp;Import
-    </button>
-    <div *ngIf="sidebarImportVisible === 0">
-      <div class="p-3">
-        <app-sidebar-import></app-sidebar-import>
+    <ng-container *ngIf="sidebarImportVisible !== 2">
+      <button
+        class="btn btn-dark icon-hover btn-lg text-start rounded-0"
+        type="button"
+        (click)="toggleImport(sidebarImportVisible)"
+      >
+        <fa-icon icon="file-import" [ngClass]="sidebarImportVisible === 0 ? 'text-info' : ''">
+        </fa-icon>
+        &nbsp;Import
+      </button>
+      <div *ngIf="sidebarImportVisible === 0">
+        <div class="p-3">
+          <app-sidebar-import></app-sidebar-import>
+        </div>
       </div>
-    </div>
+    </ng-container>
 
     <!-- PATIENTS -->
-    <button
-      class="btn btn-dark icon-hover btn-lg text-start rounded-0"
-      type="button"
-      (click)="togglePatients(sidebarPatientsVisible)"
-    >
-      <fa-icon icon="hospital-user" [ngClass]="sidebarPatientsVisible === 0 ? 'text-info' : ''">
-      </fa-icon>
-      &nbsp;Patients
-    </button>
-    <div *ngIf="sidebarPatientsVisible === 0">
-      <div class="p-3">
-        <app-sidebar-patients></app-sidebar-patients>
+    <ng-container *ngIf="sidebarPatientsVisible !== 2">
+      <button
+        class="btn btn-dark icon-hover btn-lg text-start rounded-0"
+        type="button"
+        (click)="togglePatients(sidebarPatientsVisible)"
+      >
+        <fa-icon icon="hospital-user" [ngClass]="sidebarPatientsVisible === 0 ? 'text-info' : ''">
+        </fa-icon>
+        &nbsp;Patients
+      </button>
+      <div *ngIf="sidebarPatientsVisible === 0">
+        <div class="p-3">
+          <app-sidebar-patients></app-sidebar-patients>
+        </div>
       </div>
-    </div>
+    </ng-container>
 
     <!-- THRESHOLD -->
-    <button
-      class="btn btn-dark icon-hover btn-lg text-start rounded-0"
-      type="button"
-      (click)="toggleThreshold(sidebarThresholdVisible)"
-    >
-      <fa-icon icon="sort-amount-up" [ngClass]="sidebarThresholdVisible === 0 ? 'text-info' : ''">
-      </fa-icon>
-      &nbsp;Threshold
-    </button>
-    <div *ngIf="sidebarThresholdVisible === 0">
-      <div class="p-3">
-        <app-sidebar-threshold></app-sidebar-threshold>
+    <ng-container *ngIf="sidebarThresholdVisible !== 2">
+      <button
+        class="btn btn-dark icon-hover btn-lg text-start rounded-0"
+        type="button"
+        (click)="toggleThreshold(sidebarThresholdVisible)"
+      >
+        <fa-icon icon="sort-amount-up" [ngClass]="sidebarThresholdVisible === 0 ? 'text-info' : ''">
+        </fa-icon>
+        &nbsp;Threshold
+      </button>
+      <div *ngIf="sidebarThresholdVisible === 0">
+        <div class="p-3">
+          <app-sidebar-threshold></app-sidebar-threshold>
+        </div>
       </div>
-    </div>
+    </ng-container>
 
     <!-- NODES -->
-    <button
-      class="btn btn-dark icon-hover btn-lg text-start rounded-0"
-      type="button"
-      (click)="toggleNodes(sidebarNodesVisible)"
-    >
-      <fa-icon icon="project-diagram" [ngClass]="sidebarNodesVisible === 0 ? 'text-info' : ''">
-      </fa-icon>
-      &nbsp;Nodes
-    </button>
-    <div *ngIf="sidebarNodesVisible === 0">
-      <div class="p-3">
-        <app-sidebar-nodes></app-sidebar-nodes>
+    <ng-container *ngIf="sidebarNodesVisible !== 2">
+      <button
+        class="btn btn-dark icon-hover btn-lg text-start rounded-0"
+        type="button"
+        (click)="toggleNodes(sidebarNodesVisible)"
+      >
+        <fa-icon icon="project-diagram" [ngClass]="sidebarNodesVisible === 0 ? 'text-info' : ''">
+        </fa-icon>
+        &nbsp;Nodes
+      </button>
+      <div *ngIf="sidebarNodesVisible === 0">
+        <div class="p-3">
+          <app-sidebar-nodes></app-sidebar-nodes>
+        </div>
       </div>
-    </div>
+    </ng-container>
 
     <!-- LAYOUT -->
-    <button
-      class="btn btn-dark icon-hover btn-lg text-start rounded-0"
-      type="button"
-      (click)="toggleLayout(sidebarLayoutVisible)"
-    >
-      <fa-icon icon="palette" [ngClass]="sidebarLayoutVisible === 0 ? 'text-info' : ''"> </fa-icon>
-      &nbsp;Layout
-    </button>
-    <div *ngIf="sidebarLayoutVisible === 0">
-      <div class="p-3">
-        <app-sidebar-layout></app-sidebar-layout>
+    <ng-container *ngIf="sidebarLayoutVisible !== 2">
+      <button
+        class="btn btn-dark icon-hover btn-lg text-start rounded-0"
+        type="button"
+        (click)="toggleLayout(sidebarLayoutVisible)"
+      >
+        <fa-icon icon="palette" [ngClass]="sidebarLayoutVisible === 0 ? 'text-info' : ''"></fa-icon>
+        &nbsp;Layout
+      </button>
+      <div *ngIf="sidebarLayoutVisible === 0">
+        <div class="p-3">
+          <app-sidebar-layout></app-sidebar-layout>
+        </div>
       </div>
-    </div>
+    </ng-container>
 
     <!-- DOWNLOAD -->
-    <button
-      class="btn btn-dark icon-hover btn-lg text-start rounded-0"
-      type="button"
-      (click)="toggleDownload(sidebarDownloadVisible)"
-    >
-      <fa-icon icon="arrow-circle-down" [ngClass]="sidebarDownloadVisible === 0 ? 'text-info' : ''">
-      </fa-icon>
-      &nbsp;Download
-    </button>
-    <div *ngIf="sidebarDownloadVisible === 0">
-      <div class="p-3">
-        <app-sidebar-download></app-sidebar-download>
+    <ng-container *ngIf="sidebarDownloadVisible !== 2">
+      <button
+        class="btn btn-dark icon-hover btn-lg text-start rounded-0"
+        type="button"
+        (click)="toggleDownload(sidebarDownloadVisible)"
+      >
+        <fa-icon icon="arrow-circle-down"
+                 [ngClass]="sidebarDownloadVisible === 0 ? 'text-info' : ''">
+        </fa-icon>
+        &nbsp;Download
+      </button>
+      <div *ngIf="sidebarDownloadVisible === 0">
+        <div class="p-3">
+          <app-sidebar-download></app-sidebar-download>
+        </div>
       </div>
-    </div>
+    </ng-container>
 
     <!-- LINK GENERATOR -->
-    <button
-      class="btn btn-dark icon-hover btn-lg text-start rounded-0"
-      type="button"
-      (click)="toggleGenerator(sidebarGeneratorVisible)"
-    >
-      <fa-icon icon="link" [ngClass]="sidebarGeneratorVisible === 0 ? 'text-info' : ''"> </fa-icon>
-      &nbsp;Link generator
-    </button>
-    <div *ngIf="sidebarGeneratorVisible === 0">
-      <div class="p-3">
-        <app-sidebar-generator></app-sidebar-generator>
+    <ng-container *ngIf="sidebarGeneratorVisible !== 2">
+      <button
+        class="btn btn-dark icon-hover btn-lg text-start rounded-0"
+        type="button"
+        (click)="toggleGenerator(sidebarGeneratorVisible)"
+      >
+        <fa-icon icon="link" [ngClass]="sidebarGeneratorVisible === 0 ? 'text-info' : ''"></fa-icon>
+        &nbsp;Link generator
+      </button>
+      <div *ngIf="sidebarGeneratorVisible === 0">
+        <div class="p-3">
+          <app-sidebar-generator></app-sidebar-generator>
+        </div>
       </div>
-    </div>
+    </ng-container>
 
     <!-- IMPRESSUM -->
-    <button
-      class="btn btn-dark icon-hover btn-lg text-start rounded-0"
-      type="button"
-      (click)="toggleImpressum(sidebarImpressumVisible)"
-    >
-      <fa-icon icon="info-circle" [ngClass]="sidebarImpressumVisible === 0 ? 'text-info' : ''">
-      </fa-icon>
-      &nbsp;Impressum
-    </button>
-    <div *ngIf="sidebarImpressumVisible === 0">
-      <div class="p-3">
-        <app-sidebar-legal></app-sidebar-legal>
+    <ng-container *ngIf="sidebarImpressumVisible !== 2">
+      <button
+        class="btn btn-dark icon-hover btn-lg text-start rounded-0"
+        type="button"
+        (click)="toggleImpressum(sidebarImpressumVisible)"
+      >
+        <fa-icon icon="info-circle" [ngClass]="sidebarImpressumVisible === 0 ? 'text-info' : ''">
+        </fa-icon>
+        &nbsp;Impressum
+      </button>
+      <div *ngIf="sidebarImpressumVisible === 0">
+        <div class="p-3">
+          <app-sidebar-legal></app-sidebar-legal>
+        </div>
       </div>
-    </div>
+    </ng-container>
+
   </div>
 </div>
 

@@ -7,12 +7,14 @@ import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.en
   styleUrls: ['./sidebar-generator-component-visibility.component.scss'],
 })
 export class SidebarGeneratorComponentVisibilityComponent {
-
   @Input() name!: string;
 
   @Input() tooltip!: string;
 
   @Input() model!: ComponentVisibilityEnum | null;
 
+  @Input() parentVisibility!: ComponentVisibilityEnum | null;
+
   @Output() modelEmitter: EventEmitter<number> = new EventEmitter<ComponentVisibilityEnum>();
+
 }

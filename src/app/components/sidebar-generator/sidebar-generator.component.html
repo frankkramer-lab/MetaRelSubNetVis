@@ -41,6 +41,7 @@
 <app-sidebar-generator-component-visibility
   name="Sidebar"
   tooltip="Change the complete sidebar's visibility.<ul><li><b>Full</b>: Completely visible</li><li><b>Button</b>: Collapsed into a button</li><li><b>None</b>: Completely hidden, thus not openable</li></ul>"
+  [parentVisibility]="sidebarVisibility$ | async"
   [model]="sidebarVisibility$ | async"
   (modelEmitter)="setSidebarVisibility($event)"
 ></app-sidebar-generator-component-visibility>
@@ -48,6 +49,7 @@
 <app-sidebar-generator-component-visibility
   name="Import"
   tooltip="Change the visibility for the import option.<ul><li><b>Full</b>: Completely visible</li><li><b>Button</b>: Collapsed into a button</li><li><b>None</b>: Completely hidden, thus not openable</li></ul>"
+  [parentVisibility]="sidebarVisibility$ | async"
   [model]="cmpImportVisibility$ | async"
   (modelEmitter)="setVisibilityImport($event)"
 ></app-sidebar-generator-component-visibility>
@@ -55,6 +57,7 @@
 <app-sidebar-generator-component-visibility
   name="Patients"
   tooltip="Change the visibility for the patients option.<ul><li><b>Full</b>: Completely visible</li><li><b>Button</b>: Collapsed into a button</li><li><b>None</b>: Completely hidden, thus not openable</li></ul>"
+  [parentVisibility]="sidebarVisibility$ | async"
   [model]="cmpPatientsVisibility$ | async"
   (modelEmitter)="setVisibilityPatients($event)"
 ></app-sidebar-generator-component-visibility>
@@ -62,6 +65,7 @@
 <app-sidebar-generator-component-visibility
   name="Threshold"
   tooltip="Change the visibility for the thresholds option.<ul><li><b>Full</b>: Completely visible</li><li><b>Button</b>: Collapsed into a button</li><li><b>None</b>: Completely hidden, thus not openable</li></ul>"
+  [parentVisibility]="sidebarVisibility$ | async"
   [model]="cmpThresholdVisibility$ | async"
   (modelEmitter)="setVisibilityThreshold($event)"
 ></app-sidebar-generator-component-visibility>
@@ -69,6 +73,7 @@
 <app-sidebar-generator-component-visibility
   name="Nodes"
   tooltip="Change the visibility for the nodes option.<ul><li><b>Full</b>: Completely visible</li><li><b>Button</b>: Collapsed into a button</li><li><b>None</b>: Completely hidden, thus not openable</li></ul>"
+  [parentVisibility]="sidebarVisibility$ | async"
   [model]="cmpNodesVisibility$ | async"
   (modelEmitter)="setVisibilityNodes($event)"
 ></app-sidebar-generator-component-visibility>
@@ -76,6 +81,7 @@
 <app-sidebar-generator-component-visibility
   name="Layout"
   tooltip="Change the visibility for the layout option.<ul><li><b>Full</b>: Completely visible</li><li><b>Button</b>: Collapsed into a button</li><li><b>None</b>: Completely hidden, thus not openable</li></ul>"
+  [parentVisibility]="sidebarVisibility$ | async"
   [model]="cmpLayoutVisibility$ | async"
   (modelEmitter)="setVisibilityLayout($event)"
 ></app-sidebar-generator-component-visibility>
@@ -83,6 +89,7 @@
 <app-sidebar-generator-component-visibility
   name="Download"
   tooltip="Change the visibility for the download option.<ul><li><b>Full</b>: Completely visible</li><li><b>Button</b>: Collapsed into a button</li><li><b>None</b>: Completely hidden, thus not openable</li></ul>"
+  [parentVisibility]="sidebarVisibility$ | async"
   [model]="cmpDownloadVisibility$ | async"
   (modelEmitter)="setVisibilityDownload($event)"
 ></app-sidebar-generator-component-visibility>
@@ -90,6 +97,7 @@
 <app-sidebar-generator-component-visibility
   name="Link generator"
   tooltip="Change the visibility for the link download option.<ul><li><b>Full</b>: Completely visible</li><li><b>Button</b>: Collapsed into a button</li><li><b>None</b>: Completely hidden, thus not openable</li></ul>"
+  [parentVisibility]="sidebarVisibility$ | async"
   [model]="cmpGeneratorVisibility$ | async"
   (modelEmitter)="setVisibilityGenerator($event)"
 ></app-sidebar-generator-component-visibility>
@@ -97,6 +105,7 @@
 <app-sidebar-generator-component-visibility
   name="Impressum"
   tooltip="Change the visibility for the legal impressum option.<ul><li><b>Full</b>: Completely visible</li><li><b>Button</b>: Collapsed into a button</li><li><b>None</b>: Completely hidden, thus not openable</li></ul>"
+  [parentVisibility]="sidebarVisibility$ | async"
   [model]="cmpImpressumVisibility$ | async"
   (modelEmitter)="setVisibilityImpressum($event)"
 ></app-sidebar-generator-component-visibility>

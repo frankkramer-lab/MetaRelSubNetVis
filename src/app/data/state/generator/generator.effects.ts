@@ -110,29 +110,29 @@ export class GeneratorEffects {
       ]),
       map(
         ([
-           ,
-           uuid,
-           imageDownloadConfig,
-           triggerImageDownload,
-           sidebarVisibility,
-           patientA,
-           patientB,
-           defined,
-           markedNodes,
-           nodeColorBy,
-           nodeSizeBy,
-           showAll,
-           showShared,
-           showMtb,
-           cmpImport,
-           cmpPatients,
-           cmpThreshold,
-           cmpNodes,
-           cmpLayout,
-           cmpDownload,
-           cmpGenerator,
-           cmpImpressum,
-         ]) => {
+          ,
+          uuid,
+          imageDownloadConfig,
+          triggerImageDownload,
+          sidebarVisibility,
+          patientA,
+          patientB,
+          defined,
+          markedNodes,
+          nodeColorBy,
+          nodeSizeBy,
+          showAll,
+          showShared,
+          showMtb,
+          cmpImport,
+          cmpPatients,
+          cmpThreshold,
+          cmpNodes,
+          cmpLayout,
+          cmpDownload,
+          cmpGenerator,
+          cmpImpressum,
+        ]) => {
           const queryParams: string[] = [];
           if (!uuid) {
             return setQueryParams({ queryParams: `?${queryParams.join('&')}` });
@@ -212,6 +212,5 @@ export class GeneratorEffects {
     { dispatch: false },
   );
 
-  constructor(private actions$: Actions, private store: Store<AppState>) {
-  }
+  constructor(private actions$: Actions, private store: Store<AppState>) {}
 }

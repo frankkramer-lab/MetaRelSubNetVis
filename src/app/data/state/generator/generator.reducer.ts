@@ -17,6 +17,7 @@ import {
   toggleGeneratorImageBackground,
   toggleGeneratorTriggerImmediateDownload,
 } from './generator.actions';
+import { environment } from '../../../../environments/environment';
 
 const initialState: GeneratorState = {
   imageDownloadConfig: {
@@ -36,8 +37,7 @@ const initialState: GeneratorState = {
   componentImpressumVisibility: ComponentVisibilityEnum.button,
   triggerImageDownload: false,
   queryParams: '',
-  // eslint-disable-next-line no-restricted-globals
-  domain: `https://${location.host}`,
+  domain: environment.host,
 };
 
 export const generatorReducer = createReducer(
@@ -100,10 +100,12 @@ export const generatorReducer = createReducer(
   ),
   on(
     setGeneratorSidebarVisibility,
-    (state: GeneratorState, { sidebarVisibility }): GeneratorState => ({
-      ...state,
-      sidebarVisibility,
-    }),
+    (state: GeneratorState, { sidebarVisibility }): GeneratorState => {
+      return {
+        ...state,
+        sidebarVisibility,
+      };
+    },
   ),
   on(
     toggleGeneratorTriggerImmediateDownload,

@@ -30,6 +30,15 @@ export const selectPatientA = createSelector(selectState, (state: PatientState) 
 
 export const selectPatientB = createSelector(selectState, (state: PatientState) => state.patientB);
 
+export const selectGroupADetails = createSelector(
+  selectState,
+  (state: PatientState) => state.groupADetails,
+);
+export const selectGroupBDetails = createSelector(
+  selectState,
+  (state: PatientState) => state.groupBDetails,
+);
+
 export const selectPatientADetails = createSelector(
   selectState,
   (state: PatientState) => state.patientADetails,
@@ -51,9 +60,18 @@ export const selectPatientSelection = createSelector(
 );
 
 export const selectGeMin = createSelector(selectState, (state: PatientState) => state.geMin);
-export const selectGeMidRange = createSelector(selectState, (state: PatientState) => state.geMidRange);
+
+export const selectGeMidRange = createSelector(
+  selectState,
+  (state: PatientState) => state.geMidRange,
+);
 
 export const selectGeMax = createSelector(selectState, (state: PatientState) => state.geMax);
+
 export const selectScoreMin = createSelector(selectState, (state: PatientState) => state.scoreMin);
-export const selectScoreMidRange = createSelector(selectState, (state: PatientState) => state.scoreMidRange);
+
+export const selectScoreMidRange = createSelector(
+  selectState,
+  (state: PatientState) => state.scoreMidRange,
+);
 export const selectScoreMax = createSelector(selectState, (state: PatientState) => state.scoreMax);

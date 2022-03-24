@@ -7,6 +7,7 @@ import {
   faArrowCircleDown,
   faBars,
   faClone,
+  faComments,
   faDownload,
   faFileImport,
   faHospitalUser,
@@ -27,7 +28,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { GraphComponent } from './components/graph/graph.component';
-import { LayoutComponent } from './layout/layout/layout.component';
 import { SidebarPatientsComponent } from './components/sidebar-patients/sidebar-patients.component';
 import { SidebarNodesComponent } from './components/sidebar-nodes/sidebar-nodes.component';
 import { SidebarLayoutComponent } from './components/sidebar-layout/sidebar-layout.component';
@@ -68,13 +68,18 @@ import {
   SidebarImportFormComponent,
 } from './components/sidebar-import-form/sidebar-import-form.component';
 import { NormPipe } from './core/pipe/norm.pipe';
-import { SidebarGeneratorComponentVisibilityComponent } from './components/sidebar-generator-component-visibility/sidebar-generator-component-visibility.component';
-import { SidebarGeneratorResultComponent } from './components/sidebar-generator-result/sidebar-generator-result.component';
+import {
+  SidebarGeneratorComponentVisibilityComponent,
+} from './components/sidebar-generator-component-visibility/sidebar-generator-component-visibility.component';
+import {
+  SidebarGeneratorResultComponent,
+} from './components/sidebar-generator-result/sidebar-generator-result.component';
+import { HomeComponent } from './layout/home/home.component';
+import { NetworkComponent } from './layout/network/network.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LayoutComponent,
     SidebarComponent,
     GraphComponent,
     SidebarPatientsComponent,
@@ -96,6 +101,8 @@ import { SidebarGeneratorResultComponent } from './components/sidebar-generator-
     NormPipe,
     SidebarGeneratorComponentVisibilityComponent,
     SidebarGeneratorResultComponent,
+    HomeComponent,
+    NetworkComponent,
   ],
   imports: [
     BrowserModule,
@@ -132,6 +139,7 @@ export class AppModule {
       faClone,
       faDownload,
       faFileImport,
+      faComments,
     );
   }
 }

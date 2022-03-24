@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { forkJoin, Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { AppState } from '../app.state';
 import {
   hydrateAbort,
@@ -21,7 +21,6 @@ import {
   hydrateTriggerDownloadSuccess,
   hydrationEnded,
   loadDataFailure,
-  loadDataJsonSuccess,
   loadDataSuccess,
   loadQueryParams,
   markMultipleNodes,
@@ -29,6 +28,8 @@ import {
 import { ApiService } from '../../service/api.service';
 import { selectConfig } from './hydrator.selectors';
 import {
+  selectGroupADetails,
+  selectGroupBDetails,
   selectPatientA,
   selectPatientB,
   selectPatientGroupA,
@@ -162,13 +163,15 @@ export class HydratorEffects {
 
   hydratePatientAPatientB$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadDataJsonSuccess, loadDataSuccess),
+      ofType(loadDataSuccess),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
         this.store.select(selectPatientGroupA),
         this.store.select(selectPatientGroupB),
+        this.store.select(selectGroupADetails),
+        this.store.select(selectGroupBDetails),
       ]),
-      switchMap(([, config, patientsA, patientsB]) => {
+      switchMap(([, config, patientsA, patientsB, detailsA, detailsB]) => {
         if (!config) {
           return [hydrateAbort()];
         }
@@ -179,33 +182,26 @@ export class HydratorEffects {
 
         let patientA: Patient | null = null;
         let patientB: Patient | null = null;
-        const observables: {
-          patientADetails?: Observable<PatientItem[]>;
-          patientBDetails?: Observable<PatientItem[]>;
-        } = {};
+        let patientADetails: PatientItem[] | null = null;
+        let patientBDetails: PatientItem[] | null = null;
 
         if (config.pa) {
           patientA = patientsA.find((a) => a.name === config.pa) ?? null;
-          observables.patientADetails = this.apiService.loadPatientDetails(config.pa);
+          patientADetails = detailsA[config.pa];
         }
         if (config.pb) {
           patientB = patientsB.find((a) => a.name === config.pb) ?? null;
-          observables.patientADetails = this.apiService.loadPatientDetails(config.pb);
+          patientBDetails = detailsB[config.pb];
         }
 
-        return forkJoin(observables).pipe(
-          map((payload: { patientADetails: PatientItem[]; patientBDetails: PatientItem[] }) => {
-            return hydratePatientAPatientBSuccess({
-              patientADetails: payload.patientADetails ?? [],
-              patientBDetails: payload.patientBDetails ?? [],
-              patientA,
-              patientB,
-            });
+        return [
+          hydratePatientAPatientBSuccess({
+            patientA,
+            patientB,
+            patientADetails: patientADetails ?? [],
+            patientBDetails: patientBDetails ?? [],
           }),
-          catchError(() => {
-            return of(hydratePatientAPatientBFailure());
-          }),
-        );
+        ];
       }),
     );
   });

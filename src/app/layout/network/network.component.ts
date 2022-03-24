@@ -1,28 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from '../../data/state/app.state';
+import { Store } from '@ngrx/store';
+import { ActivatedRoute } from '@angular/router';
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
+import { AppState } from '../../data/state/app.state';
 import {
   selectSidebarVisibility,
   selectSidebarVisibilityDownload,
-  selectSidebarVisibilityGenerator, selectSidebarVisibilityImport,
+  selectSidebarVisibilityGenerator,
+  selectSidebarVisibilityImport,
   selectSidebarVisibilityImpressum,
   selectSidebarVisibilityLayout,
   selectSidebarVisibilityNodes,
   selectSidebarVisibilityPatients,
   selectSidebarVisibilityThreshold,
 } from '../../data/state/sidebar/sidebar.selectors';
-import { loadQueryParams } from '../../data/state/hydrator/hydrator.actions';
 import { selectHeadline } from '../../data/state/network/network.selectors';
+import { loadQueryParams } from '../../data/state/hydrator/hydrator.actions';
 
 @Component({
-  selector: 'app-layout',
-  templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss'],
+  selector: 'app-network',
+  templateUrl: './network.component.html',
+  styleUrls: ['./network.component.scss'],
 })
-export class LayoutComponent implements OnInit {
+export class NetworkComponent implements OnInit {
   sidebarVisible$!: Observable<ComponentVisibilityEnum>;
 
   sidebarImportVisible$!: Observable<ComponentVisibilityEnum>;

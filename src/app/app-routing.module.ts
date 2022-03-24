@@ -1,10 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutComponent } from './layout/layout/layout.component';
+import { HomeComponent } from './layout/home/home.component';
+import { NetworkComponent } from './layout/network/network.component';
 
 const routes: Routes = [
-  { path: '', component: LayoutComponent },
-  { path: 'cx/:uuid', component: LayoutComponent },
+  { path: '',
+    component: NetworkComponent,
+  },
+  {
+    path: 'cx/:uuid',
+    component: NetworkComponent,
+    canActivate: []
+  },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

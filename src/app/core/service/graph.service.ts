@@ -588,8 +588,8 @@ export class GraphService {
    */
   private setColorMap(minValue: number, maxValue: number) {
     const midPoint = maxValue - (maxValue - minValue) / 2;
-    const colorMap1 = `mapData(color, ${minValue}, ${maxValue}, ${this.colors.blue}, ${this.colors.yellow})`;
-    const colorMap2 = `mapData(color, ${minValue}, ${maxValue}, ${this.colors.yellow}, ${this.colors.red})`;
+    const colorMap1 = `mapData(color, ${minValue}, ${midPoint}, ${this.colors.blue}, ${this.colors.yellow})`;
+    const colorMap2 = `mapData(color, ${midPoint}, ${maxValue}, ${this.colors.yellow}, ${this.colors.red})`;
 
     this.cyCore
       .style()

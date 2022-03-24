@@ -12,7 +12,7 @@
       [sidebarImpressumVisible]="sidebarImpressumVisible$ | async"
     ></app-sidebar>
   </div>
-  <div [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-8' : 'col'">
+  <div class="light-mode" [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-8' : 'col'">
     <app-graph [headline]="headline$ | async"></app-graph>
   </div>
 </div>

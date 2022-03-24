@@ -18,7 +18,7 @@ export class HydratorService {
     networkAttributes: any,
     patients: PatientCollection,
     labels: string[],
-    uuid: string,
+    uuid: string | null,
   ) {
     let patientGroups: string[] = [];
     let patientNames: string[] = [];

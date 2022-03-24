@@ -4,7 +4,7 @@ import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontaweso
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  faArrowCircleDown,
+  faArrowCircleDown, faArrowLeft,
   faBars,
   faClone,
   faComments,
@@ -134,6 +134,7 @@ export class AppModule {
       faDownload,
       faFileImport,
       faComments,
+      faArrowLeft,
     );
   }
 }

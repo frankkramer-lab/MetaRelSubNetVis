@@ -11,11 +11,6 @@ export const setSidebarVisibility = createAction(
   props<{ visibility: ComponentVisibilityEnum }>(),
 );
 
-export const toggleSidebarVisibilityImport = createAction(
-  "[Sidebar Component] change sidebar's import component visibility",
-  props<{ visibilityImport: ComponentVisibilityEnum }>(),
-);
-
 export const toggleSidebarVisibilityPatients = createAction(
   "[Sidebar Component] change sidebar's patients component visibility",
   props<{ visibilityPatients: ComponentVisibilityEnum }>(),
@@ -51,3 +46,4 @@ export const toggleSidebarVisibilityImpressum = createAction(
   props<{ visibilityImpressum: ComponentVisibilityEnum }>(),
 );
 
+export const navigateHome = createAction('[Sidebar Component] navigate home');

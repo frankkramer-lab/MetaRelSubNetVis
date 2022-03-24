@@ -4,6 +4,7 @@ import { ThresholdEffects } from './threshold/threshold.effects';
 import { NodesEffects } from './nodes/nodes.effects';
 import { HydratorEffects } from './hydrator/hydrator.effects';
 import { GeneratorEffects } from './generator/generator.effects';
+import { SidebarEffects } from './sidebar/sidebar.effects';
 
 export const effects: any[] = [
   PatientEffects,
@@ -12,4 +13,5 @@ export const effects: any[] = [
   NodesEffects,
   HydratorEffects,
   GeneratorEffects,
+  SidebarEffects,
 ];

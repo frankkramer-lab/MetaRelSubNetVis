@@ -2,11 +2,11 @@ import { createReducer, on } from '@ngrx/store';
 import { SidebarState } from './sidebar.state';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 import {
+  navigateHome,
   setSidebarVisibility,
   toggleSidebarVisibility,
   toggleSidebarVisibilityDownload,
   toggleSidebarVisibilityGenerator,
-  toggleSidebarVisibilityImport,
   toggleSidebarVisibilityImpressum,
   toggleSidebarVisibilityLayout,
   toggleSidebarVisibilityNodes,
@@ -36,9 +36,6 @@ export const sidebarReducer = createReducer(
       visibility,
     }),
   ),
-  on(toggleSidebarVisibilityImport, (state: SidebarState, { visibilityImport }): SidebarState => {
-    return { ...state, visibilityImport };
-  }),
   on(
     toggleSidebarVisibilityPatients,
     (state: SidebarState, { visibilityPatients }): SidebarState => ({

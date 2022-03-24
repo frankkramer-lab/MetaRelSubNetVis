@@ -3,9 +3,24 @@
   <!-- headline -->
   <h3 class="mt-2 m-2">
     <div class="row">
-      <div class="col">EXPLORE THE NETWORKS</div>
       <div class="col-auto">
-        <fa-icon (click)="toggleSidebar(1)" class="cursor" icon="times"></fa-icon>
+        <fa-icon (click)="returnHome()"
+                 placement="right"
+                 ngbTooltip="Return to home"
+                 container="body"
+                 [openDelay]="1000"
+                 class="cursor"
+                 icon="arrow-left"></fa-icon>
+      </div>
+      <div class="col">MetaRelSubNetVis</div>
+      <div class="col-auto">
+        <fa-icon (click)="toggleSidebar(1)"
+                 placement="left"
+                 ngbTooltip="Hide the sidebar"
+                 container="body"
+                 [openDelay]="1000"
+                 class="cursor"
+                 icon="times"></fa-icon>
       </div>
     </div>
   </h3>
@@ -142,7 +157,11 @@
 
 <!-- sidebar button visible -->
 <ng-container *ngIf="sidebarVisible === 1">
-  <button class="btn btn-outline-dark mt-2" (click)="toggleSidebar(0)">
-    <fa-icon icon="bars"></fa-icon>
-  </button>
+  <fa-icon
+    size="3x"
+    class="cursor m-1"
+    (click)="toggleSidebar(0)"
+    placement="right"
+    [openDelay]="1000"
+    ngbTooltip="Show the sidebar" icon="bars"></fa-icon>
 </ng-container>

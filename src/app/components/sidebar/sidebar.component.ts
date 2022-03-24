@@ -3,16 +3,17 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../data/state/app.state';
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
 import {
+  navigateHome,
   toggleSidebarVisibility,
   toggleSidebarVisibilityDownload,
   toggleSidebarVisibilityGenerator,
-  toggleSidebarVisibilityImport,
   toggleSidebarVisibilityImpressum,
   toggleSidebarVisibilityLayout,
   toggleSidebarVisibilityNodes,
   toggleSidebarVisibilityPatients,
   toggleSidebarVisibilityThreshold,
 } from '../../data/state/sidebar/sidebar.actions';
+import { setUuid } from '../../data/state/network/network.actions';
 
 @Component({
   selector: 'app-sidebar',
@@ -38,24 +39,15 @@ export class SidebarComponent {
 
   @Input() sidebarImpressumVisible!: ComponentVisibilityEnum | null;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>) {
+  }
+
+  returnHome() {
+    this.store.dispatch(navigateHome());
+  }
 
   toggleSidebar(visibility: ComponentVisibilityEnum) {
     this.store.dispatch(toggleSidebarVisibility({ visibility }));
-  }
-
-  toggleImport(visibility: ComponentVisibilityEnum | null) {
-    if (visibility === null) {
-      return;
-    }
-    this.store.dispatch(
-      toggleSidebarVisibilityImport({
-        visibilityImport:
-          visibility === ComponentVisibilityEnum.full
-            ? ComponentVisibilityEnum.button
-            : ComponentVisibilityEnum.full,
-      }),
-    );
   }
 
   togglePatients(visibility: ComponentVisibilityEnum | null) {

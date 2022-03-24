@@ -26,9 +26,6 @@ export const hydratorReducer = createReducer(
     if (params.sb !== undefined) {
       config.sb = Number(params.sb);
     }
-    if (params.cIn !== undefined) {
-      config.cIn = Number(params.cIn);
-    }
     if (params.cP !== undefined) {
       config.cP = Number(params.cP);
     }

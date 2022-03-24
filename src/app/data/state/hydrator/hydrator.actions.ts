@@ -89,7 +89,6 @@ export const hydrateSidebarVisibilitySuccess = createAction(
   '[Hydrator Effects] hydrate sidebar visibility success',
   props<{
     visibility: ComponentVisibilityEnum;
-    cmpImportVis: ComponentVisibilityEnum;
     cmpPatientsVis: ComponentVisibilityEnum;
     cmpThresholdVis: ComponentVisibilityEnum;
     cmpNodesVis: ComponentVisibilityEnum;

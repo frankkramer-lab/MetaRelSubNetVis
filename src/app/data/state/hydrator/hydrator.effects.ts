@@ -281,7 +281,6 @@ export class HydratorEffects {
 
         return hydrateSidebarVisibilitySuccess({
           visibility: config.sb ?? 0,
-          cmpImportVis: config.cIn ?? 1,
           cmpPatientsVis: config.cP ?? 1,
           cmpThresholdVis: config.cT ?? 1,
           cmpNodesVis: config.cN ?? 1,

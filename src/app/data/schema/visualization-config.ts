@@ -10,10 +10,6 @@ export interface VisualizationConfig {
    */
   sb?: ComponentVisibilityEnum;
   /**
-   * Sidebar's import component visibility
-   */
-  cIn?: ComponentVisibilityEnum;
-  /**
    * Sidebar's patient component visibilty
    */
   cP?: ComponentVisibilityEnum;

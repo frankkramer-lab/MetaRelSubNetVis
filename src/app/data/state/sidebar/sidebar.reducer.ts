@@ -95,7 +95,6 @@ export const sidebarReducer = createReducer(
       state: SidebarState,
       {
         visibility,
-        cmpImportVis,
         cmpPatientsVis,
         cmpThresholdVis,
         cmpNodesVis,
@@ -108,7 +107,6 @@ export const sidebarReducer = createReducer(
       return {
         ...state,
         visibility,
-        visibilityImport: cmpImportVis,
         visibilityPatients: cmpPatientsVis,
         visibilityThreshold: cmpThresholdVis,
         visibilityNodes: cmpNodesVis,

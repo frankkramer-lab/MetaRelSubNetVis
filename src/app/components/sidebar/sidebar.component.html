@@ -11,23 +11,6 @@
   </h3>
 
   <div class="d-grid gap-0 mb-4">
-    <!-- IMPORT -->
-    <ng-container *ngIf="sidebarImportVisible !== 2">
-      <button
-        class="btn btn-dark icon-hover btn-lg text-start rounded-0"
-        type="button"
-        (click)="toggleImport(sidebarImportVisible)"
-      >
-        <fa-icon icon="file-import" [ngClass]="sidebarImportVisible === 0 ? 'text-info' : ''">
-        </fa-icon>
-        &nbsp;Import
-      </button>
-      <div *ngIf="sidebarImportVisible === 0">
-        <div class="p-3">
-          <app-sidebar-import></app-sidebar-import>
-        </div>
-      </div>
-    </ng-container>
 
     <!-- PATIENTS -->
     <ng-container *ngIf="sidebarPatientsVisible !== 2">

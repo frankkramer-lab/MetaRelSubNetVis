@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
@@ -16,14 +16,14 @@ import {
   selectSidebarVisibilityThreshold,
 } from '../../data/state/sidebar/sidebar.selectors';
 import { selectHeadline } from '../../data/state/network/network.selectors';
-import { loadQueryParams } from '../../data/state/hydrator/hydrator.actions';
+import { initializeCore } from '../../data/state/network/network.actions';
 
 @Component({
   selector: 'app-network',
   templateUrl: './network.component.html',
   styleUrls: ['./network.component.scss'],
 })
-export class NetworkComponent implements OnInit {
+export class NetworkComponent implements OnInit, AfterViewInit {
   sidebarVisible$!: Observable<ComponentVisibilityEnum>;
 
   sidebarImportVisible$!: Observable<ComponentVisibilityEnum>;
@@ -58,9 +58,9 @@ export class NetworkComponent implements OnInit {
     this.sidebarImpressumVisible$ = this.store.select(selectSidebarVisibilityImpressum);
 
     this.headline$ = this.store.select(selectHeadline);
+  }
 
-    this.route.queryParams.subscribe((params) => {
-      this.store.dispatch(loadQueryParams({ params }));
-    });
+  ngAfterViewInit(): void {
+    this.store.dispatch(initializeCore());
   }
 }

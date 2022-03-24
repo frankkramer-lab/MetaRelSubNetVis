@@ -1,37 +1,50 @@
 <!-- headline -->
 <div class="d-block m-3">
   <h1 class="display-3 row">
-    <div class="col-10">
-      MetaRelSubNetVis
-    </div>
+    <div class="col-10">MetaRelSubNetVis</div>
     <div class="col-2">
       <img
         class="img-fluid"
         src="https://assets.uni-augsburg.de/media/filer_public_thumbnails/filer_public/69/0d/690d57b6-7679-411b-8a60-6ae0d02122ef/misitsvg.png__1080x2000_q85_subject_location-215%2C89_subsampling-2.png"
-        alt="Chair logo">
+        alt="Chair logo"
+      />
     </div>
   </h1>
-  <hr>
+  <hr />
 </div>
 
 <!-- content -->
 <div class="m-4">
-
   <h5 class="display-5">What is the purpose of this app?</h5>
 
   <div class="accordion accordion-flush" id="homeAccordion">
-
     <!-- ABOUT -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="accordionAboutHead">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionAboutContent" aria-expanded="false" aria-controls="accordionAboutContent">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#accordionAboutContent"
+          aria-expanded="false"
+          aria-controls="accordionAboutContent"
+        >
           About
         </button>
       </h2>
-      <div id="accordionAboutContent" class="accordion-collapse collapse" aria-labelledby="accordionAboutHead" data-bs-parent="#homeAccordion">
+      <div
+        id="accordionAboutContent"
+        class="accordion-collapse collapse"
+        aria-labelledby="accordionAboutHead"
+        data-bs-parent="#homeAccordion"
+      >
         <div class="accordion-body">
-          WIP
-          Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.
+
+          Comparing groups of patients with respect to biological specifics is one of the building
+          blocks for precision medicine. Such a data-driven analysis does not have to be abstract.
+          With MetaRelSubNetVis we provide a visualization tool that allows users to inspect
+          differences between two groups of patients.
+
         </div>
       </div>
     </div>
@@ -39,13 +52,30 @@
     <!-- NDEX -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="accordionNdexHead">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionNdexContent" aria-expanded="false" aria-controls="accordionNdexContent">
-          Getting started
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#accordionNdexContent"
+          aria-expanded="false"
+          aria-controls="accordionNdexContent"
+        >
+          NDEx
         </button>
       </h2>
-      <div id="accordionNdexContent" class="accordion-collapse collapse" aria-labelledby="accordionNdexHead" data-bs-parent="#homeAccordion">
+      <div
+        id="accordionNdexContent"
+        class="accordion-collapse collapse"
+        aria-labelledby="accordionNdexHead"
+        data-bs-parent="#homeAccordion"
+      >
         <div class="accordion-body">
-          Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.
+          The <b>N</b>etwork <b>D</b>ata <b>Ex</b>change is an online platform specifically designed
+          for the distribution of biological network data among scientists. Users can upload, share
+          and distribute networks in diverse formats and sizes. For further information, please read
+          their publication <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4649937/"
+                               target="_blank">NDEx, the Network Data Exchange</a> or visit the <a
+          href="https://www.ndexbio.org/" target="_blank">website</a>.
         </div>
       </div>
     </div>
@@ -53,79 +83,218 @@
     <!-- START -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="accordionStartHead">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionStartContent" aria-expanded="false" aria-controls="accordionStartContent">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#accordionStartContent"
+          aria-expanded="false"
+          aria-controls="accordionStartContent"
+        >
           Getting started
         </button>
       </h2>
-      <div id="accordionStartContent" class="accordion-collapse collapse" aria-labelledby="accordionStartHead" data-bs-parent="#homeAccordion">
+      <div
+        id="accordionStartContent"
+        class="accordion-collapse collapse"
+        aria-labelledby="accordionStartHead"
+        data-bs-parent="#homeAccordion"
+      >
         <div class="accordion-body">
-          Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.
+          Placeholder content for this accordion, which is intended to demonstrate the
+          <code>.accordion-flush</code>
+          class. This is the first item's accordion body.
         </div>
       </div>
     </div>
-
   </div>
 
-  <hr>
+  <hr />
 
-  <h5 class="display-5">Find a network</h5>
+  <h5 class="display-5">Find a network on NDEx</h5>
 
-  todo
+  <!-- FORM -->
+  <div class="input-group">
+    <input
+      [(ngModel)]="keyword"
+      type="text"
+      class="form-control"
+      placeholder="Search..."
+      aria-describedby="httpSearch"
+      [readOnly]="requestInProgress"
+      (keyup.enter)="searchNdex()"
+    />
+    <div class="input-group-append">
+      <button
+        class="btn btn-outline-primary"
+        type="button"
+        id="httpSearchPrivate"
+        container="body"
+        data-toggle="tooltip"
+        ngbTooltip="Search NDEx by entering a term"
+        [openDelay]="1000"
+        placement="left"
+        (click)="searchNdex()"
+      >
+        <span *ngIf="!requestInProgress">Search</span>
+        <span *ngIf="requestInProgress" class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </span>
+      </button>
+    </div>
+  </div>
 
-  <hr>
+  <!-- SEARCH RESULT -->
+  <div class="mt-2 row">
+    <!-- selector -->
+    <div class="col-4">
+      <ul class="list-group">
+        <ng-container *ngFor="let network of networks; let networkIndex = index">
+          <li
+            class="list-group-item cursor"
+            (click)="networkDetailsIndex = networkIndex"
+            [ngClass]="networkDetailsIndex === networkIndex ? 'active' : ''"
+            [attr.aria-current]="networkDetailsIndex === networkIndex"
+          >
+            {{ network.name }}
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+
+    <!-- content -->
+    <div class="col-8">
+      <ng-container *ngIf="networkDetailsIndex !== null">
+        <!-- details table -->
+        <table class="table">
+          <thead>
+          <th>UUID</th>
+          <th>Owner</th>
+          <th># Nodes</th>
+          <th># Edges</th>
+          </thead>
+          <tbody>
+          <td>{{ networks[networkDetailsIndex].externalId }}</td>
+          <td>{{ networks[networkDetailsIndex].owner }}</td>
+          <td>{{ networks[networkDetailsIndex].nodeCount }}</td>
+          <td>{{ networks[networkDetailsIndex].edgeCount }}</td>
+          </tbody>
+        </table>
+
+        <!-- network description -->
+        <div class="card mb-2">
+          <div class="card-body">
+            <h5 class="card-title">Description</h5>
+            <ng-container
+              *ngIf="
+                networks[networkDetailsIndex].description.length > 0;
+                then blockDescription;
+                else blockDefault
+              "
+            ></ng-container>
+            <ng-template #blockDescription>
+              <p class="card-text" [innerHTML]="networks[networkDetailsIndex].description"></p>
+            </ng-template>
+            <ng-template #blockDefault class="card-text">
+              <p>No description given</p>
+            </ng-template>
+          </div>
+        </div>
+
+        <!-- links -->
+        <div class="row">
+          <div class="col d-grid gap-0">
+            <button class="btn btn-info"
+                    (click)="setupWorkspace()">Open the app with this network</button>
+          </div>
+          <div class="col d-grid gap-0">
+            <a [href]="getLinkToNdexNetwork()"
+               target="_blank"
+               class="btn btn-outline-info">Open this network on NDEx</a>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <hr />
 
   <h5 class="display-5">FAQ</h5>
 
   <div class="accordion accordion-flush" id="faqAccordion">
-
     <!-- Question 1 -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="faq1Q">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1A" aria-expanded="false" aria-controls="faq1A">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq1A"
+          aria-expanded="false"
+          aria-controls="faq1A"
+        >
           <fa-icon icon="comments"></fa-icon>
           &nbsp;Question 1
         </button>
       </h2>
-      <div id="faq1A" class="accordion-collapse collapse" aria-labelledby="faq1Q" data-bs-parent="#faqAccordion">
-        <div class="accordion-body">
-          Answer 1
-        </div>
+      <div
+        id="faq1A"
+        class="accordion-collapse collapse"
+        aria-labelledby="faq1Q"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">Answer 1</div>
       </div>
     </div>
 
     <!-- Question 2 -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="faq2Q">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2A" aria-expanded="false" aria-controls="faq2A">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq2A"
+          aria-expanded="false"
+          aria-controls="faq2A"
+        >
           <fa-icon icon="comments"></fa-icon>
           &nbsp;Question 2
         </button>
       </h2>
-      <div id="faq2A" class="accordion-collapse collapse" aria-labelledby="faq2Q" data-bs-parent="#faqAccordion">
-        <div class="accordion-body">
-          Answer 2
-        </div>
+      <div
+        id="faq2A"
+        class="accordion-collapse collapse"
+        aria-labelledby="faq2Q"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">Answer 2</div>
       </div>
     </div>
 
     <!-- Question 3 -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="faq3Q">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3A" aria-expanded="false" aria-controls="faq3A">
+        <button
+          class="accordion-button collapsed"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq3A"
+          aria-expanded="false"
+          aria-controls="faq3A"
+        >
           <fa-icon icon="comments"></fa-icon>
           &nbsp;Question 3
         </button>
       </h2>
-      <div id="faq3A" class="accordion-collapse collapse" aria-labelledby="faq3Q" data-bs-parent="#faqAccordion">
-        <div class="accordion-body">
-          Answer 3
-        </div>
+      <div
+        id="faq3A"
+        class="accordion-collapse collapse"
+        aria-labelledby="faq3Q"
+        data-bs-parent="#faqAccordion"
+      >
+        <div class="accordion-body">Answer 3</div>
       </div>
     </div>
-
   </div>
 </div>
-
-
-
-

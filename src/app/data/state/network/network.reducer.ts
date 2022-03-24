@@ -1,13 +1,13 @@
 import { createReducer, on } from '@ngrx/store';
 import { NetworkState } from './network.state';
-import { loadDataSuccess, loadQueryParams } from '../hydrator/hydrator.actions';
+import { loadDataFailure, loadDataSuccess, loadQueryParams } from '../hydrator/hydrator.actions';
 import { setUuid } from './network.actions';
 
 const initialState: NetworkState = {
   network: null,
   isLoading: false,
   headline: null,
-  uuid: 'a420aaee-4be9-11ec-b3be-0ac135e8bacf',
+  uuid: null,
 };
 
 export const networkReducer = createReducer(
@@ -20,7 +20,7 @@ export const networkReducer = createReducer(
       isLoading: true,
     }),
   ),
-  on(loadQueryParams, (state: NetworkState): NetworkState => ({ ...state })), // todo add isLoading check
+  on(loadQueryParams, (state: NetworkState): NetworkState => ({ ...state, isLoading: true })),
   on(
     loadDataSuccess,
     (state: NetworkState, { network, headline }): NetworkState => ({
@@ -30,4 +30,5 @@ export const networkReducer = createReducer(
       network,
     }),
   ),
+  on(loadDataFailure, (state: NetworkState): NetworkState => ({ ...state, isLoading: false })),
 );

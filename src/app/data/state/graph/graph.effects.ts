@@ -50,23 +50,17 @@ import {
   selectTransparentBackground,
 } from '../download/download.selectors';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
-import {
-  hydrateSidebarVisibilityFailure,
-  hydrateSidebarVisibilitySuccess,
-  hydrateTriggerDownloadSuccess,
-  loadDataJsonSuccess,
-  loadDataSuccess,
-  markMultipleNodes,
-} from '../hydrator/hydrator.actions';
+import { hydrateTriggerDownloadSuccess, markMultipleNodes } from '../hydrator/hydrator.actions';
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
+import { initializeCore } from '../network/network.actions';
 
 @Injectable()
 export class GraphEffects {
   processGraphCore$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(loadDataJsonSuccess, loadDataSuccess),
+        ofType(initializeCore),
         concatLatestFrom(() => this.store.select(selectNetwork)),
         map(([, network]) => {
           if (!network) {
@@ -79,17 +73,9 @@ export class GraphEffects {
     { dispatch: false },
   );
 
-  // is also called during hydration
   renderGraph$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(
-        setDefined,
-        toggleShowMtbResults,
-        setNodeColorBy,
-        setNodeSizeBy,
-        hydrateSidebarVisibilitySuccess,
-        hydrateSidebarVisibilityFailure,
-      ),
+      ofType(setDefined, toggleShowMtbResults, setNodeColorBy, setNodeSizeBy),
       concatLatestFrom(() => [
         this.store.select(selectPatientADetails),
         this.store.select(selectPatientBDetails),

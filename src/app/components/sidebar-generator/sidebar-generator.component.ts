@@ -63,7 +63,7 @@ import { selectUuid } from '../../data/state/network/network.selectors';
   styleUrls: ['./sidebar-generator.component.scss'],
 })
 export class SidebarGeneratorComponent implements OnInit {
-  uuid$!: Observable<string>;
+  uuid$!: Observable<string | null>;
 
   groupLabelA$!: Observable<string>;
 

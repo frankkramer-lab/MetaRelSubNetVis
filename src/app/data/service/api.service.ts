@@ -1,44 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PatientCollection } from '../schema/patient-collection';
-import { PatientItem } from '../schema/patient-item';
-import { Network } from '../schema/network';
-import { Threshold } from '../schema/threshold';
+import { NetworkSearch } from '../schema/network-search';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   /**
-   * Path to network.ts
-   * @private
-   */
-  private readonly urlNetwork = 'assets/data/network.json';
-
-  /**
-   * Path to thresholds
-   * @private
-   */
-  private readonly urlThresholds = 'assets/data/thresholds.json';
-
-  /**
-   * Path to patients
-   * @private
-   */
-  private readonly urlPatients = 'assets/data/patients.json';
-
-  /**
-   * Path prefix to patients directory
-   * @private
-   */
-  private readonly urlPatientPrefix = 'assets/data/patient/';
-
-  /**
    * Public NDExBio API.
    * @private
    */
-  private readonly ndexPublicApi = 'https://public.ndexbio.org/v2/network/';
+  private readonly ndexPublicApi = 'https://public.ndexbio.org/v2/';
+  /**
+   * Public NDExBio domain
+   */
+  readonly ndexPublicDomain = 'https://www.ndexbio.org/viewer/networks/';
 
   /**
    * Constructor
@@ -47,40 +24,29 @@ export class ApiService {
   constructor(private http: HttpClient) {
   }
 
-  /**
-   * Loading the initially rendered network.ts
-   */
-  loadNetwork(): Observable<Network> {
-    return this.http.get<Network>(this.urlNetwork);
-  }
+  searchNdex(keyword: string): Observable<NetworkSearch> {
+    const sanitizedSearchTerm = keyword.trim();
 
-  /**
-   * Loading thresholds
-   */
-  loadThresholds(): Observable<Threshold> {
-    return this.http.get<Threshold>(this.urlThresholds);
-  }
+    if (sanitizedSearchTerm.length === 0) {
+      return new Observable<NetworkSearch
+        >((o) => o.next());
+    }
 
-  /**
-   * Loading patients subsumed as classes of metastatic and nonmetastatic patients
-   */
-  loadPatientsClassified(): Observable<PatientCollection> {
-    return this.http.get<PatientCollection>(this.urlPatients);
-  }
+    const body: any = {
+      searchString: sanitizedSearchTerm,
+    };
 
-  /**
-   * Loading specific patients with protein details necessary for updating the network.ts visualization
-   * @param id Name of the specified patient
-   */
-  loadPatientDetails(id: string): Observable<PatientItem[]> {
-    return this.http.get<PatientItem[]>(`${this.urlPatientPrefix}${id}.json`);
+    const url = `${this.ndexPublicApi}search/network?size=10`;
+    return this.http.post(url, body) as Observable<NetworkSearch>;
   }
 
   /**
    * Loading data from NDEx by a specified UUID.
    * @param uuid identifier for the network of interest
    */
-  loadDataNdex(uuid: string): Observable<Object> {
-    return this.http.get(this.ndexPublicApi + uuid);
+  loadNetwork(uuid: string): Observable<Object> {
+    return this.http.get(`${this.ndexPublicApi}network/${uuid}`);
   }
+
+
 }

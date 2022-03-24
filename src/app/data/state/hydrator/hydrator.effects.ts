@@ -3,6 +3,7 @@ import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
+import { Router } from '@angular/router';
 import { AppState } from '../app.state';
 import {
   hydrateAbort,
@@ -78,7 +79,7 @@ export class HydratorEffects {
           return of(loadDataFailure());
         }
 
-        return this.apiService.loadDataNdex(action.uuid).pipe(
+        return this.apiService.loadNetwork(action.uuid).pipe(
           map((data) => {
             let nodesDictionary: any = {};
             let nodesRaw: any[] = [];
@@ -278,8 +279,6 @@ export class HydratorEffects {
       map(([, config]) => {
         if (!config || config.sb === null) return hydrateSidebarVisibilityFailure();
 
-        console.log(config);
-
         return hydrateSidebarVisibilitySuccess({
           visibility: config.sb ?? 0,
           cmpImportVis: config.cIn ?? 1,
@@ -294,6 +293,18 @@ export class HydratorEffects {
       }),
     );
   });
+
+  triggerRouting$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(hydrateSidebarVisibilitySuccess, hydrateSidebarVisibilityFailure),
+        map(() => {
+          this.router.navigate(['/network']);
+        }),
+      );
+    },
+    { dispatch: false },
+  );
 
   markNodes$ = createEffect(() => {
     return this.actions$.pipe(
@@ -333,5 +344,6 @@ export class HydratorEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private hydratorService: HydratorService,
+    private router: Router,
   ) {}
 }

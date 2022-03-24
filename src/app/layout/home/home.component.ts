@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ApiService } from '../../data/service/api.service';
 import { NetworkSearchItem } from '../../data/schema/network-search-item';
@@ -10,16 +10,29 @@ import { loadQueryParams } from '../../data/state/hydrator/hydrator.actions';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   keyword!: string;
 
   networks!: NetworkSearchItem[];
 
-  networkDetailsIndex: number | null = null;
+  exampleNetwork: NetworkSearchItem | null = null;
+
+  networkSelected: NetworkSearchItem | null = null;
 
   requestInProgress = false;
 
   constructor(private apiService: ApiService, private store: Store<AppState>) {}
+
+  ngOnInit(): void {
+    this.requestInProgress = true;
+    this.apiService.loadNetworkSummary('a420aaee-4be9-11ec-b3be-0ac135e8bacf').subscribe(
+      (data: NetworkSearchItem) => {
+        this.exampleNetwork = data;
+        this.requestInProgress = false;
+      },
+      (error) => console.error(error),
+    );
+  }
 
   searchNdex() {
     if (!this.keyword) {
@@ -40,20 +53,18 @@ export class HomeComponent {
   }
 
   getLinkToNdexNetwork(): string {
-    if (this.networkDetailsIndex !== null) {
-      return `${this.apiService.ndexPublicDomain}${
-        this.networks[this.networkDetailsIndex].externalId
-      }`;
+    if (this.networkSelected !== null) {
+      return `${this.apiService.ndexPublicDomain}${this.networkSelected.externalId}`;
     }
     return '#';
   }
 
   setupWorkspace() {
-    if (this.networkDetailsIndex !== null) {
+    if (this.networkSelected !== null) {
       this.store.dispatch(
         loadQueryParams({
           params: {
-            uuid: 'a420aaee-4be9-11ec-b3be-0ac135e8bacf',
+            uuid: this.networkSelected.externalId,
           },
         }),
       );

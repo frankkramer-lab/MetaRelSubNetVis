@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NetworkSearch } from '../schema/network-search';
+import { NetworkSearchItem } from '../schema/network-search-item';
 
 @Injectable({
   providedIn: 'root',
@@ -44,8 +45,12 @@ export class ApiService {
    * Loading data from NDEx by a specified UUID.
    * @param uuid identifier for the network of interest
    */
-  loadNetwork(uuid: string): Observable<Object> {
-    return this.http.get(`${this.ndexPublicApi}network/${uuid}`);
+  loadNetwork(uuid: string): Observable<any[]> {
+    return this.http.get(`${this.ndexPublicApi}network/${uuid}`) as Observable<any[]>;
+  }
+
+  loadNetworkSummary(uuid: string): Observable<NetworkSearchItem> {
+    return this.http.get(`${this.ndexPublicApi}network/${uuid}/summary`) as Observable<NetworkSearchItem>;
   }
 
 

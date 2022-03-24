@@ -149,12 +149,22 @@
     <!-- selector -->
     <div class="col-4">
       <ul class="list-group">
-        <ng-container *ngFor="let network of networks; let networkIndex = index">
+
+        <li *ngIf="exampleNetwork !== null"
+          class="list-group-item cursor"
+          (click)="networkSelected = exampleNetwork"
+          [ngClass]="exampleNetwork === networkSelected ? 'active' : ''"
+          [attr.aria-current]="exampleNetwork === networkSelected"
+        >
+          [OFFICIAL DEMO]&nbsp;{{ exampleNetwork.name }}
+        </li>
+
+        <ng-container *ngFor="let network of networks">
           <li
             class="list-group-item cursor"
-            (click)="networkDetailsIndex = networkIndex"
-            [ngClass]="networkDetailsIndex === networkIndex ? 'active' : ''"
-            [attr.aria-current]="networkDetailsIndex === networkIndex"
+            (click)="networkSelected = network"
+            [ngClass]="network === networkSelected ? 'active' : ''"
+            [attr.aria-current]="network === networkSelected"
           >
             {{ network.name }}
           </li>
@@ -164,7 +174,7 @@
 
     <!-- content -->
     <div class="col-8">
-      <ng-container *ngIf="networkDetailsIndex !== null">
+      <ng-container *ngIf="networkSelected !== null">
         <!-- details table -->
         <table class="table">
           <thead>
@@ -174,10 +184,10 @@
           <th># Edges</th>
           </thead>
           <tbody>
-          <td>{{ networks[networkDetailsIndex].externalId }}</td>
-          <td>{{ networks[networkDetailsIndex].owner }}</td>
-          <td>{{ networks[networkDetailsIndex].nodeCount }}</td>
-          <td>{{ networks[networkDetailsIndex].edgeCount }}</td>
+          <td>{{ networkSelected.externalId }}</td>
+          <td>{{ networkSelected.owner }}</td>
+          <td>{{ networkSelected.nodeCount }}</td>
+          <td>{{ networkSelected.edgeCount }}</td>
           </tbody>
         </table>
 
@@ -187,13 +197,13 @@
             <h5 class="card-title">Description</h5>
             <ng-container
               *ngIf="
-                networks[networkDetailsIndex].description.length > 0;
+                networkSelected.description.length > 0;
                 then blockDescription;
                 else blockDefault
               "
             ></ng-container>
             <ng-template #blockDescription>
-              <p class="card-text" [innerHTML]="networks[networkDetailsIndex].description"></p>
+              <p class="card-text" [innerHTML]="networkSelected.description"></p>
             </ng-template>
             <ng-template #blockDefault class="card-text">
               <p>No description given</p>

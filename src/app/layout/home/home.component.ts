@@ -28,6 +28,7 @@ export class HomeComponent implements OnInit {
     this.apiService.loadNetworkSummary('a420aaee-4be9-11ec-b3be-0ac135e8bacf').subscribe(
       (data: NetworkSearchItem) => {
         this.exampleNetwork = data;
+        this.networkSelected = this.exampleNetwork;
         this.requestInProgress = false;
       },
       (error) => console.error(error),

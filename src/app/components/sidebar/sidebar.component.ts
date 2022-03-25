@@ -13,7 +13,6 @@ import {
   toggleSidebarVisibilityPatients,
   toggleSidebarVisibilityThreshold,
 } from '../../data/state/sidebar/sidebar.actions';
-import { setUuid } from '../../data/state/network/network.actions';
 
 @Component({
   selector: 'app-sidebar',
@@ -39,8 +38,7 @@ export class SidebarComponent {
 
   @Input() sidebarImpressumVisible!: ComponentVisibilityEnum | null;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   returnHome() {
     this.store.dispatch(navigateHome());

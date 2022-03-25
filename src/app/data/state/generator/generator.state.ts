@@ -14,6 +14,5 @@ export interface GeneratorState {
   imageDownloadConfig: ImageDownloadConfig;
   isImageDownloadConfigValid: boolean;
   triggerImageDownload: boolean;
-  queryParams: string;
   domain: string;
 }

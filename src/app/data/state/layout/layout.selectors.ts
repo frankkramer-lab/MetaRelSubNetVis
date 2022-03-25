@@ -7,6 +7,8 @@ const selectState = createSelector(
   (state: LayoutState) => state,
 );
 
+export const selectLayoutState = createSelector(selectState, (state: LayoutState) => state);
+
 export const selectNodeColorBy = createSelector(
   selectState,
   (state: LayoutState) => state.nodeColorBy,
@@ -27,3 +29,4 @@ export const selectShowMtbResults = createSelector(
   selectState,
   (state: LayoutState) => state.showMtbResults,
 );
+

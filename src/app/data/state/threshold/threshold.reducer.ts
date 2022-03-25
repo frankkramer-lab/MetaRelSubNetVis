@@ -3,6 +3,7 @@ import { ThresholdState } from './threshold.state';
 import { setDefined, setLabelMin } from './threshold.action';
 import {
   hydrateThresholdSuccess,
+  loadDataFailure,
   loadDataSuccess,
   loadQueryParams,
 } from '../hydrator/hydrator.actions';
@@ -20,6 +21,7 @@ const initialState: ThresholdState = {
 export const thresholdReducer = createReducer(
   initialState,
   on(loadQueryParams, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: true })),
+  on(loadDataFailure, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: false })),
   on(loadDataSuccess, (state: ThresholdState, payload): ThresholdState => {
     return {
       ...state,

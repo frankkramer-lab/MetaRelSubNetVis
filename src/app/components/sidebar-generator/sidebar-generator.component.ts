@@ -24,10 +24,8 @@ import {
   selectShowOnlySharedNodes,
 } from '../../data/state/layout/layout.selectors';
 import {
-  selectDomain,
   selectGenCmpVisDownload,
   selectGenCmpVisGenerator,
-  selectGenCmpVisImport,
   selectGenCmpVisImpressum,
   selectGenCmpVisLayout,
   selectGenCmpVisNodes,
@@ -35,9 +33,9 @@ import {
   selectGenCmpVisThreshold,
   selectImageDownloadConfig,
   selectIsImageDownloadConfigValid,
-  selectQueryParams,
   selectSidebarVisibility,
   selectTriggerImmediateDownload,
+  selectUrl,
 } from '../../data/state/generator/generator.selectors';
 import {
   copyToClipboard,
@@ -95,11 +93,7 @@ export class SidebarGeneratorComponent implements OnInit {
 
   domain$!: Observable<string>;
 
-  queryParams$!: Observable<string>;
-
   sidebarVisibility$!: Observable<ComponentVisibilityEnum>;
-
-  cmpImportVisibility$!: Observable<ComponentVisibilityEnum>;
 
   cmpPatientsVisibility$!: Observable<ComponentVisibilityEnum>;
 
@@ -114,6 +108,8 @@ export class SidebarGeneratorComponent implements OnInit {
   cmpGeneratorVisibility$!: Observable<ComponentVisibilityEnum>;
 
   cmpImpressumVisibility$!: Observable<ComponentVisibilityEnum>;
+
+  url$!: Observable<string>;
 
   constructor(private store: Store<AppState>) {
   }
@@ -134,10 +130,7 @@ export class SidebarGeneratorComponent implements OnInit {
     this.imageDownloadConfig$ = this.store.select(selectImageDownloadConfig);
     this.isImageFormValid$ = this.store.select(selectIsImageDownloadConfigValid);
     this.triggerImmediateImageDownload$ = this.store.select(selectTriggerImmediateDownload);
-    this.domain$ = this.store.select(selectDomain);
-    this.queryParams$ = this.store.select(selectQueryParams);
     this.sidebarVisibility$ = this.store.select(selectSidebarVisibility);
-    this.cmpImportVisibility$ = this.store.select(selectGenCmpVisImport);
     this.cmpPatientsVisibility$ = this.store.select(selectGenCmpVisPatients);
     this.cmpThresholdVisibility$ = this.store.select(selectGenCmpVisThreshold);
     this.cmpNodesVisibility$ = this.store.select(selectGenCmpVisNodes);
@@ -145,6 +138,7 @@ export class SidebarGeneratorComponent implements OnInit {
     this.cmpDownloadVisibility$ = this.store.select(selectGenCmpVisDownload);
     this.cmpGeneratorVisibility$ = this.store.select(selectGenCmpVisGenerator);
     this.cmpImpressumVisibility$ = this.store.select(selectGenCmpVisImpressum);
+    this.url$ = this.store.select(selectUrl);
   }
 
   toggleTriggerImmediateDownload() {

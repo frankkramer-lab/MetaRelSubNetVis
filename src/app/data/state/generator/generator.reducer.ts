@@ -13,7 +13,6 @@ import {
   setGeneratorImageExtension,
   setGeneratorImageScale,
   setGeneratorSidebarVisibility,
-  setQueryParams,
   toggleGeneratorImageBackground,
   toggleGeneratorTriggerImmediateDownload,
 } from './generator.actions';
@@ -36,7 +35,6 @@ const initialState: GeneratorState = {
   componentGeneratorVisibility: ComponentVisibilityEnum.button,
   componentImpressumVisibility: ComponentVisibilityEnum.button,
   triggerImageDownload: false,
-  queryParams: '',
   domain: environment.host,
 };
 
@@ -148,13 +146,6 @@ export const generatorReducer = createReducer(
       },
     };
   }),
-  on(
-    setQueryParams,
-    (state: GeneratorState, { queryParams }): GeneratorState => ({
-      ...state,
-      queryParams,
-    }),
-  ),
   on(
     toggleGeneratorImageBackground,
     (state: GeneratorState): GeneratorState => ({

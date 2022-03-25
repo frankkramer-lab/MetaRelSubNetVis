@@ -24,8 +24,6 @@
 <h4>Configure image options</h4>
 
 <app-sidebar-generator-form
-  [domain]="domain$ | async"
-  [queryParams]="queryParams$ | async"
   [isImageFormValid]="isImageFormValid$ | async"
   [imageDownloadConfig]="imageDownloadConfig$ | async"
   (imageExtensionChanged)="setImageExtension($event)"
@@ -44,14 +42,6 @@
   [parentVisibility]="sidebarVisibility$ | async"
   [model]="sidebarVisibility$ | async"
   (modelEmitter)="setSidebarVisibility($event)"
-></app-sidebar-generator-component-visibility>
-
-<app-sidebar-generator-component-visibility
-  name="Import"
-  tooltip="Change the visibility for the import option.<ul><li><b>Full</b>: Completely visible</li><li><b>Button</b>: Collapsed into a button</li><li><b>None</b>: Completely hidden, thus not openable</li></ul>"
-  [parentVisibility]="sidebarVisibility$ | async"
-  [model]="cmpImportVisibility$ | async"
-  (modelEmitter)="setVisibilityImport($event)"
 ></app-sidebar-generator-component-visibility>
 
 <app-sidebar-generator-component-visibility
@@ -113,8 +103,7 @@
 <hr>
 
 <app-sidebar-generator-result
-  [domain]="domain$ | async"
-  [queryParams]="queryParams$ | async"
+  [url]="url$ | async"
   [isImageFormValid]="isImageFormValid$ | async"
   (copyTrigger)="buildAndCopyUrl()"
 ></app-sidebar-generator-result>

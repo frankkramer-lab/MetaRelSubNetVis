@@ -21,10 +21,6 @@ export const toggleGeneratorImageBackground = createAction(
 export const toggleGeneratorTriggerImmediateDownload = createAction(
   '[Generator Component] toggle generator trigger immediate download',
 );
-export const setQueryParams = createAction(
-  '[Generator Component] set query params',
-  props<{ queryParams: string }>(),
-);
 export const copyToClipboard = createAction('[Generator Component] copy to clipboard');
 
 export const setComponentVisibilityImport = createAction(

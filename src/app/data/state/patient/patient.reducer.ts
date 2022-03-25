@@ -9,7 +9,7 @@ import {
 } from './patient.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import {
-  hydratePatientAPatientBSuccess,
+  hydratePatientAPatientBSuccess, loadDataFailure,
   loadDataSuccess,
   loadQueryParams,
 } from '../hydrator/hydrator.actions';
@@ -38,6 +38,7 @@ const initialState: PatientState = {
 export const patientReducer = createReducer(
   initialState,
   on(loadQueryParams, (state: PatientState): PatientState => ({ ...state, isLoading: true })),
+  on(loadDataFailure, (state: PatientState): PatientState => ({...state, isLoading: false})),
   on(loadDataSuccess, (state: PatientState, payload): PatientState => {
     return {
       ...state,

@@ -3,11 +3,14 @@
   <h1 class="display-3 row">
     <div class="col-10">MetaRelSubNetVis</div>
     <div class="col-2">
-      <img
-        class="img-fluid"
-        src="https://assets.uni-augsburg.de/media/filer_public_thumbnails/filer_public/69/0d/690d57b6-7679-411b-8a60-6ae0d02122ef/misitsvg.png__1080x2000_q85_subject_location-215%2C89_subsampling-2.png"
-        alt="Chair logo"
-      />
+      <a href="https://www.uni-augsburg.de/de/fakultaet/fai/informatik/prof/misit/"
+         target="_blank">
+        <img
+          class="img-fluid"
+          src="https://assets.uni-augsburg.de/media/filer_public_thumbnails/filer_public/69/0d/690d57b6-7679-411b-8a60-6ae0d02122ef/misitsvg.png__1080x2000_q85_subject_location-215%2C89_subsampling-2.png"
+          alt="Chair logo"
+        />
+      </a>
     </div>
   </h1>
   <hr />
@@ -101,9 +104,11 @@
         data-bs-parent="#homeAccordion"
       >
         <div class="accordion-body">
-          Placeholder content for this accordion, which is intended to demonstrate the
-          <code>.accordion-flush</code>
-          class. This is the first item's accordion body.
+          To kick-off your visualization, you need a network stored on NDEx that conforms to the <a
+          href="https://home.ndexbio.org/data-model/"
+          target="_blank">CX
+          data model</a> and contains all aspects that we expect during rendering. Check out our
+          dummy network to find out about the necessary aspects <a href="#" target="_blank">here</a>.
         </div>
       </div>
     </div>
@@ -151,10 +156,10 @@
       <ul class="list-group">
 
         <li *ngIf="exampleNetwork !== null"
-          class="list-group-item cursor"
-          (click)="networkSelected = exampleNetwork"
-          [ngClass]="exampleNetwork === networkSelected ? 'active' : ''"
-          [attr.aria-current]="exampleNetwork === networkSelected"
+            class="list-group-item cursor"
+            (click)="networkSelected = exampleNetwork"
+            [ngClass]="exampleNetwork === networkSelected ? 'active' : ''"
+            [attr.aria-current]="exampleNetwork === networkSelected"
         >
           [OFFICIAL DEMO]&nbsp;{{ exampleNetwork.name }}
         </li>
@@ -215,7 +220,8 @@
         <div class="row">
           <div class="col d-grid gap-0">
             <button class="btn btn-info"
-                    (click)="setupWorkspace()">Open the app with this network</button>
+                    (click)="setupWorkspace()">Open the app with this network
+            </button>
           </div>
           <div class="col d-grid gap-0">
             <a [href]="getLinkToNdexNetwork()"
@@ -244,7 +250,7 @@
           aria-controls="faq1A"
         >
           <fa-icon icon="comments"></fa-icon>
-          &nbsp;Question 1
+          &nbsp;I can't find the network I'm looking for, although it's marked as public. What's the problem here?
         </button>
       </h2>
       <div
@@ -253,7 +259,9 @@
         aria-labelledby="faq1Q"
         data-bs-parent="#faqAccordion"
       >
-        <div class="accordion-body">Answer 1</div>
+        <div class="accordion-body">
+          Please make sure, that your network is not only public, but explicitly marked as <b>searchable</b>.
+        </div>
       </div>
     </div>
 
@@ -269,7 +277,7 @@
           aria-controls="faq2A"
         >
           <fa-icon icon="comments"></fa-icon>
-          &nbsp;Question 2
+          &nbsp;Can I access networks on NDEx that are private?
         </button>
       </h2>
       <div
@@ -278,7 +286,9 @@
         aria-labelledby="faq2Q"
         data-bs-parent="#faqAccordion"
       >
-        <div class="accordion-body">Answer 2</div>
+        <div class="accordion-body">
+          We currently don't support privately stored networks.
+        </div>
       </div>
     </div>
 

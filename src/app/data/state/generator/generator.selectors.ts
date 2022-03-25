@@ -131,6 +131,6 @@ export const selectUrl = createSelector(
       }
     }
 
-    return `${state.domain}?${queryParams.join('&')}`;
+    return `${state.domain}/link?${queryParams.join('&')}`;
   },
 );

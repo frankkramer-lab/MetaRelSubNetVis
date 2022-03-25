@@ -106,5 +106,11 @@ export const hydratorReducer = createReducer(
 
     return { ...state, config };
   }),
-  on(hydrationEnded, (state: HydratorState): HydratorState => ({ ...state, config: null })),
+  on(
+    hydrationEnded,
+    (state: HydratorState): HydratorState => ({
+      ...state,
+      config: null,
+    }),
+  ),
 );

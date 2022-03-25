@@ -4,7 +4,8 @@ import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontaweso
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  faArrowCircleDown, faArrowLeft,
+  faArrowCircleDown,
+  faArrowLeft,
   faBars,
   faClone,
   faComments,
@@ -72,6 +73,7 @@ import {
 } from './components/sidebar-generator-result/sidebar-generator-result.component';
 import { HomeComponent } from './layout/home/home.component';
 import { NetworkComponent } from './layout/network/network.component';
+import { LinkComponent } from './layout/link/link.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +99,7 @@ import { NetworkComponent } from './layout/network/network.component';
     SidebarGeneratorResultComponent,
     HomeComponent,
     NetworkComponent,
+    LinkComponent,
   ],
   imports: [
     BrowserModule,

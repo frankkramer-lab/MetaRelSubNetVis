@@ -155,6 +155,15 @@
     <div class="col-4">
       <ul class="list-group">
 
+        <li *ngIf="dummyNetwork !== null"
+            class="list-group-item cursor"
+            (click)="networkSelected = dummyNetwork"
+            [ngClass]="dummyNetwork === networkSelected ? 'active' : ''"
+            [attr.aria-current]="dummyNetwork === networkSelected"
+        >
+          [OFFICIAL DEMO]&nbsp;{{ dummyNetwork.name }}
+        </li>
+
         <li *ngIf="exampleNetwork !== null"
             class="list-group-item cursor"
             (click)="networkSelected = exampleNetwork"
@@ -201,7 +210,7 @@
           <div class="card-body">
             <h5 class="card-title">Description</h5>
             <ng-container
-              *ngIf="
+              *ngIf="networkSelected && networkSelected.description &&
                 networkSelected.description.length > 0;
                 then blockDescription;
                 else blockDefault
@@ -237,7 +246,7 @@
 
   <h5 class="display-5">FAQ</h5>
 
-  <div class="accordion accordion-flush" id="faqAccordion">
+  <div class="accordion accordion-flush mb-5" id="faqAccordion">
     <!-- Question 1 -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="faq1Q">
@@ -293,28 +302,28 @@
     </div>
 
     <!-- Question 3 -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="faq3Q">
-        <button
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#faq3A"
-          aria-expanded="false"
-          aria-controls="faq3A"
-        >
-          <fa-icon icon="comments"></fa-icon>
-          &nbsp;Question 3
-        </button>
-      </h2>
-      <div
-        id="faq3A"
-        class="accordion-collapse collapse"
-        aria-labelledby="faq3Q"
-        data-bs-parent="#faqAccordion"
-      >
-        <div class="accordion-body">Answer 3</div>
-      </div>
-    </div>
+<!--    <div class="accordion-item">-->
+<!--      <h2 class="accordion-header" id="faq3Q">-->
+<!--        <button-->
+<!--          class="accordion-button collapsed"-->
+<!--          type="button"-->
+<!--          data-bs-toggle="collapse"-->
+<!--          data-bs-target="#faq3A"-->
+<!--          aria-expanded="false"-->
+<!--          aria-controls="faq3A"-->
+<!--        >-->
+<!--          <fa-icon icon="comments"></fa-icon>-->
+<!--          &nbsp;Question 3-->
+<!--        </button>-->
+<!--      </h2>-->
+<!--      <div-->
+<!--        id="faq3A"-->
+<!--        class="accordion-collapse collapse"-->
+<!--        aria-labelledby="faq3Q"-->
+<!--        data-bs-parent="#faqAccordion"-->
+<!--      >-->
+<!--        <div class="accordion-body">Answer 3</div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </div>

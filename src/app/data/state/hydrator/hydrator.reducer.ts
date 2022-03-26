@@ -1,16 +1,22 @@
 import { createReducer, on } from '@ngrx/store';
 import { HydratorState } from './hydrator.state';
-import { hydrationEnded, loadQueryParams } from './hydrator.actions';
+import {
+  hydrationEnded,
+  loadDataFailure,
+  loadDataSuccess,
+  loadQueryParams,
+} from './hydrator.actions';
 import { VisualizationConfig } from '../../schema/visualization-config';
 
 const initialState: HydratorState = {
   config: null,
+  hydrationInProgress: false,
 };
 
 export const hydratorReducer = createReducer(
   initialState,
   on(loadQueryParams, (state: HydratorState, { params }): HydratorState => {
-    if (Object.keys(params).length === 0) return { ...state };
+    if (Object.keys(params).length === 0) return { ...state, hydrationInProgress: true };
 
     const config: VisualizationConfig = {
       uuid: '',
@@ -104,13 +110,22 @@ export const hydratorReducer = createReducer(
       config.th = Number(params.th);
     }
 
-    return { ...state, config };
+    return { ...state, config, hydrationInProgress: true };
   }),
+  on(
+    loadDataSuccess,
+    loadDataFailure,
+    (state: HydratorState): HydratorState => ({
+      ...state,
+      hydrationInProgress: false,
+    }),
+  ),
   on(
     hydrationEnded,
     (state: HydratorState): HydratorState => ({
       ...state,
       config: null,
+      hydrationInProgress: false,
     }),
   ),
 );

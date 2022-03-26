@@ -17,6 +17,8 @@ export class HomeComponent implements OnInit {
 
   exampleNetwork: NetworkSearchItem | null = null;
 
+  dummyNetwork: NetworkSearchItem | null = null;
+
   networkSelected: NetworkSearchItem | null = null;
 
   requestInProgress = false;
@@ -29,6 +31,13 @@ export class HomeComponent implements OnInit {
       (data: NetworkSearchItem) => {
         this.exampleNetwork = data;
         this.networkSelected = this.exampleNetwork;
+      },
+      (error) => console.error(error),
+    );
+
+    this.apiService.loadNetworkSummary('140d01f0-acfe-11ec-b3be-0ac135e8bacf').subscribe(
+      (data: NetworkSearchItem) => {
+        this.dummyNetwork = data;
         this.requestInProgress = false;
       },
       (error) => console.error(error),

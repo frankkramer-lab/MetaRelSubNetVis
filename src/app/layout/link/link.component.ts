@@ -3,6 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../data/state/app.state';
 import { loadQueryParams } from '../../data/state/hydrator/hydrator.actions';
+import { Observable } from 'rxjs';
+import { selectHydrationInProgress } from '../../data/state/hydrator/hydrator.selectors';
+import { navigateHome } from '../../data/state/sidebar/sidebar.actions';
 
 @Component({
   selector: 'app-link',
@@ -10,11 +13,20 @@ import { loadQueryParams } from '../../data/state/hydrator/hydrator.actions';
   styleUrls: ['./link.component.scss'],
 })
 export class LinkComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private store: Store<AppState>) {}
+
+  hydrationInProgress$!: Observable<boolean>;
+
+  constructor(private route: ActivatedRoute, private store: Store<AppState>) {
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.store.dispatch(loadQueryParams({ params }));
     });
+    this.hydrationInProgress$ = this.store.select(selectHydrationInProgress);
+  }
+
+  returnHome() {
+    this.store.dispatch(navigateHome());
   }
 }

@@ -9,3 +9,7 @@ const selectState = createSelector(
 
 export const selectConfig = createSelector(selectState, (state: HydratorState) => state.config);
 
+export const selectHydrationInProgress = createSelector(
+  selectState,
+  (state: HydratorState) => state.hydrationInProgress,
+);

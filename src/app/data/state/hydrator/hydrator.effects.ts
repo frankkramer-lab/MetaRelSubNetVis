@@ -81,6 +81,7 @@ export class HydratorEffects {
 
         return this.apiService.loadNetwork(action.uuid).pipe(
           map((data) => {
+
             let nodesDictionary: any = {};
             let nodesRaw: any[] = [];
             let edgesRaw: any[] = [];
@@ -142,6 +143,10 @@ export class HydratorEffects {
               patients,
               nodesDictionary,
             );
+
+            if (patients.groupA.length < 1 || patients.groupB.length < 1) {
+              return loadDataFailure();
+            }
 
             network.occ = this.hydratorService.hydrateOccurrences(patients);
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
@@ -293,7 +298,7 @@ export class HydratorEffects {
     );
   });
 
-  triggerRouting$ = createEffect(
+  triggerRoutingSuccess$ = createEffect(
     () => {
       return this.actions$.pipe(
         ofType(hydrateSidebarVisibilitySuccess, hydrateSidebarVisibilityFailure),
@@ -344,5 +349,6 @@ export class HydratorEffects {
     private apiService: ApiService,
     private hydratorService: HydratorService,
     private router: Router,
-  ) {}
+  ) {
+  }
 }

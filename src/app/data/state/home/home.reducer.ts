@@ -51,21 +51,12 @@ export const homeReducer = createReducer(
       lastResultWasEmpty: false,
     }),
   ),
-  on(loadNetworkSummariesSuccess, (state: HomeState, { search }): HomeState => {
-    const newNetworks: NetworkSearchItem[] = [];
-
-    search.networks.forEach((network: NetworkSearchItem) => {
-      newNetworks.push({
-        ...network,
-        isValid: true,
-        linkNdex: `https://www.ndexbio.org/viewer/networks/${network.externalId}`,
-      });
-    });
+  on(loadNetworkSummariesSuccess, (state: HomeState, { networks }): HomeState => {
     return {
       ...state,
       isLoading: false,
-      networks: newNetworks,
-      lastResultWasEmpty: search.networks.length === 0,
+      networks,
+      lastResultWasEmpty: networks.length === 0,
     };
   }),
   on(

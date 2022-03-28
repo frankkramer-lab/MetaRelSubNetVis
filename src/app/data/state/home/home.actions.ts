@@ -19,7 +19,7 @@ export const loadNetworkSummaries = createAction(
 
 export const loadNetworkSummariesSuccess = createAction(
   '[Home Effects] load network summaries success',
-  props<{ search: NetworkSearch }>(),
+  props<{ networks: NetworkSearchItem[] }>(),
 );
 
 export const loadNetworkSummariesFailure = createAction(

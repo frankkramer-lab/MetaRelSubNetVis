@@ -13,6 +13,7 @@ import {
   loadSampleSummariesSuccess,
 } from './home.actions';
 import { ApiService } from '../../service/api.service';
+import { NetworkSearchItem } from '../../schema/network-search-item';
 
 @Injectable()
 export class HomeEffects {
@@ -26,7 +27,16 @@ export class HomeEffects {
         }).pipe(
           map((payload) => {
             return loadSampleSummariesSuccess({
-              sampleNetworks: [payload.sample_1, payload.sample_2],
+              sampleNetworks: [
+                {
+                  ...payload.sample_1,
+                  linkNdex: `https://www.ndexbio.org/viewer/networks/${payload.sample_1.externalId}`,
+                },
+                {
+                  ...payload.sample_2,
+                  linkNdex: `https://www.ndexbio.org/viewer/networks/${payload.sample_2.externalId}`,
+                },
+              ],
             });
           }),
           catchError(() => {
@@ -51,7 +61,15 @@ export class HomeEffects {
 
         return this.apiService.searchNdex(action.searchTerm).pipe(
           map((payload) => {
-            return loadNetworkSummariesSuccess({ search: payload });
+            const networks: NetworkSearchItem[] = [];
+            payload.networks.forEach((network) => {
+              networks.push({
+                ...network,
+                linkNdex: `https://www.ndexbio.org/viewer/networks/${network.externalId}`,
+              });
+            });
+
+            return loadNetworkSummariesSuccess({ networks });
           }),
           catchError(() =>
             of(
@@ -69,6 +87,5 @@ export class HomeEffects {
     private actions$: Actions,
     private store: Store<AppState>,
     private apiService: ApiService,
-  ) {
-  }
+  ) {}
 }

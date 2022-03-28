@@ -7,6 +7,7 @@ import {
   loadDataSuccess,
   loadQueryParams,
 } from '../hydrator/hydrator.actions';
+import { navigateHome } from '../sidebar/sidebar.actions';
 
 const initialState: ThresholdState = {
   groupA: null,
@@ -47,4 +48,5 @@ export const thresholdReducer = createReducer(
     setLabelMin,
     (state: ThresholdState, { labelMin }): ThresholdState => ({ ...state, labelMin }),
   ),
+  on(navigateHome, (state: ThresholdState): ThresholdState => ({ ...state, defined: null })),
 );

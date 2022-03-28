@@ -9,10 +9,12 @@ import {
 } from './patient.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import {
-  hydratePatientAPatientBSuccess, loadDataFailure,
+  hydratePatientAPatientBSuccess,
+  loadDataFailure,
   loadDataSuccess,
   loadQueryParams,
 } from '../hydrator/hydrator.actions';
+import { navigateHome } from '../sidebar/sidebar.actions';
 
 const initialState: PatientState = {
   groupALabel: '',
@@ -38,7 +40,7 @@ const initialState: PatientState = {
 export const patientReducer = createReducer(
   initialState,
   on(loadQueryParams, (state: PatientState): PatientState => ({ ...state, isLoading: true })),
-  on(loadDataFailure, (state: PatientState): PatientState => ({...state, isLoading: false})),
+  on(loadDataFailure, (state: PatientState): PatientState => ({ ...state, isLoading: false })),
   on(loadDataSuccess, (state: PatientState, payload): PatientState => {
     return {
       ...state,
@@ -119,4 +121,12 @@ export const patientReducer = createReducer(
     }
     return { ...state, patientSelection };
   }),
+  on(
+    navigateHome,
+    (state: PatientState): PatientState => ({
+      ...state,
+      patientA: null,
+      patientB: null,
+    }),
+  ),
 );

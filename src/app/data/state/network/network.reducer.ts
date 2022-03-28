@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { NetworkState } from './network.state';
 import { loadDataFailure, loadDataSuccess, loadQueryParams } from '../hydrator/hydrator.actions';
 import { setUuid } from './network.actions';
+import { navigateHome } from '../sidebar/sidebar.actions';
 
 const initialState: NetworkState = {
   network: null,
@@ -31,4 +32,12 @@ export const networkReducer = createReducer(
     }),
   ),
   on(loadDataFailure, (state: NetworkState): NetworkState => ({ ...state, isLoading: false })),
+  on(
+    navigateHome,
+    (state: NetworkState): NetworkState => ({
+      ...state,
+      uuid: null,
+      headline: null,
+    }),
+  ),
 );

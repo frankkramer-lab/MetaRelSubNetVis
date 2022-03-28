@@ -2,7 +2,6 @@ import { createReducer, on } from '@ngrx/store';
 import { SidebarState } from './sidebar.state';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 import {
-  navigateHome,
   setSidebarVisibility,
   toggleSidebarVisibility,
   toggleSidebarVisibilityDownload,

@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { DownloadState } from './download.state';
 import { setFileExtension, setScale, toggleBackgroundTransparent } from './download.actions';
 import { hydrateDownloadConfigSuccess } from '../hydrator/hydrator.actions';
+import { navigateHome } from '../sidebar/sidebar.actions';
 
 const initialState: DownloadState = {
   extension: 'PNG',
@@ -47,4 +48,14 @@ export const downloadReducer = createReducer(
       transparentBackground: downloadConfig.transparent,
     };
   }),
+  on(
+    navigateHome,
+    (state: DownloadState): DownloadState => ({
+      ...state,
+      scale: 1,
+      isFormValid: true,
+      transparentBackground: false,
+      extension: 'PNG',
+    }),
+  ),
 );

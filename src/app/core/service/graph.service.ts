@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 // @ts-ignore
 import * as svg from 'cytoscape-svg';
 import * as cytoscape from 'cytoscape';
-import { CollectionReturnValue, ElementsDefinition } from 'cytoscape';
+import { CollectionReturnValue, ElementsDefinition, NodeDefinition } from 'cytoscape';
 import { NetworkNode } from '../../data/schema/network-node';
 import { Network } from '../../data/schema/network';
 import { Patient } from '../../data/schema/patient';
@@ -137,7 +137,6 @@ export class GraphService {
           visibility: 'hidden',
         },
       },
-
       {
         selector: 'node.mtb',
         style: {
@@ -147,21 +146,6 @@ export class GraphService {
       },
       {
         selector: 'node.split',
-        style: {
-          'text-outline-width': '0px',
-          'text-outline-color': this.colors.gray,
-          'text-outline-opacity': '0.3',
-          width: '80px',
-          height: '80px',
-          'pie-size': '100%',
-          'pie-1-background-color': 'green',
-          'pie-1-background-size': '50%',
-          'pie-2-background-color': 'green',
-          'pie-2-background-size': '50%',
-        },
-      },
-      {
-        selector: 'node.splitLeft',
         style: {
           'text-outline-width': '0px',
           'text-outline-color': this.colors.gray,
@@ -189,7 +173,6 @@ export class GraphService {
           visibility: 'hidden',
         },
       },
-
       {
         selector: 'edge',
         style: {
@@ -199,7 +182,6 @@ export class GraphService {
           'target-arrow-shape': 'triangle',
         },
       },
-
       {
         selector: 'edge.highlight',
         style: {
@@ -541,15 +523,15 @@ export class GraphService {
     this.cyCore
       .style()
       // @ts-ignore
-      .selector('node[color = \'LOW\']')
+      .selector("node[color = 'LOW']")
       .style('background-color', this.colors.blue)
       .style('text-outline-color', this.colors.blue)
       // @ts-ignore
-      .selector('node[color = \'NORMAL\']')
+      .selector("node[color = 'NORMAL']")
       .style('background-color', this.colors.yellow)
       .style('text-outline-color', this.colors.yellow)
       // @ts-ignore
-      .selector('node[color = \'HIGH\']')
+      .selector("node[color = 'HIGH']")
       .style('background-color', this.colors.red)
       .style('text-outline-color', this.colors.red)
       // @ts-ignore
@@ -561,46 +543,23 @@ export class GraphService {
       .style('pie-2-background-color', this.colors.gray)
       .style('pie-1-background-color', this.colors.gray)
       // @ts-ignore
-      .selector('node.split[colorMet = \'LOW\']')
+      .selector("node.split[colorMet = 'LOW']")
       .style('pie-2-background-color', this.colors.blue)
       // @ts-ignore
-      .selector('node.split[colorNonMet = \'LOW\']')
+      .selector("node.split[colorNonMet = 'LOW']")
       .style('pie-1-background-color', this.colors.blue)
       // @ts-ignore
-      .selector('node.split[colorMet = \'NORMAL\']')
+      .selector("node.split[colorMet = 'NORMAL']")
       .style('pie-2-background-color', this.colors.yellow)
       // @ts-ignore
-      .selector('node.split[colorNonMet = \'NORMAL\']')
+      .selector("node.split[colorNonMet = 'NORMAL']")
       .style('pie-1-background-color', this.colors.yellow)
       // @ts-ignore
-      .selector('node.split[colorMet = \'HIGH\']')
+      .selector("node.split[colorMet = 'HIGH']")
       .style('pie-2-background-color', this.colors.red)
       // @ts-ignore
-      .selector('node.split[colorNonMet = \'HIGH\']')
+      .selector("node.split[colorNonMet = 'HIGH']")
       .style('pie-1-background-color', this.colors.red);
-  }
-
-  /**
-   * Applies a visual style to nodes
-   * @param minValue
-   * @param maxValue
-   * @private
-   */
-  private setColorMap(minValue: number, maxValue: number) {
-    const midPoint = maxValue - (maxValue - minValue) / 2;
-    const colorMap1 = `mapData(color, ${minValue}, ${midPoint}, ${this.colors.blue}, ${this.colors.yellow})`;
-    const colorMap2 = `mapData(color, ${midPoint}, ${maxValue}, ${this.colors.yellow}, ${this.colors.red})`;
-
-    this.cyCore
-      .style()
-      // @ts-ignore
-      .selector(`node[color<=${midPoint}]`)
-      .style('background-color', colorMap1)
-      .style('text-outline-color', colorMap1)
-      // @ts-ignore
-      .selector(`node[color>${midPoint}]`)
-      .style('background-color', colorMap2)
-      .style('text-outline-color', colorMap2);
   }
 
   /**
@@ -647,6 +606,29 @@ export class GraphService {
       // @ts-ignore
       .selector('node.split[^colorMet][colorNonMet]')
       .style('pie-2-background-color', this.colors.gray);
+  }
+
+  /**
+   * Applies a visual style to nodes
+   * @param minValue
+   * @param maxValue
+   * @private
+   */
+  private setColorMap(minValue: number, maxValue: number) {
+    const midPoint = maxValue - (maxValue - minValue) / 2;
+    const colorMap1 = `mapData(color, ${minValue}, ${midPoint}, ${this.colors.blue}, ${this.colors.yellow})`;
+    const colorMap2 = `mapData(color, ${midPoint}, ${maxValue}, ${this.colors.yellow}, ${this.colors.red})`;
+
+    this.cyCore
+      .style()
+      // @ts-ignore
+      .selector(`node[color<=${midPoint}]`)
+      .style('background-color', colorMap1)
+      .style('text-outline-color', colorMap1)
+      // @ts-ignore
+      .selector(`node[color>${midPoint}]`)
+      .style('background-color', colorMap2)
+      .style('text-outline-color', colorMap2);
   }
 
   /**

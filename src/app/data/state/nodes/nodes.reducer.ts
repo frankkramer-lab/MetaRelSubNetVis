@@ -12,6 +12,7 @@ import {
 } from './nodes.actions';
 import { SortByEnum } from '../../../core/enum/sort-by.enum';
 import { hydrateNodesSuccess } from '../hydrator/hydrator.actions';
+import { navigateHome } from '../sidebar/sidebar.actions';
 
 const initialState: NodesState = {
   numberOfColumns: 2,
@@ -78,6 +79,18 @@ export const nodesReducer = createReducer(
     (state: NodesState, { selection }): NodesState => ({
       ...state,
       markedNodes: selection,
+    }),
+  ),
+  on(
+    navigateHome,
+    (state: NodesState): NodesState => ({
+      ...state,
+      markedNodes: [],
+      numberOfColumns: 2,
+      subtypeColumnA: null,
+      subtypeColumnB: null,
+      sortByColumn: SortByEnum.all,
+      filterTerm: null,
     }),
   ),
 );

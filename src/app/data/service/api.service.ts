@@ -13,10 +13,6 @@ export class ApiService {
    * @private
    */
   private readonly ndexPublicApi = 'https://public.ndexbio.org/v2/';
-  /**
-   * Public NDExBio domain
-   */
-  readonly ndexPublicDomain = 'https://www.ndexbio.org/viewer/networks/';
 
   /**
    * Constructor
@@ -25,12 +21,15 @@ export class ApiService {
   constructor(private http: HttpClient) {
   }
 
+  /**
+   * Query NDEx with a specified keyword
+   * @param keyword Term that is queried
+   */
   searchNdex(keyword: string): Observable<NetworkSearch> {
     const sanitizedSearchTerm = keyword.trim();
 
     if (sanitizedSearchTerm.length === 0) {
-      return new Observable<NetworkSearch
-        >((o) => o.next());
+      return new Observable<NetworkSearch>((o) => o.next());
     }
 
     const body: any = {
@@ -49,6 +48,10 @@ export class ApiService {
     return this.http.get(`${this.ndexPublicApi}network/${uuid}`) as Observable<any[]>;
   }
 
+  /**
+   * Loading a network's summary
+   * @param uuid identifier for the network of interest
+   */
   loadNetworkSummary(uuid: string): Observable<NetworkSearchItem> {
     return this.http.get(`${this.ndexPublicApi}network/${uuid}/summary`) as Observable<NetworkSearchItem>;
   }

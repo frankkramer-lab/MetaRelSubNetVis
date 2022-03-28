@@ -7,6 +7,7 @@ import { DownloadState } from './download/download.state';
 import { SidebarState } from './sidebar/sidebar.state';
 import { HydratorState } from './hydrator/hydrator.state';
 import { GeneratorState } from './generator/generator.state';
+import { HomeState } from './home/home.state';
 
 export interface AppState {
   sidebar: SidebarState;
@@ -18,4 +19,5 @@ export interface AppState {
   download: DownloadState;
   hydrator: HydratorState;
   generator: GeneratorState;
+  home: HomeState;
 }

@@ -26,12 +26,6 @@ export const loadDataSuccess = createAction(
   }>(),
 );
 
-export const loadDataJsonSuccess = createAction(
-  '[Hydrator Effects] load data JSON success',
-  props<{ network: Network; patients: PatientCollection; thresholds: Threshold }>(),
-);
-export const loadDataJsonFailure = createAction('[Hydrator Effects] load data JSON failure');
-
 export const hydrateAbort = createAction('[Hydrator Effects] hydrate abort');
 
 export const hydratePatientAPatientBSuccess = createAction(

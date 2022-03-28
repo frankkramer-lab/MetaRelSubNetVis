@@ -4,5 +4,7 @@ export interface NetworkSearchItem {
   owner: string;
   description: string;
   edgeCount: number;
-  nodeCount: number
+  nodeCount: number;
+  isValid: boolean;
+  linkNdex: string;
 }

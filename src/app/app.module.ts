@@ -75,6 +75,7 @@ import { HomeComponent } from './layout/home/home.component';
 import { NetworkComponent } from './layout/network/network.component';
 import { LinkComponent } from './layout/link/link.component';
 import { LinkContentComponent } from './layout/link-content/link-content.component';
+import { HomeContentComponent } from './layout/home-content/home-content.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { LinkContentComponent } from './layout/link-content/link-content.compone
     NetworkComponent,
     LinkComponent,
     LinkContentComponent,
+    HomeContentComponent,
   ],
   imports: [
     BrowserModule,

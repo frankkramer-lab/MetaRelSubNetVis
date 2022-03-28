@@ -9,7 +9,7 @@ import {
   faBars,
   faClone,
   faComments,
-  faDownload,
+  faDownload, faExclamationTriangle,
   faFileImport,
   faHospitalUser,
   faInfo,
@@ -18,7 +18,7 @@ import {
   faPalette,
   faProjectDiagram,
   faRedo,
-  faSortAmountUp,
+  faSortAmountUp, faStar,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 import { StoreModule } from '@ngrx/store';
@@ -142,6 +142,8 @@ export class AppModule {
       faFileImport,
       faComments,
       faArrowLeft,
+      faStar,
+      faExclamationTriangle,
     );
   }
 }

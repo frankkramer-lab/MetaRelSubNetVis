@@ -41,18 +41,26 @@ export class HomeEffects {
   searchNdex$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadNetworkSummaries),
-      concatLatestFrom(() => [this.store.select(selectSearchTerm)]),
-      switchMap(([, term]) => {
-        if (term === null || term.trim().length === 0) {
-          // todo handle invalid search query
-          return of(loadNetworkSummariesFailure());
+      switchMap((action) => {
+        if (action.searchTerm === null || action.searchTerm.trim().length === 0) {
+          return of(
+            loadNetworkSummariesFailure({
+              lastTermWasEmpty: true,
+            }),
+          );
         }
 
-        return this.apiService.searchNdex(term).pipe(
+        return this.apiService.searchNdex(action.searchTerm).pipe(
           map((payload) => {
             return loadNetworkSummariesSuccess({ search: payload });
           }),
-          catchError(() => of(loadNetworkSummariesFailure())),
+          catchError(() =>
+            of(
+              loadNetworkSummariesFailure({
+                lastTermWasEmpty: false,
+              }),
+            ),
+          ),
         );
       }),
     );

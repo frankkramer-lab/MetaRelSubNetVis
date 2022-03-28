@@ -6,10 +6,19 @@ import { AppState } from '../../data/state/app.state';
 import { NetworkSearchItem } from '../../data/schema/network-search-item';
 import {
   selectIsLoading,
+  selectLastResultEmpty,
+  selectLastTermEmpty,
   selectNetworks,
   selectSampleNetworks,
+  selectSelectedNetwork,
+  selectSetupInProgress,
 } from '../../data/state/home/home.selectors';
-import { loadNetworkSummaries, loadSampleSummaries } from '../../data/state/home/home.actions';
+import {
+  loadNetworkSummaries,
+  loadSampleSummaries,
+  showNetworkDetails,
+} from '../../data/state/home/home.actions';
+import { loadQueryParams } from '../../data/state/hydrator/hydrator.actions';
 
 @Component({
   selector: 'app-home',
@@ -21,9 +30,18 @@ export class HomeComponent implements OnInit {
 
   networks$!: Observable<NetworkSearchItem[]>;
 
+  selectedNetwork$!: Observable<NetworkSearchItem | null>;
+
   isLoading$!: Observable<boolean>;
 
-  constructor(private apiService: ApiService, private store: Store<AppState>) {}
+  setupInProgress$!: Observable<boolean>;
+
+  lastTermWasEmpty$!: Observable<boolean>;
+
+  lastResultWasEmpty$!: Observable<boolean>;
+
+  constructor(private apiService: ApiService, private store: Store<AppState>) {
+  }
 
   /**
    * By default, we load two exemplary networks - one illustrating the basic data structure,
@@ -31,69 +49,37 @@ export class HomeComponent implements OnInit {
    */
   ngOnInit(): void {
     this.isLoading$ = this.store.select(selectIsLoading);
+    this.setupInProgress$ = this.store.select(selectSetupInProgress);
     this.sampleNetworks$ = this.store.select(selectSampleNetworks);
     this.networks$ = this.store.select(selectNetworks);
+    this.selectedNetwork$ = this.store.select(selectSelectedNetwork);
+    this.lastTermWasEmpty$ = this.store.select(selectLastTermEmpty);
+    this.lastResultWasEmpty$ = this.store.select(selectLastResultEmpty);
 
     this.store.dispatch(loadSampleSummaries());
-
-
-    // this.requestInProgress = true;
-    // this.apiService.loadNetworkSummary('a420aaee-4be9-11ec-b3be-0ac135e8bacf').subscribe(
-    //   (data: NetworkSearchItem) => {
-    //     this.exampleNetwork = data;
-    //     this.networkSelected = this.exampleNetwork;
-    //   },
-    //   (error) => console.error(error),
-    // );
-    //
-    // this.apiService.loadNetworkSummary('140d01f0-acfe-11ec-b3be-0ac135e8bacf').subscribe(
-    //   (data: NetworkSearchItem) => {
-    //     this.dummyNetwork = data;
-    //     this.requestInProgress = false;
-    //   },
-    //   (error) => console.error(error),
-    // );
   }
 
   /**
    * Triggers the search on NDEx via search term.
    */
   searchNdex(searchTerm: string | null) {
-    if (searchTerm === null) {
-      return;
-    }
-
-    this.store.dispatch(loadNetworkSummaries({ searchTerm }))
-
-    // this.store.dispatch()
-    // this.requestInProgress = true;
-    // this.apiService.searchNdex(this.keyword).subscribe(
-    //   (data) => {
-    //     if (data.networks.length > 0) {
-    //       this.networks = data.networks;
-    //     } else {
-    //       console.log('Empty result');
-    //     }
-    //     this.requestInProgress = false;
-    //   },
-    //   (error) => console.error(error),
-    // );
+    this.store.dispatch(loadNetworkSummaries({ searchTerm }));
   }
-
 
   /**
    * Starts loading and parsing the network.
    */
   setupWorkspace(uuid: string) {
-    // if (this.networkSelected !== null) {
-    //   this.requestInProgress = true;
-    //   this.store.dispatch(
-    //     loadQueryParams({
-    //       params: {
-    //         uuid: this.networkSelected.externalId,
-    //       },
-    //     }),
-    //   );
-    // }
+    this.store.dispatch(
+      loadQueryParams({
+        params: {
+          uuid,
+        },
+      }),
+    );
+  }
+
+  selectNetwork(selectedNetwork: NetworkSearchItem) {
+    this.store.dispatch(showNetworkDetails({ selectedNetwork }));
   }
 }

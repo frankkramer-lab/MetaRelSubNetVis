@@ -76,12 +76,11 @@ export class HydratorEffects {
       ofType(setUuid),
       switchMap((action) => {
         if (action.uuid === null || action.uuid === '') {
-          return of(loadDataFailure());
+          return of(loadDataFailure({ uuid: '' }));
         }
 
         return this.apiService.loadNetwork(action.uuid).pipe(
           map((data) => {
-
             let nodesDictionary: any = {};
             let nodesRaw: any[] = [];
             let edgesRaw: any[] = [];
@@ -145,7 +144,7 @@ export class HydratorEffects {
             );
 
             if (patients.groupA.length < 1 || patients.groupB.length < 1) {
-              return loadDataFailure();
+              return loadDataFailure({ uuid: action.uuid ?? '' });
             }
 
             network.occ = this.hydratorService.hydrateOccurrences(patients);
@@ -161,7 +160,7 @@ export class HydratorEffects {
               headline: labels[0],
             });
           }),
-          catchError(() => of(loadDataFailure())),
+          catchError(() => of(loadDataFailure({ uuid: action.uuid ?? '' }))),
         );
       }),
     );
@@ -349,6 +348,5 @@ export class HydratorEffects {
     private apiService: ApiService,
     private hydratorService: HydratorService,
     private router: Router,
-  ) {
-  }
+  ) {}
 }

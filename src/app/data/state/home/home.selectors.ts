@@ -7,8 +7,24 @@ const selectState = createSelector(
   (state: HomeState) => state,
 );
 
-export const selectIsLoading = createSelector(selectState, (state) => state.isLoading);
+export const selectIsLoading = createSelector(selectState, (state: HomeState) => state.isLoading);
 
-export const selectNetworks = createSelector(selectState, (state) => state.networks);
-export const selectSampleNetworks = createSelector(selectState, (state) => state.sampleNetworks);
-export const selectSearchTerm = createSelector(selectState, (state) => state.searchTerm);
+export const selectNetworks = createSelector(selectState, (state: HomeState) => state.networks);
+export const selectSampleNetworks = createSelector(
+  selectState,
+  (state: HomeState) => state.sampleNetworks,
+);
+export const selectSearchTerm = createSelector(selectState, (state: HomeState) => state.searchTerm);
+export const selectSetupInProgress = createSelector(
+  selectState,
+  (state: HomeState) => state.setupInProgress,
+);
+export const selectLastTermEmpty = createSelector(
+  selectState,
+  (state: HomeState) => state.lastTermWasEmpty,
+);
+export const selectLastResultEmpty = createSelector(
+  selectState,
+  (state: HomeState) => state.lastResultWasEmpty,
+);
+export const selectSelectedNetwork = createSelector(selectState, (state: HomeState) => state.selectedNetwork);

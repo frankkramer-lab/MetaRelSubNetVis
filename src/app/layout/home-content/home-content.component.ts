@@ -10,18 +10,24 @@ export class HomeContentComponent {
 
   @Input() isLoading!: boolean | null;
 
+  @Input() setupInProgress!: boolean | null;
+
   @Input() sampleNetworks!: NetworkSearchItem[] | null;
 
   @Input() networks!: NetworkSearchItem[] | null;
+
+  @Input() selectedNetwork!: NetworkSearchItem | null;
+
+  @Input() lastTermWasEmpty!: boolean | null;
+
+  @Input() lastResultWasEmpty!: boolean | null;
+
+  @Output() networkDetailsEmitter: EventEmitter<NetworkSearchItem> = new EventEmitter<NetworkSearchItem>();
 
   @Output() loadNetwork: EventEmitter<string> = new EventEmitter<string>();
 
   @Output() searchNdex: EventEmitter<string | null> = new EventEmitter<string | null>();
 
   searchTerm: string | null = null;
-
-  selectedNetwork: NetworkSearchItem | null = null;
-
-
 
 }

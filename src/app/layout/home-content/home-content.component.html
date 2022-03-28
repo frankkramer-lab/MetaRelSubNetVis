@@ -124,7 +124,7 @@
       class="form-control"
       placeholder="Search..."
       aria-describedby="httpSearch"
-      [readOnly]="isLoading"
+      [readOnly]="isLoading || setupInProgress"
       (keyup.enter)="searchNdex.emit(searchTerm)"
     />
     <div class="input-group-append">
@@ -136,6 +136,7 @@
         data-toggle="tooltip"
         ngbTooltip="Search NDEx by entering a term"
         [openDelay]="1000"
+        [disabled]="setupInProgress"
         placement="left"
         (click)="searchNdex.emit(searchTerm)"
       >
@@ -147,19 +148,36 @@
     </div>
   </div>
 
+  <div class="card border-warning mt-2" *ngIf="lastTermWasEmpty">
+    <div class="card-body">
+      <h5 class="card-title">Term missing</h5>
+      <p class="card-text">You entered no search term. Please let us know, what you're looking
+        for.</p>
+    </div>
+  </div>
+
+  <div class="card border-warning mt-2" *ngIf="lastResultWasEmpty">
+    <div class="card-body">
+      <h5 class="card-title">Empty result</h5>
+      <p class="card-text">The term you queried did not yield any results. Check for typos and try
+        synonyms. Also make sure, that the network is actually <b>searchable</b> on NDEx.</p>
+    </div>
+  </div>
+
   <!-- SEARCH RESULT -->
   <div class="mt-2 row">
     <!-- selector -->
     <div class="col-4">
       <ul class="list-group">
         <ng-container *ngIf="sampleNetworks !== null">
-          <li class="list-group-item cursor"
+          <li
+            class="list-group-item cursor"
             *ngFor="let sample of sampleNetworks"
             (click)="selectedNetwork = sample"
             [ngClass]="sample === selectedNetwork ? 'active' : ''"
             [attr.aria-current]="sample === selectedNetwork"
           >
-            [OFFICIAL DEMO]{{ sample.name }}
+            <fa-icon icon="star"></fa-icon>&nbsp;[OFFICIAL DEMO] {{ sample.name }}
           </li>
         </ng-container>
 
@@ -170,7 +188,19 @@
             [ngClass]="network === selectedNetwork ? 'active' : ''"
             [attr.aria-current]="network === selectedNetwork"
           >
-            {{ network.name }}
+            <ng-container
+              *ngIf="network.isValid;
+                then blockValid;
+                else blockInvalid
+              "
+            ></ng-container>
+
+            <ng-template #blockInvalid>
+              <fa-icon class="text-warning" icon="exclamation-triangle"></fa-icon>&nbsp;{{
+              network.name
+              }}
+            </ng-template>
+            <ng-template #blockValid>{{ network.name }}</ng-template>
           </li>
         </ng-container>
       </ul>
@@ -214,6 +244,28 @@
             <ng-template #blockDefault class="card-text">
               <p>No description given</p>
             </ng-template>
+          </div>
+        </div>
+
+        <!-- hint: network invalid -->
+        <div
+          class="card border-warning mb-3"
+          *ngIf="!selectedNetwork.isValid"
+        >
+          <div class="card-body">
+            <h5 class="card-title">Invalid network</h5>
+            <p class="card-text">
+              This network does not conform to the format we require to build the group comparison.
+              Check out the
+              <a
+                href="https://www.ndexbio.org/viewer/networks/140d01f0-acfe-11ec-b3be-0ac135e8bacf"
+                target="_blank"
+              >example network</a
+              >. If the issue persists or you need further assistance, please open an issue on
+              <a href="https://github.com/frankkramer-lab/MetaRelSubNetVis/issues" target="_blank"
+              >GitHub</a
+              >.
+            </p>
           </div>
         </div>
 

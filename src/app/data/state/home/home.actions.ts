@@ -14,7 +14,7 @@ export const loadSampleSummariesFailure = createAction(
 
 export const loadNetworkSummaries = createAction(
   '[Home Component] load network summaries',
-  props<{ searchTerm: string }>(),
+  props<{ searchTerm: string | null }>(),
 );
 
 export const loadNetworkSummariesSuccess = createAction(
@@ -24,4 +24,10 @@ export const loadNetworkSummariesSuccess = createAction(
 
 export const loadNetworkSummariesFailure = createAction(
   '[Home Effects] load network summaries failure',
+  props<{ lastTermWasEmpty: boolean }>(),
+);
+
+export const showNetworkDetails = createAction(
+  '[Home Component] show network details',
+  props<{ selectedNetwork: NetworkSearchItem }>(),
 );

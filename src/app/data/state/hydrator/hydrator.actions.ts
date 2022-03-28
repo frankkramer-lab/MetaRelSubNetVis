@@ -15,7 +15,10 @@ export const loadQueryParams = createAction(
   props<{ params: any }>(),
 );
 
-export const loadDataFailure = createAction('[Hydrator Effects] load data failure');
+export const loadDataFailure = createAction(
+  '[Hydrator Effects] load data failure',
+  props<{ uuid: string }>(),
+);
 export const loadDataSuccess = createAction(
   '[Hydrator Effects] load data success',
   props<{

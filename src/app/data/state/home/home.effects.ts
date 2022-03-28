@@ -87,5 +87,6 @@ export class HomeEffects {
     private actions$: Actions,
     private store: Store<AppState>,
     private apiService: ApiService,
-  ) {}
+  ) {
+  }
 }

@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 import { NetworkSearchItem } from '../../schema/network-search-item';
-import { NetworkSearch } from '../../schema/network-search';
 
 export const loadSampleSummaries = createAction('[Home Component] load sample summaries');
 

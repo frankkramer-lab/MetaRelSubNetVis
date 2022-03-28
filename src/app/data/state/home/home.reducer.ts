@@ -11,6 +11,7 @@ import {
 } from './home.actions';
 import { NetworkSearchItem } from '../../schema/network-search-item';
 import { loadDataFailure, loadDataSuccess, loadQueryParams } from '../hydrator/hydrator.actions';
+import { navigateHome } from '../sidebar/sidebar.actions';
 
 const initialState: HomeState = {
   sampleNetworks: [],
@@ -32,15 +33,13 @@ export const homeReducer = createReducer(
       isLoading: true,
     }),
   ),
-  on(
-    loadSampleSummariesSuccess,
-    (state: HomeState, { sampleNetworks }): HomeState => ({
+  on(loadSampleSummariesSuccess, (state: HomeState, { sampleNetworks }): HomeState => {
+    return {
       ...state,
       isLoading: false,
       sampleNetworks,
-      selectedNetwork: sampleNetworks[1],
-    }),
-  ),
+    };
+  }),
   on(loadSampleSummariesFailure, (state: HomeState): HomeState => ({ ...state, isLoading: false })),
   on(
     loadNetworkSummaries,
@@ -87,18 +86,23 @@ export const homeReducer = createReducer(
   ),
   on(loadDataFailure, (state: HomeState, { uuid }): HomeState => {
     if (uuid.length > 0) {
-      const networks: NetworkSearchItem[] = [];
-      state.networks.forEach((network) => {
-        if (network.externalId === uuid) {
-          networks.push({ ...network, isValid: false });
-        } else {
-          networks.push(network);
-        }
-      });
+      const invalidNetworkIndex = state.networks.findIndex((a) => a.externalId === uuid);
+      const invalidNetwork = state.networks[invalidNetworkIndex];
+      const validNetworks: NetworkSearchItem[] = state.networks.filter(
+        (a) => a.externalId !== uuid,
+      );
+
+      let selectedNetwork: NetworkSearchItem | null = null;
+      if (invalidNetwork) {
+        selectedNetwork = { ...invalidNetwork, isValid: false };
+        validNetworks.splice(invalidNetworkIndex, 0, selectedNetwork);
+      }
+
       return {
         ...state,
         setupInProgress: false,
-        networks,
+        networks: validNetworks,
+        selectedNetwork,
       };
     }
     return {
@@ -106,11 +110,15 @@ export const homeReducer = createReducer(
       setupInProgress: false,
     };
   }),
+  on(showNetworkDetails, (state: HomeState, { selectedNetwork }): HomeState => {
+    return { ...state, selectedNetwork };
+  }),
   on(
-    showNetworkDetails,
-    (state: HomeState, { selectedNetwork }): HomeState => ({
+    navigateHome,
+    (state: HomeState): HomeState => ({
       ...state,
-      selectedNetwork,
+      lastTermWasEmpty: false,
+      lastResultWasEmpty: false,
     }),
   ),
 );

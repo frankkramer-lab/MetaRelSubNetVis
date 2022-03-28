@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { forkJoin, of } from 'rxjs';
 import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
@@ -13,7 +13,6 @@ import {
   loadSampleSummariesSuccess,
 } from './home.actions';
 import { ApiService } from '../../service/api.service';
-import { selectSearchTerm } from './home.selectors';
 
 @Injectable()
 export class HomeEffects {
@@ -70,5 +69,6 @@ export class HomeEffects {
     private actions$: Actions,
     private store: Store<AppState>,
     private apiService: ApiService,
-  ) {}
+  ) {
+  }
 }

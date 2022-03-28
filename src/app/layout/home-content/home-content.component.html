@@ -148,6 +148,7 @@
     </div>
   </div>
 
+  <!-- hint: empty term -->
   <div class="card border-warning mt-2" *ngIf="lastTermWasEmpty">
     <div class="card-body">
       <h5 class="card-title">Term missing</h5>
@@ -156,6 +157,7 @@
     </div>
   </div>
 
+  <!-- hint: empty result -->
   <div class="card border-warning mt-2" *ngIf="lastResultWasEmpty">
     <div class="card-body">
       <h5 class="card-title">Empty result</h5>
@@ -173,7 +175,7 @@
           <li
             class="list-group-item cursor"
             *ngFor="let sample of sampleNetworks"
-            (click)="selectedNetwork = sample"
+            (click)="networkDetailsEmitter.emit(sample)"
             [ngClass]="sample === selectedNetwork ? 'active' : ''"
             [attr.aria-current]="sample === selectedNetwork"
           >
@@ -184,7 +186,7 @@
         <ng-container *ngFor="let network of networks">
           <li
             class="list-group-item cursor"
-            (click)="selectedNetwork = network"
+            (click)="networkDetailsEmitter.emit(network)"
             [ngClass]="network === selectedNetwork ? 'active' : ''"
             [attr.aria-current]="network === selectedNetwork"
           >

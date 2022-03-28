@@ -8,9 +8,8 @@ import {
   selectIsLoading,
   selectLastResultEmpty,
   selectLastTermEmpty,
-  selectNetworks,
+  selectNetworks, selectNetworkSummary,
   selectSampleNetworks,
-  selectSelectedNetwork,
   selectSetupInProgress,
 } from '../../data/state/home/home.selectors';
 import {
@@ -52,7 +51,7 @@ export class HomeComponent implements OnInit {
     this.setupInProgress$ = this.store.select(selectSetupInProgress);
     this.sampleNetworks$ = this.store.select(selectSampleNetworks);
     this.networks$ = this.store.select(selectNetworks);
-    this.selectedNetwork$ = this.store.select(selectSelectedNetwork);
+    this.selectedNetwork$ = this.store.select(selectNetworkSummary);
     this.lastTermWasEmpty$ = this.store.select(selectLastTermEmpty);
     this.lastResultWasEmpty$ = this.store.select(selectLastResultEmpty);
 

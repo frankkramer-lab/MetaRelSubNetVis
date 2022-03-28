@@ -14,7 +14,6 @@ export const selectSampleNetworks = createSelector(
   selectState,
   (state: HomeState) => state.sampleNetworks,
 );
-export const selectSearchTerm = createSelector(selectState, (state: HomeState) => state.searchTerm);
 export const selectSetupInProgress = createSelector(
   selectState,
   (state: HomeState) => state.setupInProgress,
@@ -27,4 +26,7 @@ export const selectLastResultEmpty = createSelector(
   selectState,
   (state: HomeState) => state.lastResultWasEmpty,
 );
-export const selectSelectedNetwork = createSelector(selectState, (state: HomeState) => state.selectedNetwork);
+export const selectNetworkSummary = createSelector(
+  selectState,
+  (state: HomeState) => state.selectedNetwork,
+);

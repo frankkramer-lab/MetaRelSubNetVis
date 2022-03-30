@@ -2,7 +2,7 @@
   "name": "meta",
   "version": "1.0.0",
   "scripts": {
-    "gh": "ng build --prod --output-path docs --base-href /MetaRelSubNetVis/; cp src/404.html docs/",
+    "gh": "ng build --output-path docs --base-href /MetaRelSubNetVis/; cp src/404.html docs/",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

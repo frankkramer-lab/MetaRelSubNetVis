@@ -21,7 +21,11 @@ export class LinkComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      this.store.dispatch(loadQueryParams({ params }));
+      if (Object.keys(params).length > 0) {
+        this.store.dispatch(loadQueryParams({ params }));
+      } else {
+        this.store.dispatch(navigateHome());
+      }
     });
     this.hydrationInProgress$ = this.store.select(selectHydrationInProgress);
   }

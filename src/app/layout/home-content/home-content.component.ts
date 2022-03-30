@@ -28,6 +28,8 @@ export class HomeContentComponent {
 
   @Output() searchNdex: EventEmitter<string | null> = new EventEmitter<string | null>();
 
+  @Output() showModal: EventEmitter<void> = new EventEmitter<void>();
+
   searchTerm: string | null = null;
 
 }

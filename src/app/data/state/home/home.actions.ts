@@ -30,3 +30,6 @@ export const showNetworkDetails = createAction(
   '[Home Component] show network details',
   props<{ selectedNetwork: NetworkSearchItem }>(),
 );
+
+export const showModalFormat = createAction('[Home Component] show modal format');
+export const closeModalFormat = createAction('[Home Component] close modal format');

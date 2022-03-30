@@ -1,19 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { forkJoin, of } from 'rxjs';
-import { catchError, concatMap, map, switchMap } from 'rxjs/operators';
+import { forkJoin, from, of } from 'rxjs';
+import { catchError, concatMap, exhaustMap, map, switchMap } from 'rxjs/operators';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AppState } from '../app.state';
 import {
+  closeModalFormat,
   loadNetworkSummaries,
   loadNetworkSummariesFailure,
   loadNetworkSummariesSuccess,
   loadSampleSummaries,
   loadSampleSummariesFailure,
   loadSampleSummariesSuccess,
+  showModalFormat,
 } from './home.actions';
 import { ApiService } from '../../service/api.service';
 import { NetworkSearchItem } from '../../schema/network-search-item';
+import { HomeModalFormatComponent } from '../../../layout/home-modal-format/home-modal-format.component';
 
 @Injectable()
 export class HomeEffects {
@@ -83,10 +87,31 @@ export class HomeEffects {
     );
   });
 
+  openModal$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(showModalFormat),
+      exhaustMap(() => {
+        return this.showModal().pipe(
+          map((result) => {
+            return closeModalFormat();
+          }),
+          catchError(() => {
+            return of(closeModalFormat());
+          }),
+        );
+      }),
+    );
+  });
+
+  private showModal() {
+    const modal = this.modalService.open(HomeModalFormatComponent, { size: 'xl', scrollable: true });
+    return from(modal.result);
+  }
+
   constructor(
     private actions$: Actions,
     private store: Store<AppState>,
     private apiService: ApiService,
-  ) {
-  }
+    private modalService: NgbModal,
+  ) {}
 }

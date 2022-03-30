@@ -8,13 +8,15 @@ import {
   selectIsLoading,
   selectLastResultEmpty,
   selectLastTermEmpty,
-  selectNetworks, selectNetworkSummary,
+  selectNetworks,
+  selectNetworkSummary,
   selectSampleNetworks,
   selectSetupInProgress,
 } from '../../data/state/home/home.selectors';
 import {
   loadNetworkSummaries,
   loadSampleSummaries,
+  showModalFormat,
   showNetworkDetails,
 } from '../../data/state/home/home.actions';
 import { loadQueryParams } from '../../data/state/hydrator/hydrator.actions';
@@ -80,5 +82,9 @@ export class HomeComponent implements OnInit {
 
   selectNetwork(selectedNetwork: NetworkSearchItem) {
     this.store.dispatch(showNetworkDetails({ selectedNetwork }));
+  }
+
+  showModal() {
+    this.store.dispatch(showModalFormat());
   }
 }

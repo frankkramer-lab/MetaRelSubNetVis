@@ -167,7 +167,7 @@
         <h5 class="card-title">Empty result</h5>
         <p class="card-text">
           The term you queried did not yield any results. Check for typos and try synonyms. Also make
-          sure, that the network is actually <b>searchable</b> on NDEx.
+          sure, that the network is <b>searchable</b> on NDEx.
         </p>
       </div>
     </div>
@@ -257,8 +257,10 @@
             <div class="card-body">
               <h5 class="card-title">Invalid network</h5>
               <p class="card-text">
-                This network does not conform to the format we require to build the group comparison.
-                Check out the
+                This network does not conform to the
+                <span class="link-primary cursor text-decoration-underline"
+                      (click)="showModal.emit()">format</span>
+                we require to build the group comparison. Check out the
                 <a
                   href="https://www.ndexbio.org/viewer/networks/140d01f0-acfe-11ec-b3be-0ac135e8bacf"
                   target="_blank"

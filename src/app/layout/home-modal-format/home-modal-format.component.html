@@ -1,0 +1,68 @@
+<div class="modal-header">
+  <h4 class="modal-title">Data structure</h4>
+  <button type="button" class="btn-close" aria-label="Close"
+          (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+  <p>To make sure, your network is compatible as input for this class comparison, check your network
+    for the following properties.</p>
+
+  <h6>Basics</h6>
+
+  <p>The network needs to conform to the <a href="https://home.ndexbio.org/data-model/"
+                                            target="_blank">CX data model</a> and contain the
+    aspects <b>nodes</b>, <b>edges</b>, <b>nodeAttributes</b>, <b>networkAttributes</b>.</p>
+
+  <h6>Nodes</h6>
+
+  <p>Each node has to have an id (property <b>@id</b>) and a name (property <b>n</b>).</p>
+
+  <h6>Edges</h6>
+
+  <p>Each edge has to have an id (property <b>@id</b>), a source (property <b>s</b>) and a target
+    (property <b>t</b>).</p>
+
+  <h6>NodeAttributes</h6>
+
+  <p>Each node can have multiple attributes. A node attribute's relation to a node is indicated by
+    the node attribute's property <b>po</b>. The name of the node attribute (property <b>n</b>)
+    always starts with a patient identifier, followed by <b>_</b>. After that the attribute is
+    described. The following are required for <b>each</b> patient:
+  </p>
+
+  <ul>
+    <li><b>Score</b>: Relevance score, a numeric value</li>
+    <li><b>GE</b>: Gene expression, a numeric value</li>
+    <li><b>GE_Level</b>: Gene expression level, one of the following values: (LOW, HIGH, NORMAL)
+    </li>
+  </ul>
+
+  <p>Optional attributes are:</p>
+
+  <ul>
+    <li><b>MTB</b>: a boolean value</li>
+  </ul>
+
+  <h6>NetworkAttributes</h6>
+
+  <p>
+    NetworkAttributes are used to describe the patient samples. Please note: The <b>order</b> within
+    each of these attributes is crucical.
+  </p>
+
+  <ul>
+    <li><b>Patients</b>: String list of patient identifiers</li>
+    <li><b>PatientSubtype</b>: String list of each patient's cancer subtype</li>
+    <li><b>PatientSurvivalYears</b>: Double list of each patient's metastasis free survival</li>
+    <li><b>PatientGroups</b>: String list of each patient's group (in sum there can only be
+      <b>two</b>
+      different types of groups!)
+    </li>
+  </ul>
+
+  <p>
+    Furthermore the property <b>name</b> contains the network's name that will be used as a headline
+    for this application.
+  </p>
+
+</div>

@@ -1,0 +1,42 @@
+<ng-container *ngIf="patientsSelected !== 0; else emptyTemplate">
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="thresholdLabel">
+    {{
+    patientsSelected === 3
+      ? 'Both patients:'
+      : patientsSelected === 1
+        ? groupLabelA + ':'
+        : groupLabelB + ':'
+    }}
+  </span>
+    <input
+      [disabled]="true"
+      type="text"
+      id="threshold"
+      class="form-control"
+      [ngModel]="defined"
+    />
+  </div>
+
+  <input
+    (ngModelChange)="definedChangedEmitter.emit($event / (multiplier ?? 1))"
+    type="range"
+    class="form-range"
+    id="thresholdRange"
+    [min]="(min ?? 0) * (multiplier ?? 1)"
+    [max]="(max ?? 1) * (multiplier ?? 1)"
+    [ngModel]="(defined ?? 0) * (multiplier ?? 0)"
+  />
+
+  <div class="row mb-1">
+    <div class="col">
+      <small class="float-start">{{labelMin}}</small>
+      <small class="float-end">{{labelMax}}</small>
+    </div>
+  </div>
+
+</ng-container>
+
+<ng-template #emptyTemplate>
+  <p>Select at least one patient above</p>
+</ng-template>

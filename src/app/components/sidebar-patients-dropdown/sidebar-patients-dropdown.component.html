@@ -1,0 +1,34 @@
+<label class="h5" for="patient">{{ label === '' ? labelFallback : label }}</label>
+<div class="dropdown">
+  <button
+    aria-expanded="false"
+    class="btn btn-secondary dropdown-toggle"
+    data-bs-toggle="dropdown"
+    id="patient"
+    type="button"
+  >
+    <span *ngIf="!patient">Patient {{ label === '' ? labelFallback : label }}</span>
+    <span *ngIf="patient">{{ patient.name }} ({{ patient.subtype }})</span>
+  </button>
+  <ul aria-labelledby="patient" class="dropdown-menu">
+    <li>
+      <button (click)="patientReset.emit()" class="dropdown-item">Reset</button>
+    </li>
+    <li *ngFor="let patient of patients">
+      <button (click)="patientSelected.emit(patient)" class="dropdown-item">
+        {{ patient.name }} ({{ patient.subtype }})
+      </button>
+    </li>
+  </ul>
+</div>
+
+<ng-container *ngIf="patient">
+  <label for="subtype">Cancer subtype:</label>
+  <div id="subtype">
+    <b>{{ patient.subtype }}</b>
+  </div>
+  <label for="mfs">Metastasis free survival:</label>
+  <div id="mfs">
+    <b>{{ patient.mfsYears }}&nbsp;years</b>
+  </div>
+</ng-container>

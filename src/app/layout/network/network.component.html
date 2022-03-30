@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="p-0" [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-4' : 'col-auto'">
+    <app-sidebar
+      [sidebarVisible]="sidebarVisible$ | async"
+      [sidebarImportVisible]="sidebarImportVisible$ | async"
+      [sidebarPatientsVisible]="sidebarPatientsVisible$ | async"
+      [sidebarThresholdVisible]="sidebarThresholdVisible$ | async"
+      [sidebarNodesVisible]="sidebarNodesVisible$ | async"
+      [sidebarLayoutVisible]="sidebarLayoutVisible$ | async"
+      [sidebarDownloadVisible]="sidebarDownloadVisible$ | async"
+      [sidebarGeneratorVisible]="sidebarGeneratorVisible$ | async"
+      [sidebarImpressumVisible]="sidebarImpressumVisible$ | async"
+    ></app-sidebar>
+  </div>
+  <div class="light-mode" [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-8' : 'col'">
+    <app-graph [headline]="headline$ | async"></app-graph>
+  </div>
+</div>

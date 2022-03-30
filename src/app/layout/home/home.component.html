@@ -1,0 +1,14 @@
+<app-home-content
+  [isLoading]="isLoading$ | async"
+  [setupInProgress]="setupInProgress$ | async"
+  [sampleNetworks]="sampleNetworks$ | async"
+  [networks]="networks$ | async"
+  [selectedNetwork]="selectedNetwork$ | async"
+  [lastTermWasEmpty]="lastTermWasEmpty$ | async"
+  [lastResultWasEmpty]="lastResultWasEmpty$ | async"
+  (loadNetwork)="setupWorkspace($event)"
+  (searchNdex)="searchNdex($event)"
+  (networkDetailsEmitter)="selectNetwork($event)"
+  (showModal)="showModal()"
+></app-home-content>
+

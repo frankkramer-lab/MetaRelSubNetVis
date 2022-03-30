@@ -1,0 +1,154 @@
+<ng-container *ngIf="patientSelection === 0; else nodeTemplate">
+  <p>Select at least one patient above</p>
+</ng-container>
+
+<ng-template #nodeTemplate>
+  <h6>Color nodes</h6>
+
+  <!-- by gene expression level -->
+  <div class="form-check">
+    <input
+      (click)="nodeColorByChanged.emit(0)"
+      class="form-check-input"
+      type="radio"
+      name="colorNodesBy"
+      id="colorByGeneExpressionLevel"
+      value="geneExpressionLevel"
+      [checked]="nodeColorBy === 0"
+    />
+    <label class="form-check-label" for="colorByGeneExpressionLevel">
+      by gene expression level
+      <span class="ge text-light" *ngIf="nodeColorBy === 0"
+      >( <b id="low">Low</b>, <b id="normal">Normal</b>, <b id="high">High</b> )
+      </span>
+    </label>
+  </div>
+
+  <!-- by gene expression -->
+  <div class="form-check">
+    <input
+      (click)="nodeColorByChanged.emit(1)"
+      class="form-check-input"
+      type="radio"
+      name="colorNodesBy"
+      id="colorByGeneExpression"
+      value="geneExpression"
+      [checked]="nodeColorBy === 1"
+    />
+    <label class="form-check-label w-100" for="colorByGeneExpression">
+      <span> by gene expression </span>
+      <div *ngIf="nodeColorBy === 1" class="w-auto gradient"></div>
+      <div class="row" *ngIf="nodeColorBy === 1">
+        <small class="col text-start">{{geMin | norm : 2}}</small>
+        <small class="col text-center">{{geMidRange | norm : 2 }}</small>
+        <small class="col text-end">{{geMax | norm : 2 }}</small>
+      </div>
+    </label>
+  </div>
+
+  <!-- by relevance -->
+  <div class="form-check">
+    <input
+      (click)="nodeColorByChanged.emit(2)"
+      class="form-check-input"
+      type="radio"
+      name="colorNodesBy"
+      id="colorByRelevance"
+      value="relevance"
+      [checked]="nodeColorBy === 2"
+    />
+    <label class="form-check-label w-100" for="colorByRelevance">
+      <span> by relevance </span>
+      <div *ngIf="nodeColorBy === 2" class="w-auto gradient"></div>
+      <div class="row" *ngIf="nodeColorBy === 2">
+        <small class="col text-start">{{scoreMin | norm : 2 }}</small>
+        <small class="col text-center">{{scoreMidRange | norm : 2 }}</small>
+        <small class="col text-end">{{scoreMax | norm : 2 }}</small>
+      </div>
+    </label>
+  </div>
+
+  <hr />
+
+  <!-- TOGGLE: show all nodes -->
+  <div class="form-check form-switch mt-2">
+    <label class="form-check-label" for="showAllNodes">Show all nodes</label>
+    <input
+      (click)="showAllNodesChanged.emit()"
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      id="showAllNodes"
+      [checked]="showAllNodes"
+    />
+  </div>
+
+  <!-- TOGGLE: show MTB results -->
+  <div class="form-check form-switch mt-2">
+    <label class="form-check-label" for="showMtbResults"
+    >Show MTB results
+      <span class="circle"></span>
+    </label>
+    <input
+      (click)="showMtbResultsChanged.emit()"
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      id="showMtbResults"
+      [checked]="showMtbResults"
+    />
+  </div>
+
+  <!-- TOGGLE: show only shared nodes -->
+  <div class="form-check form-switch mt-2" *ngIf="patientSelection === 3">
+    <label class="form-check-label" for="showOnlyShared">Show only shared nodes</label>
+    <input
+      (click)="showOnlySharedNodesChanged.emit()"
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      id="showOnlyShared"
+      [checked]="showOnlySharedNodes"
+    />
+  </div>
+
+  <!-- node size can only be changed for one selected patient -->
+  <ng-container *ngIf="patientSelection === 1 || patientSelection === 2">
+    <hr />
+    <!-- set node size -->
+    <h6>Node size</h6>
+    <!-- by relevance -->
+    <div class="form-check">
+      <input
+        (click)="nodeSizeByChanged.emit(1)"
+        class="form-check-input"
+        type="radio"
+        name="nodeSizeBy"
+        id="nodeSizeByRelevance"
+        value="relevance"
+        [checked]="nodeSizeBy === 1"
+      />
+      <label class="form-check-label" for="nodeSizeByRelevance"> by relevance </label>
+    </div>
+    <!-- by gene expression -->
+    <div class="form-check">
+      <input
+        (click)="nodeSizeByChanged.emit(0)"
+        class="form-check-input"
+        type="radio"
+        name="nodeSizeBy"
+        id="nodeSizeByGeneExpression"
+        value="geneExpression"
+        [checked]="nodeSizeBy === 0"
+      />
+      <label class="form-check-label" for="nodeSizeByGeneExpression"> by gene expression </label>
+    </div>
+  </ng-container>
+</ng-template>
+
+<!-- FIT -->
+<div class="d-grid mt-2">
+  <button class="btn btn-secondary" type="button" (click)="fitGraphPressed.emit()">
+    Fit graph to viewport
+  </button>
+</div>

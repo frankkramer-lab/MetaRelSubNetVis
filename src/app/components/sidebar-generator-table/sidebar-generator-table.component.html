@@ -1,0 +1,98 @@
+<table class="table table-dark table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Variable</th>
+    <th scope="col">Value</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td><b>UUID</b></td>
+    <td><b>{{ uuid }}</b></td>
+  </tr>
+  <tr>
+    <td>Patient {{ groupLabelA === '' ? 'Group A' : groupLabelA }}</td>
+    <td>{{ patientA?.name }}</td>
+  </tr>
+  <tr>
+    <td>Patient {{ groupLabelB === '' ? 'Group B' : groupLabelB }}</td>
+    <td>{{ patientB?.name }}</td>
+  </tr>
+  <tr *ngIf="patientA !== null || patientB !== null">
+    <td>Threshold</td>
+    <td>{{ threshold }}</td>
+  </tr>
+  <tr *ngIf="nodes">
+    <td>Selected nodes ({{ nodes.length }} selected)</td>
+    <td>
+      <ul *ngIf="nodes.length > 0">
+        <li *ngFor="let node of nodes">{{ node.data.name }}</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>Node's color</td>
+    <td *ngIf="nodesColorBy === 0">Gene expression level (high, normal low)</td>
+    <td *ngIf="nodesColorBy === 1">Gene expression</td>
+    <td *ngIf="nodesColorBy === 2">Relevance</td>
+  </tr>
+  <tr>
+    <td>Node's size</td>
+    <td *ngIf="nodesSizeBy === 0">Gene expression</td>
+    <td *ngIf="nodesSizeBy === 1">Relevance</td>
+  </tr>
+  <tr>
+    <td>Show all nodes</td>
+    <td>{{ showAll ? 'yes' : 'no' }}</td>
+  </tr>
+  <tr>
+    <td>Show only shared nodes</td>
+    <td>{{ showShared ? 'yes' : 'no' }}</td>
+  </tr>
+  <tr>
+    <td>Show MTB results</td>
+    <td>{{ showMtb ? 'yes' : 'no' }}</td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="row mb-2">
+  <div class="col-6">
+
+<!--    <app-sidebar-generator-component-visibility [model]="test" (modelEmitter)="handleModelChange($event)"></app-sidebar-generator-component-visibility>-->
+
+<!--    <div class="dropdown">-->
+<!--      <button-->
+<!--        class="btn btn-secondary dropdown-toggle"-->
+<!--        type="button"-->
+<!--        id="selectSidebarVisibility"-->
+<!--        data-bs-toggle="dropdown"-->
+<!--        aria-expanded="false"-->
+<!--      >-->
+<!--        SidebarVisibility:-->
+<!--        <span *ngIf="sidebarVisibility === 0">Full</span>-->
+<!--        <span *ngIf="sidebarVisibility === 1">Button</span>-->
+<!--        <span *ngIf="sidebarVisibility === 2">None</span>-->
+<!--      </button>-->
+<!--      <ul class="dropdown-menu" aria-labelledby="selectSidebarVisibility">-->
+<!--        <li><a class="dropdown-item" (click)="sidebarVisibilityChanged.emit(0)">Full</a></li>-->
+<!--        <li><a class="dropdown-item" (click)="sidebarVisibilityChanged.emit(1)">Button</a></li>-->
+<!--        <li><a class="dropdown-item" (click)="sidebarVisibilityChanged.emit(2)">None</a></li>-->
+<!--      </ul>-->
+<!--    </div>-->
+  </div>
+  <div class="col-auto">
+    <div class="mb-3 form-check">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="triggerImageDownload"
+        [ngModel]="triggerImmediateImageDownload"
+        (ngModelChange)="triggerDownloadChanged.emit()"
+      />
+      <label class="form-check-label" for="triggerImageDownload"
+      >Set immediate image download</label
+      >
+    </div>
+  </div>
+</div>

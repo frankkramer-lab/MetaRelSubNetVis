@@ -1,0 +1,49 @@
+
+  <!-- select: data type -->
+  <div class="d-grid mb-3">
+    <div class="btn-group btn-group-toggle" ngbRadioGroup name="datatypes" [ngModel]="extension">
+      <label ngbButtonLabel class="btn-secondary" *ngFor="let type of availableDatatypes">
+        <input class="btn-radio-hidden" ngbButton type="radio" (change)="extensionChanged.emit(type)" [value]="type"> {{type}}
+      </label>
+    </div>
+  </div>
+
+  <!-- select: scale -->
+  <div class="input-group mb-3" *ngIf="extension !== 'SVG'">
+    <span class="input-group-text" id="scaleLabel">Scale image by</span>
+    <input
+      type="number"
+      class="form-control"
+      id="scale"
+      aria-label="Scale image by"
+      aria-describedby="scaleLabel"
+      [ngModel]="scale"
+      (ngModelChange)="scaleChanged.emit($event)"
+    />
+  </div>
+
+  <!-- error handling: scale -->
+  <p *ngIf="!isFormValid" class="alert alert-danger">
+    Scale is required and has to be greater than 0 and cannot be greater than 10.
+  </p>
+
+  <!-- select: background transparent -->
+  <div *ngIf="extension === 'PNG'" class="mb-3">
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="transparent"
+        [ngModel]="transparentBackground"
+        (ngModelChange)="transparentBackgroundChanged.emit()"
+      />
+      <label class="form-check-label" for="transparent">Transparent background</label>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="d-grid" *ngIf="buttonVisible">
+    <button class="btn btn-success" [disabled]="!isFormValid" (click)="triggerImageDownload.emit()">
+      <fa-icon icon="download"></fa-icon>&nbsp; Download image
+    </button>
+  </div>

@@ -1,0 +1,12 @@
+<app-sidebar-threshold-selector
+  [min]="min$ | async"
+  [max]="max$ | async"
+  [multiplier]="multiplier$ | async"
+  [defined]="defined$ | async"
+  [patientsSelected]="patientSelection$ | async"
+  [groupLabelA]="groupLabelA$ | async"
+  [groupLabelB]="groupLabelB$ | async"
+  [labelMin]="thresholdMinLabel$ | async"
+  [labelMax]="thresholdMaxLabel$ | async"
+  (definedChangedEmitter)="definedChanged($event)"
+></app-sidebar-threshold-selector>

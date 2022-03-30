@@ -6,11 +6,11 @@ import { NetworkGuard } from './core/guard/network.guard';
 import { LinkComponent } from './layout/link/link.component';
 
 const routes: Routes = [
-  { path: '',
+  { path: 'home',
     component: HomeComponent,
   },
   {
-    path: 'link',
+    path: '',
     component: LinkComponent,
   },
   {
@@ -18,7 +18,7 @@ const routes: Routes = [
     component: NetworkComponent,
     canActivate: [NetworkGuard]
   },
-  { path: '**', redirectTo: '', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];
 
 @NgModule({

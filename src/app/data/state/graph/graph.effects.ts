@@ -53,7 +53,8 @@ import { ImageDownloadConfig } from '../../schema/image-download-config';
 import { hydrateTriggerDownloadSuccess, markMultipleNodes } from '../hydrator/hydrator.actions';
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
-import { initializeCore } from '../network/network.actions';
+import {initCoreFailure, initCoreSuccess, initializeCore} from '../network/network.actions';
+import {of} from 'rxjs';
 
 @Injectable()
 export class GraphEffects {
@@ -64,18 +65,18 @@ export class GraphEffects {
         concatLatestFrom(() => this.store.select(selectNetwork)),
         map(([, network]) => {
           if (!network) {
-            return;
+            return initCoreFailure();
           }
           this.graphService.initializeCore(network);
+          return initCoreSuccess();
         }),
       );
     },
-    { dispatch: false },
   );
 
   renderGraph$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(setDefined, toggleShowMtbResults, setNodeColorBy, setNodeSizeBy),
+      ofType(initCoreSuccess, setDefined, toggleShowMtbResults, setNodeColorBy, setNodeSizeBy),
       concatLatestFrom(() => [
         this.store.select(selectPatientADetails),
         this.store.select(selectPatientBDetails),

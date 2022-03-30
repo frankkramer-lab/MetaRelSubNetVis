@@ -13,7 +13,7 @@ export class SidebarEffects {
       return this.actions$.pipe(
         ofType(navigateHome),
         map(() => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/home']);
         }),
       );
     },

@@ -1,4 +1,10 @@
-# Technical stuff
+# Introduction
+
+Comparing groups of patients with respect to biological specifics is one of the building blocks for precision medicine. Such a data-driven analysis does not have to be abstract. With [MetaRelSubNetVis](https://frankkramer-lab.github.io/MetaRelSubNetVis/) we provide a visualization tool that allows users to inspect differences between two groups of patients.
+
+Demo can be found here: https://frankkramer-lab.github.io/MetaRelSubNetVis/
+
+# Technical concerns
 
 ## Angular version
 

@@ -77,6 +77,7 @@ import { LinkComponent } from './layout/link/link.component';
 import { LinkContentComponent } from './layout/link-content/link-content.component';
 import { HomeContentComponent } from './layout/home-content/home-content.component';
 import { HomeModalFormatComponent } from './layout/home-modal-format/home-modal-format.component';
+import { SidebarGeneratorBoolVisibilityComponent } from './components/sidebar-generator-bool-visibility/sidebar-generator-bool-visibility.component';
 
 @NgModule({
   declarations: [
@@ -106,6 +107,7 @@ import { HomeModalFormatComponent } from './layout/home-modal-format/home-modal-
     LinkContentComponent,
     HomeContentComponent,
     HomeModalFormatComponent,
+    SidebarGeneratorBoolVisibilityComponent,
   ],
   imports: [
     BrowserModule,

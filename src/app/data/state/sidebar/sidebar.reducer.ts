@@ -24,6 +24,7 @@ const initialState: SidebarState = {
   visibilityDownload: ComponentVisibilityEnum.button,
   visibilityGenerator: ComponentVisibilityEnum.button,
   visibilityImpressum: ComponentVisibilityEnum.button,
+  visibilityBackButton: true,
 };
 
 export const sidebarReducer = createReducer(
@@ -98,6 +99,7 @@ export const sidebarReducer = createReducer(
         cmpDownloadVis,
         cmpGeneratorVis,
         cmpImpressumVis,
+        backButtonVis,
       },
     ): SidebarState => {
       return {
@@ -110,6 +112,7 @@ export const sidebarReducer = createReducer(
         visibilityDownload: cmpDownloadVis,
         visibilityGenerator: cmpGeneratorVis,
         visibilityImpressum: cmpImpressumVis,
+        visibilityBackButton: backButtonVis,
       };
     },
   ),

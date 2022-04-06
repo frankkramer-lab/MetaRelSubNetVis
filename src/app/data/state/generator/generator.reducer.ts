@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { GeneratorState } from './generator.state';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 import {
+  setBackButtonVisibility,
   setComponentVisibilityDownload,
   setComponentVisibilityGenerator,
   setComponentVisibilityImport,
@@ -34,6 +35,7 @@ const initialState: GeneratorState = {
   componentDownloadVisibility: ComponentVisibilityEnum.button,
   componentGeneratorVisibility: ComponentVisibilityEnum.button,
   componentImpressumVisibility: ComponentVisibilityEnum.button,
+  backButtonVisibility: true,
   triggerImageDownload: false,
   domain: environment.host,
 };
@@ -104,6 +106,13 @@ export const generatorReducer = createReducer(
         sidebarVisibility,
       };
     },
+  ),
+  on(
+    setBackButtonVisibility,
+    (state: GeneratorState, { backButtonVisibility }): GeneratorState => ({
+      ...state,
+      backButtonVisibility,
+    }),
   ),
   on(
     toggleGeneratorTriggerImmediateDownload,

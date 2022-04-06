@@ -93,6 +93,7 @@ export const hydrateSidebarVisibilitySuccess = createAction(
     cmpDownloadVis: ComponentVisibilityEnum;
     cmpGeneratorVis: ComponentVisibilityEnum;
     cmpImpressumVis: ComponentVisibilityEnum;
+    backButtonVis: boolean;
   }>(),
 );
 export const hydrateSidebarVisibilityFailure = createAction(

@@ -10,4 +10,5 @@ export interface SidebarState {
   visibilityDownload: ComponentVisibilityEnum;
   visibilityGenerator: ComponentVisibilityEnum;
   visibilityImpressum: ComponentVisibilityEnum;
+  visibilityBackButton: boolean;
 }

@@ -3,7 +3,7 @@
   <!-- headline -->
   <h3 class="mt-2 m-2">
     <div class="row">
-      <div class="col-auto">
+      <div class="col-auto" *ngIf="sidebarBackButtonVisible">
         <fa-icon (click)="returnHome()"
                  placement="right"
                  ngbTooltip="Return to home"

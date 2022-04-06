@@ -292,6 +292,7 @@ export class HydratorEffects {
           cmpDownloadVis: config.cD ?? 1,
           cmpGeneratorVis: config.cG ?? 1,
           cmpImpressumVis: config.cIm ?? 1,
+          backButtonVis: config.bb ?? true,
         });
       }),
     );

@@ -1,11 +1,13 @@
 <div class="container-fluid p-5 mb-5">
-
   <!-- headline -->
   <div class="d-block">
     <h1 class="display-3 row">
       <div class="col-10">MetaRelSubNetVis</div>
       <div class="col-2">
-        <a href="https://www.uni-augsburg.de/de/fakultaet/fai/informatik/prof/misit/" target="_blank">
+        <a
+          href="https://www.uni-augsburg.de/de/fakultaet/fai/informatik/prof/misit/"
+          target="_blank"
+        >
           <img
             class="img-fluid"
             src="https://assets.uni-augsburg.de/media/filer_public_thumbnails/filer_public/69/0d/690d57b6-7679-411b-8a60-6ae0d02122ef/misitsvg.png__1080x2000_q85_subject_location-215%2C89_subsampling-2.png"
@@ -73,12 +75,12 @@
           data-bs-parent="#homeAccordion"
         >
           <div class="accordion-body">
-            The <b>N</b>etwork <b>D</b>ata <b>Ex</b>change is an online platform specifically designed
-            for the distribution of biological network data among scientists. Users can upload, share
-            and distribute networks in diverse formats and sizes. For further information, please read
-            their publication
+            The <b>N</b>etwork <b>D</b>ata <b>Ex</b>change is an online platform specifically
+            designed for the distribution of biological network data among scientists. Users can
+            upload, share and distribute networks in diverse formats and sizes. For further
+            information, please read their publication
             <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4649937/" target="_blank"
-            >NDEx, the Network Data Exchange</a
+              >NDEx, the Network Data Exchange</a
             >
             or visit the <a href="https://www.ndexbio.org/" target="_blank">website</a>.
           </div>
@@ -108,8 +110,11 @@
           <div class="accordion-body">
             To kick-off your visualization, you need a network stored on NDEx that conforms to the
             <a href="https://home.ndexbio.org/data-model/" target="_blank">CX data model</a> and
-            contains all aspects that we expect during rendering. Check out our dummy network to find
-            out about the necessary aspects <a href="#" target="_blank">here</a>.
+            contains all aspects that we expect during rendering. Check out our dummy network to
+            find out about the necessary aspects
+            <span class="link-primary cursor text-decoration-underline" (click)="showModal.emit()"
+              >here</span
+            >.
           </div>
         </div>
       </div>
@@ -145,8 +150,8 @@
         >
           <span *ngIf="!isLoading">Search</span>
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </span>
+            <span class="visually-hidden">Loading...</span>
+          </span>
         </button>
       </div>
     </div>
@@ -166,8 +171,8 @@
       <div class="card-body">
         <h5 class="card-title">Empty result</h5>
         <p class="card-text">
-          The term you queried did not yield any results. Check for typos and try synonyms. Also make
-          sure, that the network is <b>searchable</b> on NDEx.
+          The term you queried did not yield any results. Check for typos and try synonyms. Also
+          make sure, that the network is <b>searchable</b> on NDEx.
         </p>
       </div>
     </div>
@@ -202,7 +207,7 @@
 
               <ng-template #blockInvalid>
                 <fa-icon class="text-warning" icon="exclamation-triangle"></fa-icon>&nbsp;{{
-                network.name
+                  network.name
                 }}
               </ng-template>
               <ng-template #blockValid>{{ network.name }}</ng-template>
@@ -217,16 +222,16 @@
           <!-- details table -->
           <table class="table">
             <thead>
-            <th>UUID</th>
-            <th>Owner</th>
-            <th># Nodes</th>
-            <th># Edges</th>
+              <th>UUID</th>
+              <th>Owner</th>
+              <th># Nodes</th>
+              <th># Edges</th>
             </thead>
             <tbody>
-            <td>{{ selectedNetwork.externalId }}</td>
-            <td>{{ selectedNetwork.owner }}</td>
-            <td>{{ selectedNetwork.nodeCount }}</td>
-            <td>{{ selectedNetwork.edgeCount }}</td>
+              <td>{{ selectedNetwork.externalId }}</td>
+              <td>{{ selectedNetwork.owner }}</td>
+              <td>{{ selectedNetwork.nodeCount }}</td>
+              <td>{{ selectedNetwork.edgeCount }}</td>
             </tbody>
           </table>
 
@@ -236,12 +241,12 @@
               <h5 class="card-title">Description</h5>
               <ng-container
                 *ngIf="
-                selectedNetwork &&
-                  selectedNetwork.description &&
-                  selectedNetwork.description.length > 0;
-                then blockDescription;
-                else blockDefault
-              "
+                  selectedNetwork &&
+                    selectedNetwork.description &&
+                    selectedNetwork.description.length > 0;
+                  then blockDescription;
+                  else blockDefault
+                "
               ></ng-container>
               <ng-template #blockDescription>
                 <p class="card-text" [innerHTML]="selectedNetwork.description"></p>
@@ -258,16 +263,19 @@
               <h5 class="card-title">Invalid network</h5>
               <p class="card-text">
                 This network does not conform to the
-                <span class="link-primary cursor text-decoration-underline"
-                      (click)="showModal.emit()">format</span>
+                <span
+                  class="link-primary cursor text-decoration-underline"
+                  (click)="showModal.emit()"
+                  >format</span
+                >
                 we require to build the group comparison. Check out the
                 <a
                   href="https://www.ndexbio.org/viewer/networks/140d01f0-acfe-11ec-b3be-0ac135e8bacf"
                   target="_blank"
-                >example network</a
+                  >example network</a
                 >. If the issue persists or you need further assistance, please open an issue on
                 <a href="https://github.com/frankkramer-lab/MetaRelSubNetVis/issues" target="_blank"
-                >GitHub</a
+                  >GitHub</a
                 >.
               </p>
             </div>
@@ -282,7 +290,7 @@
             </div>
             <div class="col d-grid gap-0">
               <a [href]="selectedNetwork.linkNdex" target="_blank" class="btn btn-outline-info"
-              >Open this network on NDEx</a
+                >Open this network on NDEx</a
               >
             </div>
           </div>
@@ -308,8 +316,8 @@
             aria-controls="faq1A"
           >
             <fa-icon icon="comments"></fa-icon>
-            &nbsp;I can't find the network I'm looking for, although it's marked as public. What's the
-            problem here?
+            &nbsp;I can't find the network I'm looking for, although it's marked as public. What's
+            the problem here?
           </button>
         </h2>
         <div
@@ -349,7 +357,6 @@
           <div class="accordion-body">We currently don't support privately stored networks.</div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -359,13 +366,15 @@
       <hr />
 
       <div class="col">
-        <a href="https://www.uni-augsburg.de/de/fakultaet/fai/informatik/prof/misit/" target="_blank"
-        >Chair</a
+        <a
+          href="https://www.uni-augsburg.de/de/fakultaet/fai/informatik/prof/misit/"
+          target="_blank"
+          >Chair</a
         >
       </div>
       <div class="col">
         <a href="https://www.sys-med.de/en/junior-research-groups/multipath/" target="_blank"
-        >Project</a
+          >Project</a
         >
       </div>
       <div class="col">
@@ -376,11 +385,9 @@
       </div>
       <div class="col">
         <a href="https://www.uni-augsburg.de/de/impressum/" target="_blank"
-        >Legal notice / disclosure</a
+          >Legal notice / disclosure</a
         >
       </div>
     </div>
   </div>
-
 </div>
-

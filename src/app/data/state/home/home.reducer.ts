@@ -34,11 +34,19 @@ export const homeReducer = createReducer(
     }),
   ),
   on(loadSampleSummariesSuccess, (state: HomeState, { sampleNetworks }): HomeState => {
+    if (sampleNetworks.length > 0) {
+      return {
+        ...state,
+        isLoading: false,
+        sampleNetworks,
+        selectedNetwork: sampleNetworks[0],
+      };
+    }
     return {
       ...state,
       isLoading: false,
       sampleNetworks,
-      selectedNetwork: sampleNetworks[0],
+      selectedNetwork: null,
     };
   }),
   on(loadSampleSummariesFailure, (state: HomeState): HomeState => ({ ...state, isLoading: false })),

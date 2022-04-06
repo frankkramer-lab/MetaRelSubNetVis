@@ -53,6 +53,9 @@ export const hydratorReducer = createReducer(
     if (params.cIm !== undefined) {
       config.cIm = Number(params.cIm);
     }
+    if (params.bb !== undefined) {
+      config.bb = params.bb === 'true';
+    }
 
     if (params.dwn) {
       config.dwn = params.dwn === 'true';

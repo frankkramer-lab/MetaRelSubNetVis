@@ -24,6 +24,7 @@ import {
   selectShowOnlySharedNodes,
 } from '../../data/state/layout/layout.selectors';
 import {
+  selectGenBackButtonVis,
   selectGenCmpVisDownload,
   selectGenCmpVisGenerator,
   selectGenCmpVisImpressum,
@@ -39,6 +40,7 @@ import {
 } from '../../data/state/generator/generator.selectors';
 import {
   copyToClipboard,
+  setBackButtonVisibility,
   setComponentVisibilityDownload,
   setComponentVisibilityGenerator,
   setComponentVisibilityImport,
@@ -109,6 +111,8 @@ export class SidebarGeneratorComponent implements OnInit {
 
   cmpImpressumVisibility$!: Observable<ComponentVisibilityEnum>;
 
+  backButtonVisibility$!: Observable<boolean>;
+
   url$!: Observable<string>;
 
   constructor(private store: Store<AppState>) {
@@ -138,6 +142,7 @@ export class SidebarGeneratorComponent implements OnInit {
     this.cmpDownloadVisibility$ = this.store.select(selectGenCmpVisDownload);
     this.cmpGeneratorVisibility$ = this.store.select(selectGenCmpVisGenerator);
     this.cmpImpressumVisibility$ = this.store.select(selectGenCmpVisImpressum);
+    this.backButtonVisibility$ = this.store.select(selectGenBackButtonVis);
     this.url$ = this.store.select(selectUrl);
   }
 
@@ -195,5 +200,9 @@ export class SidebarGeneratorComponent implements OnInit {
 
   setVisibilityImpressum(visibility: ComponentVisibilityEnum) {
     this.store.dispatch(setComponentVisibilityImpressum({ visibility }));
+  }
+
+  setVisibilityBackButton(backButtonVisibility: boolean) {
+    this.store.dispatch(setBackButtonVisibility({ backButtonVisibility }));
   }
 }

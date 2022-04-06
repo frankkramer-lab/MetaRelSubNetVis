@@ -100,6 +100,16 @@
   (modelEmitter)="setVisibilityImpressum($event)"
 ></app-sidebar-generator-component-visibility>
 
+
+<!-- back button -->
+<app-sidebar-generator-bool-visibility
+  name="Back button"
+  tooltip="Change the visibility for the back button.<ul><li><b>None</b>: Button will not be visible</li><li><b>Full</b>: Button will be visible</li></ul>"
+  [parentVisibility]="sidebarVisibility$ | async"
+  [model]="backButtonVisibility$ | async"
+  (modelEmitter)="setVisibilityBackButton($event)"
+></app-sidebar-generator-bool-visibility>
+
 <hr>
 
 <app-sidebar-generator-result

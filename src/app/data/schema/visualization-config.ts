@@ -37,15 +37,52 @@ export interface VisualizationConfig {
    * Sidebar's impressum component visibility
    */
   cIm?: ComponentVisibilityEnum;
+  /**
+   * Sidebar's back button's visibility
+   */
+  bb?: boolean;
+  /**
+   * True, if the image download is to be triggered
+   */
   dwn?: boolean;
+  /**
+   * Image configuration for the triggered image download
+   */
   img?: ImageDownloadConfig;
+  /**
+   * Defines coloring of the nodes
+   */
   col?: NodeColorByEnum;
+  /**
+   * Defines sizing of the nodes
+   */
   size?: NodeSizeByEnum;
+  /**
+   * Selected patient group A
+   */
   pa?: string;
+  /**
+   * Selected patient group B
+   */
   pb?: string;
+  /**
+   * List of selected nodes
+   */
   sel?: string[];
+  /**
+   * True, if all nodes are visible
+   */
   all?: boolean;
+  /**
+   * True, if MTB results are to be rendered
+   */
   mtb?: boolean;
+  /**
+   * True, if only shared nodes are to be shown
+   */
   shared?: boolean;
+  /**
+   * Defined threshold
+   */
   th?: number;
 }

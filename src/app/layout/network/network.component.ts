@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
 import { AppState } from '../../data/state/app.state';
 import {
+  selectSidebarBackButtonVisibility,
   selectSidebarVisibility,
   selectSidebarVisibilityDownload,
   selectSidebarVisibilityGenerator,
@@ -42,6 +43,8 @@ export class NetworkComponent implements OnInit, AfterViewInit {
 
   sidebarImpressumVisible$!: Observable<ComponentVisibilityEnum>;
 
+  sidebarBackButtonVisible$!: Observable<boolean>;
+
   headline$!: Observable<string | null>;
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {}
@@ -56,6 +59,7 @@ export class NetworkComponent implements OnInit, AfterViewInit {
     this.sidebarDownloadVisible$ = this.store.select(selectSidebarVisibilityDownload);
     this.sidebarGeneratorVisible$ = this.store.select(selectSidebarVisibilityGenerator);
     this.sidebarImpressumVisible$ = this.store.select(selectSidebarVisibilityImpressum);
+    this.sidebarBackButtonVisible$ = this.store.select(selectSidebarBackButtonVisibility);
 
     this.headline$ = this.store.select(selectHeadline);
   }

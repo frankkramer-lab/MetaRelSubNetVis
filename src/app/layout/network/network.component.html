@@ -10,6 +10,7 @@
       [sidebarDownloadVisible]="sidebarDownloadVisible$ | async"
       [sidebarGeneratorVisible]="sidebarGeneratorVisible$ | async"
       [sidebarImpressumVisible]="sidebarImpressumVisible$ | async"
+      [sidebarBackButtonVisible]="sidebarBackButtonVisible$ | async"
     ></app-sidebar>
   </div>
   <div class="light-mode" [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-8' : 'col'">

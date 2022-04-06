@@ -38,6 +38,8 @@ export class SidebarComponent {
 
   @Input() sidebarImpressumVisible!: ComponentVisibilityEnum | null;
 
+  @Input() sidebarBackButtonVisible!: boolean | null;
+
   constructor(private store: Store<AppState>) {}
 
   returnHome() {

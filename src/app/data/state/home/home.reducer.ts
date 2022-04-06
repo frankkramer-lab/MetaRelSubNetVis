@@ -38,6 +38,7 @@ export const homeReducer = createReducer(
       ...state,
       isLoading: false,
       sampleNetworks,
+      selectedNetwork: sampleNetworks[0],
     };
   }),
   on(loadSampleSummariesFailure, (state: HomeState): HomeState => ({ ...state, isLoading: false })),

@@ -55,3 +55,7 @@ export const setComponentVisibilityImpressum = createAction(
   "[Generator Component] set sidebar's component impressum visibility",
   props<{ visibility: ComponentVisibilityEnum }>(),
 );
+export const setBackButtonVisibility = createAction(
+  '[Generator Component] set back button visibility',
+  props<{ backButtonVisibility: boolean }>(),
+);

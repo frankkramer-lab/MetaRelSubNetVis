@@ -12,6 +12,7 @@ export interface GeneratorState {
   componentGeneratorVisibility: ComponentVisibilityEnum;
   componentImpressumVisibility: ComponentVisibilityEnum;
   imageDownloadConfig: ImageDownloadConfig;
+  backButtonVisibility: boolean;
   isImageDownloadConfigValid: boolean;
   triggerImageDownload: boolean;
   domain: string;

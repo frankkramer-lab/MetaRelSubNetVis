@@ -61,6 +61,10 @@ export const selectGenCmpVisImpressum = createSelector(
   selectState,
   (state: GeneratorState) => state.componentImpressumVisibility,
 );
+export const selectGenBackButtonVis = createSelector(
+  selectState,
+  (state: GeneratorState) => state.backButtonVisibility,
+);
 export const selectUrl = createSelector(
   selectState,
   selectLayoutState,
@@ -69,15 +73,7 @@ export const selectUrl = createSelector(
   selectPatientB,
   selectDefined,
   selectMarkedNodes,
-  (
-    state,
-    layoutState,
-    uuid,
-    patientA,
-    patientB,
-    defined,
-    markedNodes,
-  ) => {
+  (state, layoutState, uuid, patientA, patientB, defined, markedNodes) => {
     const queryParams: string[] = [];
 
     queryParams.push(`uuid=${uuid}`);
@@ -128,6 +124,7 @@ export const selectUrl = createSelector(
         queryParams.push(`cD=${state.componentDownloadVisibility}`);
         queryParams.push(`cG=${state.componentGeneratorVisibility}`);
         queryParams.push(`cIm=${state.componentImpressumVisibility}`);
+        queryParams.push(`bb=${state.backButtonVisibility}`);
       }
     }
 

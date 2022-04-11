@@ -8,5 +8,8 @@
   [groupLabelB]="groupLabelB$ | async"
   [labelMin]="thresholdMinLabel$ | async"
   [labelMax]="thresholdMaxLabel$ | async"
+  [responsibleProperty]="thresholdProperty$ | async"
+  [availableProperties]="availableProperties$ | async"
+  (propertyChangedEmitter)="propertyChanged($event)"
   (definedChangedEmitter)="definedChanged($event)"
 ></app-sidebar-threshold-selector>

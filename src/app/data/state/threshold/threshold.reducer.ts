@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { ThresholdState } from './threshold.state';
-import { setDefined, setLabelMin } from './threshold.action';
+import { setDefined, setProperty } from './threshold.action';
 import {
   hydrateThresholdSuccess,
   loadDataFailure,
@@ -10,9 +10,11 @@ import {
 import { navigateHome } from '../sidebar/sidebar.actions';
 
 const initialState: ThresholdState = {
-  groupA: null,
-  groupB: null,
+  rangeGroupA: null,
+  rangeGroupB: null,
   defined: null,
+  responsibleProperty: null,
+  availableProperties: [],
   multiplier: 1000000000,
   isLoading: false,
   labelMin: null,
@@ -24,29 +26,39 @@ export const thresholdReducer = createReducer(
   on(loadQueryParams, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: true })),
   on(loadDataFailure, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: false })),
   on(loadDataSuccess, (state: ThresholdState, payload): ThresholdState => {
+    if (payload.thresholds.availableProperties.length > 0) {
+      return {
+        ...state,
+        isLoading: false,
+        responsibleProperty: payload.thresholds.availableProperties[0],
+        availableProperties: payload.thresholds.availableProperties,
+        rangeGroupA: payload.thresholds.rangeGroupA,
+        rangeGroupB: payload.thresholds.rangeGroupB,
+      };
+    }
     return {
       ...state,
       isLoading: false,
-      groupA: payload.thresholds.groupA,
-      groupB: payload.thresholds.groupB,
-      labelMin: Math.min(
-        payload.thresholds.groupA.threshold,
-        payload.thresholds.groupB.threshold,
-      ).toString(),
-      labelMax: Math.max(payload.thresholds.groupA.max, payload.thresholds.groupB.max).toString(),
+      responsibleProperty: null,
+      availableProperties: payload.thresholds.availableProperties,
+      rangeGroupA: payload.thresholds.rangeGroupA,
+      rangeGroupB: payload.thresholds.rangeGroupB,
     };
   }),
   on(
     setDefined,
     hydrateThresholdSuccess,
-    (state: ThresholdState, { defined }): ThresholdState => ({
+    (state: ThresholdState, { thresholdDefinition }): ThresholdState => ({
       ...state,
-      defined,
+      defined: thresholdDefinition.defined,
     }),
   ),
   on(
-    setLabelMin,
-    (state: ThresholdState, { labelMin }): ThresholdState => ({ ...state, labelMin }),
+    setProperty,
+    (state: ThresholdState, { responsibleProperty }): ThresholdState => ({
+      ...state,
+      responsibleProperty,
+    }),
   ),
   on(navigateHome, (state: ThresholdState): ThresholdState => ({ ...state, defined: null })),
 );

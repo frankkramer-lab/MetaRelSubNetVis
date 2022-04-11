@@ -9,6 +9,8 @@ import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import { NetworkNode } from '../../schema/network-node';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
+import { Property } from '../../schema/property';
+import { ThresholdDefinition } from '../../schema/threshold-definition';
 
 export const loadQueryParams = createAction(
   '[Layout Component] load query params',
@@ -26,6 +28,8 @@ export const loadDataSuccess = createAction(
     patients: PatientCollection;
     thresholds: Threshold;
     headline: string;
+    properties: Property[];
+    highlightColor: string;
   }>(),
 );
 
@@ -46,7 +50,7 @@ export const hydratePatientAPatientBFailure = createAction(
 
 export const hydrateThresholdSuccess = createAction(
   '[Hydrator Effects] hydrate threshold success',
-  props<{ defined: number }>(),
+  props<{ thresholdDefinition: ThresholdDefinition }>(),
 );
 export const hydrateThresholdFailure = createAction('[Hydrator Effects] hydrate threshold failure');
 
@@ -56,7 +60,7 @@ export const hydrateLayoutSuccess = createAction(
     showAll: boolean;
     showShared: boolean;
     showMtb: boolean;
-    nodeColorBy: NodeColorByEnum;
+    nodeColorBy: Property | null;
     nodeSizeBy: NodeSizeByEnum;
   }>(),
 );

@@ -3,9 +3,9 @@
  */
 export interface ThresholdItem {
   /**
-   * Threshold
+   * Minimum
    */
-  threshold: number;
+  min: number;
   /**
    * Maximum
    */

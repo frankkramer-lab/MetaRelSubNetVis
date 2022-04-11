@@ -22,30 +22,6 @@ export interface PatientCollection {
    */
   detailsB: PatientDetails;
   /**
-   * Minimal gene expression
-   */
-  geMin: number;
-  /**
-   * Center between extrema gene expression
-   */
-  geMidRange: number;
-  /**
-   * Maximal gene expression
-   */
-  geMax: number;
-  /**
-   * Minimal relevance score
-   */
-  scoreMin: number;
-  /**
-   * Center between extrema relevance scores
-   */
-  scoreMidRange: number;
-  /**
-   * Maximal relevance score
-   */
-  scoreMax: number;
-  /**
    * Label for patient group A
    */
   labelA: string;

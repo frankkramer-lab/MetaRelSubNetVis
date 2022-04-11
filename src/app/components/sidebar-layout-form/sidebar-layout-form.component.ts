@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
+import { Property } from '../../data/schema/property';
 
 @Component({
   selector: 'app-sidebar-layout-form',
@@ -11,7 +12,7 @@ import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
 export class SidebarLayoutFormComponent {
   @Input() patientSelection!: PatientSelectionEnum | null;
 
-  @Input() nodeColorBy!: NodeColorByEnum | null;
+  @Input() nodeColorBy!: Property | null;
 
   @Input() nodeSizeBy!: NodeSizeByEnum | null;
 
@@ -33,7 +34,7 @@ export class SidebarLayoutFormComponent {
 
   @Input() scoreMax!: number | null;
 
-  @Output() nodeColorByChanged: EventEmitter<NodeColorByEnum> = new EventEmitter<NodeColorByEnum>();
+  @Output() nodeColorByChanged: EventEmitter<Property | null> = new EventEmitter<Property | null>();
 
   @Output() nodeSizeByChanged: EventEmitter<NodeSizeByEnum> = new EventEmitter<NodeSizeByEnum>();
 

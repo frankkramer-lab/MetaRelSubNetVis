@@ -3,10 +3,14 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../../data/state/app.state';
 import {
-  selectDefined, selectLabelMax, selectLabelMin,
+  selectAvailableProperties,
+  selectDefined,
+  selectLabelMax,
+  selectLabelMin,
   selectMax,
   selectMin,
   selectMultiplier,
+  selectResponsibleProperty,
 } from '../../data/state/threshold/threshold.selectors';
 import {
   selectGroupLabelA,
@@ -14,7 +18,9 @@ import {
   selectPatientSelection,
 } from '../../data/state/patient/patient.selectors';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
-import { setDefined } from '../../data/state/threshold/threshold.action';
+import { setDefined, setProperty } from '../../data/state/threshold/threshold.action';
+import { Property } from '../../data/schema/property';
+import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 
 @Component({
   selector: 'app-sidebar-threshold',
@@ -40,6 +46,10 @@ export class SidebarThresholdComponent implements OnInit {
 
   thresholdMaxLabel$!: Observable<string | null>;
 
+  thresholdProperty$!: Observable<Property | null>;
+
+  availableProperties$!: Observable<Property[]>;
+
   @Output() thresholdEmitter: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private store: Store<AppState>) {
@@ -55,9 +65,15 @@ export class SidebarThresholdComponent implements OnInit {
     this.groupLabelB$ = this.store.select(selectGroupLabelB);
     this.thresholdMinLabel$ = this.store.select(selectLabelMin);
     this.thresholdMaxLabel$ = this.store.select(selectLabelMax);
+    this.thresholdProperty$ = this.store.select(selectResponsibleProperty);
+    this.availableProperties$ = this.store.select(selectAvailableProperties);
   }
 
-  definedChanged(defined: number) {
-    this.store.dispatch(setDefined({ defined }));
+  definedChanged(thresholdDefinition: ThresholdDefinition) {
+    this.store.dispatch(setDefined({ thresholdDefinition }));
+  }
+
+  propertyChanged(responsibleProperty: Property) {
+    this.store.dispatch(setProperty({ responsibleProperty }));
   }
 }

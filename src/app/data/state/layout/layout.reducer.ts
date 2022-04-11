@@ -1,6 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
 import { LayoutState } from './layout.state';
-import { NodeColorByEnum } from '../../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import {
   setNodeColorBy,
@@ -9,19 +8,29 @@ import {
   toggleShowMtbResults,
   toggleShowOnlySharedNodes,
 } from './layout.actions';
-import { hydrateLayoutSuccess } from '../hydrator/hydrator.actions';
+import { hydrateLayoutSuccess, loadDataSuccess } from '../hydrator/hydrator.actions';
 import { navigateHome } from '../sidebar/sidebar.actions';
 
 const initialState: LayoutState = {
-  nodeColorBy: NodeColorByEnum.geneExpressionLevel,
+  nodeColorBy: null,
   nodeSizeBy: NodeSizeByEnum.relevance,
   showAllNodes: false,
   showOnlySharedNodes: false,
   showMtbResults: true,
+  properties: [],
+  highlightColor: '#000000',
 };
 
 export const layoutReducer = createReducer(
   initialState,
+  on(
+    loadDataSuccess,
+    (state: LayoutState, { properties, highlightColor }): LayoutState => ({
+      ...state,
+      properties,
+      highlightColor,
+    }),
+  ),
   on(
     toggleShowMtbResults,
     (state: LayoutState): LayoutState => ({
@@ -68,7 +77,7 @@ export const layoutReducer = createReducer(
       return {
         ...state,
         nodeSizeBy: nodeSizeBy ?? NodeSizeByEnum.relevance,
-        nodeColorBy: nodeColorBy ?? NodeColorByEnum.geneExpressionLevel,
+        nodeColorBy: nodeColorBy ?? null,
         showAllNodes: showAll && showShared ? false : showAll,
         showOnlySharedNodes: showShared,
         showMtbResults: showMtb,
@@ -82,7 +91,7 @@ export const layoutReducer = createReducer(
       showMtbResults: true,
       showOnlySharedNodes: false,
       showAllNodes: false,
-      nodeColorBy: NodeColorByEnum.geneExpressionLevel,
+      nodeColorBy: null,
       nodeSizeBy: NodeSizeByEnum.relevance,
     }),
   ),

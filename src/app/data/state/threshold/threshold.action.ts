@@ -1,10 +1,13 @@
 import { createAction, props } from '@ngrx/store';
+import { Property } from '../../schema/property';
+import { ThresholdDefinition } from '../../schema/threshold-definition';
 
 export const setDefined = createAction(
   '[Sidebar Threshold Component] set defined',
-  props<{ defined: number }>(),
+  props<{ thresholdDefinition: ThresholdDefinition }>(),
 );
 
-export const setLabelMin = createAction(
-  '[Threshold Effects] set threshold label min', props<{ labelMin: string }>(),
+export const setProperty = createAction(
+  '[Threshold Component] set property',
+  props<{ responsibleProperty: Property }>(),
 );

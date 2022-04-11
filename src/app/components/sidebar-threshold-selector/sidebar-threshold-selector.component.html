@@ -1,40 +1,66 @@
 <ng-container *ngIf="patientsSelected !== 0; else emptyTemplate">
   <div class="input-group mb-3">
     <span class="input-group-text" id="thresholdLabel">
-    {{
-    patientsSelected === 3
-      ? 'Both patients:'
-      : patientsSelected === 1
-        ? groupLabelA + ':'
-        : groupLabelB + ':'
-    }}
-  </span>
-    <input
-      [disabled]="true"
-      type="text"
-      id="threshold"
-      class="form-control"
-      [ngModel]="defined"
-    />
+      {{
+        patientsSelected === 3
+          ? 'Both patients:'
+          : patientsSelected === 1
+          ? groupLabelA + ':'
+          : groupLabelB + ':'
+      }}
+    </span>
+    <input [disabled]="true" type="text" id="threshold" class="form-control" [ngModel]="defined" />
   </div>
 
-  <input
-    (ngModelChange)="definedChangedEmitter.emit($event / (multiplier ?? 1))"
-    type="range"
-    class="form-range"
-    id="thresholdRange"
-    [min]="(min ?? 0) * (multiplier ?? 1)"
-    [max]="(max ?? 1) * (multiplier ?? 1)"
-    [ngModel]="(defined ?? 0) * (multiplier ?? 0)"
-  />
-
-  <div class="row mb-1">
+  <div class="row">
     <div class="col">
-      <small class="float-start">{{labelMin}}</small>
-      <small class="float-end">{{labelMax}}</small>
+      <!-- range -->
+      <input
+        (ngModelChange)="
+          definedChangedEmitter.emit({
+            defined: $event / (multiplier ?? 1),
+            property: responsibleProperty
+          })
+        "
+        type="range"
+        class="form-range"
+        id="thresholdRange"
+        [min]="(min ?? 0) * (multiplier ?? 1)"
+        [max]="(max ?? 1) * (multiplier ?? 1)"
+        [ngModel]="(defined ?? 0) * (multiplier ?? 0)"
+      />
+
+      <!-- todo labels -->
+      <div class="row mb-1">
+        <div class="col">
+          <small class="float-start">{{ labelMin }}</small>
+          <small class="float-end">{{ labelMax }}</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-auto">
+
+      <!-- dropdown -->
+      <div class="dropdown">
+        <button
+          class="btn btn-secondary dropdown-toggle"
+          type="button"
+          id="properties"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ responsibleProperty?.name ?? 'Select a property' }}
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="properties">
+          <li *ngFor="let property of availableProperties">
+            <button class="dropdown-item" (click)="propertyChangedEmitter.emit(property)">
+              {{ property.name }}
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-
 </ng-container>
 
 <ng-template #emptyTemplate>

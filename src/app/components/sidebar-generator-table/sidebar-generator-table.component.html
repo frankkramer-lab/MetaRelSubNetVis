@@ -32,9 +32,9 @@
   </tr>
   <tr>
     <td>Node's color</td>
-    <td *ngIf="nodesColorBy === 0">Gene expression level (high, normal low)</td>
-    <td *ngIf="nodesColorBy === 1">Gene expression</td>
-    <td *ngIf="nodesColorBy === 2">Relevance</td>
+    <td *ngIf="nodesColorBy?.type === 0">Gene expression level (high, normal low)</td>
+    <td *ngIf="nodesColorBy?.type === 1">Gene expression</td>
+    <td *ngIf="nodesColorBy?.type === 2">Relevance</td>
   </tr>
   <tr>
     <td>Node's size</td>

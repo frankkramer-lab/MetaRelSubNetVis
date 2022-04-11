@@ -1,6 +1,8 @@
 import { ThresholdItem } from './threshold-item';
+import { Property } from './property';
 
 export interface Threshold {
-  groupA: ThresholdItem;
-  groupB: ThresholdItem;
+  rangeGroupA: ThresholdItem;
+  rangeGroupB: ThresholdItem;
+  availableProperties: Property[];
 }

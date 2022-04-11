@@ -4,6 +4,7 @@ import { NetworkNode } from '../../data/schema/network-node';
 import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
+import { Property } from '../../data/schema/property';
 
 @Component({
   selector: 'app-sidebar-generator-table',
@@ -25,7 +26,7 @@ export class SidebarGeneratorTableComponent {
 
   @Input() nodes!: NetworkNode[] | null;
 
-  @Input() nodesColorBy!: NodeColorByEnum | null;
+  @Input() nodesColorBy!: Property | null;
 
   @Input() nodesSizeBy!: NodeSizeByEnum | null;
 

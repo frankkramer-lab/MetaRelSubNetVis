@@ -22,11 +22,11 @@ export const selectMin = createSelector(
   (state: ThresholdState, patientSelection: PatientSelectionEnum) => {
     switch (patientSelection) {
       case PatientSelectionEnum.both:
-        return Math.min(state.groupA?.threshold ?? 0, state.groupB?.threshold ?? 0);
+        return Math.min(state.rangeGroupA?.min ?? 0, state.rangeGroupB?.min ?? 0);
       case PatientSelectionEnum.groupA:
-        return state.groupA?.threshold ?? 0;
+        return state.rangeGroupA?.min ?? 0;
       case PatientSelectionEnum.groupB:
-        return state.groupB?.threshold ?? 0;
+        return state.rangeGroupB?.min ?? 0;
       default:
         return 0;
     }
@@ -39,11 +39,11 @@ export const selectMax = createSelector(
   (state: ThresholdState, patientSelection: PatientSelectionEnum) => {
     switch (patientSelection) {
       case PatientSelectionEnum.both:
-        return Math.max(state.groupA?.max ?? 1, state.groupB?.max ?? 1);
+        return Math.max(state.rangeGroupA?.max ?? 1, state.rangeGroupB?.max ?? 1);
       case PatientSelectionEnum.groupA:
-        return state.groupA?.max ?? 1;
+        return state.rangeGroupA?.max ?? 1;
       case PatientSelectionEnum.groupB:
-        return state.groupB?.max ?? 1;
+        return state.rangeGroupB?.max ?? 1;
       default:
         return 1;
     }
@@ -52,29 +52,73 @@ export const selectMax = createSelector(
 
 export const selectMinA = createSelector(
   selectState,
-  (state: ThresholdState) => state.groupA?.threshold || null,
+  (state: ThresholdState) => state.rangeGroupA?.min || null,
 );
 
 export const selectMaxA = createSelector(
   selectState,
-  (state: ThresholdState) => state.groupA?.max || null,
+  (state: ThresholdState) => state.rangeGroupA?.max || null,
 );
 
 export const selectMinB = createSelector(
   selectState,
-  (state: ThresholdState) => state.groupB?.threshold || null,
+  (state: ThresholdState) => state.rangeGroupB?.min || null,
 );
 
 export const selectMaxB = createSelector(
   selectState,
-  (state: ThresholdState) => state.groupB?.max || null,
+  (state: ThresholdState) => state.rangeGroupB?.max || null,
 );
 
 export const selectLabelMin = createSelector(
   selectState,
-  (state: ThresholdState) => state.labelMin,
+  selectPatientSelection,
+  (state: ThresholdState, patientSelection) => {
+    if (state.responsibleProperty) {
+      switch (patientSelection) {
+        default:
+        case PatientSelectionEnum.both:
+        case PatientSelectionEnum.none:
+          return Math.min(
+            state.responsibleProperty.minA ?? Number.MAX_SAFE_INTEGER,
+            state.responsibleProperty.minB ?? Number.MAX_SAFE_INTEGER,
+          ).toString();
+        case PatientSelectionEnum.groupA:
+          return (state.responsibleProperty.minA ?? Number.MAX_SAFE_INTEGER).toString();
+        case PatientSelectionEnum.groupB:
+          return (state.responsibleProperty.minB ?? Number.MAX_SAFE_INTEGER).toString();
+      }
+    }
+    return Number.MAX_SAFE_INTEGER.toString();
+  },
 );
 export const selectLabelMax = createSelector(
   selectState,
-  (state: ThresholdState) => state.labelMax,
+  selectPatientSelection,
+  (state: ThresholdState, patientSelection) => {
+    if (state.responsibleProperty) {
+      switch (patientSelection) {
+        default:
+        case PatientSelectionEnum.both:
+        case PatientSelectionEnum.none:
+          return Math.max(
+            state.responsibleProperty.maxA ?? Number.MIN_SAFE_INTEGER,
+            state.responsibleProperty.maxB ?? Number.MIN_SAFE_INTEGER,
+          ).toString();
+        case PatientSelectionEnum.groupA:
+          return (state.responsibleProperty.maxA ?? Number.MIN_SAFE_INTEGER).toString();
+        case PatientSelectionEnum.groupB:
+          return (state.responsibleProperty.maxB ?? Number.MIN_SAFE_INTEGER).toString();
+      }
+    }
+    return Number.MIN_SAFE_INTEGER.toString();
+  },
+);
+export const selectResponsibleProperty = createSelector(
+  selectState,
+  (state: ThresholdState) => state.responsibleProperty,
+);
+export const selectAvailableProperties = createSelector(
+  selectState,
+  (state: ThresholdState) => state.availableProperties,
 );

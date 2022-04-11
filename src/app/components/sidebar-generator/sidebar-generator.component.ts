@@ -56,6 +56,7 @@ import {
   toggleGeneratorTriggerImmediateDownload,
 } from '../../data/state/generator/generator.actions';
 import { selectUuid } from '../../data/state/network/network.selectors';
+import { Property } from '../../data/schema/property';
 
 @Component({
   selector: 'app-sidebar-generator',
@@ -77,7 +78,7 @@ export class SidebarGeneratorComponent implements OnInit {
 
   nodes$!: Observable<NetworkNode[] | null>;
 
-  nodesColorBy$!: Observable<NodeColorByEnum>;
+  nodesColorBy$!: Observable<Property | null>;
 
   nodesSizeBy$!: Observable<NodeSizeByEnum>;
 
@@ -92,8 +93,6 @@ export class SidebarGeneratorComponent implements OnInit {
   imageDownloadConfig$!: Observable<ImageDownloadConfig>;
 
   triggerImmediateImageDownload$!: Observable<boolean>;
-
-  domain$!: Observable<string>;
 
   sidebarVisibility$!: Observable<ComponentVisibilityEnum>;
 

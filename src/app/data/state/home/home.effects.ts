@@ -26,8 +26,9 @@ export class HomeEffects {
       ofType(loadSampleSummaries),
       concatMap(() => {
         return forkJoin({
-          sample_1: this.apiService.loadNetworkSummary('a420aaee-4be9-11ec-b3be-0ac135e8bacf'),
-          sample_2: this.apiService.loadNetworkSummary('140d01f0-acfe-11ec-b3be-0ac135e8bacf'),
+          sample_1: this.apiService.loadNetworkSummary('aeb504b5-b97a-11ec-b3be-0ac135e8bacf'),
+          // sample_1: this.apiService.loadNetworkSummary('a420aaee-4be9-11ec-b3be-0ac135e8bacf'),
+          // sample_2: this.apiService.loadNetworkSummary('140d01f0-acfe-11ec-b3be-0ac135e8bacf'),
         }).pipe(
           map((payload) => {
             return loadSampleSummariesSuccess({
@@ -36,10 +37,10 @@ export class HomeEffects {
                   ...payload.sample_1,
                   linkNdex: `https://www.ndexbio.org/viewer/networks/${payload.sample_1.externalId}`,
                 },
-                {
-                  ...payload.sample_2,
-                  linkNdex: `https://www.ndexbio.org/viewer/networks/${payload.sample_2.externalId}`,
-                },
+                // {
+                //   ...payload.sample_2,
+                //   linkNdex: `https://www.ndexbio.org/viewer/networks/${payload.sample_2.externalId}`,
+                // },
               ],
             });
           }),

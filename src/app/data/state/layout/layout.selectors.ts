@@ -30,3 +30,12 @@ export const selectShowMtbResults = createSelector(
   (state: LayoutState) => state.showMtbResults,
 );
 
+export const selectProperties = createSelector(
+  selectState,
+  (state: LayoutState) => state.properties,
+);
+
+export const selectHighlightColor = createSelector(
+  selectState,
+  (state: LayoutState) => state.highlightColor,
+);

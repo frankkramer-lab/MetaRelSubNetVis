@@ -8,8 +8,6 @@ import { ApiService } from '../../service/api.service';
 import { GraphService } from '../../../core/service/graph.service';
 
 import {
-  selectGeMax,
-  selectGeMin,
   selectPatientA,
   selectPatientADetails,
   selectPatientB,
@@ -25,10 +23,12 @@ import {
   selectMinA,
   selectMinB,
 } from '../threshold/threshold.selectors';
-import { selectMarkedNodes } from '../nodes/nodes.selectors';
+import { selectMarkedNodes, selectVisibleNodes } from '../nodes/nodes.selectors';
 import {
+  selectHighlightColor,
   selectNodeColorBy,
   selectNodeSizeBy,
+  selectProperties,
   selectShowAllNodes,
   selectShowMtbResults,
   selectShowOnlySharedNodes,
@@ -53,26 +53,27 @@ import { ImageDownloadConfig } from '../../schema/image-download-config';
 import { hydrateTriggerDownloadSuccess, markMultipleNodes } from '../hydrator/hydrator.actions';
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
-import {initCoreFailure, initCoreSuccess, initializeCore} from '../network/network.actions';
-import {of} from 'rxjs';
+import { initCoreFailure, initCoreSuccess, initializeCore } from '../network/network.actions';
 
 @Injectable()
 export class GraphEffects {
-  processGraphCore$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(initializeCore),
-        concatLatestFrom(() => this.store.select(selectNetwork)),
-        map(([, network]) => {
-          if (!network) {
-            return initCoreFailure();
-          }
-          this.graphService.initializeCore(network);
-          return initCoreSuccess();
-        }),
-      );
-    },
-  );
+  processGraphCore$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(initializeCore),
+      concatLatestFrom(() => [
+        this.store.select(selectNetwork),
+        this.store.select(selectProperties),
+        this.store.select(selectHighlightColor),
+      ]),
+      map(([, network, properties, highlightColor]) => {
+        if (!network) {
+          return initCoreFailure();
+        }
+        this.graphService.initializeCore(network, properties, highlightColor);
+        return initCoreSuccess();
+      }),
+    );
+  });
 
   renderGraph$ = createEffect(() => {
     return this.actions$.pipe(
@@ -82,60 +83,45 @@ export class GraphEffects {
         this.store.select(selectPatientBDetails),
         this.store.select(selectPatientGroupA),
         this.store.select(selectPatientGroupB),
-        this.store.select(selectGeMin),
-        this.store.select(selectGeMax),
         this.store.select(selectNetwork),
         this.store.select(selectDefined),
-        this.store.select(selectMinA),
-        this.store.select(selectMaxA),
-        this.store.select(selectMinB),
-        this.store.select(selectMaxB),
         this.store.select(selectNodeColorBy),
         this.store.select(selectNodeSizeBy),
         this.store.select(selectShowAllNodes),
         this.store.select(selectShowOnlySharedNodes),
         this.store.select(selectShowMtbResults),
+        this.store.select(selectVisibleNodes),
       ]),
       map(
         ([
-          ,
-          patientADetails,
-          patientBDetails,
-          patientGroupA,
-          patientGroupB,
-          geMin,
-          geMax,
-          network,
-          defined,
-          minA,
-          maxA,
-          minB,
-          maxB,
-          nodeColorBy,
-          nodeSizeBy,
-          showAllNodes,
-          showOnlySharedNodes,
-          showMtbResults,
-        ]) => {
+           ,
+           patientADetails,
+           patientBDetails,
+           patientGroupA,
+           patientGroupB,
+           network,
+           defined,
+           nodeColorBy,
+           nodeSizeBy,
+           showAllNodes,
+           showOnlySharedNodes,
+           showMtbResults,
+           visibleNodes,
+         ]) => {
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
             patientADetails,
             patientBDetails,
             patientGroupA,
             patientGroupB,
-            geMin,
-            geMax,
             network,
             defined,
-            minA,
-            maxA,
-            minB,
-            maxB,
             nodeColorBy,
             nodeSizeBy,
             showAllNodes,
             showOnlySharedNodes,
             showMtbResults,
+            visibleNodes,
           );
           return renderingSuccess();
         },
@@ -225,5 +211,6 @@ export class GraphEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private graphService: GraphService,
-  ) {}
+  ) {
+  }
 }

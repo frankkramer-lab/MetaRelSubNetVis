@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
+import { Property } from '../../data/schema/property';
+import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 
 @Component({
   selector: 'app-sidebar-threshold-selector',
@@ -7,7 +9,6 @@ import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
   styleUrls: ['./sidebar-threshold-selector.component.scss'],
 })
 export class SidebarThresholdSelectorComponent {
-
   @Input() min!: number | null;
 
   @Input() max!: number | null;
@@ -26,6 +27,12 @@ export class SidebarThresholdSelectorComponent {
 
   @Input() labelMax!: string | null;
 
-  @Output() definedChangedEmitter: EventEmitter<number> = new EventEmitter<number>();
+  @Input() responsibleProperty!: Property | null;
 
+  @Input() availableProperties!: Property[] | null;
+
+  @Output() definedChangedEmitter: EventEmitter<ThresholdDefinition> =
+    new EventEmitter<ThresholdDefinition>();
+
+  @Output() propertyChangedEmitter: EventEmitter<Property> = new EventEmitter<Property>();
 }

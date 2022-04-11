@@ -38,7 +38,6 @@ import {
 } from '../patient/patient.selectors';
 import { Patient } from '../../schema/patient';
 import { PatientItem } from '../../schema/patient-item';
-import { NodeColorByEnum } from '../../../core/enum/node-color-by.enum';
 import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import { selectNodes } from '../network/network.selectors';
 import { markingNodesSuccess, renderingSuccess } from '../graph/graph.actions';
@@ -116,12 +115,6 @@ export class HydratorEffects {
               groupB: [],
               labelA: '',
               labelB: '',
-              geMin: Number.MAX_SAFE_INTEGER,
-              geMidRange: 0,
-              geMax: Number.MIN_SAFE_INTEGER,
-              scoreMin: Number.MAX_SAFE_INTEGER,
-              scoreMidRange: 0,
-              scoreMax: Number.MIN_SAFE_INTEGER,
             };
 
             let subtypes: string[] = [];
@@ -137,27 +130,38 @@ export class HydratorEffects {
 
             patients = { ...patients, labelA: labels[1], labelB: labels[2] };
 
+            const properties = this.hydratorService.initProperties(networkAttributes, patients);
+            const highlightColor = this.hydratorService.getHighlightColor(networkAttributes);
+
             patients = this.hydratorService.hydrateNodeAttributes(
               nodeAttributes,
               patients,
               nodesDictionary,
+              properties,
             );
 
             if (patients.groupA.length < 1 || patients.groupB.length < 1) {
               return loadDataFailure({ uuid: action.uuid ?? '' });
             }
 
+            console.log(patients);
+
             network.occ = this.hydratorService.hydrateOccurrences(patients);
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
             network.edges = this.hydratorService.hydrateEdges(edgesRaw);
 
-            const thresholds: Threshold = this.hydratorService.hydrateThresholds(patients);
+            const thresholds: Threshold = this.hydratorService.hydrateThresholds(
+              patients,
+              properties,
+            );
 
             return loadDataSuccess({
               network,
               patients,
               thresholds,
               headline: labels[0],
+              properties,
+              highlightColor,
             });
           }),
           catchError(() => of(loadDataFailure({ uuid: action.uuid ?? '' }))),
@@ -217,7 +221,12 @@ export class HydratorEffects {
       concatLatestFrom(() => this.store.select(selectConfig)),
       map(([, config]) => {
         if (!config || !config.th || Number.isNaN(config.th)) return hydrateThresholdFailure();
-        return hydrateThresholdSuccess({ defined: config.th });
+        return hydrateThresholdSuccess({
+          thresholdDefinition: {
+            defined: config.th,
+            property: null,
+          },
+        });
       }),
     );
   });
@@ -237,7 +246,7 @@ export class HydratorEffects {
           showAll: config.all ?? false,
           showShared: config.shared ?? false,
           showMtb: config.mtb ?? true,
-          nodeColorBy: (config.col as NodeColorByEnum) ?? NodeColorByEnum.geneExpressionLevel,
+          nodeColorBy: null,
           nodeSizeBy: (config.size as NodeSizeByEnum) ?? NodeSizeByEnum.geneExpression,
         });
       }),

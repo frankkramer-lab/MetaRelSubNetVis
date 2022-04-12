@@ -478,7 +478,14 @@ export class GraphService {
             .data('member', true)
             .data('shown', true)
             .data('size', Number(data[size as keyof PatientItem]))
-            .data('color', data[color as keyof PatientItem]);
+            .data(
+              'color',
+              nodeColorBy?.type === PropertyTypeEnum.continuous
+                ? Number(data[color as keyof PatientItem])
+                : data[color as keyof PatientItem],
+            );
+
+          // todo
           if (node && data.mtb) {
             node.addClass('mtb');
           }
@@ -490,18 +497,13 @@ export class GraphService {
   private setColorContinuous(property: Property) {
     const keys = Object.keys(property.mapping) as unknown as number[];
     const values = Object.values(property.mapping);
-    const maps: string[] = [];
-
-    console.log(property);
 
     Object.entries(property.mapping).forEach(([rawKey, value], index) => {
       const key = Number(rawKey);
-      const successorKey = keys[index + 1];
+      const successorKey = Number(keys[index + 1]);
       const successorValue = values[index + 1];
 
       const map = `mapData(color, ${key}, ${successorKey}, ${value}, ${successorValue})`;
-
-      console.log(map);
 
       if (index === 0) {
         this.cyCore
@@ -519,7 +521,6 @@ export class GraphService {
           .style('text-outline-color', map);
       }
     });
-    console.log(maps);
   }
 
   /**
@@ -691,26 +692,38 @@ export class GraphService {
   private setSizeMap(property: Property) {
     const keys = Object.keys(property.mapping);
 
-    Object.keys(property.mapping).forEach((rawKey, index) => {
-      const key = Number(rawKey);
-      const successorKey = keys[index + 1];
+    // todo find min max of all patients for this property and interpolate them
+    const min = Math.min(property.minA ?? 0, property.minB ?? 0);
+    const max = Math.max(property.maxA ?? 1, property.maxB ?? 1);
+    const mapNodeSize = `mapData(size, ${min}, ${max}, 50, 130)`;
+    const mapFontSize = `mapData(size, ${min}, ${max}, 18, 30)`;
+    this.cyCore
+      .style()
+      // @ts-ignore
+      .selector('node[?member]')
+      .style('width', mapNodeSize)
+      .style('height', mapNodeSize)
+      .style('font-size', mapFontSize);
 
-      // console.log(`Index: ${index}: ${rawKey} || ${successorKey}`);
-
-
-      const mapNodeSize = `mapData(size, ${key}, ${successorKey}, 50, 130)`;
-      const mapFontSize = `mapData(size, ${key}, ${successorKey}, 18, 30)`;
-
-      if (index !== keys.length - 1) {
-        this.cyCore
-          .style()
-          // @ts-ignore
-          .selector('node[?member]')
-          .style('width', mapNodeSize)
-          .style('height', mapNodeSize)
-          .style('font-size', mapFontSize);
-      }
-    });
+    // Object.keys(property.mapping).forEach((rawKey, index) => {
+    //   const key = Number(rawKey);
+    //   const successorKey = keys[index + 1];
+    //
+    //   console.log(`Index: ${index}: ${rawKey} || ${successorKey}`);
+    //
+    //   const mapNodeSize = `mapData(size, ${key}, ${successorKey}, 50, 130)`;
+    //   const mapFontSize = `mapData(size, ${key}, ${successorKey}, 18, 30)`;
+    //
+    //   if (index !== keys.length - 1) {
+    //     this.cyCore
+    //       .style()
+    //       // @ts-ignore
+    //       .selector('node[?member]')
+    //       .style('width', mapNodeSize)
+    //       .style('height', mapNodeSize)
+    //       .style('font-size', mapFontSize);
+    //   }
+    // });
   }
 
   /**

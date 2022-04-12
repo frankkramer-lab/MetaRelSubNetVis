@@ -6,7 +6,6 @@ import { CollectionReturnValue, ElementsDefinition } from 'cytoscape';
 import { NetworkNode } from '../../data/schema/network-node';
 import { Network } from '../../data/schema/network';
 import { Patient } from '../../data/schema/patient';
-import { UtilService } from './util.service';
 import { PatientItem } from '../../data/schema/patient-item';
 import { PatientSelectionEnum } from '../enum/patient-selection-enum';
 import { ImageDownloadConfig } from '../../data/schema/image-download-config';
@@ -38,7 +37,7 @@ export class GraphService {
   /**
    * Constructor, binding svg export library to cytoscape
    */
-  constructor(private utilService: UtilService) {
+  constructor() {
     cytoscape.use(svg);
   }
 
@@ -207,8 +206,6 @@ export class GraphService {
         });
       }
     });
-
-    console.log(style);
     return style;
   }
 
@@ -339,10 +336,10 @@ export class GraphService {
     nodeSizeBy: Property | null,
     showAllNodes: boolean,
     showOnlySharedNodes: boolean,
-    showMtbResults: boolean,
+    booleanProperty: Property | null,
     visibleNodes: NetworkNode[],
   ) {
-    this.updateMtbNodes(showMtbResults);
+    this.updateBooleanProperty(booleanProperty);
     const visibleNodesIds: string[] = visibleNodes.map((a) => a.data.id.toString());
     if (
       patientADetails &&
@@ -364,7 +361,6 @@ export class GraphService {
       (patientADetails && patientADetails.length > 0) ||
       (patientBDetails && patientBDetails.length > 0);
     this.updateShownNodes(showAllNodes, showOnlySharedNodes, patientSelected);
-    console.log(this.cyCore);
   }
 
   /**
@@ -380,27 +376,23 @@ export class GraphService {
     this.cyCore.batch(() => {
       this.clear();
 
-      // todo
+      const color = nodeColorBy?.name;
 
-      const color = '';
-      // const color = this.utilService.getColorByLiteral(nodeColorBy);
-      // switch (nodeColorBy) {
-      //   case NodeColorByEnum.relevance:
-      //     if (minA && minB && maxA && maxB) {
-      //       this.setColorMap(Math.min(minA, minB), Math.max(maxA, maxB));
-      //       this.setSplitColorMap(minA, maxA, minB, maxB);
-      //     }
-      //     break;
-      //   case NodeColorByEnum.geneExpression:
-      //     if (geMin && geMax) {
-      //       this.setSplitColorMap(geMin, geMax, geMin, geMax);
-      //     }
-      //     break;
-      //   case NodeColorByEnum.geneExpressionLevel:
-      //   default:
-      //     this.setColorDisc();
-      //     break;
-      // }
+      if (nodeColorBy !== null) {
+        switch (nodeColorBy.type) {
+          case PropertyTypeEnum.continuous:
+            // this.setColorContinuous(nodeColorBy);
+            this.setColorContinuousSplit(nodeColorBy);
+            break;
+          case PropertyTypeEnum.discrete:
+            this.setColorDiscrete(nodeColorBy);
+            break;
+          default:
+            console.log(
+              `Coloring is only valid for a discrete or continuous property! Got ${nodeColorBy.name} with type ${nodeColorBy.type}`,
+            );
+        }
+      }
 
       (patientADetails || []).forEach((data: PatientItem) => {
         if (visibleNodes.includes(data.id)) {
@@ -410,7 +402,14 @@ export class GraphService {
             .data('member', true)
             .data('shown', true)
             .addClass('split')
-            .data('colorA', data[color as keyof PatientItem]);
+            .data(
+              'colorA',
+              nodeColorBy?.type === PropertyTypeEnum.continuous
+                ? Number(data[color as keyof PatientItem])
+                : data[color as keyof PatientItem],
+            );
+
+          // todo
           if (node && data.mtb) {
             node.addClass('mtb');
           }
@@ -426,7 +425,14 @@ export class GraphService {
             .data('member', true)
             .data('shown', true)
             .addClass('split')
-            .data('colorB', data[color as keyof PatientItem]);
+            .data(
+              'colorB',
+              nodeColorBy?.type === PropertyTypeEnum.continuous
+                ? Number(data[color as keyof PatientItem])
+                : data[color as keyof PatientItem],
+            );
+
+          // todo
           if (node && data.mtb) {
             node.addClass('mtb');
           }
@@ -441,8 +447,6 @@ export class GraphService {
     nodeColorBy: Property | null,
     visibleNodes: string[],
   ): void {
-    console.log(visibleNodes);
-
     this.cyCore.batch(() => {
       this.clear();
 
@@ -466,9 +470,6 @@ export class GraphService {
             );
         }
       }
-
-      console.log(color);
-      console.log(size);
 
       (patientDetails || []).forEach((data: PatientItem) => {
         if (visibleNodes.includes(data.id)) {
@@ -549,122 +550,54 @@ export class GraphService {
         .selector(`node[color='${key}']`)
         .style('background-color', value)
         .style('text-outline-color', value)
+        // @ts-ignore
         .selector(`node.split[colorA='${key}']`)
         .style('pie-2-background-color', value)
+        // @ts-ignore
         .selector(`node.split[colorB='${key}']`)
         .style('pie-1-background-color', value);
     });
-
-    // this.cyCore
-    //   .style()
-    //   // @ts-ignore
-    //   .selector('node[color = \'LOW\']')
-    //   .style('background-color', this.colors.blue)
-    //   .style('text-outline-color', this.colors.blue)
-    //   // @ts-ignore
-    //   .selector('node[color = \'NORMAL\']')
-    //   .style('background-color', this.colors.yellow)
-    //   .style('text-outline-color', this.colors.yellow)
-    //   // @ts-ignore
-    //   .selector('node[color = \'HIGH\']')
-    //   .style('background-color', this.colors.red)
-    //   .style('text-outline-color', this.colors.red)
-    //   // @ts-ignore
-    //   .selector('node.split[colorA][colorB]')
-    //   .style('width', '80px')
-    //   .style('height', '80px')
-    //   // @ts-ignore
-    //   .selector('node.split[^colorA], node.split[^colorB]')
-    //   .style('pie-2-background-color', this.colors.gray)
-    //   .style('pie-1-background-color', this.colors.gray)
-    //   // @ts-ignore
-    //   .selector('node.split[colorA = \'LOW\']')
-    //   .style('pie-2-background-color', this.colors.blue)
-    //   // @ts-ignore
-    //   .selector('node.split[colorB = \'LOW\']')
-    //   .style('pie-1-background-color', this.colors.blue)
-    //   // @ts-ignore
-    //   .selector('node.split[colorA = \'NORMAL\']')
-    //   .style('pie-2-background-color', this.colors.yellow)
-    //   // @ts-ignore
-    //   .selector('node.split[colorB = \'NORMAL\']')
-    //   .style('pie-1-background-color', this.colors.yellow)
-    //   // @ts-ignore
-    //   .selector('node.split[colorA = \'HIGH\']')
-    //   .style('pie-2-background-color', this.colors.red)
-    //   // @ts-ignore
-    //   .selector('node.split[colorB = \'HIGH\']')
-    //   .style('pie-1-background-color', this.colors.red);
   }
 
   /**
    * Applies a visual split style to nodes
-   * @param minValueMet
-   * @param maxValueMet
-   * @param minValueNonMet
-   * @param maxValueNonMet
+   * @param property
    * @private
    */
-  private setSplitColorMap(
-    minValueMet: number,
-    maxValueMet: number,
-    minValueNonMet: number,
-    maxValueNonMet: number,
-  ) {
-    const midPointMet = maxValueMet - (maxValueMet - minValueMet) / 2;
-    const midPointNonMet = maxValueNonMet - (maxValueNonMet - minValueNonMet) / 2;
-    const colorMapMet1 = `mapData(colorA, ${minValueMet}, ${maxValueMet}, ${this.colors.blue}, ${this.colors.yellow})`;
-    const colorMapMet2 = `mapData(colorA, ${minValueMet}, ${maxValueMet}, ${this.colors.yellow}, ${this.colors.red})`;
-    const colorMapNonMet1 = `mapData(colorB, ${minValueNonMet}, ${maxValueNonMet}, ${this.colors.blue}, ${this.colors.yellow})`;
-    const colorMapNonMet2 = `mapData(colorB, ${minValueNonMet}, ${maxValueNonMet}, ${this.colors.yellow}, ${this.colors.red})`;
-    this.cyCore
-      .style()
-      // @ts-ignore
-      .selector('node.split[colorA][colorB]')
-      .style('width', '80px')
-      .style('height', '80px')
-      // @ts-ignore
-      .selector(`node.split[colorA<=${midPointMet}]`)
-      .style('pie-2-background-color', colorMapMet1)
-      // @ts-ignore
-      .selector(`node.split[colorA>${midPointMet}]`)
-      .style('pie-2-background-color', colorMapMet2)
-      // @ts-ignore
-      .selector(`node.split[colorB<=${midPointNonMet}]`)
-      .style('pie-1-background-color', colorMapNonMet1)
-      // @ts-ignore
-      .selector(`node.split[colorB>${midPointNonMet}]`)
-      .style('pie-1-background-color', colorMapNonMet2)
-      // @ts-ignore
-      .selector('node.split[colorA][^colorB]')
-      .style('pie-1-background-color', this.colors.gray)
-      // @ts-ignore
-      .selector('node.split[^colorA][colorB]')
-      .style('pie-2-background-color', this.colors.gray);
-  }
+  private setColorContinuousSplit(property: Property) {
+    const keys = Object.keys(property.mapping) as unknown as number[];
+    const values = Object.values(property.mapping);
 
-  /**
-   * Applies a visual style to nodes
-   * @param minValue
-   * @param maxValue
-   * @private
-   */
-  // private setColorMap(minValue: number, maxValue: number) {
-  //   const midPoint = maxValue - (maxValue - minValue) / 2;
-  //   const colorMap1 = `mapData(color, ${minValue}, ${midPoint}, ${this.colors.blue}, ${this.colors.yellow})`;
-  //   const colorMap2 = `mapData(color, ${midPoint}, ${maxValue}, ${this.colors.yellow}, ${this.colors.red})`;
-  //
-  //   this.cyCore
-  //     .style()
-  //     // @ts-ignore
-  //     .selector(`node[color<=${midPoint}]`)
-  //     .style('background-color', colorMap1)
-  //     .style('text-outline-color', colorMap1)
-  //     // @ts-ignore
-  //     .selector(`node[color>${midPoint}]`)
-  //     .style('background-color', colorMap2)
-  //     .style('text-outline-color', colorMap2);
-  // }
+    Object.entries(property.mapping).forEach(([rawKey, value], index) => {
+      const key = Number(rawKey);
+      const successorKey = Number(keys[index + 1]);
+      const successorValue = values[index + 1];
+
+      if (index !== keys.length - 1) {
+        const aMap = `mapData(colorA, ${key}, ${successorKey}, ${value}, ${successorValue})`;
+        const bMap = `mapData(colorB, ${key}, ${successorKey}, ${value}, ${successorValue})`;
+
+        this.cyCore
+          .style()
+          // @ts-ignore
+          .selector('node.split[colorA][colorB]')
+          .style('width', '80px')
+          .style('height', '80px')
+          // @ts-ignore
+          .selector(`node.split[colorA<=${key}]`)
+          .style('pie-2-background-color', aMap)
+          // @ts-ignore
+          .selector(`node.split[colorB<=${key}]`)
+          .style('pie-1-background-color', bMap)
+          // @ts-ignore
+          .selector('node.split[colorA][^colorB]')
+          .style('pie-1-background-color', this.colors.gray)
+          // @ts-ignore
+          .selector('node.split[^colorA][colorB]')
+          .style('pie-2-background-color', this.colors.gray);
+      }
+    });
+  }
 
   /**
    * Clears all applied styles
@@ -690,9 +623,6 @@ export class GraphService {
    * @private
    */
   private setSizeMap(property: Property) {
-    const keys = Object.keys(property.mapping);
-
-    // todo find min max of all patients for this property and interpolate them
     const min = Math.min(property.minA ?? 0, property.minB ?? 0);
     const max = Math.max(property.maxA ?? 1, property.maxB ?? 1);
     const mapNodeSize = `mapData(size, ${min}, ${max}, 50, 130)`;
@@ -704,26 +634,6 @@ export class GraphService {
       .style('width', mapNodeSize)
       .style('height', mapNodeSize)
       .style('font-size', mapFontSize);
-
-    // Object.keys(property.mapping).forEach((rawKey, index) => {
-    //   const key = Number(rawKey);
-    //   const successorKey = keys[index + 1];
-    //
-    //   console.log(`Index: ${index}: ${rawKey} || ${successorKey}`);
-    //
-    //   const mapNodeSize = `mapData(size, ${key}, ${successorKey}, 50, 130)`;
-    //   const mapFontSize = `mapData(size, ${key}, ${successorKey}, 18, 30)`;
-    //
-    //   if (index !== keys.length - 1) {
-    //     this.cyCore
-    //       .style()
-    //       // @ts-ignore
-    //       .selector('node[?member]')
-    //       .style('width', mapNodeSize)
-    //       .style('height', mapNodeSize)
-    //       .style('font-size', mapFontSize);
-    //   }
-    // });
   }
 
   /**
@@ -768,14 +678,15 @@ export class GraphService {
 
   /**
    * Updates the node style based on if the mtb property is to be displayed.
-   * @param showMtbResults Value of showing mtb results
+   * @param booleanProperty Active property that borders single nodes
    */
-  private updateMtbNodes(showMtbResults: boolean): void {
-    this.cyCore
-      .style()
-      // @ts-ignore
-      .selector('node.mtb')
-      .style('border-width', showMtbResults ? '7px' : '0px');
+  private updateBooleanProperty(booleanProperty: Property | null): void {
+    // todo
+    // this.cyCore
+    //   .style()
+    //   // @ts-ignore
+    //   .selector('node.mtb')
+    //   .style('border-width', showMtbResults ? '7px' : '0px');
   }
 
   /**

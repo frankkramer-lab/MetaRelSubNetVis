@@ -10,27 +10,19 @@ import { Property } from '../../data/schema/property';
 export class SidebarLayoutFormComponent {
   @Input() patientSelection!: PatientSelectionEnum | null;
 
+  @Input() booleanProperty!: Property | null;
+
   @Input() nodeColorBy!: Property | null;
 
   @Input() nodeSizeBy!: Property | null;
 
   @Input() showAllNodes!: boolean | null;
 
-  @Input() showMtbResults!: boolean | null;
-
   @Input() showOnlySharedNodes!: boolean | null;
 
-  @Input() geMin!: number | null;
+  @Input() properties!: Property[] | null;
 
-  @Input() geMidRange!: number | null;
-
-  @Input() geMax!: number | null;
-
-  @Input() scoreMin!: number | null;
-
-  @Input() scoreMidRange!: number | null;
-
-  @Input() scoreMax!: number | null;
+  @Output() booleanPropertyChanged: EventEmitter<Property | null> = new EventEmitter<Property | null>();
 
   @Output() nodeColorByChanged: EventEmitter<Property | null> = new EventEmitter<Property | null>();
 
@@ -38,9 +30,8 @@ export class SidebarLayoutFormComponent {
 
   @Output() showAllNodesChanged: EventEmitter<void> = new EventEmitter<void>();
 
-  @Output() showMtbResultsChanged: EventEmitter<void> = new EventEmitter<void>();
-
   @Output() showOnlySharedNodesChanged: EventEmitter<void> = new EventEmitter<void>();
 
   @Output() fitGraphPressed: EventEmitter<void> = new EventEmitter<void>();
+
 }

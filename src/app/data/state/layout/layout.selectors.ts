@@ -25,11 +25,10 @@ export const selectShowOnlySharedNodes = createSelector(
   selectState,
   (state: LayoutState) => state.showOnlySharedNodes,
 );
-export const selectShowMtbResults = createSelector(
+export const selectActiveBooleanProperty = createSelector(
   selectState,
-  (state: LayoutState) => state.showMtbResults,
+  (state: LayoutState) => state.booleanProperty
 );
-
 export const selectProperties = createSelector(
   selectState,
   (state: LayoutState) => state.properties,

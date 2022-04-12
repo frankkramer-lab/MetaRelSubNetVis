@@ -3,8 +3,8 @@ import { LayoutState } from './layout.state';
 import {
   setNodeColorBy,
   setNodeSizeBy,
+  toggleBooleanProperty,
   toggleShowAllNodes,
-  toggleShowMtbResults,
   toggleShowOnlySharedNodes,
 } from './layout.actions';
 import { hydrateLayoutSuccess, loadDataSuccess } from '../hydrator/hydrator.actions';
@@ -16,7 +16,7 @@ const initialState: LayoutState = {
   nodeSizeBy: null,
   showAllNodes: false,
   showOnlySharedNodes: false,
-  showMtbResults: true,
+  booleanProperty: null,
   properties: [],
   highlightColor: '#000000',
 };
@@ -25,21 +25,19 @@ export const layoutReducer = createReducer(
   initialState,
   on(loadDataSuccess, (state: LayoutState, { properties, highlightColor }): LayoutState => {
     const firstContinuous = properties.find((a) => a.type === PropertyTypeEnum.continuous);
-    const firstDiscrete = properties.find((a) => a.type === PropertyTypeEnum.discrete);
-
     return {
       ...state,
       properties,
       highlightColor,
-      nodeColorBy: firstDiscrete ?? null,
+      nodeColorBy: firstContinuous ?? null,
       nodeSizeBy: firstContinuous ?? null,
     };
   }),
   on(
-    toggleShowMtbResults,
-    (state: LayoutState): LayoutState => ({
+    toggleBooleanProperty,
+    (state: LayoutState, { booleanProperty }): LayoutState => ({
       ...state,
-      showMtbResults: !state.showMtbResults,
+      booleanProperty,
     }),
   ),
   on(toggleShowAllNodes, (state: LayoutState): LayoutState => {
@@ -76,7 +74,7 @@ export const layoutReducer = createReducer(
     hydrateLayoutSuccess,
     (
       state: LayoutState,
-      { showAll, showShared, showMtb, nodeSizeBy, nodeColorBy },
+      { showAll, showShared, booleanProperty, nodeSizeBy, nodeColorBy },
     ): LayoutState => {
       return {
         ...state,
@@ -84,7 +82,7 @@ export const layoutReducer = createReducer(
         nodeColorBy: nodeColorBy ?? null,
         showAllNodes: showAll && showShared ? false : showAll,
         showOnlySharedNodes: showShared,
-        showMtbResults: showMtb,
+        booleanProperty,
       };
     },
   ),
@@ -92,7 +90,7 @@ export const layoutReducer = createReducer(
     navigateHome,
     (state: LayoutState): LayoutState => ({
       ...state,
-      showMtbResults: true,
+      booleanProperty: null,
       showOnlySharedNodes: false,
       showAllNodes: false,
       nodeColorBy: null,

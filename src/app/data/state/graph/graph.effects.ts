@@ -18,20 +18,20 @@ import {
 } from '../patient/patient.selectors';
 import { selectMarkedNodes, selectVisibleNodes } from '../nodes/nodes.selectors';
 import {
+  selectActiveBooleanProperty,
   selectHighlightColor,
   selectNodeColorBy,
   selectNodeSizeBy,
   selectProperties,
   selectShowAllNodes,
-  selectShowMtbResults,
   selectShowOnlySharedNodes,
 } from '../layout/layout.selectors';
 import {
   fitGraph,
   setNodeColorBy,
   setNodeSizeBy,
+  toggleBooleanProperty,
   toggleShowAllNodes,
-  toggleShowMtbResults,
   toggleShowOnlySharedNodes,
 } from '../layout/layout.actions';
 import { clearMarkedNodes, markNode } from '../nodes/nodes.actions';
@@ -74,7 +74,7 @@ export class GraphEffects {
         initCoreSuccess,
         setAllThresholds,
         setThreshold,
-        toggleShowMtbResults,
+        toggleBooleanProperty,
         setNodeColorBy,
         setNodeSizeBy,
       ),
@@ -88,24 +88,24 @@ export class GraphEffects {
         this.store.select(selectNodeSizeBy),
         this.store.select(selectShowAllNodes),
         this.store.select(selectShowOnlySharedNodes),
-        this.store.select(selectShowMtbResults),
+        this.store.select(selectActiveBooleanProperty),
         this.store.select(selectVisibleNodes),
       ]),
       map(
         ([
-          ,
-          patientADetails,
-          patientBDetails,
-          patientGroupA,
-          patientGroupB,
-          network,
-          nodeColorBy,
-          nodeSizeBy,
-          showAllNodes,
-          showOnlySharedNodes,
-          showMtbResults,
-          visibleNodes,
-        ]) => {
+           ,
+           patientADetails,
+           patientBDetails,
+           patientGroupA,
+           patientGroupB,
+           network,
+           nodeColorBy,
+           nodeSizeBy,
+           showAllNodes,
+           showOnlySharedNodes,
+           showMtbResults,
+           visibleNodes,
+         ]) => {
 
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
@@ -209,5 +209,6 @@ export class GraphEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private graphService: GraphService,
-  ) {}
+  ) {
+  }
 }

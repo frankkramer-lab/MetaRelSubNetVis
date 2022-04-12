@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 import { AppState } from '../../data/state/app.state';
 import { Patient } from '../../data/schema/patient';
 import { NetworkNode } from '../../data/schema/network-node';
-import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { ImageDownloadConfig } from '../../data/schema/image-download-config';
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
 import {
@@ -19,7 +17,6 @@ import {
   selectNodeColorBy,
   selectNodeSizeBy,
   selectShowAllNodes,
-  selectShowMtbResults,
   selectShowOnlySharedNodes,
 } from '../../data/state/layout/layout.selectors';
 import {
@@ -127,7 +124,7 @@ export class SidebarGeneratorComponent implements OnInit {
     this.nodesSizeBy$ = this.store.select(selectNodeSizeBy);
     this.showAll$ = this.store.select(selectShowAllNodes);
     this.showShared$ = this.store.select(selectShowOnlySharedNodes);
-    this.showMtb$ = this.store.select(selectShowMtbResults);
+    // this.showMtb$ = this.store.select(selectShowMtbResults);
     this.imageDownloadConfig$ = this.store.select(selectImageDownloadConfig);
     this.isImageFormValid$ = this.store.select(selectIsImageDownloadConfigValid);
     this.triggerImmediateImageDownload$ = this.store.select(selectTriggerImmediateDownload);

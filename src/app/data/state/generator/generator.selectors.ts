@@ -100,9 +100,9 @@ export const selectUrl = createSelector(
     if (layoutState.showOnlySharedNodes !== null) {
       queryParams.push(`shared=${layoutState.showOnlySharedNodes}`);
     }
-    if (layoutState.showMtbResults !== null) {
-      queryParams.push(`mtb=${layoutState.showMtbResults}`);
-    }
+    // if (layoutState.showMtbResults !== null) {
+    //   queryParams.push(`mtb=${layoutState.showMtbResults}`);
+    // }
     if (state.triggerImageDownload) {
       queryParams.push(`dwn=${state.triggerImageDownload}`);
       if (state.imageDownloadConfig) {

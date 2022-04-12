@@ -79,6 +79,9 @@ import { HomeContentComponent } from './layout/home-content/home-content.compone
 import { HomeModalFormatComponent } from './layout/home-modal-format/home-modal-format.component';
 import { SidebarGeneratorBoolVisibilityComponent } from './components/sidebar-generator-bool-visibility/sidebar-generator-bool-visibility.component';
 import { SidebarThresholdSelectorRangeComponent } from './components/sidebar-threshold-selector-range/sidebar-threshold-selector-range.component';
+import { SidebarLayoutFormDiscreteComponent } from './components/sidebar-layout-form-discrete/sidebar-layout-form-discrete.component';
+import { SidebarLayoutFormContinuousComponent } from './components/sidebar-layout-form-continuous/sidebar-layout-form-continuous.component';
+import { SidebarLayoutFormBooleanComponent } from './components/sidebar-layout-form-boolean/sidebar-layout-form-boolean.component';
 
 @NgModule({
   declarations: [
@@ -110,6 +113,9 @@ import { SidebarThresholdSelectorRangeComponent } from './components/sidebar-thr
     HomeModalFormatComponent,
     SidebarGeneratorBoolVisibilityComponent,
     SidebarThresholdSelectorRangeComponent,
+    SidebarLayoutFormDiscreteComponent,
+    SidebarLayoutFormContinuousComponent,
+    SidebarLayoutFormBooleanComponent,
   ],
   imports: [
     BrowserModule,

@@ -5,7 +5,7 @@ export interface LayoutState {
   nodeSizeBy: Property | null;
   showAllNodes: boolean;
   showOnlySharedNodes: boolean;
-  showMtbResults: boolean;
+  booleanProperty: Property | null;
   properties: Property[];
   highlightColor: string;
 }

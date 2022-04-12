@@ -1,0 +1,22 @@
+<div class="form-check form-switch mt-2">
+  <label class="form-check-label" for="show{{ propertyId }}"
+    >Show {{ property?.name ?? '' }}
+
+    <span *ngIf="property && property.mapping" class="d-inline">
+      <span
+        *ngFor="let item of property.mapping | keyvalue"
+        class="circle"
+        [ngStyle]="{ 'border-color': item.value }"
+      ></span>
+    </span>
+  </label>
+
+  <input
+    (click)="propertyClicked.emit(isChecked ? null : property)"
+    class="form-check-input"
+    type="checkbox"
+    role="switch"
+    id="show{{ propertyId }}"
+    [checked]="isChecked"
+  />
+</div>

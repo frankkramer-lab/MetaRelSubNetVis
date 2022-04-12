@@ -18,17 +18,20 @@ import { ThresholdDefinition } from '../../data/schema/threshold-definition';
   providedIn: 'root',
 })
 export class HydratorService {
-  constructor(private utilService: UtilService) {}
+  constructor(private utilService: UtilService) {
+  }
 
   initProperties(networkAttribues: any, patients: PatientCollection): Property[] {
-    console.log(patients);
 
     let rawNames!: string[];
     let rawTypes!: string[];
     const keys: any = {};
     const values: any = {};
 
-    const properties: Property[] = [];
+    let properties: Property[] = [];
+    const cProperties: Property[] = [];
+    const dProperties: Property[] = [];
+    const bProperties: Property[] = [];
 
     networkAttribues.forEach((attribute: NodeAttributesItem) => {
       const name = attribute.n;
@@ -83,9 +86,13 @@ export class HydratorService {
             item.maxB = Number.MIN_SAFE_INTEGER;
             item.minA = Number.MAX_SAFE_INTEGER;
             item.minB = Number.MAX_SAFE_INTEGER;
+            cProperties.push(item);
+          } else if (type === PropertyTypeEnum.discrete) {
+            dProperties.push(item);
+          } else {
+            bProperties.push(item);
           }
-
-          properties.push(item);
+          properties = cProperties.concat(dProperties, bProperties);
         }
       });
     }

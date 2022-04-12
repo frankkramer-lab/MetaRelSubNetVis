@@ -5,68 +5,32 @@
 <ng-template #nodeTemplate>
   <h6>Color nodes</h6>
 
-  <!-- by gene expression level -->
-  <div class="form-check">
-    <input
-      (click)="nodeColorByChanged.emit(null)"
-      class="form-check-input"
-      type="radio"
-      name="colorNodesBy"
-      id="colorByGeneExpressionLevel"
-      value="geneExpressionLevel"
-      [checked]="nodeColorBy?.type === 0"
-    />
-    <label class="form-check-label" for="colorByGeneExpressionLevel">
-      by gene expression level
-      <span class="ge text-light" *ngIf="nodeColorBy?.type === 0"
-      >( <b id="low">Low</b>, <b id="normal">Normal</b>, <b id="high">High</b> )
-      </span>
-    </label>
-  </div>
+  <ng-container *ngFor="let property of properties; let propertyId = index">
 
-  <!-- by gene expression -->
-  <div class="form-check">
-    <input
-      (click)="nodeColorByChanged.emit(null)"
-      class="form-check-input"
-      type="radio"
-      name="colorNodesBy"
-      id="colorByGeneExpression"
-      value="geneExpression"
-      [checked]="nodeColorBy?.type === 1"
-    />
-    <label class="form-check-label w-100" for="colorByGeneExpression">
-      <span> by gene expression </span>
-      <div *ngIf="nodeColorBy?.type === 1" class="w-auto gradient"></div>
-      <div class="row" *ngIf="nodeColorBy?.type === 1">
-        <small class="col text-start">{{geMin | norm : 2}}</small>
-        <small class="col text-center">{{geMidRange | norm : 2 }}</small>
-        <small class="col text-end">{{geMax | norm : 2 }}</small>
-      </div>
-    </label>
-  </div>
+    <app-sidebar-layout-form-continuous
+      *ngIf="property.type === 0"
+      [property]="property"
+      [propertyId]="propertyId"
+      [isChecked]="property === nodeColorBy"
+      (propertyClicked)="nodeColorByChanged.emit(property)"
+    ></app-sidebar-layout-form-continuous>
 
-  <!-- by relevance -->
-  <div class="form-check">
-    <input
-      (click)="nodeColorByChanged.emit(null)"
-      class="form-check-input"
-      type="radio"
-      name="colorNodesBy"
-      id="colorByRelevance"
-      value="relevance"
-      [checked]="nodeColorBy?.type === 2"
-    />
-    <label class="form-check-label w-100" for="colorByRelevance">
-      <span> by relevance </span>
-      <div *ngIf="nodeColorBy?.type === 2" class="w-auto gradient"></div>
-      <div class="row" *ngIf="nodeColorBy?.type === 2">
-        <small class="col text-start">{{scoreMin | norm : 2 }}</small>
-        <small class="col text-center">{{scoreMidRange | norm : 2 }}</small>
-        <small class="col text-end">{{scoreMax | norm : 2 }}</small>
-      </div>
-    </label>
-  </div>
+    <app-sidebar-layout-form-discrete
+      *ngIf="property.type === 1"
+      [property]="property"
+      [propertyId]="propertyId"
+      [isChecked]="property === nodeColorBy"
+      (propertyClicked)="nodeColorByChanged.emit(property)"
+    ></app-sidebar-layout-form-discrete>
+
+    <app-sidebar-layout-form-boolean
+    *ngIf="property.type === 2"
+    [property]="property"
+    [propertyId]="propertyId"
+    [isChecked]="booleanProperty === property"
+    (propertyClicked)="booleanPropertyChanged.emit($event)"></app-sidebar-layout-form-boolean>
+
+  </ng-container>
 
   <hr />
 
@@ -83,22 +47,6 @@
     />
   </div>
 
-  <!-- TOGGLE: show MTB results -->
-  <div class="form-check form-switch mt-2">
-    <label class="form-check-label" for="showMtbResults"
-    >Show MTB results
-      <span class="circle"></span>
-    </label>
-    <input
-      (click)="showMtbResultsChanged.emit()"
-      class="form-check-input"
-      type="checkbox"
-      role="switch"
-      id="showMtbResults"
-      [checked]="showMtbResults"
-    />
-  </div>
-
   <!-- TOGGLE: show only shared nodes -->
   <div class="form-check form-switch mt-2" *ngIf="patientSelection === 3">
     <label class="form-check-label" for="showOnlyShared">Show only shared nodes</label>
@@ -112,7 +60,7 @@
     />
   </div>
 
-  <!-- node size can only be changed for one selected patient -->
+  <!-- todo node size can only be changed for one selected patient -->
   <ng-container *ngIf="patientSelection === 1 || patientSelection === 2">
     <hr />
     <!-- set node size -->

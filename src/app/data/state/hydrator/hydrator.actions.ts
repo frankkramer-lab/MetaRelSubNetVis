@@ -56,7 +56,7 @@ export const hydrateLayoutSuccess = createAction(
   props<{
     showAll: boolean;
     showShared: boolean;
-    showMtb: boolean;
+    booleanProperty: Property | null;
     nodeColorBy: Property | null;
     nodeSizeBy: Property | null;
   }>(),

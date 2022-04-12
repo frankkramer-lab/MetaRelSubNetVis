@@ -17,7 +17,8 @@ import {
   hydratePatientAPatientBSuccess,
   hydrateSidebarVisibilityFailure,
   hydrateSidebarVisibilitySuccess,
-  hydrateThresholdFailure, hydrateThresholdSuccess,
+  hydrateThresholdFailure,
+  hydrateThresholdSuccess,
   hydrateTriggerDownloadSuccess,
   hydrationEnded,
   loadDataFailure,
@@ -37,7 +38,6 @@ import {
 } from '../patient/patient.selectors';
 import { Patient } from '../../schema/patient';
 import { PatientItem } from '../../schema/patient-item';
-import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import { selectNodes } from '../network/network.selectors';
 import { markingNodesSuccess, renderingSuccess } from '../graph/graph.actions';
 import { triggerImageDownload } from '../download/download.actions';
@@ -246,7 +246,7 @@ export class HydratorEffects {
         return hydrateLayoutSuccess({
           showAll: config.all ?? false,
           showShared: config.shared ?? false,
-          showMtb: config.mtb ?? true,
+          booleanProperty: null, // todo
           nodeColorBy: null,
           nodeSizeBy: null,
         });
@@ -359,5 +359,6 @@ export class HydratorEffects {
     private apiService: ApiService,
     private hydratorService: HydratorService,
     private router: Router,
-  ) {}
+  ) {
+  }
 }

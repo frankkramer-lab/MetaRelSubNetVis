@@ -1,9 +1,9 @@
 import { createAction, props } from '@ngrx/store';
-import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import { Property } from '../../schema/property';
 
-export const toggleShowMtbResults = createAction(
-  '[Sidebar Layout Component] toggle show mtb results',
+export const toggleBooleanProperty = createAction(
+  '[Sidebar Layout Component] toggle boolean property',
+  props<{ booleanProperty: Property | null }>(),
 );
 export const toggleShowAllNodes = createAction('[Sidebar Layout Component] toggle show all nodes');
 export const toggleShowOnlySharedNodes = createAction(

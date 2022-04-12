@@ -2,27 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../../data/state/app.state';
-import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import {
+  selectActiveBooleanProperty,
   selectNodeColorBy,
   selectNodeSizeBy,
+  selectProperties,
   selectShowAllNodes,
-  selectShowMtbResults,
   selectShowOnlySharedNodes,
 } from '../../data/state/layout/layout.selectors';
 import {
   fitGraph,
   setNodeColorBy,
   setNodeSizeBy,
+  toggleBooleanProperty,
   toggleShowAllNodes,
-  toggleShowMtbResults,
   toggleShowOnlySharedNodes,
 } from '../../data/state/layout/layout.actions';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
-import {
-  selectPatientSelection,
-} from '../../data/state/patient/patient.selectors';
+import { selectPatientSelection } from '../../data/state/patient/patient.selectors';
 import { Property } from '../../data/schema/property';
 
 @Component({
@@ -37,21 +34,25 @@ export class SidebarLayoutComponent implements OnInit {
 
   nodeSizeBy$!: Observable<Property | null>;
 
-  showMtbResult$!: Observable<boolean>;
+  booleanProperty$!: Observable<Property | null>;
 
   showAllNodes$!: Observable<boolean>;
 
   showOnlySharedNodes$!: Observable<boolean>;
 
-  constructor(private store: Store<AppState>) {}
+  properties$!: Observable<Property[]>;
+
+  constructor(private store: Store<AppState>) {
+  }
 
   ngOnInit(): void {
     this.patientSelection$ = this.store.select(selectPatientSelection);
     this.nodeColorBy$ = this.store.select(selectNodeColorBy);
     this.nodeSizeBy$ = this.store.select(selectNodeSizeBy);
-    this.showMtbResult$ = this.store.select(selectShowMtbResults);
     this.showAllNodes$ = this.store.select(selectShowAllNodes);
+    this.booleanProperty$ = this.store.select(selectActiveBooleanProperty);
     this.showOnlySharedNodes$ = this.store.select(selectShowOnlySharedNodes);
+    this.properties$ = this.store.select(selectProperties);
   }
 
   setNodeColorBy(nodeColorBy: Property | null) {
@@ -62,8 +63,8 @@ export class SidebarLayoutComponent implements OnInit {
     this.store.dispatch(setNodeSizeBy({ nodeSizeBy }));
   }
 
-  toggleShowMtbResults() {
-    this.store.dispatch(toggleShowMtbResults());
+  toggleBooleanProperty(booleanProperty: Property | null) {
+    this.store.dispatch(toggleBooleanProperty({ booleanProperty }));
   }
 
   toggleShowAllNodes() {

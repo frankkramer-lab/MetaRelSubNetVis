@@ -548,9 +548,9 @@ export class GraphService {
         .selector(`node[color='${key}']`)
         .style('background-color', value)
         .style('text-outline-color', value)
-        .selector(`node.split[colorA=${key}]`)
+        .selector(`node.split[colorA='${key}']`)
         .style('pie-2-background-color', value)
-        .selector(`node.split[colorB=${key}]`)
+        .selector(`node.split[colorB='${key}']`)
         .style('pie-1-background-color', value);
     });
 

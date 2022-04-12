@@ -16,13 +16,6 @@ import {
   selectPatientGroupB,
   selectPatientSelection,
 } from '../patient/patient.selectors';
-import {
-  selectDefined,
-  selectMaxA,
-  selectMaxB,
-  selectMinA,
-  selectMinB,
-} from '../threshold/threshold.selectors';
 import { selectMarkedNodes, selectVisibleNodes } from '../nodes/nodes.selectors';
 import {
   selectHighlightColor,
@@ -33,7 +26,6 @@ import {
   selectShowMtbResults,
   selectShowOnlySharedNodes,
 } from '../layout/layout.selectors';
-import { setDefined } from '../threshold/threshold.action';
 import {
   fitGraph,
   setNodeColorBy,
@@ -77,14 +69,13 @@ export class GraphEffects {
 
   renderGraph$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(initCoreSuccess, setDefined, toggleShowMtbResults, setNodeColorBy, setNodeSizeBy),
+      ofType(initCoreSuccess, toggleShowMtbResults, setNodeColorBy, setNodeSizeBy),
       concatLatestFrom(() => [
         this.store.select(selectPatientADetails),
         this.store.select(selectPatientBDetails),
         this.store.select(selectPatientGroupA),
         this.store.select(selectPatientGroupB),
         this.store.select(selectNetwork),
-        this.store.select(selectDefined),
         this.store.select(selectNodeColorBy),
         this.store.select(selectNodeSizeBy),
         this.store.select(selectShowAllNodes),
@@ -100,7 +91,6 @@ export class GraphEffects {
            patientGroupA,
            patientGroupB,
            network,
-           defined,
            nodeColorBy,
            nodeSizeBy,
            showAllNodes,
@@ -115,7 +105,6 @@ export class GraphEffects {
             patientGroupA,
             patientGroupB,
             network,
-            defined,
             nodeColorBy,
             nodeSizeBy,
             showAllNodes,

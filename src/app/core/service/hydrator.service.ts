@@ -8,18 +8,17 @@ import { NodeRaw } from '../../data/schema/node-raw';
 import { NetworkEdge } from '../../data/schema/network-edge';
 import { NetworkNode } from '../../data/schema/network-node';
 import { NetworkOccurrences } from '../../data/schema/network-occurrences';
-import { Threshold } from '../../data/schema/threshold';
 import { Property } from '../../data/schema/property';
 import { UtilService } from './util.service';
 import { PropertyMapping } from '../../data/schema/property-mapping';
 import { PropertyTypeEnum } from '../enum/property-type-enum';
+import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HydratorService {
-  constructor(private utilService: UtilService) {
-  }
+  constructor(private utilService: UtilService) {}
 
   initProperties(networkAttribues: any, patients: PatientCollection): Property[] {
     console.log(patients);
@@ -351,29 +350,22 @@ export class HydratorService {
     return occurrences;
   }
 
-  hydrateThresholds(patients: PatientCollection, properties: Property[]): Threshold {
+  hydrateThresholds(properties: Property[], networkAttributes: any[]): ThresholdDefinition[] {
     const availableProperties = properties.filter((a) => a.type === PropertyTypeEnum.continuous);
-    if (availableProperties.length > 0) {
-      return {
-        rangeGroupA: {
-          min: properties[0].minA ?? Number.MIN_SAFE_INTEGER,
-          max: properties[0].maxA ?? Number.MAX_SAFE_INTEGER,
-        },
-        rangeGroupB: {
-          min: properties[0].minB ?? Number.MIN_SAFE_INTEGER,
-          max: properties[0].maxB ?? Number.MAX_SAFE_INTEGER,
-        },
-        availableProperties,
-      };
-    }
-    return {
-      rangeGroupA: { min: Number.MIN_SAFE_INTEGER, max: Number.MAX_SAFE_INTEGER },
-      rangeGroupB: { min: Number.MIN_SAFE_INTEGER, max: Number.MAX_SAFE_INTEGER },
-      availableProperties,
-    };
+    const item: NodeAttributesItem = networkAttributes.find((a) => a.n === 'thresholds');
+    const validProperties = availableProperties.filter((a) => item.v.includes(a.name));
+
+    const thresholds: ThresholdDefinition[] = [];
+    validProperties.forEach((property) => {
+      thresholds.push({
+        property,
+        defined: Number.MIN_SAFE_INTEGER,
+      });
+    });
+    return thresholds;
   }
 
-  getHighlightColor(networkAttributes: any): string {
+  hydrateHighlightColor(networkAttributes: any): string {
     const color = networkAttributes.find((a: NodeAttributesItem) => a.n === 'highlight');
     return color.v ?? '#000000';
   }

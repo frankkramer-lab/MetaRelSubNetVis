@@ -14,7 +14,6 @@ import {
   selectPatientA,
   selectPatientB,
 } from '../../data/state/patient/patient.selectors';
-import { selectDefined } from '../../data/state/threshold/threshold.selectors';
 import { selectMarkedNodes } from '../../data/state/nodes/nodes.selectors';
 import {
   selectNodeColorBy,
@@ -123,7 +122,6 @@ export class SidebarGeneratorComponent implements OnInit {
     this.groupLabelB$ = this.store.select(selectGroupLabelB);
     this.patientA$ = this.store.select(selectPatientA);
     this.patientB$ = this.store.select(selectPatientB);
-    this.threshold$ = this.store.select(selectDefined);
     this.nodes$ = this.store.select(selectMarkedNodes);
     this.nodesColorBy$ = this.store.select(selectNodeColorBy);
     this.nodesSizeBy$ = this.store.select(selectNodeSizeBy);

@@ -336,7 +336,6 @@ export class GraphService {
     patientGroupA: Patient[] | null,
     patientGroupB: Patient[] | null,
     network: Network,
-    defined: number | null,
     nodeColorBy: Property | null,
     nodeSizeBy: NodeSizeByEnum,
     showAllNodes: boolean,
@@ -356,7 +355,6 @@ export class GraphService {
       this.visualizeTwo(
         patientADetails,
         patientBDetails,
-        defined,
         nodeColorBy,
         visibleNodesIds,
       );
@@ -365,7 +363,6 @@ export class GraphService {
         patientADetails,
         nodeSizeBy,
         nodeColorBy,
-        defined,
         visibleNodesIds,
       );
     } else if (patientBDetails && patientBDetails.length > 0) {
@@ -373,7 +370,6 @@ export class GraphService {
         patientBDetails,
         nodeSizeBy,
         nodeColorBy,
-        defined,
         visibleNodesIds,
       );
     } else {
@@ -393,7 +389,6 @@ export class GraphService {
   private visualizeTwo(
     patientADetails: PatientItem[] | null,
     patientBDetails: PatientItem[] | null,
-    defined: number | null,
     nodeColorBy: Property | null,
     visibleNodes: string[],
   ) {
@@ -456,7 +451,6 @@ export class GraphService {
     patientDetails: PatientItem[],
     nodeSizeBy: NodeSizeByEnum,
     nodeColorBy: Property | null,
-    defined: number | null,
     visibleNodes: string[],
   ): void {
 

@@ -17,8 +17,7 @@ import {
   hydratePatientAPatientBSuccess,
   hydrateSidebarVisibilityFailure,
   hydrateSidebarVisibilitySuccess,
-  hydrateThresholdFailure,
-  hydrateThresholdSuccess,
+  hydrateThresholdFailure, hydrateThresholdSuccess,
   hydrateTriggerDownloadSuccess,
   hydrationEnded,
   loadDataFailure,
@@ -51,8 +50,8 @@ import { selectMarkedNodes } from '../nodes/nodes.selectors';
 import { PatientCollection } from '../../schema/patient-collection';
 import { HydratorService } from '../../../core/service/hydrator.service';
 import { Network } from '../../schema/network';
-import { Threshold } from '../../schema/threshold';
 import { setUuid } from '../network/network.actions';
+import { ThresholdDefinition } from '../../schema/threshold-definition';
 
 @Injectable()
 export class HydratorEffects {
@@ -131,7 +130,7 @@ export class HydratorEffects {
             patients = { ...patients, labelA: labels[1], labelB: labels[2] };
 
             const properties = this.hydratorService.initProperties(networkAttributes, patients);
-            const highlightColor = this.hydratorService.getHighlightColor(networkAttributes);
+            const highlightColor = this.hydratorService.hydrateHighlightColor(networkAttributes);
 
             patients = this.hydratorService.hydrateNodeAttributes(
               nodeAttributes,
@@ -150,10 +149,12 @@ export class HydratorEffects {
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
             network.edges = this.hydratorService.hydrateEdges(edgesRaw);
 
-            const thresholds: Threshold = this.hydratorService.hydrateThresholds(
-              patients,
+            const thresholds: ThresholdDefinition[] = this.hydratorService.hydrateThresholds(
               properties,
+              networkAttributes,
             );
+
+            console.log(thresholds);
 
             return loadDataSuccess({
               network,

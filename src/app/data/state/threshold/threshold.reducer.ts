@@ -1,64 +1,53 @@
 import { createReducer, on } from '@ngrx/store';
 import { ThresholdState } from './threshold.state';
-import { setDefined, setProperty } from './threshold.action';
-import {
-  hydrateThresholdSuccess,
-  loadDataFailure,
-  loadDataSuccess,
-  loadQueryParams,
-} from '../hydrator/hydrator.actions';
+import { loadDataFailure, loadDataSuccess, loadQueryParams } from '../hydrator/hydrator.actions';
 import { navigateHome } from '../sidebar/sidebar.actions';
+import { setAllThresholds, setThreshold } from './threshold.action';
+import { ThresholdDefinition } from '../../schema/threshold-definition';
 
 const initialState: ThresholdState = {
-  rangeGroupA: null,
-  rangeGroupB: null,
-  defined: null,
-  responsibleProperty: null,
-  availableProperties: [],
+  thresholds: [],
   multiplier: 1000000000,
   isLoading: false,
-  labelMin: null,
-  labelMax: null,
 };
 
 export const thresholdReducer = createReducer(
   initialState,
   on(loadQueryParams, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: true })),
   on(loadDataFailure, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: false })),
-  on(loadDataSuccess, (state: ThresholdState, payload): ThresholdState => {
-    if (payload.thresholds.availableProperties.length > 0) {
-      return {
-        ...state,
-        isLoading: false,
-        responsibleProperty: payload.thresholds.availableProperties[0],
-        availableProperties: payload.thresholds.availableProperties,
-        rangeGroupA: payload.thresholds.rangeGroupA,
-        rangeGroupB: payload.thresholds.rangeGroupB,
-      };
-    }
+  on(loadDataSuccess, (state: ThresholdState, { thresholds }): ThresholdState => {
     return {
       ...state,
       isLoading: false,
-      responsibleProperty: null,
-      availableProperties: payload.thresholds.availableProperties,
-      rangeGroupA: payload.thresholds.rangeGroupA,
-      rangeGroupB: payload.thresholds.rangeGroupB,
+      thresholds,
     };
   }),
   on(
-    setDefined,
-    hydrateThresholdSuccess,
-    (state: ThresholdState, { thresholdDefinition }): ThresholdState => ({
+    setAllThresholds,
+    (state: ThresholdState, { thresholds }): ThresholdState => ({
       ...state,
-      defined: thresholdDefinition.defined,
+      thresholds,
     }),
   ),
+  on(setThreshold, (state: ThresholdState, { threshold }): ThresholdState => {
+    const newThresholds: ThresholdDefinition[] = [
+      ...state.thresholds.filter((a) => a.property.name !== threshold.property.name),
+    ];
+    const relevantThresholdIndex = state.thresholds.findIndex(
+      (a) => a.property.name === threshold.property.name,
+    );
+    newThresholds.splice(relevantThresholdIndex, 0, threshold);
+    return {
+      ...state,
+      thresholds: newThresholds,
+    };
+  }),
   on(
-    setProperty,
-    (state: ThresholdState, { responsibleProperty }): ThresholdState => ({
+    navigateHome,
+    (state: ThresholdState): ThresholdState => ({
       ...state,
-      responsibleProperty,
+      isLoading: false,
+      thresholds: [],
     }),
   ),
-  on(navigateHome, (state: ThresholdState): ThresholdState => ({ ...state, defined: null })),
 );

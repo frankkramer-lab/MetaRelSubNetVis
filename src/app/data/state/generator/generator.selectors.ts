@@ -4,7 +4,6 @@ import { GeneratorState } from './generator.state';
 import { selectMarkedNodes } from '../nodes/nodes.selectors';
 import { selectUuid } from '../network/network.selectors';
 import { selectPatientA, selectPatientB } from '../patient/patient.selectors';
-import { selectDefined } from '../threshold/threshold.selectors';
 import { selectLayoutState } from '../layout/layout.selectors';
 import { NetworkNode } from '../../schema/network-node';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
@@ -71,9 +70,8 @@ export const selectUrl = createSelector(
   selectUuid,
   selectPatientA,
   selectPatientB,
-  selectDefined,
   selectMarkedNodes,
-  (state, layoutState, uuid, patientA, patientB, defined, markedNodes) => {
+  (state, layoutState, uuid, patientA, patientB, markedNodes) => {
     const queryParams: string[] = [];
 
     queryParams.push(`uuid=${uuid}`);
@@ -84,9 +82,9 @@ export const selectUrl = createSelector(
     if (patientB) {
       queryParams.push(`pb=${patientB.name}`);
     }
-    if (defined) {
-      queryParams.push(`th=${defined}`);
-    }
+    // if (defined) {
+    //   queryParams.push(`th=${defined}`);
+    // }
     if (markedNodes && markedNodes.length > 0) {
       queryParams.push(`sel=${markedNodes.map((a: NetworkNode) => a.data.id).join(',')}`);
     }

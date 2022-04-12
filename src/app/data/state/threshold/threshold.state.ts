@@ -1,14 +1,7 @@
-import { ThresholdItem } from '../../schema/threshold-item';
-import { Property } from '../../schema/property';
+import { ThresholdDefinition } from '../../schema/threshold-definition';
 
 export interface ThresholdState {
-  rangeGroupA: ThresholdItem | null;
-  rangeGroupB: ThresholdItem | null;
-  defined: number | null;
-  responsibleProperty: Property | null;
-  availableProperties: Property[];
+  thresholds: ThresholdDefinition[];
   multiplier: number;
   isLoading: boolean;
-  labelMin: string | null;
-  labelMax: string | null;
 }

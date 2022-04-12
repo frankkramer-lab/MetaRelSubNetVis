@@ -50,7 +50,6 @@ export class SidebarThresholdComponent implements OnInit {
   }
 
   triggerThresholdChanged(threshold: ThresholdDefinition) {
-    console.log(threshold);
     this.store.dispatch(setThreshold({ threshold }));
   }
 }

@@ -46,6 +46,7 @@ import { hydrateTriggerDownloadSuccess, markMultipleNodes } from '../hydrator/hy
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import { initCoreFailure, initCoreSuccess, initializeCore } from '../network/network.actions';
+import { setThreshold } from '../threshold/threshold.action';
 
 @Injectable()
 export class GraphEffects {
@@ -69,7 +70,7 @@ export class GraphEffects {
 
   renderGraph$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(initCoreSuccess, toggleShowMtbResults, setNodeColorBy, setNodeSizeBy),
+      ofType(initCoreSuccess, setThreshold, toggleShowMtbResults, setNodeColorBy, setNodeSizeBy),
       concatLatestFrom(() => [
         this.store.select(selectPatientADetails),
         this.store.select(selectPatientBDetails),

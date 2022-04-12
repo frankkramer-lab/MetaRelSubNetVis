@@ -6,7 +6,8 @@ import { NetworkNode } from '../../schema/network-node';
 import { SortByEnum } from '../../../core/enum/sort-by.enum';
 import { selectPatientADetails, selectPatientBDetails } from '../patient/patient.selectors';
 import { PatientItem } from '../../schema/patient-item';
-import { selectProperties } from '../layout/layout.selectors';
+import { selectThresholds } from '../threshold/threshold.selectors';
+import { ThresholdDefinition } from '../../schema/threshold-definition';
 
 const selectState = createSelector(
   (appState: AppState) => appState.nodes,
@@ -51,12 +52,14 @@ export const selectVisibleNodes = createSelector(
   selectPatientBDetails,
   selectFilterTerm,
   selectNodesState,
+  selectThresholds,
   (
     nodes: NetworkNode[],
     patientADetails: PatientItem[] | null,
     patientBDetails: PatientItem[] | null,
     filterTerm: string | null,
     nodesState: NodesState,
+    thresholds: ThresholdDefinition[],
   ) => {
     let visibleNodes: NetworkNode[];
 
@@ -71,30 +74,30 @@ export const selectVisibleNodes = createSelector(
           const nodeLabel = nodeA.name;
           const cleanNodeLabel = nodeLabel.trim().toLowerCase();
 
-          // there is no filter term or filterterm can be applied
-          // if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
-          //
-          //   // threshold check:
-          //   // threshold and the comparative property are defined
-          //   // property's type is continuous
-          //   // node contains the property
-          //   // node's value is greater or equal than threshold
-          //   const propertyName = responsibleProperty ? responsibleProperty.name : '';
-          //
-          //   if (
-          //     defined &&
-          //     responsibleProperty &&
-          //     responsibleProperty.type === PropertyTypeEnum.continuous &&
-          //     nodeProperties.includes(propertyName) &&
-          //     Number(nodeA[propertyName]) >= defined
-          //   ) {
-          //     const node = nodes.find((a) => a.data.name === nodeLabel);
-          //     // no duplicates
-          //     if (node && !visibleNodes.includes(node)) {
-          //       visibleNodes.push(node);
-          //     }
-          //   }
-          // }
+          if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
+            // a node can only be visible, if it matches all defined thresholds
+            // if a node does not contain the threshold's property, it ignores this check => assuming it passes
+
+            let passedTest = true;
+            const node = nodes.find((a) => a.data.name === nodeLabel);
+
+            thresholds.forEach((th) => {
+              const propertyName = th.property.name;
+
+              if (nodeProperties.includes(propertyName)) { // only compare to threshold, if this property actually exists
+
+                const passes = Number(nodeA[propertyName]) >= th.defined;
+
+                if (!passes) {
+                  passedTest = false;
+                }
+              }
+            });
+
+            if (passedTest && node && !visibleNodes.includes(node)) {
+              visibleNodes.push(node);
+            }
+          }
         }
       }
 
@@ -104,35 +107,35 @@ export const selectVisibleNodes = createSelector(
           const nodeLabel = nodeB.name;
           const cleanNodeLabel = nodeLabel.trim().toLowerCase();
 
-          // there is no filter term or filterterm can be applied
-          // if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
-          //
-          //   // threshold check:
-          //   // threshold and the comparative property are defined
-          //   // property's type is continuous
-          //   // node contains the property
-          //   // node's value is greater or equal than threshold
-          //   const propertyName = responsibleProperty ? responsibleProperty.name : '';
-          //
-          //   if (
-          //     defined &&
-          //     responsibleProperty &&
-          //     responsibleProperty.type === PropertyTypeEnum.continuous &&
-          //     nodeProperties.includes(propertyName) &&
-          //     Number(nodeB[propertyName]) >= defined
-          //   ) {
-          //     const node = nodes.find((a) => a.data.name === nodeLabel);
-          //     // no duplicates
-          //     if (node && !visibleNodes.includes(node)) {
-          //       visibleNodes.push(node);
-          //     }
-          //   }
-          // }
+          if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
+            // a node can only be visible, if it matches all defined thresholds
+            // if a node does not contain the threshold's property, it ignores this check => assuming it passes
+
+            let passedTest = true;
+            const node = nodes.find((a) => a.data.name === nodeLabel);
+
+            thresholds.forEach((th) => {
+              const propertyName = th.property.name;
+
+              if (nodeProperties.includes(propertyName)) { // only compare to threshold, if this property actually exists
+
+                const passes = Number(nodeB[propertyName]) >= th.defined;
+
+                if (!passes) {
+                  passedTest = false;
+                }
+              }
+            });
+
+            if (passedTest && node && !visibleNodes.includes(node)) {
+              visibleNodes.push(node);
+            }
+          }
         }
       }
     } else {
       visibleNodes = [];
-      for (const node of nodes) {
+      nodes.forEach((node) => {
         const nodeLabel = node.data.name.toLowerCase();
 
         // there is no filter term or filterterm can be applied
@@ -141,7 +144,7 @@ export const selectVisibleNodes = createSelector(
             visibleNodes.push(node);
           }
         }
-      }
+      });
     }
 
     const subTypeA = nodesState.subtypeColumnA;
@@ -164,6 +167,7 @@ export const selectVisibleNodes = createSelector(
         visibleNodes.sort((a, b) => (a.occ.all > b.occ.all ? -1 : 1));
         break;
     }
+    console.log(visibleNodes);
     return visibleNodes;
   },
 );

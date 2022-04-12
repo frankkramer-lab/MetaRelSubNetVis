@@ -1,5 +1,15 @@
 <ng-container *ngIf="patientsSelected !== 0; else emptyTemplate">
 
+  <h5>
+    {{
+    patientsSelected === 3
+      ? 'Both patients:'
+      : patientsSelected === 1
+        ? groupLabelA + ':'
+        : groupLabelB + ':'
+    }}
+  </h5>
+
   <ng-container *ngFor="let threshold of thresholds; let thIndex = index">
 
     <app-sidebar-threshold-selector-range
@@ -12,6 +22,8 @@
       [max]="max ? max[thIndex] : 1"
       (thresholdChangedEmitter)="thresholdChangedEmitter.emit($event)"
     ></app-sidebar-threshold-selector-range>
+
+    <hr>
 
   </ng-container>
 

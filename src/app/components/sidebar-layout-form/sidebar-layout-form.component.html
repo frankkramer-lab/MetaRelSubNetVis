@@ -27,7 +27,7 @@
     *ngIf="property.type === 2"
     [property]="property"
     [propertyId]="propertyId"
-    [isChecked]="booleanProperty === property"
+    [booleanProperty]="booleanProperty"
     (propertyClicked)="booleanPropertyChanged.emit($event)"></app-sidebar-layout-form-boolean>
 
   </ng-container>

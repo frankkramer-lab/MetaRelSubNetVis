@@ -10,9 +10,10 @@ export class SidebarLayoutFormBooleanComponent {
 
   @Input() property!: Property | null;
 
+  @Input() booleanProperty!: Property | null;
+
   @Input() propertyId!: number | null;
 
-  @Input() isChecked!: boolean | null;
-
   @Output() propertyClicked: EventEmitter<Property | null> = new EventEmitter<Property | null>();
+
 }

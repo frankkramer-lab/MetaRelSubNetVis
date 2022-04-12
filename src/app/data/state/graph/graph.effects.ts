@@ -90,23 +90,24 @@ export class GraphEffects {
         this.store.select(selectShowOnlySharedNodes),
         this.store.select(selectActiveBooleanProperty),
         this.store.select(selectVisibleNodes),
+        this.store.select(selectProperties),
       ]),
       map(
         ([
-           ,
-           patientADetails,
-           patientBDetails,
-           patientGroupA,
-           patientGroupB,
-           network,
-           nodeColorBy,
-           nodeSizeBy,
-           showAllNodes,
-           showOnlySharedNodes,
-           showMtbResults,
-           visibleNodes,
-         ]) => {
-
+          ,
+          patientADetails,
+          patientBDetails,
+          patientGroupA,
+          patientGroupB,
+          network,
+          nodeColorBy,
+          nodeSizeBy,
+          showAllNodes,
+          showOnlySharedNodes,
+          booleanProperty,
+          visibleNodes,
+          properties,
+        ]) => {
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
             patientADetails,
@@ -118,8 +119,9 @@ export class GraphEffects {
             nodeSizeBy,
             showAllNodes,
             showOnlySharedNodes,
-            showMtbResults,
+            booleanProperty,
             visibleNodes,
+            properties,
           );
           return renderingSuccess();
         },
@@ -209,6 +211,5 @@ export class GraphEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private graphService: GraphService,
-  ) {
-  }
+  ) {}
 }

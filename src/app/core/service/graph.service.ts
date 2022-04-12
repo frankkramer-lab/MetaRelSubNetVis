@@ -206,6 +206,8 @@ export class GraphService {
         });
       }
     });
+
+    console.log(style);
     return style;
   }
 
@@ -338,8 +340,9 @@ export class GraphService {
     showOnlySharedNodes: boolean,
     booleanProperty: Property | null,
     visibleNodes: NetworkNode[],
+    properties: Property[],
   ) {
-    this.updateBooleanProperty(booleanProperty);
+    this.updateBooleanProperty(booleanProperty, properties);
     const visibleNodesIds: string[] = visibleNodes.map((a) => a.data.id.toString());
     if (
       patientADetails &&
@@ -348,11 +351,11 @@ export class GraphService {
       patientBDetails?.length > 0
     ) {
       this.clear();
-      this.visualizeTwo(patientADetails, patientBDetails, nodeColorBy, visibleNodesIds);
+      this.visualizeTwo(patientADetails, patientBDetails, nodeColorBy, visibleNodesIds, properties);
     } else if (patientADetails && patientADetails.length > 0) {
-      this.visualizeOne(patientADetails, nodeSizeBy, nodeColorBy, visibleNodesIds);
+      this.visualizeOne(patientADetails, nodeSizeBy, nodeColorBy, visibleNodesIds, properties);
     } else if (patientBDetails && patientBDetails.length > 0) {
-      this.visualizeOne(patientBDetails, nodeSizeBy, nodeColorBy, visibleNodesIds);
+      this.visualizeOne(patientBDetails, nodeSizeBy, nodeColorBy, visibleNodesIds, properties);
     } else {
       this.clear();
       this.cyCore.elements('node').data('shown', true);
@@ -372,6 +375,7 @@ export class GraphService {
     patientBDetails: PatientItem[] | null,
     nodeColorBy: Property | null,
     visibleNodes: string[],
+    properties: Property[],
   ) {
     this.cyCore.batch(() => {
       this.clear();
@@ -409,10 +413,16 @@ export class GraphService {
                 : data[color as keyof PatientItem],
             );
 
-          // todo
-          if (node && data.mtb) {
-            node.addClass('mtb');
-          }
+          const booleanProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
+          booleanProperties.forEach((property) => {
+            if (node && data[property.name]) {
+              node.addClass(property.name);
+            }
+          });
+
+          // if (node && data.mtb) {
+          //   node.addClass('mtb');
+          // }
         }
       });
 
@@ -433,9 +443,15 @@ export class GraphService {
             );
 
           // todo
-          if (node && data.mtb) {
-            node.addClass('mtb');
-          }
+          const booleanProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
+          booleanProperties.forEach((property) => {
+            if (node && data[property.name]) {
+              node.addClass(property.name);
+            }
+          });
+          // if (node && data.mtb) {
+          //   node.addClass('mtb');
+          // }
         }
       });
     });
@@ -446,6 +462,7 @@ export class GraphService {
     nodeSizeBy: Property | null,
     nodeColorBy: Property | null,
     visibleNodes: string[],
+    properties: Property[],
   ): void {
     this.cyCore.batch(() => {
       this.clear();
@@ -487,9 +504,16 @@ export class GraphService {
             );
 
           // todo
-          if (node && data.mtb) {
-            node.addClass('mtb');
-          }
+
+          const booleanProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
+          booleanProperties.forEach((property) => {
+            if (node && data[property.name]) {
+              node.addClass(property.name);
+            }
+          });
+          // if (node && data.mtb) {
+          //   node.addClass('mtb');
+          // }
         }
       });
     });
@@ -679,14 +703,17 @@ export class GraphService {
   /**
    * Updates the node style based on if the mtb property is to be displayed.
    * @param booleanProperty Active property that borders single nodes
+   * @param properties List of properties
    */
-  private updateBooleanProperty(booleanProperty: Property | null): void {
-    // todo
-    // this.cyCore
-    //   .style()
-    //   // @ts-ignore
-    //   .selector('node.mtb')
-    //   .style('border-width', showMtbResults ? '7px' : '0px');
+  private updateBooleanProperty(booleanProperty: Property | null, properties: Property[]): void {
+    const booleanProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
+    booleanProperties.forEach((property) => {
+      this.cyCore
+        .style()
+        // @ts-ignore
+        .selector(`node.${property.name}`)
+        .style('border-width', property === booleanProperty ? '7px' : '0px');
+    });
   }
 
   /**

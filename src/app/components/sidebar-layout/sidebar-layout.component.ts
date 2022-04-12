@@ -35,7 +35,7 @@ export class SidebarLayoutComponent implements OnInit {
 
   nodeColorBy$!: Observable<Property | null>;
 
-  nodeSizeBy$!: Observable<NodeSizeByEnum>;
+  nodeSizeBy$!: Observable<Property | null>;
 
   showMtbResult$!: Observable<boolean>;
 
@@ -58,7 +58,7 @@ export class SidebarLayoutComponent implements OnInit {
     this.store.dispatch(setNodeColorBy({ nodeColorBy }));
   }
 
-  setNodeSizeBy(nodeSizeBy: NodeSizeByEnum) {
+  setNodeSizeBy(nodeSizeBy: Property | null) {
     this.store.dispatch(setNodeSizeBy({ nodeSizeBy }));
   }
 

@@ -248,7 +248,7 @@ export class HydratorEffects {
           showShared: config.shared ?? false,
           showMtb: config.mtb ?? true,
           nodeColorBy: null,
-          nodeSizeBy: (config.size as NodeSizeByEnum) ?? NodeSizeByEnum.geneExpression,
+          nodeSizeBy: null,
         });
       }),
     );

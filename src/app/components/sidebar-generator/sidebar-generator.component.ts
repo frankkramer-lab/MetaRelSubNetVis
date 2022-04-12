@@ -79,7 +79,7 @@ export class SidebarGeneratorComponent implements OnInit {
 
   nodesColorBy$!: Observable<Property | null>;
 
-  nodesSizeBy$!: Observable<NodeSizeByEnum>;
+  nodesSizeBy$!: Observable<Property | null>;
 
   showAll$!: Observable<boolean>;
 

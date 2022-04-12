@@ -38,8 +38,8 @@
   </tr>
   <tr>
     <td>Node's size</td>
-    <td *ngIf="nodesSizeBy === 0">Gene expression</td>
-    <td *ngIf="nodesSizeBy === 1">Relevance</td>
+    <td *ngIf="nodesSizeBy?.type === 0">Gene expression</td>
+    <td *ngIf="nodesSizeBy?.type === 1">Relevance</td>
   </tr>
   <tr>
     <td>Show all nodes</td>

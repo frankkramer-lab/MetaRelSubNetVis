@@ -28,7 +28,7 @@ export class SidebarGeneratorTableComponent {
 
   @Input() nodesColorBy!: Property | null;
 
-  @Input() nodesSizeBy!: NodeSizeByEnum | null;
+  @Input() nodesSizeBy!: Property | null;
 
   @Input() showAll!: boolean | null;
 

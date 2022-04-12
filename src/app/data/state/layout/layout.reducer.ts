@@ -1,6 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
 import { LayoutState } from './layout.state';
-import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import {
   setNodeColorBy,
   setNodeSizeBy,
@@ -10,10 +9,11 @@ import {
 } from './layout.actions';
 import { hydrateLayoutSuccess, loadDataSuccess } from '../hydrator/hydrator.actions';
 import { navigateHome } from '../sidebar/sidebar.actions';
+import { PropertyTypeEnum } from '../../../core/enum/property-type-enum';
 
 const initialState: LayoutState = {
   nodeColorBy: null,
-  nodeSizeBy: NodeSizeByEnum.relevance,
+  nodeSizeBy: null,
   showAllNodes: false,
   showOnlySharedNodes: false,
   showMtbResults: true,
@@ -23,14 +23,18 @@ const initialState: LayoutState = {
 
 export const layoutReducer = createReducer(
   initialState,
-  on(
-    loadDataSuccess,
-    (state: LayoutState, { properties, highlightColor }): LayoutState => ({
+  on(loadDataSuccess, (state: LayoutState, { properties, highlightColor }): LayoutState => {
+    const firstContinuous = properties.find((a) => a.type === PropertyTypeEnum.continuous);
+    const firstDiscrete = properties.find((a) => a.type === PropertyTypeEnum.discrete);
+
+    return {
       ...state,
       properties,
       highlightColor,
-    }),
-  ),
+      nodeColorBy: firstDiscrete ?? null,
+      nodeSizeBy: firstContinuous ?? null,
+    };
+  }),
   on(
     toggleShowMtbResults,
     (state: LayoutState): LayoutState => ({
@@ -76,7 +80,7 @@ export const layoutReducer = createReducer(
     ): LayoutState => {
       return {
         ...state,
-        nodeSizeBy: nodeSizeBy ?? NodeSizeByEnum.relevance,
+        nodeSizeBy: nodeSizeBy ?? null,
         nodeColorBy: nodeColorBy ?? null,
         showAllNodes: showAll && showShared ? false : showAll,
         showOnlySharedNodes: showShared,
@@ -92,7 +96,7 @@ export const layoutReducer = createReducer(
       showOnlySharedNodes: false,
       showAllNodes: false,
       nodeColorBy: null,
-      nodeSizeBy: NodeSizeByEnum.relevance,
+      nodeSizeBy: null,
     }),
   ),
 );

@@ -46,7 +46,7 @@ import { hydrateTriggerDownloadSuccess, markMultipleNodes } from '../hydrator/hy
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import { initCoreFailure, initCoreSuccess, initializeCore } from '../network/network.actions';
-import { setThreshold } from '../threshold/threshold.action';
+import { setAllThresholds, setThreshold } from '../threshold/threshold.action';
 
 @Injectable()
 export class GraphEffects {
@@ -70,7 +70,14 @@ export class GraphEffects {
 
   renderGraph$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(initCoreSuccess, setThreshold, toggleShowMtbResults, setNodeColorBy, setNodeSizeBy),
+      ofType(
+        initCoreSuccess,
+        setAllThresholds,
+        setThreshold,
+        toggleShowMtbResults,
+        setNodeColorBy,
+        setNodeSizeBy,
+      ),
       concatLatestFrom(() => [
         this.store.select(selectPatientADetails),
         this.store.select(selectPatientBDetails),
@@ -86,19 +93,20 @@ export class GraphEffects {
       ]),
       map(
         ([
-           ,
-           patientADetails,
-           patientBDetails,
-           patientGroupA,
-           patientGroupB,
-           network,
-           nodeColorBy,
-           nodeSizeBy,
-           showAllNodes,
-           showOnlySharedNodes,
-           showMtbResults,
-           visibleNodes,
-         ]) => {
+          ,
+          patientADetails,
+          patientBDetails,
+          patientGroupA,
+          patientGroupB,
+          network,
+          nodeColorBy,
+          nodeSizeBy,
+          showAllNodes,
+          showOnlySharedNodes,
+          showMtbResults,
+          visibleNodes,
+        ]) => {
+
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
             patientADetails,
@@ -201,6 +209,5 @@ export class GraphEffects {
     private store: Store<AppState>,
     private apiService: ApiService,
     private graphService: GraphService,
-  ) {
-  }
+  ) {}
 }

@@ -9,7 +9,7 @@ import { selectPatientSelection } from '../patient/patient.selectors';
 import { selectThresholds } from './threshold.selectors';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
-import { setAllThresholds } from './threshold.action';
+import { keepAllThresholds, setAllThresholds } from './threshold.action';
 
 @Injectable()
 export class ThresholdEffects {
@@ -49,7 +49,7 @@ export class ThresholdEffects {
           });
           return setAllThresholds({ thresholds: newThresholds });
         }
-        return setAllThresholds({ thresholds });
+        return keepAllThresholds();
       }),
     );
   });

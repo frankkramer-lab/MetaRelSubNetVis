@@ -7,7 +7,6 @@ import { NetworkNode } from '../../data/schema/network-node';
 import { Network } from '../../data/schema/network';
 import { Patient } from '../../data/schema/patient';
 import { UtilService } from './util.service';
-import { NodeSizeByEnum } from '../enum/node-size-by.enum';
 import { PatientItem } from '../../data/schema/patient-item';
 import { PatientSelectionEnum } from '../enum/patient-selection-enum';
 import { ImageDownloadConfig } from '../../data/schema/image-download-config';
@@ -337,7 +336,7 @@ export class GraphService {
     patientGroupB: Patient[] | null,
     network: Network,
     nodeColorBy: Property | null,
-    nodeSizeBy: NodeSizeByEnum,
+    nodeSizeBy: Property | null,
     showAllNodes: boolean,
     showOnlySharedNodes: boolean,
     showMtbResults: boolean,
@@ -352,26 +351,11 @@ export class GraphService {
       patientBDetails?.length > 0
     ) {
       this.clear();
-      this.visualizeTwo(
-        patientADetails,
-        patientBDetails,
-        nodeColorBy,
-        visibleNodesIds,
-      );
+      this.visualizeTwo(patientADetails, patientBDetails, nodeColorBy, visibleNodesIds);
     } else if (patientADetails && patientADetails.length > 0) {
-      this.visualizeOne(
-        patientADetails,
-        nodeSizeBy,
-        nodeColorBy,
-        visibleNodesIds,
-      );
+      this.visualizeOne(patientADetails, nodeSizeBy, nodeColorBy, visibleNodesIds);
     } else if (patientBDetails && patientBDetails.length > 0) {
-      this.visualizeOne(
-        patientBDetails,
-        nodeSizeBy,
-        nodeColorBy,
-        visibleNodesIds,
-      );
+      this.visualizeOne(patientBDetails, nodeSizeBy, nodeColorBy, visibleNodesIds);
     } else {
       this.clear();
       this.cyCore.elements('node').data('shown', true);
@@ -380,6 +364,7 @@ export class GraphService {
       (patientADetails && patientADetails.length > 0) ||
       (patientBDetails && patientBDetails.length > 0);
     this.updateShownNodes(showAllNodes, showOnlySharedNodes, patientSelected);
+    console.log(this.cyCore);
   }
 
   /**
@@ -394,6 +379,9 @@ export class GraphService {
   ) {
     this.cyCore.batch(() => {
       this.clear();
+
+      // todo
+
       const color = '';
       // const color = this.utilService.getColorByLiteral(nodeColorBy);
       // switch (nodeColorBy) {
@@ -449,35 +437,21 @@ export class GraphService {
 
   private visualizeOne(
     patientDetails: PatientItem[],
-    nodeSizeBy: NodeSizeByEnum,
+    nodeSizeBy: Property | null,
     nodeColorBy: Property | null,
     visibleNodes: string[],
   ): void {
-
     console.log(visibleNodes);
 
     this.cyCore.batch(() => {
       this.clear();
 
-      // todo node size
-      const size = '';
-      // const size = this.utilService.getNodeSizeByLiteral(nodeSizeBy);
-      // switch (nodeSizeBy) {
-      //   case NodeSizeByEnum.geneExpression:
-      //     this.setSizeMap(
-      //       this.utilService.getMinGe(patientDetails ?? []),
-      //       this.utilService.getMaxGe(patientDetails ?? []),
-      //     );
-      //     break;
-      //   case NodeSizeByEnum.relevance:
-      //   default:
-      //     if (min && max) {
-      //       this.setSizeMap(min, max);
-      //     }
-      //     break;
-      // }
+      const size = nodeSizeBy?.name;
+      if (nodeSizeBy !== null) {
+        this.setSizeMap(nodeSizeBy);
+      }
 
-      const color = '';
+      const color = nodeColorBy?.name;
       if (nodeColorBy !== null) {
         switch (nodeColorBy.type) {
           case PropertyTypeEnum.continuous:
@@ -493,23 +467,8 @@ export class GraphService {
         }
       }
 
-      // const color = this.utilService.getColorByLiteral(nodeColorBy);
-      // switch (nodeColorBy) {
-      //   case NodeColorByEnum.geneExpression:
-      //     if (geMin && geMax) {
-      //       this.setColorMap(geMin, geMax);
-      //     }
-      //     break;
-      //   case NodeColorByEnum.geneExpressionLevel:
-      //     this.setColorDisc();
-      //     break;
-      //   case NodeColorByEnum.relevance:
-      //   default:
-      //     if (min && max) {
-      //       this.setColorMap(min, max);
-      //     }
-      //     break;
-      // }
+      console.log(color);
+      console.log(size);
 
       (patientDetails || []).forEach((data: PatientItem) => {
         if (visibleNodes.includes(data.id)) {
@@ -518,7 +477,7 @@ export class GraphService {
             .getElementById(data.id.toString())
             .data('member', true)
             .data('shown', true)
-            .data('size', data[size as keyof PatientItem])
+            .data('size', Number(data[size as keyof PatientItem]))
             .data('color', data[color as keyof PatientItem]);
           if (node && data.mtb) {
             node.addClass('mtb');
@@ -533,38 +492,31 @@ export class GraphService {
     const values = Object.values(property.mapping);
     const maps: string[] = [];
 
+    console.log(property);
+
     Object.entries(property.mapping).forEach(([rawKey, value], index) => {
       const key = Number(rawKey);
       const successorKey = keys[index + 1];
       const successorValue = values[index + 1];
 
-      if (index < keys.length) {
-        const map = `mapData(color, ${key}, ${successorKey}, ${value}, ${successorValue})`;
+      const map = `mapData(color, ${key}, ${successorKey}, ${value}, ${successorValue})`;
 
-        if (index === 0) {
-          this.cyCore
-            .style()
-            // @ts-ignore
-            .selector(`node[color<${keys[0]}]`)
-            .style('background-color', map)
-            .style('text-outline-color', map);
-        }
+      console.log(map);
 
-        if (index === keys.length - 1) {
-          this.cyCore
-            .style()
-            // @ts-ignore
-            .selector(`node[color>${key}]`)
-            .style('background-color', map)
-            .style('text-outline-color', map);
-        } else {
-          this.cyCore
-            .style()
-            // @ts-ignore
-            .selector(`node[color>=${key}][color<${successorKey}]`)
-            .style('background-color', map)
-            .style('text-outline-color', map);
-        }
+      if (index === 0) {
+        this.cyCore
+          .style()
+          // @ts-ignore
+          .selector(`node[color<${keys[0]}]`)
+          .style('background-color', map)
+          .style('text-outline-color', map);
+      } else if (index !== keys.length - 1) {
+        this.cyCore
+          .style()
+          // @ts-ignore
+          .selector(`node[color>=${key}][color<${successorKey}]`)
+          .style('background-color', map)
+          .style('text-outline-color', map);
       }
     });
     console.log(maps);
@@ -579,6 +531,7 @@ export class GraphService {
 
     // default split
     this.cyCore
+      .style()
       // @ts-ignore
       .selector('node.split[colorA][colorB]')
       .style('width', '80px')
@@ -695,22 +648,22 @@ export class GraphService {
    * @param maxValue
    * @private
    */
-  private setColorMap(minValue: number, maxValue: number) {
-    const midPoint = maxValue - (maxValue - minValue) / 2;
-    const colorMap1 = `mapData(color, ${minValue}, ${midPoint}, ${this.colors.blue}, ${this.colors.yellow})`;
-    const colorMap2 = `mapData(color, ${midPoint}, ${maxValue}, ${this.colors.yellow}, ${this.colors.red})`;
-
-    this.cyCore
-      .style()
-      // @ts-ignore
-      .selector(`node[color<=${midPoint}]`)
-      .style('background-color', colorMap1)
-      .style('text-outline-color', colorMap1)
-      // @ts-ignore
-      .selector(`node[color>${midPoint}]`)
-      .style('background-color', colorMap2)
-      .style('text-outline-color', colorMap2);
-  }
+  // private setColorMap(minValue: number, maxValue: number) {
+  //   const midPoint = maxValue - (maxValue - minValue) / 2;
+  //   const colorMap1 = `mapData(color, ${minValue}, ${midPoint}, ${this.colors.blue}, ${this.colors.yellow})`;
+  //   const colorMap2 = `mapData(color, ${midPoint}, ${maxValue}, ${this.colors.yellow}, ${this.colors.red})`;
+  //
+  //   this.cyCore
+  //     .style()
+  //     // @ts-ignore
+  //     .selector(`node[color<=${midPoint}]`)
+  //     .style('background-color', colorMap1)
+  //     .style('text-outline-color', colorMap1)
+  //     // @ts-ignore
+  //     .selector(`node[color>${midPoint}]`)
+  //     .style('background-color', colorMap2)
+  //     .style('text-outline-color', colorMap2);
+  // }
 
   /**
    * Clears all applied styles
@@ -733,20 +686,31 @@ export class GraphService {
 
   /**
    * Applies sizing to the nodes
-   * @param minValue
-   * @param maxValue
    * @private
    */
-  private setSizeMap(minValue: number, maxValue: number) {
-    const sizeMap = `mapData(size, ${minValue}, ${maxValue}, 50, 130)`;
-    const fontSizeMap = `mapData(size, ${minValue}, ${maxValue}, 18, 30)`;
-    this.cyCore
-      .style()
-      // @ts-ignore
-      .selector('node[?member]')
-      .style('width', sizeMap)
-      .style('height', sizeMap)
-      .style('font-size', fontSizeMap);
+  private setSizeMap(property: Property) {
+    const keys = Object.keys(property.mapping);
+
+    Object.keys(property.mapping).forEach((rawKey, index) => {
+      const key = Number(rawKey);
+      const successorKey = keys[index + 1];
+
+      // console.log(`Index: ${index}: ${rawKey} || ${successorKey}`);
+
+
+      const mapNodeSize = `mapData(size, ${key}, ${successorKey}, 50, 130)`;
+      const mapFontSize = `mapData(size, ${key}, ${successorKey}, 18, 30)`;
+
+      if (index !== keys.length - 1) {
+        this.cyCore
+          .style()
+          // @ts-ignore
+          .selector('node[?member]')
+          .style('width', mapNodeSize)
+          .style('height', mapNodeSize)
+          .style('font-size', mapFontSize);
+      }
+    });
   }
 
   /**

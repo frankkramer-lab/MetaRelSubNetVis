@@ -15,6 +15,6 @@ export const setNodeColorBy = createAction(
 );
 export const setNodeSizeBy = createAction(
   '[Sidebar Layout Component] select size nodes by',
-  props<{ nodeSizeBy: NodeSizeByEnum }>(),
+  props<{ nodeSizeBy: Property | null }>(),
 );
 export const fitGraph = createAction('[Sidebar Layout Component] fit graph');

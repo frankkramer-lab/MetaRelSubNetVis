@@ -120,26 +120,26 @@
     <!-- by relevance -->
     <div class="form-check">
       <input
-        (click)="nodeSizeByChanged.emit(1)"
+        (click)="nodeSizeByChanged.emit(null)"
         class="form-check-input"
         type="radio"
         name="nodeSizeBy"
         id="nodeSizeByRelevance"
         value="relevance"
-        [checked]="nodeSizeBy === 1"
+        [checked]="nodeSizeBy?.type === 1"
       />
       <label class="form-check-label" for="nodeSizeByRelevance"> by relevance </label>
     </div>
     <!-- by gene expression -->
     <div class="form-check">
       <input
-        (click)="nodeSizeByChanged.emit(0)"
+        (click)="nodeSizeByChanged.emit(null)"
         class="form-check-input"
         type="radio"
         name="nodeSizeBy"
         id="nodeSizeByGeneExpression"
         value="geneExpression"
-        [checked]="nodeSizeBy === 0"
+        [checked]="nodeSizeBy?.type === 0"
       />
       <label class="form-check-label" for="nodeSizeByGeneExpression"> by gene expression </label>
     </div>

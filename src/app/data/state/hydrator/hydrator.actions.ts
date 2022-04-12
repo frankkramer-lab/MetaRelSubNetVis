@@ -3,7 +3,6 @@ import { Network } from '../../schema/network';
 import { PatientCollection } from '../../schema/patient-collection';
 import { Patient } from '../../schema/patient';
 import { PatientItem } from '../../schema/patient-item';
-import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import { NetworkNode } from '../../schema/network-node';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
@@ -59,7 +58,7 @@ export const hydrateLayoutSuccess = createAction(
     showShared: boolean;
     showMtb: boolean;
     nodeColorBy: Property | null;
-    nodeSizeBy: NodeSizeByEnum;
+    nodeSizeBy: Property | null;
   }>(),
 );
 export const hydrateLayoutFailure = createAction('[Hydrator Effects] hydrate layout failure');

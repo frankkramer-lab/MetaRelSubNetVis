@@ -2,7 +2,7 @@
   <label class="form-check-label" for="show{{ propertyId }}"
   >
     <div *ngIf="property && property.mapping" class="d-inline">
-      Show {{ property?.name ?? '' }}&nbsp;
+      Show {{ property?.label ?? property?.name ?? '' }}&nbsp;
       <div
         *ngFor="let item of property.mapping | keyvalue"
         class="circle align-text-bottom"

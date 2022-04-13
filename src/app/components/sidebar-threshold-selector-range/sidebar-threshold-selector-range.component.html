@@ -1,6 +1,6 @@
 <div class="input-group mb-3">
     <span class="input-group-text" id="thresholdLabel">
-      {{threshold?.property?.name}}
+      {{threshold?.property?.label ?? threshold?.property?.name}}
     </span>
   <input [disabled]="true" type="text" id="threshold" class="form-control"
          [ngModel]="threshold?.defined" />

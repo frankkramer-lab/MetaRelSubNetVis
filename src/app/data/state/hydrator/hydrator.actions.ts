@@ -47,7 +47,7 @@ export const hydratePatientAPatientBFailure = createAction(
 
 export const hydrateThresholdSuccess = createAction(
   '[Hydrator Effects] hydrate threshold success',
-  props<{ thresholdDefinition: any }>(),
+  props<{ thresholds: ThresholdDefinition[] }>(),
 );
 export const hydrateThresholdFailure = createAction('[Hydrator Effects] hydrate threshold failure');
 

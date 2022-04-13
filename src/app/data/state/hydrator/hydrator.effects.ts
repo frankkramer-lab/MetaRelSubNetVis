@@ -145,8 +145,6 @@ export class HydratorEffects {
               return loadDataFailure({ uuid: action.uuid ?? '' });
             }
 
-            console.log(patients);
-
             network.occ = this.hydratorService.hydrateOccurrences(patients);
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
             network.edges = this.hydratorService.hydrateEdges(edgesRaw);
@@ -221,15 +219,30 @@ export class HydratorEffects {
   hydrateThreshold$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(hydratePatientAPatientBSuccess, hydratePatientAPatientBFailure),
-      concatLatestFrom(() => this.store.select(selectConfig)),
-      map(([, config]) => {
-        if (!config || !config.th || Number.isNaN(config.th)) return hydrateThresholdFailure();
-        return hydrateThresholdSuccess({
-          thresholdDefinition: {
-            defined: config.th,
-            property: null,
-          },
+      concatLatestFrom(() => [
+        this.store.select(selectConfig),
+        this.store.select(selectProperties),
+      ]),
+      map(([, config, properties]) => {
+        if (!config || !config.th) return hydrateThresholdFailure();
+
+        const thresholds: ThresholdDefinition[] = [];
+
+        Object.entries(config.th).forEach(([key, value]) => {
+          const numericValue = Number(value);
+          const property = properties.find(
+            (a) => a.name === key && a.type === PropertyTypeEnum.continuous,
+          );
+
+          if (property && !Number.isNaN(numericValue)) {
+            thresholds.push({
+              defined: numericValue,
+              property,
+            });
+          }
         });
+
+        return hydrateThresholdSuccess({ thresholds });
       }),
     );
   });
@@ -249,12 +262,19 @@ export class HydratorEffects {
           (a) => a.name === config.bool && a.type === PropertyTypeEnum.boolean,
         );
 
+        const colProperty = properties.find(
+          (a) => a.name === config.col && a.type !== PropertyTypeEnum.boolean,
+        );
+        const sizeProperty = properties.find(
+          (a) => a.name === config.size && a.type !== PropertyTypeEnum.boolean,
+        );
+
         return hydrateLayoutSuccess({
           showAll: config.all ?? false,
           showShared: config.shared ?? false,
           booleanProperty: booleanProperty ?? null,
-          nodeColorBy: null,
-          nodeSizeBy: null,
+          nodeColorBy: colProperty ?? null,
+          nodeSizeBy: sizeProperty ?? null,
         });
       }),
     );
@@ -365,5 +385,6 @@ export class HydratorEffects {
     private apiService: ApiService,
     private hydratorService: HydratorService,
     private router: Router,
-  ) {}
+  ) {
+  }
 }

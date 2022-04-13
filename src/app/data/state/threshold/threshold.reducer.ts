@@ -1,6 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
 import { ThresholdState } from './threshold.state';
-import { loadDataFailure, loadDataSuccess, loadQueryParams } from '../hydrator/hydrator.actions';
+import {
+  hydrateThresholdSuccess,
+  loadDataFailure,
+  loadDataSuccess,
+  loadQueryParams,
+} from '../hydrator/hydrator.actions';
 import { navigateHome } from '../sidebar/sidebar.actions';
 import { setAllThresholds, setThreshold } from './threshold.action';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
@@ -23,6 +28,7 @@ export const thresholdReducer = createReducer(
     };
   }),
   on(
+    hydrateThresholdSuccess,
     setAllThresholds,
     (state: ThresholdState, { thresholds }): ThresholdState => ({
       ...state,

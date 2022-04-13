@@ -18,7 +18,6 @@ export const selectIsImageDownloadConfigValid = createSelector(
   selectState,
   (state: GeneratorState) => state.isImageDownloadConfigValid,
 );
-
 export const selectImageDownloadConfig = createSelector(
   selectState,
   (state: GeneratorState) => state.imageDownloadConfig,
@@ -31,8 +30,6 @@ export const selectTriggerImmediateDownload = createSelector(
   selectState,
   (state: GeneratorState) => state.triggerImageDownload,
 );
-export const selectDomain = createSelector(selectState, (state: GeneratorState) => state.domain);
-
 export const selectGenCmpVisPatients = createSelector(
   selectState,
   (state: GeneratorState) => state.componentPatientsVisibility,

@@ -3,6 +3,7 @@ import { Patient } from '../../data/schema/patient';
 import { NetworkNode } from '../../data/schema/network-node';
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
 import { Property } from '../../data/schema/property';
+import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 
 @Component({
   selector: 'app-sidebar-generator-table',
@@ -20,7 +21,7 @@ export class SidebarGeneratorTableComponent {
 
   @Input() patientB!: Patient | null;
 
-  @Input() threshold!: number | null;
+  @Input() thresholds!: ThresholdDefinition[] | null;
 
   @Input() nodes!: NetworkNode[] | null;
 

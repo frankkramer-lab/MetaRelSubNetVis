@@ -56,9 +56,9 @@
       <td>Show only shared nodes</td>
       <td>{{ showShared ? 'yes' : 'no' }}</td>
     </tr>
-    <tr>
+    <tr *ngIf="booleanProperty !== null">
       <td>Mark nodes with property</td>
-      <td>{{ booleanProperty?.name ?? '-' }}</td>
+      <td>{{ booleanProperty.name ?? '-' }}</td>
     </tr>
   </tbody>
 </table>

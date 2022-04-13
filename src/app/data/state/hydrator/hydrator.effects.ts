@@ -86,6 +86,7 @@ export class HydratorEffects {
             let edgesRaw: any[] = [];
             let nodeAttributes: any;
             let networkAttributes: any;
+            let metaRelSubNetVis: any;
             const labels: string[] = [];
 
             (data as any[]).forEach((aspect) => {
@@ -100,6 +101,9 @@ export class HydratorEffects {
               }
               if (aspect.edges) {
                 edgesRaw = aspect.edges;
+              }
+              if (aspect.metaRelSubNetVis) {
+                metaRelSubNetVis = aspect.metaRelSubNetVis;
               }
             });
 
@@ -131,8 +135,8 @@ export class HydratorEffects {
 
             patients = { ...patients, labelA: labels[1], labelB: labels[2] };
 
-            const properties = this.hydratorService.initProperties(networkAttributes, patients);
-            const highlightColor = this.hydratorService.hydrateHighlightColor(networkAttributes);
+            const properties = this.hydratorService.initProperties(metaRelSubNetVis);
+            const highlightColor = this.hydratorService.hydrateHighlightColor(metaRelSubNetVis);
 
             patients = this.hydratorService.hydrateNodeAttributes(
               nodeAttributes,
@@ -149,12 +153,8 @@ export class HydratorEffects {
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
             network.edges = this.hydratorService.hydrateEdges(edgesRaw);
 
-            const thresholds: ThresholdDefinition[] = this.hydratorService.hydrateThresholds(
-              properties,
-              networkAttributes,
-            );
-
-            console.log(thresholds);
+            const thresholds: ThresholdDefinition[] =
+              this.hydratorService.hydrateThresholds(properties);
 
             return loadDataSuccess({
               network,
@@ -385,6 +385,5 @@ export class HydratorEffects {
     private apiService: ApiService,
     private hydratorService: HydratorService,
     private router: Router,
-  ) {
-  }
+  ) {}
 }

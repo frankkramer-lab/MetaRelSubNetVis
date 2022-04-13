@@ -9,8 +9,6 @@ import { NetworkEdge } from '../../data/schema/network-edge';
 import { NetworkNode } from '../../data/schema/network-node';
 import { NetworkOccurrences } from '../../data/schema/network-occurrences';
 import { Property } from '../../data/schema/property';
-import { UtilService } from './util.service';
-import { PropertyMapping } from '../../data/schema/property-mapping';
 import { PropertyTypeEnum } from '../enum/property-type-enum';
 import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 
@@ -18,86 +16,49 @@ import { ThresholdDefinition } from '../../data/schema/threshold-definition';
   providedIn: 'root',
 })
 export class HydratorService {
-  constructor(private utilService: UtilService) {
-  }
-
-  initProperties(networkAttribues: any, patients: PatientCollection): Property[] {
-
-    let rawNames!: string[];
-    let rawTypes!: string[];
-    const keys: any = {};
-    const values: any = {};
-
+  initProperties(metaRelSubNetVis: any[]): Property[] {
     let properties: Property[] = [];
     const cProperties: Property[] = [];
     const dProperties: Property[] = [];
     const bProperties: Property[] = [];
 
-    networkAttribues.forEach((attribute: NodeAttributesItem) => {
-      const name = attribute.n;
-      const value = attribute.v;
+    metaRelSubNetVis.forEach((attribute: any) => {
+      // patient-specific properties
+      if (attribute.individual_properties) {
+        attribute.individual_properties.forEach((ip: any) => {
+          const property: Property = {
+            label: ip.label ?? 'n/a',
+            name: ip.property ?? 'n/a',
+            mapping: ip.mapping ?? null,
+            threshold: false,
+            type: PropertyTypeEnum.boolean,
+          };
+          if (ip.type === 'continuous') {
+            property.type = PropertyTypeEnum.continuous;
+            property.threshold = ip.threshold;
+            property.minA = Number.MAX_SAFE_INTEGER;
+            property.minB = Number.MAX_SAFE_INTEGER;
+            property.maxA = Number.MIN_SAFE_INTEGER;
+            property.maxB = Number.MIN_SAFE_INTEGER;
+            cProperties.push(property);
+          } else if (ip.type === 'discrete') {
+            property.type = PropertyTypeEnum.discrete;
+            dProperties.push(property);
+          } else {
+            property.type = PropertyTypeEnum.boolean;
+            bProperties.push(property);
+          }
+        });
+      }
 
-      if (name === 'property_names') {
-        rawNames = value as unknown as string[];
-      } else if (name === 'property_types') {
-        rawTypes = value as unknown as string[];
-      } else if (name.startsWith('property_') && name.endsWith('_keys')) {
-        const expKey = new RegExp(/property_(.*)_keys/, 'g');
-
-        const match = expKey.exec(name);
-
-        if (match && match.length === 2) {
-          keys[match[1]] = value as unknown as string[];
-        }
-      } else if (name.startsWith('property_') && name.endsWith('_values')) {
-        const expValue = new RegExp(/property_(.+)_values/, 'g');
-        const match = expValue.exec(name);
-
-        if (match && match.length === 2) {
-          values[match[1]] = value as unknown as string[];
-        }
+      // generic properties
+      if (attribute.properties) {
+        // todo
       }
     });
 
-    if (rawNames.length > 0 && rawTypes.length > 0) {
-      rawNames.forEach((name: string, nameIndex: number) => {
-        if (keys[name] && values[name]) {
-          const type: PropertyTypeEnum = this.utilService.getPropertyTypeByString(
-            rawTypes[nameIndex],
-          );
-          const mapping: PropertyMapping = {};
+    properties = cProperties.concat(dProperties, bProperties);
 
-          if (!(keys[name] instanceof Array)) {
-            mapping[keys[name]] = values[name];
-          } else {
-            keys[name].forEach((key: string, keyIndex: number) => {
-              mapping[key] = values[name][keyIndex];
-            });
-          }
-
-          const item: Property = {
-            name,
-            type,
-            mapping,
-          };
-
-          if (type === PropertyTypeEnum.continuous) {
-            item.maxA = Number.MIN_SAFE_INTEGER;
-            item.maxB = Number.MIN_SAFE_INTEGER;
-            item.minA = Number.MAX_SAFE_INTEGER;
-            item.minB = Number.MAX_SAFE_INTEGER;
-            cProperties.push(item);
-          } else if (type === PropertyTypeEnum.discrete) {
-            dProperties.push(item);
-          } else {
-            bProperties.push(item);
-          }
-          properties = cProperties.concat(dProperties, bProperties);
-        }
-      });
-    }
-
-    console.log(properties);
     return properties;
   }
 
@@ -357,10 +318,9 @@ export class HydratorService {
     return occurrences;
   }
 
-  hydrateThresholds(properties: Property[], networkAttributes: any[]): ThresholdDefinition[] {
+  hydrateThresholds(properties: Property[]): ThresholdDefinition[] {
     const availableProperties = properties.filter((a) => a.type === PropertyTypeEnum.continuous);
-    const item: NodeAttributesItem = networkAttributes.find((a) => a.n === 'thresholds');
-    const validProperties = availableProperties.filter((a) => item.v.includes(a.name));
+    const validProperties = availableProperties.filter((a) => a.threshold);
 
     const thresholds: ThresholdDefinition[] = [];
     validProperties.forEach((property) => {
@@ -372,8 +332,7 @@ export class HydratorService {
     return thresholds;
   }
 
-  hydrateHighlightColor(networkAttributes: any): string {
-    const color = networkAttributes.find((a: NodeAttributesItem) => a.n === 'highlight');
-    return color.v ?? '#000000';
+  hydrateHighlightColor(metaRelSubNetVis: any[]): string {
+    return metaRelSubNetVis[0].highlight ?? '#000000';
   }
 }

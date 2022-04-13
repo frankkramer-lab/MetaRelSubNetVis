@@ -3,6 +3,8 @@ import { PropertyMapping } from './property-mapping';
 
 export interface Property {
   name: string;
+  label: string;
+  threshold: boolean;
   type: PropertyTypeEnum;
   mapping: PropertyMapping;
   minA?: number;

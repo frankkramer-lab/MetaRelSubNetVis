@@ -12,6 +12,8 @@ export class SidebarLayoutFormComponent {
 
   @Input() booleanProperty!: Property | null;
 
+  @Input() gradient!: string | null;
+
   @Input() nodeColorBy!: Property | null;
 
   @Input() nodeSizeBy!: Property | null;

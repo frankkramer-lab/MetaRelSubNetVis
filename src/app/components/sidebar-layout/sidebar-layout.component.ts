@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../../data/state/app.state';
 import {
-  selectActiveBooleanProperty,
+  selectActiveBooleanProperty, selectGradient,
   selectNodeColorBy,
   selectNodeSizeBy,
   selectProperties,
@@ -36,6 +36,8 @@ export class SidebarLayoutComponent implements OnInit {
 
   booleanProperty$!: Observable<Property | null>;
 
+  gradient$!: Observable<string | null>;
+
   showAllNodes$!: Observable<boolean>;
 
   showOnlySharedNodes$!: Observable<boolean>;
@@ -51,6 +53,7 @@ export class SidebarLayoutComponent implements OnInit {
     this.nodeSizeBy$ = this.store.select(selectNodeSizeBy);
     this.showAllNodes$ = this.store.select(selectShowAllNodes);
     this.booleanProperty$ = this.store.select(selectActiveBooleanProperty);
+    this.gradient$ = this.store.select(selectGradient);
     this.showOnlySharedNodes$ = this.store.select(selectShowOnlySharedNodes);
     this.properties$ = this.store.select(selectProperties);
   }

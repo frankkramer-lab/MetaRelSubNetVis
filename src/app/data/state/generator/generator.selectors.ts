@@ -7,6 +7,7 @@ import { selectPatientA, selectPatientB } from '../patient/patient.selectors';
 import { selectLayoutState } from '../layout/layout.selectors';
 import { NetworkNode } from '../../schema/network-node';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
+import { selectThresholds } from '../threshold/threshold.selectors';
 
 const selectState = createSelector(
   (appState: AppState) => appState.generator,
@@ -66,12 +67,13 @@ export const selectGenBackButtonVis = createSelector(
 );
 export const selectUrl = createSelector(
   selectState,
+  selectThresholds,
   selectLayoutState,
   selectUuid,
   selectPatientA,
   selectPatientB,
   selectMarkedNodes,
-  (state, layoutState, uuid, patientA, patientB, markedNodes) => {
+  (state, thresholds, layoutState, uuid, patientA, patientB, markedNodes) => {
     const queryParams: string[] = [];
 
     queryParams.push(`uuid=${uuid}`);
@@ -82,17 +84,20 @@ export const selectUrl = createSelector(
     if (patientB) {
       queryParams.push(`pb=${patientB.name}`);
     }
-    // if (defined) {
-    //   queryParams.push(`th=${defined}`);
-    // }
+    if (patientA || patientB) {
+      thresholds.forEach((threshold) => {
+        const paramKey = `th_${threshold.property.name}`;
+        queryParams.push(`${paramKey}=${threshold.defined}`);
+      });
+    }
     if (markedNodes && markedNodes.length > 0) {
       queryParams.push(`sel=${markedNodes.map((a: NetworkNode) => a.data.id).join(',')}`);
     }
     if (layoutState.nodeColorBy !== null) {
-      queryParams.push(`col=${layoutState.nodeColorBy}`);
+      queryParams.push(`col=${layoutState.nodeColorBy.name}`);
     }
     if (layoutState.nodeSizeBy !== null) {
-      queryParams.push(`size=${layoutState.nodeSizeBy}`);
+      queryParams.push(`size=${layoutState.nodeSizeBy.name}`);
     }
     if (layoutState.showAllNodes !== null) {
       queryParams.push(`all=${layoutState.showAllNodes}`);
@@ -100,9 +105,9 @@ export const selectUrl = createSelector(
     if (layoutState.showOnlySharedNodes !== null) {
       queryParams.push(`shared=${layoutState.showOnlySharedNodes}`);
     }
-    // if (layoutState.showMtbResults !== null) {
-    //   queryParams.push(`mtb=${layoutState.showMtbResults}`);
-    // }
+    if (layoutState.booleanProperty !== null) {
+      queryParams.push(`bool=${layoutState.booleanProperty.name}`);
+    }
     if (state.triggerImageDownload) {
       queryParams.push(`dwn=${state.triggerImageDownload}`);
       if (state.imageDownloadConfig) {

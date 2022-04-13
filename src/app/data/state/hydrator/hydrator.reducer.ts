@@ -78,11 +78,11 @@ export const hydratorReducer = createReducer(
     }
 
     if (params.col !== undefined) {
-      config.col = Number(params.col);
+      config.col = params.col;
     }
 
     if (params.size !== undefined) {
-      config.size = Number(params.size);
+      config.size = params.size;
     }
 
     if (params.pa) {
@@ -101,18 +101,29 @@ export const hydratorReducer = createReducer(
       config.all = params.all === 'true';
     }
 
-    if (params.mtb) {
-      config.mtb = params.mtb === 'true';
+    if (params.bool) {
+      config.bool = params.bool;
     }
 
     if (params.shared) {
       config.shared = params.shared === 'true';
     }
 
-    if (params.th !== undefined) {
-      config.th = Number(params.th);
-    }
+    const thresholdKeys = Object.keys(params).filter((a) => a.startsWith('th_'));
 
+    thresholdKeys.forEach((key) => {
+      if (params[key] !== undefined) {
+        if (!config.th) {
+          config.th = {};
+        }
+        const numericValue = Number(params[key]);
+        if (!Number.isNaN(numericValue)) {
+          const cleanKey = key.substr(3);
+          config.th[cleanKey] = numericValue;
+        }
+      }
+    });
+    console.log(config);
     return { ...state, config, hydrationInProgress: true };
   }),
   on(

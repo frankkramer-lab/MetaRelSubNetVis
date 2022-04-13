@@ -52,6 +52,8 @@ import { HydratorService } from '../../../core/service/hydrator.service';
 import { Network } from '../../schema/network';
 import { setUuid } from '../network/network.actions';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
+import { selectProperties } from '../layout/layout.selectors';
+import { PropertyTypeEnum } from '../../../core/enum/property-type-enum';
 
 @Injectable()
 export class HydratorEffects {
@@ -235,18 +237,22 @@ export class HydratorEffects {
   hydrateLayout$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(hydrateThresholdSuccess, hydrateThresholdFailure),
-      concatLatestFrom(() => this.store.select(selectConfig)),
-      map(([, config]) => {
-        if (
-          !config ||
-          (!config.shared && !config.all && !config.mtb && !config.col && !config.size)
-        )
+      concatLatestFrom(() => [
+        this.store.select(selectConfig),
+        this.store.select(selectProperties),
+      ]),
+      map(([, config, properties]) => {
+        if (!config || (!config.shared && !config.all && !config.col && !config.size))
           return hydrateLayoutFailure();
+
+        const booleanProperty = properties.find(
+          (a) => a.name === config.bool && a.type === PropertyTypeEnum.boolean,
+        );
 
         return hydrateLayoutSuccess({
           showAll: config.all ?? false,
           showShared: config.shared ?? false,
-          booleanProperty: null, // todo
+          booleanProperty: booleanProperty ?? null,
           nodeColorBy: null,
           nodeSizeBy: null,
         });
@@ -359,6 +365,5 @@ export class HydratorEffects {
     private apiService: ApiService,
     private hydratorService: HydratorService,
     private router: Router,
-  ) {
-  }
+  ) {}
 }

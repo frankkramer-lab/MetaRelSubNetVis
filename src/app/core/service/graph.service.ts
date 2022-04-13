@@ -373,7 +373,12 @@ export class GraphService {
   }
 
   /**
-   * Renders the network.ts for two selected patients
+   * Renders the network for two selected patients
+   * @param patientADetails
+   * @param patientBDetails
+   * @param nodeColorBy
+   * @param visibleNodes
+   * @param boolProperties
    * @private
    */
   private visualizeTwo(
@@ -453,6 +458,15 @@ export class GraphService {
     });
   }
 
+  /**
+   * Renders the network for one selected patient
+   * @param patientDetails
+   * @param nodeSizeBy
+   * @param nodeColorBy
+   * @param visibleNodes
+   * @param boolProperties
+   * @private
+   */
   private visualizeOne(
     patientDetails: PatientItem[],
     nodeSizeBy: Property | null,
@@ -509,6 +523,11 @@ export class GraphService {
     });
   }
 
+  /**
+   * Applies a continuous coloring style to nodes
+   * @param property
+   * @private
+   */
   private setColorContinuous(property: Property) {
     const keys = Object.keys(property.mapping) as unknown as number[];
     const values = Object.values(property.mapping);
@@ -539,7 +558,7 @@ export class GraphService {
   }
 
   /**
-   * Applies a discrete visual style to nodes
+   * Applies a discrete coloring style to nodes
    * @private
    */
   private setColorDiscrete(property: Property) {

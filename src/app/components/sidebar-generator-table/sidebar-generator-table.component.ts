@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Patient } from '../../data/schema/patient';
 import { NetworkNode } from '../../data/schema/network-node';
-import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
 import { Property } from '../../data/schema/property';
 
@@ -34,7 +32,7 @@ export class SidebarGeneratorTableComponent {
 
   @Input() showShared!: boolean | null;
 
-  @Input() showMtb!: boolean | null;
+  @Input() booleanProperty!: Property | null;
 
   @Input() sidebarVisibility!: ComponentVisibilityEnum | null;
 

@@ -157,7 +157,6 @@ export class GraphService {
           visibility: 'hidden',
         },
       },
-
       // highlight
       {
         selector: 'node.highlight',
@@ -173,7 +172,6 @@ export class GraphService {
           'line-color': this.colors.highlight,
         },
       },
-
       // split
       {
         selector: 'node.split',
@@ -344,20 +342,28 @@ export class GraphService {
   ) {
     this.updateBooleanProperty(booleanProperty, properties);
     const visibleNodesIds: string[] = visibleNodes.map((a) => a.data.id.toString());
+    const boolProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
+
     if (
       patientADetails &&
       patientADetails?.length > 0 &&
       patientBDetails &&
       patientBDetails?.length > 0
     ) {
-      this.clear();
-      this.visualizeTwo(patientADetails, patientBDetails, nodeColorBy, visibleNodesIds, properties);
+      this.clear(boolProperties);
+      this.visualizeTwo(
+        patientADetails,
+        patientBDetails,
+        nodeColorBy,
+        visibleNodesIds,
+        boolProperties,
+      );
     } else if (patientADetails && patientADetails.length > 0) {
-      this.visualizeOne(patientADetails, nodeSizeBy, nodeColorBy, visibleNodesIds, properties);
+      this.visualizeOne(patientADetails, nodeSizeBy, nodeColorBy, visibleNodesIds, boolProperties);
     } else if (patientBDetails && patientBDetails.length > 0) {
-      this.visualizeOne(patientBDetails, nodeSizeBy, nodeColorBy, visibleNodesIds, properties);
+      this.visualizeOne(patientBDetails, nodeSizeBy, nodeColorBy, visibleNodesIds, boolProperties);
     } else {
-      this.clear();
+      this.clear(boolProperties);
       this.cyCore.elements('node').data('shown', true);
     }
     const patientSelected =
@@ -375,10 +381,10 @@ export class GraphService {
     patientBDetails: PatientItem[] | null,
     nodeColorBy: Property | null,
     visibleNodes: string[],
-    properties: Property[],
+    boolProperties: Property[],
   ) {
     this.cyCore.batch(() => {
-      this.clear();
+      this.clear(boolProperties);
 
       const color = nodeColorBy?.name;
 
@@ -413,16 +419,11 @@ export class GraphService {
                 : data[color as keyof PatientItem],
             );
 
-          const booleanProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
-          booleanProperties.forEach((property) => {
+          boolProperties.forEach((property) => {
             if (node && data[property.name]) {
               node.addClass(property.name);
             }
           });
-
-          // if (node && data.mtb) {
-          //   node.addClass('mtb');
-          // }
         }
       });
 
@@ -442,16 +443,11 @@ export class GraphService {
                 : data[color as keyof PatientItem],
             );
 
-          // todo
-          const booleanProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
-          booleanProperties.forEach((property) => {
+          boolProperties.forEach((property) => {
             if (node && data[property.name]) {
               node.addClass(property.name);
             }
           });
-          // if (node && data.mtb) {
-          //   node.addClass('mtb');
-          // }
         }
       });
     });
@@ -462,10 +458,10 @@ export class GraphService {
     nodeSizeBy: Property | null,
     nodeColorBy: Property | null,
     visibleNodes: string[],
-    properties: Property[],
+    boolProperties: Property[],
   ): void {
     this.cyCore.batch(() => {
-      this.clear();
+      this.clear(boolProperties);
 
       const size = nodeSizeBy?.name;
       if (nodeSizeBy !== null) {
@@ -503,17 +499,11 @@ export class GraphService {
                 : data[color as keyof PatientItem],
             );
 
-          // todo
-
-          const booleanProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
-          booleanProperties.forEach((property) => {
+          boolProperties.forEach((property) => {
             if (node && data[property.name]) {
               node.addClass(property.name);
             }
           });
-          // if (node && data.mtb) {
-          //   node.addClass('mtb');
-          // }
         }
       });
     });
@@ -627,7 +617,11 @@ export class GraphService {
    * Clears all applied styles
    * @private
    */
-  private clear() {
+  private clear(boolProperties: Property[]) {
+    boolProperties.forEach((property) => {
+      this.cyCore.elements('node').removeData(property.name);
+    });
+
     this.cyCore.batch(() => {
       this.cyCore
         .elements('node')
@@ -636,7 +630,6 @@ export class GraphService {
         .removeData('colorA')
         .removeData('colorB')
         .removeData('size')
-        .removeClass('mtb')
         .removeClass('split');
       this.removeSizeMap();
     });
@@ -701,7 +694,7 @@ export class GraphService {
   }
 
   /**
-   * Updates the node style based on if the mtb property is to be displayed.
+   * Updates the node style based on if a boolean property is to be displayed.
    * @param booleanProperty Active property that borders single nodes
    * @param properties List of properties
    */

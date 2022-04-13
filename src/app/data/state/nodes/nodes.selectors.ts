@@ -167,7 +167,6 @@ export const selectVisibleNodes = createSelector(
         visibleNodes.sort((a, b) => (a.occ.all > b.occ.all ? -1 : 1));
         break;
     }
-    console.log(visibleNodes);
     return visibleNodes;
   },
 );

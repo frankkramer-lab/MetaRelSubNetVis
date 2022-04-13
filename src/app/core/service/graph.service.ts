@@ -474,6 +474,9 @@ export class GraphService {
     visibleNodes: string[],
     boolProperties: Property[],
   ): void {
+
+    console.log('visualize method');
+
     this.cyCore.batch(() => {
       this.clear(boolProperties);
 
@@ -531,6 +534,8 @@ export class GraphService {
   private setColorContinuous(property: Property) {
     const keys = Object.keys(property.mapping) as unknown as number[];
     const values = Object.values(property.mapping);
+    console.log('color continuous');
+    console.log(property.mapping);
 
     Object.entries(property.mapping).forEach(([rawKey, value], index) => {
       const key = Number(rawKey);

@@ -7,6 +7,8 @@ import { Property } from '../../data/schema/property';
   styleUrls: ['./sidebar-layout-form-continuous.component.scss'],
 })
 export class SidebarLayoutFormContinuousComponent {
+  @Input() type!: string;
+
   @Input() property!: Property | null;
 
   @Input() isChecked!: boolean | null;

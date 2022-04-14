@@ -1,6 +1,4 @@
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
-import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { ImageDownloadConfig } from './image-download-config';
 
 export interface VisualizationConfig {
@@ -52,11 +50,11 @@ export interface VisualizationConfig {
   /**
    * Defines coloring of the nodes
    */
-  col?: NodeColorByEnum;
+  col?: string;
   /**
    * Defines sizing of the nodes
    */
-  size?: NodeSizeByEnum;
+  size?: string;
   /**
    * Selected patient group A
    */
@@ -66,6 +64,10 @@ export interface VisualizationConfig {
    */
   pb?: string;
   /**
+   * Contains the name of the boolean property that is to be applied. Empty, if none is to be applied.
+   */
+  bool?: string;
+  /**
    * List of selected nodes
    */
   sel?: string[];
@@ -74,15 +76,14 @@ export interface VisualizationConfig {
    */
   all?: boolean;
   /**
-   * True, if MTB results are to be rendered
-   */
-  mtb?: boolean;
-  /**
    * True, if only shared nodes are to be shown
    */
   shared?: boolean;
   /**
-   * Defined threshold
+   * Defined threshold, consisting of key value pairs:
+   * th_propertyA: 1.24,
+   * th_propertyB: 5.523,
+   * ...
    */
-  th?: number;
+  th?: any;
 }

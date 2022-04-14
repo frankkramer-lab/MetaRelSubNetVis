@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Patient } from '../../data/schema/patient';
 import { NetworkNode } from '../../data/schema/network-node';
-import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
+import { Property } from '../../data/schema/property';
+import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 
 @Component({
   selector: 'app-sidebar-generator-table',
@@ -21,19 +21,19 @@ export class SidebarGeneratorTableComponent {
 
   @Input() patientB!: Patient | null;
 
-  @Input() threshold!: number | null;
+  @Input() thresholds!: ThresholdDefinition[] | null;
 
   @Input() nodes!: NetworkNode[] | null;
 
-  @Input() nodesColorBy!: NodeColorByEnum | null;
+  @Input() nodesColorBy!: Property | null;
 
-  @Input() nodesSizeBy!: NodeSizeByEnum | null;
+  @Input() nodesSizeBy!: Property | null;
 
   @Input() showAll!: boolean | null;
 
   @Input() showShared!: boolean | null;
 
-  @Input() showMtb!: boolean | null;
+  @Input() booleanProperty!: Property | null;
 
   @Input() sidebarVisibility!: ComponentVisibilityEnum | null;
 

@@ -1,12 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../../data/state/app.state';
 import {
-  selectDefined, selectLabelMax, selectLabelMin,
   selectMax,
   selectMin,
   selectMultiplier,
+  selectThresholds,
 } from '../../data/state/threshold/threshold.selectors';
 import {
   selectGroupLabelA,
@@ -14,7 +14,8 @@ import {
   selectPatientSelection,
 } from '../../data/state/patient/patient.selectors';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
-import { setDefined } from '../../data/state/threshold/threshold.action';
+import { ThresholdDefinition } from '../../data/schema/threshold-definition';
+import { setThreshold } from '../../data/state/threshold/threshold.action';
 
 @Component({
   selector: 'app-sidebar-threshold',
@@ -22,13 +23,9 @@ import { setDefined } from '../../data/state/threshold/threshold.action';
   styleUrls: ['./sidebar-threshold.component.scss'],
 })
 export class SidebarThresholdComponent implements OnInit {
-  min$!: Observable<number | null>;
-
-  max$!: Observable<number | null>;
-
-  defined$!: Observable<number | null>;
-
   multiplier$!: Observable<number>;
+
+  thresholds$!: Observable<ThresholdDefinition[]>;
 
   patientSelection$!: Observable<PatientSelectionEnum>;
 
@@ -36,28 +33,23 @@ export class SidebarThresholdComponent implements OnInit {
 
   groupLabelB$!: Observable<string>;
 
-  thresholdMinLabel$!: Observable<string | null>;
+  min$!: Observable<number[]>;
 
-  thresholdMaxLabel$!: Observable<string | null>;
+  max$!: Observable<number[]>;
 
-  @Output() thresholdEmitter: EventEmitter<number> = new EventEmitter<number>();
-
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.min$ = this.store.select(selectMin);
-    this.max$ = this.store.select(selectMax);
     this.multiplier$ = this.store.select(selectMultiplier);
-    this.defined$ = this.store.select(selectDefined);
+    this.thresholds$ = this.store.select(selectThresholds);
     this.patientSelection$ = this.store.select(selectPatientSelection);
     this.groupLabelA$ = this.store.select(selectGroupLabelA);
     this.groupLabelB$ = this.store.select(selectGroupLabelB);
-    this.thresholdMinLabel$ = this.store.select(selectLabelMin);
-    this.thresholdMaxLabel$ = this.store.select(selectLabelMax);
+    this.min$ = this.store.select(selectMin);
+    this.max$ = this.store.select(selectMax);
   }
 
-  definedChanged(defined: number) {
-    this.store.dispatch(setDefined({ defined }));
+  triggerThresholdChanged(threshold: ThresholdDefinition) {
+    this.store.dispatch(setThreshold({ threshold }));
   }
 }

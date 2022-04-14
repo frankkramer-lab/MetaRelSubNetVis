@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { mergeMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
+import { map } from 'rxjs/operators';
 import { ApiService } from '../../service/api.service';
-import { setDefined, setLabelMin } from './threshold.action';
-import { setPatientSelection } from '../patient/patient.actions';
 import { AppState } from '../app.state';
-import { selectDefined, selectMinA, selectMinB } from './threshold.selectors';
+import { setPatientSelection } from '../patient/patient.actions';
 import { selectPatientSelection } from '../patient/patient.selectors';
+import { selectThresholds } from './threshold.selectors';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
+import { ThresholdDefinition } from '../../schema/threshold-definition';
+import { keepAllThresholds, setAllThresholds } from './threshold.action';
 
 @Injectable()
 export class ThresholdEffects {
@@ -17,58 +18,38 @@ export class ThresholdEffects {
       ofType(setPatientSelection),
       concatLatestFrom(() => [
         this.store.select(selectPatientSelection),
-        this.store.select(selectMinA),
-        this.store.select(selectMinB),
-        this.store.select(selectDefined),
+        this.store.select(selectThresholds),
       ]),
-      mergeMap(([action, patientSelection, minA, minB, defined]) => {
-        // there was a change in patient group selection
+      map(([action, patientSelection, thresholds]) => {
+        // was there a change in patient selection?
         if (action.previousSelection !== patientSelection) {
-          if (patientSelection === PatientSelectionEnum.both && minA !== null && minB !== null) {
-            return [
-              setDefined({
-                defined: Math.min(minA, minB),
-              }),
-              setLabelMin({ labelMin: Math.min(minA, minB).toString() }),
-            ];
-          }
-          if (patientSelection === PatientSelectionEnum.groupA && minA !== null) {
-            return [
-              setDefined({
-                defined: minA,
-              }),
-              setLabelMin({ labelMin: minA.toString() }),
-            ];
-          }
-          if (patientSelection === PatientSelectionEnum.groupB && minB !== null) {
-            return [
-              setDefined({
-                defined: minB,
-              }),
-              setLabelMin({ labelMin: minB.toString() }),
-            ];
-          }
-          // defaulting
-          return [
-            setDefined({
-              defined: Number.MIN_SAFE_INTEGER,
-            }),
-            setLabelMin({ labelMin: '-' }),
-          ];
+          // update the all thresholds with the valid defined settings
+          const newThresholds: ThresholdDefinition[] = [];
+          thresholds.forEach((th) => {
+            switch (patientSelection) {
+              case PatientSelectionEnum.groupA:
+                newThresholds.push({ ...th, defined: th.property.minA ?? Number.MIN_SAFE_INTEGER });
+                break;
+              case PatientSelectionEnum.groupB:
+                newThresholds.push({ ...th, defined: th.property.minB ?? Number.MIN_SAFE_INTEGER });
+                break;
+              case PatientSelectionEnum.both:
+                newThresholds.push({
+                  ...th,
+                  defined: Math.min(
+                    th.property.minB ?? Number.MAX_SAFE_INTEGER,
+                    th.property.minA ?? Number.MAX_SAFE_INTEGER,
+                  ),
+                });
+                break;
+              default:
+                newThresholds.push({ ...th, defined: Number.MIN_SAFE_INTEGER });
+                break;
+            }
+          });
+          return setAllThresholds({ thresholds: newThresholds });
         }
-
-        if (defined !== null) {
-          return [
-            setDefined({
-              defined,
-            }),
-          ];
-        }
-        return [
-          setDefined({
-            defined: Number.MIN_SAFE_INTEGER,
-          }),
-        ];
+        return keepAllThresholds();
       }),
     );
   });
@@ -77,6 +58,5 @@ export class ThresholdEffects {
     private actions$: Actions,
     private apiService: ApiService,
     private store: Store<AppState>,
-  ) {
-  }
+  ) {}
 }

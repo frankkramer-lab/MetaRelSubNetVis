@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
+import { Property } from '../../data/schema/property';
 
 @Component({
   selector: 'app-sidebar-layout-form',
@@ -11,37 +10,30 @@ import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
 export class SidebarLayoutFormComponent {
   @Input() patientSelection!: PatientSelectionEnum | null;
 
-  @Input() nodeColorBy!: NodeColorByEnum | null;
+  @Input() booleanProperty!: Property | null;
 
-  @Input() nodeSizeBy!: NodeSizeByEnum | null;
+  @Input() gradient!: string | null;
+
+  @Input() nodeColorBy!: Property | null;
+
+  @Input() nodeSizeBy!: Property | null;
 
   @Input() showAllNodes!: boolean | null;
 
-  @Input() showMtbResults!: boolean | null;
-
   @Input() showOnlySharedNodes!: boolean | null;
 
-  @Input() geMin!: number | null;
+  @Input() properties!: Property[] | null;
 
-  @Input() geMidRange!: number | null;
+  @Output() booleanPropertyChanged: EventEmitter<Property | null> = new EventEmitter<Property | null>();
 
-  @Input() geMax!: number | null;
+  @Output() nodeColorByChanged: EventEmitter<Property | null> = new EventEmitter<Property | null>();
 
-  @Input() scoreMin!: number | null;
-
-  @Input() scoreMidRange!: number | null;
-
-  @Input() scoreMax!: number | null;
-
-  @Output() nodeColorByChanged: EventEmitter<NodeColorByEnum> = new EventEmitter<NodeColorByEnum>();
-
-  @Output() nodeSizeByChanged: EventEmitter<NodeSizeByEnum> = new EventEmitter<NodeSizeByEnum>();
+  @Output() nodeSizeByChanged: EventEmitter<Property | null> = new EventEmitter<Property | null>();
 
   @Output() showAllNodesChanged: EventEmitter<void> = new EventEmitter<void>();
-
-  @Output() showMtbResultsChanged: EventEmitter<void> = new EventEmitter<void>();
 
   @Output() showOnlySharedNodesChanged: EventEmitter<void> = new EventEmitter<void>();
 
   @Output() fitGraphPressed: EventEmitter<void> = new EventEmitter<void>();
+
 }

@@ -38,8 +38,6 @@ import {
 } from '../patient/patient.selectors';
 import { Patient } from '../../schema/patient';
 import { PatientItem } from '../../schema/patient-item';
-import { NodeColorByEnum } from '../../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import { selectNodes } from '../network/network.selectors';
 import { markingNodesSuccess, renderingSuccess } from '../graph/graph.actions';
 import { triggerImageDownload } from '../download/download.actions';
@@ -52,8 +50,10 @@ import { selectMarkedNodes } from '../nodes/nodes.selectors';
 import { PatientCollection } from '../../schema/patient-collection';
 import { HydratorService } from '../../../core/service/hydrator.service';
 import { Network } from '../../schema/network';
-import { Threshold } from '../../schema/threshold';
 import { setUuid } from '../network/network.actions';
+import { ThresholdDefinition } from '../../schema/threshold-definition';
+import { selectProperties } from '../layout/layout.selectors';
+import { PropertyTypeEnum } from '../../../core/enum/property-type-enum';
 
 @Injectable()
 export class HydratorEffects {
@@ -86,6 +86,7 @@ export class HydratorEffects {
             let edgesRaw: any[] = [];
             let nodeAttributes: any;
             let networkAttributes: any;
+            let metaRelSubNetVis: any;
             const labels: string[] = [];
 
             (data as any[]).forEach((aspect) => {
@@ -100,6 +101,9 @@ export class HydratorEffects {
               }
               if (aspect.edges) {
                 edgesRaw = aspect.edges;
+              }
+              if (aspect.metaRelSubNetVis) {
+                metaRelSubNetVis = aspect.metaRelSubNetVis;
               }
             });
 
@@ -116,12 +120,6 @@ export class HydratorEffects {
               groupB: [],
               labelA: '',
               labelB: '',
-              geMin: Number.MAX_SAFE_INTEGER,
-              geMidRange: 0,
-              geMax: Number.MIN_SAFE_INTEGER,
-              scoreMin: Number.MAX_SAFE_INTEGER,
-              scoreMidRange: 0,
-              scoreMax: Number.MIN_SAFE_INTEGER,
             };
 
             let subtypes: string[] = [];
@@ -137,10 +135,14 @@ export class HydratorEffects {
 
             patients = { ...patients, labelA: labels[1], labelB: labels[2] };
 
+            const properties = this.hydratorService.initProperties(metaRelSubNetVis);
+            const highlightColor = this.hydratorService.hydrateHighlightColor(metaRelSubNetVis);
+
             patients = this.hydratorService.hydrateNodeAttributes(
               nodeAttributes,
               patients,
               nodesDictionary,
+              properties,
             );
 
             if (patients.groupA.length < 1 || patients.groupB.length < 1) {
@@ -151,13 +153,16 @@ export class HydratorEffects {
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
             network.edges = this.hydratorService.hydrateEdges(edgesRaw);
 
-            const thresholds: Threshold = this.hydratorService.hydrateThresholds(patients);
+            const thresholds: ThresholdDefinition[] =
+              this.hydratorService.hydrateThresholds(properties);
 
             return loadDataSuccess({
               network,
               patients,
               thresholds,
               headline: labels[0],
+              properties,
+              highlightColor,
             });
           }),
           catchError(() => of(loadDataFailure({ uuid: action.uuid ?? '' }))),
@@ -214,10 +219,30 @@ export class HydratorEffects {
   hydrateThreshold$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(hydratePatientAPatientBSuccess, hydratePatientAPatientBFailure),
-      concatLatestFrom(() => this.store.select(selectConfig)),
-      map(([, config]) => {
-        if (!config || !config.th || Number.isNaN(config.th)) return hydrateThresholdFailure();
-        return hydrateThresholdSuccess({ defined: config.th });
+      concatLatestFrom(() => [
+        this.store.select(selectConfig),
+        this.store.select(selectProperties),
+      ]),
+      map(([, config, properties]) => {
+        if (!config || !config.th) return hydrateThresholdFailure();
+
+        const thresholds: ThresholdDefinition[] = [];
+
+        Object.entries(config.th).forEach(([key, value]) => {
+          const numericValue = Number(value);
+          const property = properties.find(
+            (a) => a.name === key && a.type === PropertyTypeEnum.continuous,
+          );
+
+          if (property && !Number.isNaN(numericValue)) {
+            thresholds.push({
+              defined: numericValue,
+              property,
+            });
+          }
+        });
+
+        return hydrateThresholdSuccess({ thresholds });
       }),
     );
   });
@@ -225,20 +250,31 @@ export class HydratorEffects {
   hydrateLayout$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(hydrateThresholdSuccess, hydrateThresholdFailure),
-      concatLatestFrom(() => this.store.select(selectConfig)),
-      map(([, config]) => {
-        if (
-          !config ||
-          (!config.shared && !config.all && !config.mtb && !config.col && !config.size)
-        )
+      concatLatestFrom(() => [
+        this.store.select(selectConfig),
+        this.store.select(selectProperties),
+      ]),
+      map(([, config, properties]) => {
+        if (!config || (!config.shared && !config.all && !config.col && !config.size))
           return hydrateLayoutFailure();
+
+        const booleanProperty = properties.find(
+          (a) => a.name === config.bool && a.type === PropertyTypeEnum.boolean,
+        );
+
+        const colProperty = properties.find(
+          (a) => a.name === config.col && a.type !== PropertyTypeEnum.boolean,
+        );
+        const sizeProperty = properties.find(
+          (a) => a.name === config.size && a.type !== PropertyTypeEnum.boolean,
+        );
 
         return hydrateLayoutSuccess({
           showAll: config.all ?? false,
           showShared: config.shared ?? false,
-          showMtb: config.mtb ?? true,
-          nodeColorBy: (config.col as NodeColorByEnum) ?? NodeColorByEnum.geneExpressionLevel,
-          nodeSizeBy: (config.size as NodeSizeByEnum) ?? NodeSizeByEnum.geneExpression,
+          booleanProperty: booleanProperty ?? null,
+          nodeColorBy: colProperty ?? null,
+          nodeSizeBy: sizeProperty ?? null,
         });
       }),
     );

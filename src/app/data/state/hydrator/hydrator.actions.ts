@@ -1,14 +1,13 @@
 import { createAction, props } from '@ngrx/store';
 import { Network } from '../../schema/network';
 import { PatientCollection } from '../../schema/patient-collection';
-import { Threshold } from '../../schema/threshold';
 import { Patient } from '../../schema/patient';
 import { PatientItem } from '../../schema/patient-item';
-import { NodeColorByEnum } from '../../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import { NetworkNode } from '../../schema/network-node';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
+import { Property } from '../../schema/property';
+import { ThresholdDefinition } from '../../schema/threshold-definition';
 
 export const loadQueryParams = createAction(
   '[Layout Component] load query params',
@@ -24,8 +23,10 @@ export const loadDataSuccess = createAction(
   props<{
     network: Network;
     patients: PatientCollection;
-    thresholds: Threshold;
+    thresholds: ThresholdDefinition[];
     headline: string;
+    properties: Property[];
+    highlightColor: string;
   }>(),
 );
 
@@ -46,7 +47,7 @@ export const hydratePatientAPatientBFailure = createAction(
 
 export const hydrateThresholdSuccess = createAction(
   '[Hydrator Effects] hydrate threshold success',
-  props<{ defined: number }>(),
+  props<{ thresholds: ThresholdDefinition[] }>(),
 );
 export const hydrateThresholdFailure = createAction('[Hydrator Effects] hydrate threshold failure');
 
@@ -55,9 +56,9 @@ export const hydrateLayoutSuccess = createAction(
   props<{
     showAll: boolean;
     showShared: boolean;
-    showMtb: boolean;
-    nodeColorBy: NodeColorByEnum;
-    nodeSizeBy: NodeSizeByEnum;
+    booleanProperty: Property | null;
+    nodeColorBy: Property | null;
+    nodeSizeBy: Property | null;
   }>(),
 );
 export const hydrateLayoutFailure = createAction('[Hydrator Effects] hydrate layout failure');

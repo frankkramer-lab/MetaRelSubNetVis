@@ -1,32 +1,43 @@
 import { createReducer, on } from '@ngrx/store';
 import { LayoutState } from './layout.state';
-import { NodeColorByEnum } from '../../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
 import {
   setNodeColorBy,
   setNodeSizeBy,
+  toggleBooleanProperty,
   toggleShowAllNodes,
-  toggleShowMtbResults,
   toggleShowOnlySharedNodes,
 } from './layout.actions';
-import { hydrateLayoutSuccess } from '../hydrator/hydrator.actions';
+import { hydrateLayoutSuccess, loadDataSuccess } from '../hydrator/hydrator.actions';
 import { navigateHome } from '../sidebar/sidebar.actions';
+import { PropertyTypeEnum } from '../../../core/enum/property-type-enum';
 
 const initialState: LayoutState = {
-  nodeColorBy: NodeColorByEnum.geneExpressionLevel,
-  nodeSizeBy: NodeSizeByEnum.relevance,
+  nodeColorBy: null,
+  nodeSizeBy: null,
   showAllNodes: false,
   showOnlySharedNodes: false,
-  showMtbResults: true,
+  booleanProperty: null,
+  properties: [],
+  highlightColor: '#000000',
 };
 
 export const layoutReducer = createReducer(
   initialState,
-  on(
-    toggleShowMtbResults,
-    (state: LayoutState): LayoutState => ({
+  on(loadDataSuccess, (state: LayoutState, { properties, highlightColor }): LayoutState => {
+    const firstContinuous = properties.find((a) => a.type === PropertyTypeEnum.continuous);
+    return {
       ...state,
-      showMtbResults: !state.showMtbResults,
+      properties,
+      highlightColor,
+      nodeColorBy: firstContinuous ?? null,
+      nodeSizeBy: firstContinuous ?? null,
+    };
+  }),
+  on(
+    toggleBooleanProperty,
+    (state: LayoutState, { booleanProperty }): LayoutState => ({
+      ...state,
+      booleanProperty,
     }),
   ),
   on(toggleShowAllNodes, (state: LayoutState): LayoutState => {
@@ -63,15 +74,15 @@ export const layoutReducer = createReducer(
     hydrateLayoutSuccess,
     (
       state: LayoutState,
-      { showAll, showShared, showMtb, nodeSizeBy, nodeColorBy },
+      { showAll, showShared, booleanProperty, nodeSizeBy, nodeColorBy },
     ): LayoutState => {
       return {
         ...state,
-        nodeSizeBy: nodeSizeBy ?? NodeSizeByEnum.relevance,
-        nodeColorBy: nodeColorBy ?? NodeColorByEnum.geneExpressionLevel,
+        nodeSizeBy: nodeSizeBy ?? null,
+        nodeColorBy: nodeColorBy ?? null,
         showAllNodes: showAll && showShared ? false : showAll,
         showOnlySharedNodes: showShared,
-        showMtbResults: showMtb,
+        booleanProperty,
       };
     },
   ),
@@ -79,11 +90,11 @@ export const layoutReducer = createReducer(
     navigateHome,
     (state: LayoutState): LayoutState => ({
       ...state,
-      showMtbResults: true,
+      booleanProperty: null,
       showOnlySharedNodes: false,
       showAllNodes: false,
-      nodeColorBy: NodeColorByEnum.geneExpressionLevel,
-      nodeSizeBy: NodeSizeByEnum.relevance,
+      nodeColorBy: null,
+      nodeSizeBy: null,
     }),
   ),
 );

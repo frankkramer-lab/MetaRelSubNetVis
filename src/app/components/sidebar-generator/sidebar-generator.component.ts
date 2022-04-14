@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 import { AppState } from '../../data/state/app.state';
 import { Patient } from '../../data/schema/patient';
 import { NetworkNode } from '../../data/schema/network-node';
-import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import { ImageDownloadConfig } from '../../data/schema/image-download-config';
 import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.enum';
 import {
@@ -14,13 +12,12 @@ import {
   selectPatientA,
   selectPatientB,
 } from '../../data/state/patient/patient.selectors';
-import { selectDefined } from '../../data/state/threshold/threshold.selectors';
 import { selectMarkedNodes } from '../../data/state/nodes/nodes.selectors';
 import {
+  selectActiveBooleanProperty,
   selectNodeColorBy,
   selectNodeSizeBy,
   selectShowAllNodes,
-  selectShowMtbResults,
   selectShowOnlySharedNodes,
 } from '../../data/state/layout/layout.selectors';
 import {
@@ -56,6 +53,9 @@ import {
   toggleGeneratorTriggerImmediateDownload,
 } from '../../data/state/generator/generator.actions';
 import { selectUuid } from '../../data/state/network/network.selectors';
+import { Property } from '../../data/schema/property';
+import { ThresholdDefinition } from '../../data/schema/threshold-definition';
+import { selectThresholds } from '../../data/state/threshold/threshold.selectors';
 
 @Component({
   selector: 'app-sidebar-generator',
@@ -73,27 +73,25 @@ export class SidebarGeneratorComponent implements OnInit {
 
   patientB$!: Observable<Patient | null>;
 
-  threshold$!: Observable<number | null>;
+  thresholds$!: Observable<ThresholdDefinition[]>;
 
   nodes$!: Observable<NetworkNode[] | null>;
 
-  nodesColorBy$!: Observable<NodeColorByEnum>;
+  nodesColorBy$!: Observable<Property | null>;
 
-  nodesSizeBy$!: Observable<NodeSizeByEnum>;
+  nodesSizeBy$!: Observable<Property | null>;
 
   showAll$!: Observable<boolean>;
 
   showShared$!: Observable<boolean>;
 
-  showMtb$!: Observable<boolean>;
+  booleanProperty$!: Observable<Property | null>;
 
   isImageFormValid$!: Observable<boolean>;
 
   imageDownloadConfig$!: Observable<ImageDownloadConfig>;
 
   triggerImmediateImageDownload$!: Observable<boolean>;
-
-  domain$!: Observable<string>;
 
   sidebarVisibility$!: Observable<ComponentVisibilityEnum>;
 
@@ -124,13 +122,13 @@ export class SidebarGeneratorComponent implements OnInit {
     this.groupLabelB$ = this.store.select(selectGroupLabelB);
     this.patientA$ = this.store.select(selectPatientA);
     this.patientB$ = this.store.select(selectPatientB);
-    this.threshold$ = this.store.select(selectDefined);
+    this.thresholds$ = this.store.select(selectThresholds);
     this.nodes$ = this.store.select(selectMarkedNodes);
     this.nodesColorBy$ = this.store.select(selectNodeColorBy);
     this.nodesSizeBy$ = this.store.select(selectNodeSizeBy);
     this.showAll$ = this.store.select(selectShowAllNodes);
     this.showShared$ = this.store.select(selectShowOnlySharedNodes);
-    this.showMtb$ = this.store.select(selectShowMtbResults);
+    this.booleanProperty$ = this.store.select(selectActiveBooleanProperty);
     this.imageDownloadConfig$ = this.store.select(selectImageDownloadConfig);
     this.isImageFormValid$ = this.store.select(selectIsImageDownloadConfigValid);
     this.triggerImmediateImageDownload$ = this.store.select(selectTriggerImmediateDownload);

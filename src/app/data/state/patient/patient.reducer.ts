@@ -28,12 +28,6 @@ const initialState: PatientState = {
   patientADetails: [],
   patientBDetails: [],
   patientSelection: PatientSelectionEnum.none,
-  geMin: null,
-  geMidRange: null,
-  geMax: null,
-  scoreMin: null,
-  scoreMidRange: null,
-  scoreMax: null,
   isLoading: false,
 };
 
@@ -49,12 +43,6 @@ export const patientReducer = createReducer(
       groupB: payload.patients.groupB,
       groupADetails: payload.patients.detailsA,
       groupBDetails: payload.patients.detailsB,
-      geMin: payload.patients.geMin,
-      geMidRange: payload.patients.geMidRange,
-      geMax: payload.patients.geMax,
-      scoreMin: payload.patients.scoreMin,
-      scoreMidRange: payload.patients.scoreMidRange,
-      scoreMax: payload.patients.scoreMax,
       groupALabel: payload.patients.labelA,
       groupBLabel: payload.patients.labelB,
     };
@@ -130,12 +118,6 @@ export const patientReducer = createReducer(
       patientADetails: [],
       patientBDetails: [],
       patientSelection: PatientSelectionEnum.none,
-      geMin: null,
-      geMidRange: null,
-      geMax: null,
-      scoreMin: null,
-      scoreMidRange: null,
-      scoreMax: null,
     }),
   ),
 );

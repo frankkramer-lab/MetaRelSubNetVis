@@ -1,17 +1,21 @@
 <div class="modal-header">
   <h4 class="modal-title">Data structure</h4>
-  <button type="button" class="btn-close" aria-label="Close"
-          (click)="activeModal.dismiss('Cross click')"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  ></button>
 </div>
 <div class="modal-body">
-  <p>To make sure, your network is compatible as input for this class comparison, check your network
-    for the following properties.</p>
-
   <h6>Basics</h6>
 
-  <p>The network needs to conform to the <a href="https://home.ndexbio.org/data-model/"
-                                            target="_blank">CX data model</a> and contain the
-    aspects <b>nodes</b>, <b>edges</b>, <b>nodeAttributes</b>, <b>networkAttributes</b>.</p>
+  <p>
+    The network needs to conform to the
+    <a href="https://home.ndexbio.org/data-model/" target="_blank">CX data model</a> and contain the
+    aspects <b>nodes</b>, <b>edges</b>, <b>nodeAttributes</b>, <b>networkAttributes</b>,
+    <b>metaRelSubNetVis</b>.
+  </p>
 
   <h6>Nodes</h6>
 
@@ -19,50 +23,57 @@
 
   <h6>Edges</h6>
 
-  <p>Each edge has to have an id (property <b>@id</b>), a source (property <b>s</b>) and a target
-    (property <b>t</b>).</p>
+  <p>
+    Each edge has to have an id (property <b>@id</b>), a source (property <b>s</b>) and a target
+    (property <b>t</b>).
+  </p>
 
   <h6>NodeAttributes</h6>
 
-  <p>Each node can have multiple attributes. A node attribute's relation to a node is indicated by
+  <p>
+    Each node can have multiple attributes. A node attribute's relation to a node is indicated by
     the node attribute's property <b>po</b>. The name of the node attribute (property <b>n</b>)
     always starts with a patient identifier, followed by <b>_</b>. After that the attribute is
-    described. The following are required for <b>each</b> patient:
+    described.
   </p>
 
+  <h6>metaRelSubNetVis</h6>
+
   <ul>
-    <li><b>Score</b>: Relevance score, a numeric value</li>
-    <li><b>GE</b>: Gene expression, a numeric value</li>
-    <li><b>GE_Level</b>: Gene expression level, one of the following values: (LOW, HIGH, NORMAL)
+    <li><b>highlight</b>: Color of highlighted nodes</li>
+    <li><b>properties</b>: Network specific property definitions</li>
+    <li>
+      <b>individual_properties</b>: Properties present for every sample (i.e. the properties are
+      composed of <code>sample-id_property</code>, e.g. <code>GSM150976_Score</code>)
     </li>
   </ul>
 
-  <p>Optional attributes are:</p>
+  <p>The properties contain the following information:</p>
 
   <ul>
-    <li><b>MTB</b>: a boolean value</li>
-  </ul>
-
-  <h6>NetworkAttributes</h6>
-
-  <p>
-    NetworkAttributes are used to describe the patient samples. Please note: The <b>order</b> within
-    each of these attributes is crucical.
-  </p>
-
-  <ul>
-    <li><b>Patients</b>: String list of patient identifiers</li>
-    <li><b>PatientSubtype</b>: String list of each patient's cancer subtype</li>
-    <li><b>PatientSurvivalYears</b>: Double list of each patient's metastasis free survival</li>
-    <li><b>PatientGroups</b>: String list of each patient's group (in sum there can only be
-      <b>two</b>
-      different types of groups!)
+    <li><b>property</b>: Name of the property (e.g. Score)</li>
+    <li><b>label</b>: Label used in the app to display the property</li>
+    <li><b>type</b>: Mapping/data type (one of <code>continuous</code>, <code>discrete</code> and <code>boolean</code>)</li>
+    <li>
+      <b>threshold</b>: Nodes can be selected by adjusting the threshold (only possible for
+      continuous properties)
+    </li>
+    <li>
+      <b>mapping</b>: Key-value-pairs defining the thresholds or values and corresponding colors
     </li>
   </ul>
 
-  <p>
-    Furthermore the property <b>name</b> contains the network's name that will be used as a headline
-    for this application.
-  </p>
+  <p>The mapping types result in different mapping behaviors:</p>
+
+  <ul>
+    <li>
+      <b>Continuous</b>: The color is mapped to a gradient with the colors corresponding to the
+      thresholds; this property is also used for mapping the node size
+    </li>
+    <li>
+      <b>Discrete</b>: Only values defined in the mapping are mapped to the corresponding color
+    </li>
+    <li><b>Boolean</b>: The matching nodes get a border in the defined color</li>
+  </ul>
 
 </div>

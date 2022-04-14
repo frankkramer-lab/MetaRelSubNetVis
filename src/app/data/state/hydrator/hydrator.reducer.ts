@@ -123,7 +123,6 @@ export const hydratorReducer = createReducer(
         }
       }
     });
-    console.log(config);
     return { ...state, config, hydrationInProgress: true };
   }),
   on(

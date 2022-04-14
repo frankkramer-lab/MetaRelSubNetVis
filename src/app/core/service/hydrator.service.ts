@@ -52,10 +52,6 @@ export class HydratorService {
           }
         });
       }
-
-      // todo generic properties
-      // if (attribute.properties) {
-      // }
     });
 
     properties = cProperties.concat(dProperties, bProperties);

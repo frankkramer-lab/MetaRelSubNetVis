@@ -20,7 +20,6 @@ export class UtilService {
     keysSorted.forEach((key) => {
       sorted[key] = obj[key];
     });
-    console.log(sorted);
     return sorted;
   }
 

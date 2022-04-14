@@ -206,7 +206,6 @@ export class GraphService {
       }
     });
 
-    console.log(style);
     return style;
   }
 
@@ -476,8 +475,6 @@ export class GraphService {
     boolProperties: Property[],
   ): void {
 
-    console.log('visualize method');
-
     this.cyCore.batch(() => {
       this.clear(boolProperties);
 
@@ -533,9 +530,6 @@ export class GraphService {
    * @private
    */
   private setColorContinuous(property: Property) {
-    console.log('color continuous');
-    console.log(property.mapping);
-
     const sorted = this.utilService.sortObjectByKeys(property.mapping);
     const keys = Object.keys(sorted) as unknown as number[];
     const values = Object.values(sorted);
@@ -547,14 +541,7 @@ export class GraphService {
 
       const map = `mapData(color, ${key}, ${successorKey}, ${value}, ${successorValue})`;
 
-      if (index === 0) {
-        this.cyCore
-          .style()
-          // @ts-ignore
-          .selector(`node[color<${keys[0]}]`)
-          .style('background-color', map)
-          .style('text-outline-color', map);
-      } else if (index !== keys.length - 1) {
+      if (index !== keys.length - 1) {
         this.cyCore
           .style()
           // @ts-ignore
@@ -606,10 +593,11 @@ export class GraphService {
    * @private
    */
   private setColorContinuousSplit(property: Property) {
-    const keys = Object.keys(property.mapping) as unknown as number[];
-    const values = Object.values(property.mapping);
+    const sorted = this.utilService.sortObjectByKeys(property.mapping);
+    const keys = Object.keys(sorted) as unknown as number[];
+    const values = Object.values(sorted);
 
-    Object.entries(property.mapping).forEach(([rawKey, value], index) => {
+    Object.entries(sorted).forEach(([rawKey, value], index) => {
       const key = Number(rawKey);
       const successorKey = Number(keys[index + 1]);
       const successorValue = values[index + 1];
@@ -625,10 +613,10 @@ export class GraphService {
           .style('width', '80px')
           .style('height', '80px')
           // @ts-ignore
-          .selector(`node.split[colorA<=${key}]`)
+          .selector(`node.split[colorA>${key}][colorA<=${successorKey}]`)
           .style('pie-2-background-color', aMap)
           // @ts-ignore
-          .selector(`node.split[colorB<=${key}]`)
+          .selector(`node.split[colorB>${key}][colorB<=${successorKey}]`)
           .style('pie-1-background-color', bMap)
           // @ts-ignore
           .selector('node.split[colorA][^colorB]')

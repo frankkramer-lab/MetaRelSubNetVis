@@ -8,12 +8,57 @@ import { NodeRaw } from '../../data/schema/node-raw';
 import { NetworkEdge } from '../../data/schema/network-edge';
 import { NetworkNode } from '../../data/schema/network-node';
 import { NetworkOccurrences } from '../../data/schema/network-occurrences';
-import { Threshold } from '../../data/schema/threshold';
+import { Property } from '../../data/schema/property';
+import { PropertyTypeEnum } from '../enum/property-type-enum';
+import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HydratorService {
+  initProperties(metaRelSubNetVis: any[]): Property[] {
+    let properties: Property[] = [];
+    const cProperties: Property[] = [];
+    const dProperties: Property[] = [];
+    const bProperties: Property[] = [];
+
+    metaRelSubNetVis.forEach((attribute: any) => {
+      // patient-specific properties
+      if (attribute.individual_properties) {
+        attribute.individual_properties.forEach((ip: any) => {
+
+
+          const property: Property = {
+            label: ip.label ?? 'n/a',
+            name: ip.property ?? 'n/a',
+            mapping: ip.mapping ?? null,
+            threshold: false,
+            type: PropertyTypeEnum.boolean,
+          };
+          if (ip.type === 'continuous') {
+            property.type = PropertyTypeEnum.continuous;
+            property.threshold = ip.threshold;
+            property.minA = Number.MAX_SAFE_INTEGER;
+            property.minB = Number.MAX_SAFE_INTEGER;
+            property.maxA = Number.MIN_SAFE_INTEGER;
+            property.maxB = Number.MIN_SAFE_INTEGER;
+            cProperties.push(property);
+          } else if (ip.type === 'discrete') {
+            property.type = PropertyTypeEnum.discrete;
+            dProperties.push(property);
+          } else {
+            property.type = PropertyTypeEnum.boolean;
+            bProperties.push(property);
+          }
+        });
+      }
+    });
+
+    properties = cProperties.concat(dProperties, bProperties);
+
+    return properties;
+  }
+
   hydrateNetworkAttributes(
     networkAttributes: any,
     patients: PatientCollection,
@@ -73,6 +118,7 @@ export class HydratorService {
     nodeAttributes: any,
     patientCollection: PatientCollection,
     nodesDictionary: any,
+    properties: Property[],
   ) {
     const patients = { ...patientCollection };
 
@@ -88,44 +134,31 @@ export class HydratorService {
         const proteinName = nodesDictionary[detail.po];
         if (!patientDetailItemA[patient.name].map((a) => a.name).includes(proteinName)) {
           patientDetailItemA[patient.name].push({
-            id: detail.po,
+            id: detail.po.toString(),
             name: proteinName,
-            score: 0,
-            ge: 0,
-            geLevel: '',
-            mtb: false,
           });
         }
         const relevantDetail = patientDetailItemA[patient.name].find((a) => a.name === proteinName);
         if (relevantDetail) {
-          if (detail.n.endsWith('_GE')) {
-            const geValue = Number(detail.v);
-            if (!Number.isNaN(geValue)) {
-              relevantDetail.ge = geValue;
+          properties.forEach((property: Property) => {
+            if (detail.n.endsWith(property.name)) {
+              // this nodeAttribute relates to this property
+              relevantDetail[property.name] = detail.v;
 
-              if (geValue < patients.geMin) {
-                patients.geMin = geValue;
-              }
-              if (geValue > patients.geMax) {
-                patients.geMax = geValue;
-              }
-            }
-          } else if (detail.n.endsWith('_GE_Level')) {
-            relevantDetail.geLevel = detail.v;
-          } else if (detail.n.endsWith('_Score')) {
-            const scoreValue = Number(detail.v);
-            if (!Number.isNaN(scoreValue)) {
-              relevantDetail.score = scoreValue;
-              if (scoreValue < patients.scoreMin) {
-                patients.scoreMin = scoreValue;
-              }
-              if (scoreValue > patients.scoreMax) {
-                patients.scoreMax = scoreValue;
+              if (property.type === PropertyTypeEnum.continuous) {
+                // update this property's min and max
+                const numericDetailValue = Number(detail.v);
+                if (!Number.isNaN(numericDetailValue) && property.maxA && property.minA) {
+                  if (property.maxA < numericDetailValue) {
+                    property.maxA = numericDetailValue;
+                  }
+                  if (property.minA > numericDetailValue) {
+                    property.minA = numericDetailValue;
+                  }
+                }
               }
             }
-          } else if (detail.n.endsWith('_MTB')) {
-            relevantDetail.mtb = detail.v === 'true';
-          }
+          });
         }
       });
     });
@@ -142,50 +175,35 @@ export class HydratorService {
         const proteinName = nodesDictionary[detail.po];
         if (!patientDetailItemB[patient.name].map((a) => a.name).includes(proteinName)) {
           patientDetailItemB[patient.name].push({
-            id: detail.po,
+            id: detail.po.toString(),
             name: proteinName,
-            score: 0,
-            ge: 0,
-            geLevel: '',
-            mtb: false,
           });
         }
         const relevantDetail = patientDetailItemB[patient.name].find((a) => a.name === proteinName);
         if (relevantDetail) {
-          if (detail.n.endsWith('_GE')) {
-            const geValue = Number(detail.v);
-            if (!Number.isNaN(geValue)) {
-              relevantDetail.ge = geValue;
+          properties.forEach((property: Property) => {
+            if (detail.n.endsWith(property.name)) {
+              // this nodeAttribute relates to this property
+              relevantDetail[property.name] = detail.v;
 
-              if (geValue < patients.geMin) {
-                patients.geMin = geValue;
-              }
-              if (geValue > patients.geMax) {
-                patients.geMax = geValue;
-              }
-            }
-          } else if (detail.n.endsWith('_GE_Level')) {
-            relevantDetail.geLevel = detail.v;
-          } else if (detail.n.endsWith('_Score')) {
-            const scoreValue = Number(detail.v);
-            if (!Number.isNaN(scoreValue)) {
-              relevantDetail.score = scoreValue;
-              if (scoreValue < patients.scoreMin) {
-                patients.scoreMin = scoreValue;
-              }
-              if (scoreValue > patients.scoreMax) {
-                patients.scoreMax = scoreValue;
+              if (property.type === PropertyTypeEnum.continuous) {
+                // update this property's min and max
+                const numericDetailValue = Number(detail.v);
+                if (!Number.isNaN(numericDetailValue) && property.maxB && property.minB) {
+                  if (property.maxB < numericDetailValue) {
+                    property.maxB = numericDetailValue;
+                  }
+                  if (property.minB > numericDetailValue) {
+                    property.minB = numericDetailValue;
+                  }
+                }
               }
             }
-          } else if (detail.n.endsWith('_MTB')) {
-            relevantDetail.mtb = detail.v === 'true';
-          }
+          });
         }
       });
     });
 
-    patients.geMidRange = (patients.geMax + patients.geMin) / 2;
-    patients.scoreMidRange = (patients.scoreMax + patients.scoreMin) / 2;
     patients.detailsA = patientDetailItemA;
     patients.detailsB = patientDetailItemB;
     return patients;
@@ -297,50 +315,21 @@ export class HydratorService {
     return occurrences;
   }
 
-  hydrateThresholds(patients: PatientCollection): Threshold {
-    const threshold: Threshold = {
-      groupA: {
-        threshold: 0,
-        max: 0,
-      },
-      groupB: {
-        threshold: 0,
-        max: 0,
-      },
-    };
+  hydrateThresholds(properties: Property[]): ThresholdDefinition[] {
+    const availableProperties = properties.filter((a) => a.type === PropertyTypeEnum.continuous);
+    const validProperties = availableProperties.filter((a) => a.threshold);
 
-    let aMin = Number.MAX_SAFE_INTEGER;
-    let aMax = Number.MIN_SAFE_INTEGER;
-    Object.entries(patients.detailsA).forEach((a) => {
-      const patientNodes = a[1];
-      patientNodes.forEach((node) => {
-        if (node.score < aMin) {
-          aMin = node.score;
-        }
-        if (node.score > aMax) {
-          aMax = node.score;
-        }
+    const thresholds: ThresholdDefinition[] = [];
+    validProperties.forEach((property) => {
+      thresholds.push({
+        property,
+        defined: Number.MIN_SAFE_INTEGER,
       });
     });
+    return thresholds;
+  }
 
-    let bMin = Number.MAX_SAFE_INTEGER;
-    let bMax = Number.MIN_SAFE_INTEGER;
-    Object.entries(patients.detailsB).forEach((a) => {
-      const patientNodes = a[1];
-      patientNodes.forEach((node) => {
-        if (node.score < bMin) {
-          bMin = node.score;
-        }
-        if (node.score > bMax) {
-          bMax = node.score;
-        }
-      });
-    });
-
-    threshold.groupA.threshold = aMin;
-    threshold.groupA.max = aMax;
-    threshold.groupB.threshold = bMin;
-    threshold.groupB.max = bMax;
-    return threshold;
+  hydrateHighlightColor(metaRelSubNetVis: any[]): string {
+    return metaRelSubNetVis[0].highlight ?? '#000000';
   }
 }

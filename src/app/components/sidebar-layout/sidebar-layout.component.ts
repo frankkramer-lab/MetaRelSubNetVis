@@ -2,31 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../../data/state/app.state';
-import { NodeColorByEnum } from '../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../core/enum/node-size-by.enum';
 import {
+  selectActiveBooleanProperty, selectGradient,
   selectNodeColorBy,
   selectNodeSizeBy,
+  selectProperties,
   selectShowAllNodes,
-  selectShowMtbResults,
   selectShowOnlySharedNodes,
 } from '../../data/state/layout/layout.selectors';
 import {
   fitGraph,
   setNodeColorBy,
   setNodeSizeBy,
+  toggleBooleanProperty,
   toggleShowAllNodes,
-  toggleShowMtbResults,
   toggleShowOnlySharedNodes,
 } from '../../data/state/layout/layout.actions';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
-import {
-  selectGeMax, selectGeMidRange,
-  selectGeMin,
-  selectPatientSelection,
-  selectScoreMax, selectScoreMidRange,
-  selectScoreMin,
-} from '../../data/state/patient/patient.selectors';
+import { selectPatientSelection } from '../../data/state/patient/patient.selectors';
+import { Property } from '../../data/schema/property';
 
 @Component({
   selector: 'app-sidebar-layout',
@@ -36,55 +30,44 @@ import {
 export class SidebarLayoutComponent implements OnInit {
   patientSelection$!: Observable<PatientSelectionEnum>;
 
-  nodeColorBy$!: Observable<NodeColorByEnum>;
+  nodeColorBy$!: Observable<Property | null>;
 
-  nodeSizeBy$!: Observable<NodeSizeByEnum>;
+  nodeSizeBy$!: Observable<Property | null>;
 
-  showMtbResult$!: Observable<boolean>;
+  booleanProperty$!: Observable<Property | null>;
+
+  gradient$!: Observable<string | null>;
 
   showAllNodes$!: Observable<boolean>;
 
   showOnlySharedNodes$!: Observable<boolean>;
 
-  scoreMin$!: Observable<number | null>;
+  properties$!: Observable<Property[]>;
 
-  scoreMidRange$!: Observable<number | null>;
-
-  scoreMax$!: Observable<number | null>;
-
-  geMin$!: Observable<number | null>;
-
-  geMidRange$!: Observable<number | null>;
-
-  geMax$!: Observable<number | null>;
-
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>) {
+  }
 
   ngOnInit(): void {
     this.patientSelection$ = this.store.select(selectPatientSelection);
     this.nodeColorBy$ = this.store.select(selectNodeColorBy);
     this.nodeSizeBy$ = this.store.select(selectNodeSizeBy);
-    this.showMtbResult$ = this.store.select(selectShowMtbResults);
     this.showAllNodes$ = this.store.select(selectShowAllNodes);
+    this.booleanProperty$ = this.store.select(selectActiveBooleanProperty);
+    this.gradient$ = this.store.select(selectGradient);
     this.showOnlySharedNodes$ = this.store.select(selectShowOnlySharedNodes);
-    this.scoreMin$ = this.store.select(selectScoreMin);
-    this.scoreMidRange$ = this.store.select(selectScoreMidRange)
-    this.scoreMax$ = this.store.select(selectScoreMax);
-    this.geMin$ = this.store.select(selectGeMin);
-    this.geMidRange$ = this.store.select(selectGeMidRange);
-    this.geMax$ = this.store.select(selectGeMax);
+    this.properties$ = this.store.select(selectProperties);
   }
 
-  setNodeColorBy(nodeColorBy: NodeColorByEnum) {
+  setNodeColorBy(nodeColorBy: Property | null) {
     this.store.dispatch(setNodeColorBy({ nodeColorBy }));
   }
 
-  setNodeSizeBy(nodeSizeBy: NodeSizeByEnum) {
+  setNodeSizeBy(nodeSizeBy: Property | null) {
     this.store.dispatch(setNodeSizeBy({ nodeSizeBy }));
   }
 
-  toggleShowMtbResults() {
-    this.store.dispatch(toggleShowMtbResults());
+  toggleBooleanProperty(booleanProperty: Property | null) {
+    this.store.dispatch(toggleBooleanProperty({ booleanProperty }));
   }
 
   toggleShowAllNodes() {

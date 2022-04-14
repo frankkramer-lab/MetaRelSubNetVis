@@ -5,25 +5,15 @@ export interface PatientItem {
   /**
    * Protein's or gene's identifier
    */
-  id: number;
+  id: string;
   /**
    * Protein's or gene's name
    */
   name: string;
+
   /**
-   * Score
+   * All relevant properties have to be defined for a patient
    */
-  score: number;
-  /**
-   * Gene expression
-   */
-  ge: number;
-  /**
-   * Gene expression level class
-   */
-  geLevel: string;
-  /**
-   * MTB
-   */
-  mtb: boolean;
+  [key: string]: string;
+
 }

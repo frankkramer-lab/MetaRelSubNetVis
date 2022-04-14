@@ -1,6 +1,6 @@
 <ng-container *ngIf="patientsSelected !== 0; else emptyTemplate">
-  <div class="input-group mb-3">
-    <span class="input-group-text" id="thresholdLabel">
+
+  <h5>
     {{
     patientsSelected === 3
       ? 'Both patients:'
@@ -8,32 +8,24 @@
         ? groupLabelA + ':'
         : groupLabelB + ':'
     }}
-  </span>
-    <input
-      [disabled]="true"
-      type="text"
-      id="threshold"
-      class="form-control"
-      [ngModel]="defined"
-    />
-  </div>
+  </h5>
 
-  <input
-    (ngModelChange)="definedChangedEmitter.emit($event / (multiplier ?? 1))"
-    type="range"
-    class="form-range"
-    id="thresholdRange"
-    [min]="(min ?? 0) * (multiplier ?? 1)"
-    [max]="(max ?? 1) * (multiplier ?? 1)"
-    [ngModel]="(defined ?? 0) * (multiplier ?? 0)"
-  />
+  <ng-container *ngFor="let threshold of thresholds; let thIndex = index">
 
-  <div class="row mb-1">
-    <div class="col">
-      <small class="float-start">{{labelMin}}</small>
-      <small class="float-end">{{labelMax}}</small>
-    </div>
-  </div>
+    <app-sidebar-threshold-selector-range
+      [threshold]="threshold"
+      [patientSelection]="patientsSelected"
+      [groupLabelA]="groupLabelA"
+      [groupLabelB]="groupLabelB"
+      [multiplier]="multiplier"
+      [min]="min ? min[thIndex] : 0"
+      [max]="max ? max[thIndex] : 1"
+      (thresholdChangedEmitter)="thresholdChangedEmitter.emit($event)"
+    ></app-sidebar-threshold-selector-range>
+
+    <hr>
+
+  </ng-container>
 
 </ng-container>
 

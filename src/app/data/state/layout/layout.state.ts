@@ -1,10 +1,11 @@
-import { NodeColorByEnum } from '../../../core/enum/node-color-by.enum';
-import { NodeSizeByEnum } from '../../../core/enum/node-size-by.enum';
+import { Property } from '../../schema/property';
 
 export interface LayoutState {
-  nodeColorBy: NodeColorByEnum;
-  nodeSizeBy: NodeSizeByEnum;
+  nodeColorBy: Property | null;
+  nodeSizeBy: Property | null;
   showAllNodes: boolean;
   showOnlySharedNodes: boolean;
-  showMtbResults: boolean;
+  booleanProperty: Property | null;
+  properties: Property[];
+  highlightColor: string;
 }

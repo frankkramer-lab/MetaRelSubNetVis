@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
+import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 
 @Component({
   selector: 'app-sidebar-threshold-selector',
@@ -7,25 +8,19 @@ import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
   styleUrls: ['./sidebar-threshold-selector.component.scss'],
 })
 export class SidebarThresholdSelectorComponent {
+  @Input() patientsSelected!: PatientSelectionEnum | null;
 
-  @Input() min!: number | null;
+  @Input() multiplier!: number | null;
 
-  @Input() max!: number | null;
+  @Input() thresholds!: ThresholdDefinition[] | null;
+
+  @Input() min!: number[] | null;
+
+  @Input() max!: number[] | null;
 
   @Input() groupLabelA!: string | null;
 
   @Input() groupLabelB!: string | null;
 
-  @Input() patientsSelected!: PatientSelectionEnum | null;
-
-  @Input() defined!: number | null;
-
-  @Input() multiplier!: number | null;
-
-  @Input() labelMin!: string | null;
-
-  @Input() labelMax!: string | null;
-
-  @Output() definedChangedEmitter: EventEmitter<number> = new EventEmitter<number>();
-
+  @Output() thresholdChangedEmitter: EventEmitter<ThresholdDefinition> = new EventEmitter<ThresholdDefinition>();
 }

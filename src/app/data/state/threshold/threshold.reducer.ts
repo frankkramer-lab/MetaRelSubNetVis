@@ -1,6 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
 import { ThresholdState } from './threshold.state';
-import { setDefined, setLabelMin } from './threshold.action';
 import {
   hydrateThresholdSuccess,
   loadDataFailure,
@@ -8,45 +7,53 @@ import {
   loadQueryParams,
 } from '../hydrator/hydrator.actions';
 import { navigateHome } from '../sidebar/sidebar.actions';
+import { setAllThresholds, setThreshold } from './threshold.action';
+import { ThresholdDefinition } from '../../schema/threshold-definition';
 
 const initialState: ThresholdState = {
-  groupA: null,
-  groupB: null,
-  defined: null,
+  thresholds: [],
   multiplier: 1000000000,
   isLoading: false,
-  labelMin: null,
-  labelMax: null,
 };
 
 export const thresholdReducer = createReducer(
   initialState,
   on(loadQueryParams, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: true })),
   on(loadDataFailure, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: false })),
-  on(loadDataSuccess, (state: ThresholdState, payload): ThresholdState => {
+  on(loadDataSuccess, (state: ThresholdState, { thresholds }): ThresholdState => {
     return {
       ...state,
       isLoading: false,
-      groupA: payload.thresholds.groupA,
-      groupB: payload.thresholds.groupB,
-      labelMin: Math.min(
-        payload.thresholds.groupA.threshold,
-        payload.thresholds.groupB.threshold,
-      ).toString(),
-      labelMax: Math.max(payload.thresholds.groupA.max, payload.thresholds.groupB.max).toString(),
+      thresholds,
     };
   }),
   on(
-    setDefined,
     hydrateThresholdSuccess,
-    (state: ThresholdState, { defined }): ThresholdState => ({
+    setAllThresholds,
+    (state: ThresholdState, { thresholds }): ThresholdState => ({
       ...state,
-      defined,
+      thresholds,
     }),
   ),
+  on(setThreshold, (state: ThresholdState, { threshold }): ThresholdState => {
+    const newThresholds: ThresholdDefinition[] = [
+      ...state.thresholds.filter((a) => a.property.name !== threshold.property.name),
+    ];
+    const relevantThresholdIndex = state.thresholds.findIndex(
+      (a) => a.property.name === threshold.property.name,
+    );
+    newThresholds.splice(relevantThresholdIndex, 0, threshold);
+    return {
+      ...state,
+      thresholds: newThresholds,
+    };
+  }),
   on(
-    setLabelMin,
-    (state: ThresholdState, { labelMin }): ThresholdState => ({ ...state, labelMin }),
+    navigateHome,
+    (state: ThresholdState): ThresholdState => ({
+      ...state,
+      isLoading: false,
+      thresholds: [],
+    }),
   ),
-  on(navigateHome, (state: ThresholdState): ThresholdState => ({ ...state, defined: null })),
 );

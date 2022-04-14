@@ -26,6 +26,8 @@ export class HydratorService {
       // patient-specific properties
       if (attribute.individual_properties) {
         attribute.individual_properties.forEach((ip: any) => {
+
+
           const property: Property = {
             label: ip.label ?? 'n/a',
             name: ip.property ?? 'n/a',
@@ -51,10 +53,9 @@ export class HydratorService {
         });
       }
 
-      // generic properties
-      if (attribute.properties) {
-        // todo
-      }
+      // todo generic properties
+      // if (attribute.properties) {
+      // }
     });
 
     properties = cProperties.concat(dProperties, bProperties);

@@ -41,33 +41,41 @@ export const selectHighlightColor = createSelector(
 export const selectGradient = createSelector(selectState, (state: LayoutState) => {
   if (state.nodeColorBy === null) return null;
 
-  const map = state.nodeColorBy.mapping;
-  const keys = Object.keys(map);
-  const range = Number(keys[keys.length - 1]) - Number(keys[0]);
+  const unsorted = state.nodeColorBy.mapping;
+  const keys = Object.keys(unsorted);
+  const keysSorted = keys.sort((a, b) => {
+    const aNum = Number(a);
+    const bNum = Number(b);
+    return aNum > bNum ? 1 : -1;
+  });
+  const range = Number(keysSorted[keysSorted.length - 1]) - Number(keysSorted[0]);
 
   if (Number.isNaN(range)) return null;
 
-  const prefix = `linear-gradient(90deg,`;
-  const suffix = `)`;
+  let predecessor = Number(keysSorted[0]);
+  let cumulative = Number(keysSorted[0]);
 
   const thresholds: string[] = [];
-  let predecessor = Number(keys[0]);
-  let cumulative = Number(keys[0]);
 
-  Object.entries(map).forEach(([rawKey, value], index) => {
+  keysSorted.forEach((rawKey, index: number) => {
+    const key: number = Number(rawKey);
+    const item = unsorted[key];
 
-    const key = Number(rawKey);
     const width = Math.round(((key - predecessor) / range) * 100);
     cumulative += width;
 
     if (index === 0) {
-      thresholds.push(`${value} 0%`);
+      thresholds.push(`${item} 0%`);
     } else if (index === keys.length - 1) {
-      thresholds.push(`${value} 100%`);
+      thresholds.push(`${item} 100%`);
     } else {
-      thresholds.push(`${value} ${cumulative}%`);
+      thresholds.push(`${item} ${cumulative}%`);
     }
     predecessor = key;
   });
+
+  const prefix = `linear-gradient(90deg,`;
+  const suffix = `)`;
+
   return prefix + thresholds.join(',') + suffix;
 });

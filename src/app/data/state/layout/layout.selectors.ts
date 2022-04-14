@@ -42,6 +42,7 @@ export const selectGradient = createSelector(selectState, (state: LayoutState) =
   if (state.nodeColorBy === null) return null;
 
   const unsorted = state.nodeColorBy.mapping;
+
   const keys = Object.keys(unsorted);
   const keysSorted = keys.sort((a, b) => {
     const aNum = Number(a);

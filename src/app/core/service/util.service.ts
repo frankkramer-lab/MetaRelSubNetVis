@@ -1,24 +1,27 @@
 import { Injectable } from '@angular/core';
-import { PropertyTypeEnum } from '../enum/property-type-enum';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UtilService {
-  /**
-   * Returns the property type for a given string literal. Defaults to boolean.
-   * @param property Name of the property
-   */
-  getPropertyTypeByString = (property: string): PropertyTypeEnum => {
-    switch (property) {
-      case 'continuous':
-        return PropertyTypeEnum.continuous;
-      case 'discrete':
-        return PropertyTypeEnum.discrete;
-      case 'boolean':
-      default:
-        return PropertyTypeEnum.boolean;
-    }
-  };
+
+  sortObjectByKeys(obj: any): any {
+    const keys = Object.keys(obj);
+    const sorted: any = {};
+
+    const keysSorted = keys.sort((a, b) => {
+      const aNum = Number(a);
+      const bNum = Number(b);
+
+      if (Number.isNaN(aNum) || Number.isNaN(bNum)) return obj;
+
+      return aNum > bNum ? 1 : -1;
+    });
+    keysSorted.forEach((key) => {
+      sorted[key] = obj[key];
+    });
+    console.log(sorted);
+    return sorted;
+  }
 
 }

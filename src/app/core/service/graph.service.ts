@@ -12,6 +12,7 @@ import { ImageDownloadConfig } from '../../data/schema/image-download-config';
 import { NetworkLayer } from '../../data/schema/network-layer';
 import { Property } from '../../data/schema/property';
 import { PropertyTypeEnum } from '../enum/property-type-enum';
+import { UtilService } from './util.service';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +38,7 @@ export class GraphService {
   /**
    * Constructor, binding svg export library to cytoscape
    */
-  constructor() {
+  constructor(private utilService: UtilService) {
     cytoscape.use(svg);
   }
 
@@ -532,12 +533,14 @@ export class GraphService {
    * @private
    */
   private setColorContinuous(property: Property) {
-    const keys = Object.keys(property.mapping) as unknown as number[];
-    const values = Object.values(property.mapping);
     console.log('color continuous');
     console.log(property.mapping);
 
-    Object.entries(property.mapping).forEach(([rawKey, value], index) => {
+    const sorted = this.utilService.sortObjectByKeys(property.mapping);
+    const keys = Object.keys(sorted) as unknown as number[];
+    const values = Object.values(sorted);
+
+    Object.entries(sorted).forEach(([rawKey, value], index) => {
       const key = Number(rawKey);
       const successorKey = Number(keys[index + 1]);
       const successorValue = values[index + 1];

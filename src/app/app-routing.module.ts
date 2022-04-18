@@ -7,12 +7,12 @@ import { LinkComponent } from './layout/link/link.component';
 
 const routes: Routes = [
   {
-    path: 'home',
-    component: HomeComponent,
-  },
-  {
     path: '',
     component: LinkComponent,
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
   },
   {
     path: 'network',

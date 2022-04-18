@@ -8,17 +8,19 @@ export class UtilService {
     const keys = Object.keys(obj);
     const sorted: any = {};
 
-    const keysSorted = keys.sort((a, b) => {
-      const aNum = Number(a);
-      const bNum = Number(b);
+    keys
+      .sort((a, b) => {
+        const aNum = Number(a);
+        const bNum = Number(b);
 
-      if (Number.isNaN(aNum) || Number.isNaN(bNum)) return obj;
+        if (Number.isNaN(aNum) || Number.isNaN(bNum)) return obj;
 
-      return aNum > bNum ? 1 : -1;
-    });
-    keysSorted.forEach((key) => {
-      sorted[key] = obj[key];
-    });
+        return aNum > bNum ? 1 : -1;
+      })
+      .forEach((key) => {
+        sorted[key] = obj[key];
+      });
+
     return sorted;
   }
 }

@@ -13,6 +13,7 @@ import { NetworkLayer } from '../../data/schema/network-layer';
 import { Property } from '../../data/schema/property';
 import { PropertyTypeEnum } from '../enum/property-type-enum';
 import { UtilService } from './util.service';
+import { NetworkColors } from '../../data/schema/network-colors';
 
 @Injectable({
   providedIn: 'root',
@@ -26,11 +27,7 @@ export class GraphService {
    * List of locally used colors
    * @private
    */
-  private colors = {
-    red: '#ff3d6a',
-    yellow: '#e8e857',
-    blue: '#599eff',
-    green: '#0b0',
+  private readonly colors: NetworkColors = {
     gray: '#888',
     highlight: '#333',
   };

@@ -1,5 +1,5 @@
 export enum PropertyTypeEnum {
-  continuous,
-  discrete,
-  boolean,
+  continuous = 0,
+  discrete = 1,
+  boolean = 2,
 }

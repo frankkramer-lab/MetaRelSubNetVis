@@ -7,7 +7,6 @@ import { ComponentVisibilityEnum } from '../../core/enum/component-visibility.en
   styleUrls: ['./sidebar-generator-bool-visibility.component.scss'],
 })
 export class SidebarGeneratorBoolVisibilityComponent {
-
   @Input() name!: string;
 
   @Input() tooltip!: string;
@@ -17,5 +16,4 @@ export class SidebarGeneratorBoolVisibilityComponent {
   @Input() parentVisibility!: ComponentVisibilityEnum | null;
 
   @Output() modelEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
-
 }

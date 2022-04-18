@@ -1,40 +1,38 @@
 <div class="form-check">
   <input
     (click)="propertyClicked.emit()"
-    class="form-check-input"
-    type="radio"
-    name="colorNodesBy"
-    id="colorBy{{propertyId}}"
-    [value]="property"
     [checked]="isChecked"
+    [value]="property"
+    class="form-check-input"
+    id="colorBy{{ propertyId }}"
+    name="colorNodesBy"
+    type="radio"
   />
-  <label class="form-check-label" for="colorBy{{propertyId}}">
-    by <b>{{property?.label ?? property?.name ?? ''}}</b>
+  <label class="form-check-label" for="colorBy{{ propertyId }}">
+    by <b>{{ property?.label ?? property?.name ?? '' }}</b>
   </label>
-
 
   <ng-container *ngIf="isChecked">
     <table class="table text-light table-sm">
       <thead>
-      <tr>
-        <th>Value</th>
-        <th>Assigned with</th>
-      </tr>
+        <tr>
+          <th>Value</th>
+          <th>Assigned with</th>
+        </tr>
       </thead>
       <tbody>
-      <ng-container *ngIf="property && property.mapping">
-        <tr *ngFor="let item of property.mapping | keyvalue">
-          <td>{{item.key}}</td>
-          <td>
-          <span class="badge rounded-pill"
-                [ngStyle]="{'background-color': item.value}">&nbsp;</span>
-            &nbsp;{{item.value}}</td>
-        </tr>
-      </ng-container>
+        <ng-container *ngIf="property && property.mapping">
+          <tr *ngFor="let item of property.mapping | keyvalue">
+            <td>{{ item.key }}</td>
+            <td>
+              <span [ngStyle]="{ 'background-color': item.value }" class="badge rounded-pill"
+                >&nbsp;</span
+              >
+              &nbsp;{{ item.value }}
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </ng-container>
-
-
 </div>
-

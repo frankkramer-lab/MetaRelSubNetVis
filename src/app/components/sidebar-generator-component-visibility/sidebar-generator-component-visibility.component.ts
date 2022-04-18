@@ -16,5 +16,4 @@ export class SidebarGeneratorComponentVisibilityComponent {
   @Input() parentVisibility!: ComponentVisibilityEnum | null;
 
   @Output() modelEmitter: EventEmitter<number> = new EventEmitter<ComponentVisibilityEnum>();
-
 }

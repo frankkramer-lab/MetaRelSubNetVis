@@ -1,6 +1,9 @@
 # Introduction
 
-Comparing groups of patients with respect to biological specifics is one of the building blocks for precision medicine. Such a data-driven analysis does not have to be abstract. With [MetaRelSubNetVis](https://frankkramer-lab.github.io/MetaRelSubNetVis/) we provide a visualization tool that allows users to inspect differences between two groups of patients.
+Comparing groups of patients with respect to biological specifics is one of the building blocks for
+precision medicine. Such a data-driven analysis does not have to be abstract.
+With [MetaRelSubNetVis](https://frankkramer-lab.github.io/MetaRelSubNetVis/) we provide a
+visualization tool that allows users to inspect differences between two groups of patients.
 
 Demo can be found here: https://frankkramer-lab.github.io/MetaRelSubNetVis/
 
@@ -8,7 +11,8 @@ Demo can be found here: https://frankkramer-lab.github.io/MetaRelSubNetVis/
 
 ## Angular version
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.11.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version
+12.2.11.
 
 ## Build
 
@@ -16,11 +20,13 @@ Build for GitHub pages according to [this guide](https://angular.io/guide/deploy
 
 # Data structure
 
-To make sure, your network is compatible as input for this class comparison, check your network for the following properties
+To make sure, your network is compatible as input for this class comparison, check your network for
+the following properties
 
 ## Network
 
-The network needs to conform to the [CX data model](https://home.ndexbio.org/data-model/) and contain the aspects **nodes**, **edges**, **nodeAttributes**, **networkAttributes**.
+The network needs to conform to the [CX data model](https://home.ndexbio.org/data-model/) and
+contain the aspects **nodes**, **edges**, **nodeAttributes**, **networkAttributes**.
 
 ## Nodes
 
@@ -28,38 +34,45 @@ Each node has to have an id (property **@id**) and a name (property **n**).
 
 ## Edges
 
-Each edge has to have an id (property **@id**), a source (property **s**) and a target (property **t**).
+Each edge has to have an id (property **@id**), a source (property **s**) and a target (property **
+t**).
 
 ## NodeAttributes
 
-Each node can have multiple attributes. A node attribute's relation to a node is indicated by the node attribute's property **po**. The name of the node attribute (property **n**) always starts with a patient identifier, followed by **_**. After that the attribute is described. The following are required for **each** patient:
+Each node can have multiple attributes. A node attribute's relation to a node is indicated by the
+node attribute's property **po**. The name of the node attribute (property **n**) always starts with
+a patient identifier, followed by **\_**. After that the attribute is described. The following are
+required for **each** patient:
 
 - **Score**: relevance score, a numeric value
 - **GE**: gene expression, a numeric value
 - **GE_Level**: gene expression level, one of the following values: (LOW, HIGH, NORMAL)
 
-Optional attributes are: 
+Optional attributes are:
 
 - **MTB**: a bool value
 
 ## NetworkAttributes
 
-NetworkAttributes are used to describe the patient samples. Please note: The **order** for each of these attributes is crucical. 
+NetworkAttributes are used to describe the patient samples. Please note: The **order** for each of
+these attributes is crucical.
 
 - **Patients**: String list of patient identifiers
 - **PatientSubtype**: String list of each patient's cancer subtype
 - **PatientSurvivalYears**: Double list of each patient's metastasis free survival
-- **PatientGroups**: String list of each patient's group (in sum there can only be **two** different types of groups!)
+- **PatientGroups**: String list of each patient's group (in sum there can only be **two** different
+  types of groups!)
 
-Furthermore the property **name** contains the network's name that will be used as a headline for this application.
+Furthermore the property **name** contains the network's name that will be used as a headline for
+this application.
 
 ## Example
 
-The summary network is accessible on NDEx via [https://www.ndexbio.org/viewer/networks/140d01f0-acfe-11ec-b3be-0ac135e8bacf](https://www.ndexbio.org/viewer/networks/140d01f0-acfe-11ec-b3be-0ac135e8bacf)
+The summary network is accessible on NDEx
+via [https://www.ndexbio.org/viewer/networks/140d01f0-acfe-11ec-b3be-0ac135e8bacf](https://www.ndexbio.org/viewer/networks/140d01f0-acfe-11ec-b3be-0ac135e8bacf)
 
 <details>
   <summary>Click to see the example network</summary>
-
 
 ```
 [
@@ -956,5 +969,5 @@ The summary network is accessible on NDEx via [https://www.ndexbio.org/viewer/ne
 
 
 ```
-  
+
 </details>

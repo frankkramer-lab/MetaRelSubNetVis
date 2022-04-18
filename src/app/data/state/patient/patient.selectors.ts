@@ -58,4 +58,3 @@ export const selectPatientSelection = createSelector(
   selectState,
   (state: PatientState) => state.patientSelection,
 );
-

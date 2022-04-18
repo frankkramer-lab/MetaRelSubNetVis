@@ -1,11 +1,11 @@
 <app-sidebar-download-form
-  [buttonVisible]="true"
-  [isFormValid]="isFormValid$ | async"
-  [extension]="extension$ |async"
-  [scale]="scale$|async"
-  [transparentBackground]="transparentBackground$|async"
   (extensionChanged)="triggerSetFileExtension($event)"
   (scaleChanged)="triggerSetScale($event)"
   (transparentBackgroundChanged)="toggleTransparentBackground()"
   (triggerImageDownload)="triggerDownload($event)"
+  [buttonVisible]="true"
+  [extension]="extension$ | async"
+  [isFormValid]="isFormValid$ | async"
+  [scale]="scale$ | async"
+  [transparentBackground]="transparentBackground$ | async"
 ></app-sidebar-download-form>

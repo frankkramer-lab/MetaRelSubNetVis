@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class UtilService {
-
   sortObjectByKeys(obj: any): any {
     const keys = Object.keys(obj);
     const sorted: any = {};
@@ -22,5 +21,4 @@ export class UtilService {
     });
     return sorted;
   }
-
 }

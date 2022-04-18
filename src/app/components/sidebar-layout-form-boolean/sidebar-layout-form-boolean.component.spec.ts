@@ -8,9 +8,8 @@ describe('SidebarLayoutFormBooleanComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SidebarLayoutFormBooleanComponent ]
-    })
-    .compileComponents();
+      declarations: [SidebarLayoutFormBooleanComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

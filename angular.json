@@ -26,14 +26,8 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.css"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss", "node_modules/bootstrap/dist/css/bootstrap.css"],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
               "node_modules/@popperjs/core/dist/umd/popper.js",
@@ -41,9 +35,7 @@
               "node_modules/cytoscape/dist/cytoscape.min.js",
               "node_modules/cytoscape-svg/cytoscape-svg.js"
             ],
-            "allowedCommonJsDependencies": [
-              "cytoscape"
-            ]
+            "allowedCommonJsDependencies": ["cytoscape"]
           },
           "configurations": {
             "production": {
@@ -104,23 +96,15 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }

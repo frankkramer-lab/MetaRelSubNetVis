@@ -3,9 +3,9 @@
     <app-sidebar-patients-dropdown
       (patientReset)="patientAReset()"
       (patientSelected)="patientASelected($event)"
+      [label]="groupLabelA$ | async"
       [patient]="patientA$ | async"
       [patients]="patientsGroupA$ | async"
-      [label]="groupLabelA$ | async"
       labelFallback="Group A"
     ></app-sidebar-patients-dropdown>
   </div>
@@ -14,9 +14,9 @@
     <app-sidebar-patients-dropdown
       (patientReset)="patientBReset()"
       (patientSelected)="patientBSelected($event)"
+      [label]="groupLabelB$ | async"
       [patient]="patientB$ | async"
       [patients]="patientsGroupB$ | async"
-      [label]="groupLabelB$ | async"
       labelFallback="Group B"
     ></app-sidebar-patients-dropdown>
   </div>

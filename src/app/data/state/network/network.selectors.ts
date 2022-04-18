@@ -2,7 +2,6 @@ import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { NetworkState } from './network.state';
 import { Network } from '../../schema/network';
-import { createEffect } from '@ngrx/effects';
 
 const selectState = createSelector(
   (appState: AppState) => appState.network,

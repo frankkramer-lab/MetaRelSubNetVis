@@ -43,6 +43,179 @@ export class GraphService {
   }
 
   /**
+   * Initializes the core for the given container.
+   * @param network Network elements
+   * @param properties List of properties that can be used for visualization
+   * @param highlightColor Hex encoded color used for highlighting a node within the network
+   */
+  initializeCore(network: Network, properties: Property[], highlightColor: string): void {
+    const networkCopy = JSON.parse(JSON.stringify(network)) as ElementsDefinition;
+
+    this.colors.highlight = highlightColor;
+
+    this.cyCore = cytoscape({
+      container: this.cyContainer,
+      elements: networkCopy,
+      style: this.getStyle(properties),
+      layout: this.getLayout(network.nodes),
+    });
+
+    this.cyCore.elements('node,edge').data('shown', true);
+  }
+
+  /**
+   * Triggers the download for the specified download configuration
+   */
+  downloadImage(
+    config: ImageDownloadConfig,
+    patientA: Patient | null,
+    patientB: Patient | null,
+    patientSelection: PatientSelectionEnum,
+  ): void {
+    let filename = `network.ts`;
+
+    switch (patientSelection) {
+      case PatientSelectionEnum.groupA:
+        if (patientA !== null) {
+          filename = `${patientA.name}`;
+        }
+        break;
+      case PatientSelectionEnum.groupB:
+        if (patientB !== null) {
+          filename = `${patientB.name}`;
+        }
+        break;
+      case PatientSelectionEnum.both:
+        if (patientA !== null && patientB !== null) {
+          filename = `${patientA.name}_vs_${patientB.name}`;
+        }
+        break;
+      default:
+        filename = `Network`;
+        break;
+    }
+    filename = `${filename}.${config.extension}`;
+
+    let image = this.getImage(config);
+    if (config.extension === 'SVG') {
+      image = new Blob([image], { type: 'text/plain;charset=utf-8' });
+    } else {
+      image = this.getImage(config);
+    }
+
+    const url = window.URL.createObjectURL(image);
+    const a = document.createElement('a');
+    a.href = url;
+    a.setAttribute('download', filename);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  /**
+   * Fits the graph to the current viewport
+   */
+  fitGraph(): void {
+    this.cyCore.fit();
+  }
+
+  /**
+   * Triggers the layout for zero, one or two selected patients depending on the user input.
+   */
+  layoutPatient(
+    patientADetails: PatientItem[],
+    patientBDetails: PatientItem[],
+    patientGroupA: Patient[] | null,
+    patientGroupB: Patient[] | null,
+    network: Network,
+    nodeColorBy: Property | null,
+    nodeSizeBy: Property | null,
+    showAllNodes: boolean,
+    showOnlySharedNodes: boolean,
+    booleanProperty: Property | null,
+    visibleNodes: NetworkNode[],
+    properties: Property[],
+  ) {
+    this.updateBooleanProperty(booleanProperty, properties);
+    const visibleNodesIds: string[] = visibleNodes.map((a) => a.data.id.toString());
+    const boolProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
+
+    if (
+      patientADetails &&
+      patientADetails?.length > 0 &&
+      patientBDetails &&
+      patientBDetails?.length > 0
+    ) {
+      this.clear(boolProperties);
+      this.visualizeTwo(
+        patientADetails,
+        patientBDetails,
+        nodeColorBy,
+        visibleNodesIds,
+        boolProperties,
+      );
+    } else if (patientADetails && patientADetails.length > 0) {
+      this.visualizeOne(patientADetails, nodeSizeBy, nodeColorBy, visibleNodesIds, boolProperties);
+    } else if (patientBDetails && patientBDetails.length > 0) {
+      this.visualizeOne(patientBDetails, nodeSizeBy, nodeColorBy, visibleNodesIds, boolProperties);
+    } else {
+      this.clear(boolProperties);
+      this.cyCore.elements('node').data('shown', true);
+    }
+    const patientSelected =
+      (patientADetails && patientADetails.length > 0) ||
+      (patientBDetails && patientBDetails.length > 0);
+    this.updateShownNodes(showAllNodes, showOnlySharedNodes, patientSelected);
+  }
+
+  /**
+   * If the displayed nodes are not modified themselves,
+   * it's sufficient to update which nodes are displayed.
+   */
+  updateShownNodes(showAllNodes: boolean, showOnlySharedNodes: boolean, patientSelected: boolean) {
+    this.cyCore.batch(() => {
+      this.cyCore.elements('node[member]').data('shown', true);
+      this.cyCore.elements('node[!member]').data('shown', patientSelected ? showAllNodes : true);
+      (this.cyCore.elements('node[member]').connectedEdges() as CollectionReturnValue).data(
+        'shown',
+        true,
+      );
+      (this.cyCore.elements('node[!member]').connectedEdges() as CollectionReturnValue).data(
+        'shown',
+        patientSelected ? showAllNodes : true,
+      );
+      this.cyCore.elements('node.split[colorA][^colorB]').data('shown', !showOnlySharedNodes);
+      this.cyCore.elements('node.split[^colorA][colorB]').data('shown', !showOnlySharedNodes);
+      (
+        this.cyCore
+          .elements('node.split[colorA][^colorB], node.split[^colorA][colorB]')
+          .connectedEdges('edge[?shown]') as CollectionReturnValue
+      ).data('shown', !showOnlySharedNodes);
+    });
+  }
+
+  /**
+   * Applies the style for selected nodes to the list of currently selected nodes.
+   * All other styles are reset to their default.
+   * @param markedNodes List of currently selected nodes
+   */
+  highlightNode(markedNodes: NetworkNode[]) {
+    const nodes: string[] = markedNodes.map((a) => a.data.id.toString());
+    this.cyCore.elements('node').removeClass('highlight');
+    this.cyCore.elements('edge').removeClass('highlight');
+    if (nodes !== undefined) {
+      nodes.forEach((node) => {
+        this.cyCore
+          .nodes()
+          .getElementById(node)
+          .addClass('highlight')
+          .connectedEdges()
+          .addClass('highlight');
+      });
+    }
+  }
+
+  /**
    * Builds the layers for the concentric layout
    * @param nodes List of existing nodes within the network.ts
    */
@@ -228,76 +401,6 @@ export class GraphService {
   }
 
   /**
-   * Initializes the core for the given container.
-   * @param network Network elements
-   * @param properties List of properties that can be used for visualization
-   * @param highlightColor Hex encoded color used for highlighting a node within the network
-   */
-  initializeCore(network: Network, properties: Property[], highlightColor: string): void {
-    const networkCopy = JSON.parse(JSON.stringify(network)) as ElementsDefinition;
-
-    this.colors.highlight = highlightColor;
-
-    this.cyCore = cytoscape({
-      container: this.cyContainer,
-      elements: networkCopy,
-      style: this.getStyle(properties),
-      layout: this.getLayout(network.nodes),
-    });
-
-    this.cyCore.elements('node,edge').data('shown', true);
-  }
-
-  /**
-   * Triggers the download for the specified download configuration
-   */
-  downloadImage(
-    config: ImageDownloadConfig,
-    patientA: Patient | null,
-    patientB: Patient | null,
-    patientSelection: PatientSelectionEnum,
-  ): void {
-    let filename = `network.ts`;
-
-    switch (patientSelection) {
-      case PatientSelectionEnum.groupA:
-        if (patientA !== null) {
-          filename = `${patientA.name}`;
-        }
-        break;
-      case PatientSelectionEnum.groupB:
-        if (patientB !== null) {
-          filename = `${patientB.name}`;
-        }
-        break;
-      case PatientSelectionEnum.both:
-        if (patientA !== null && patientB !== null) {
-          filename = `${patientA.name}_vs_${patientB.name}`;
-        }
-        break;
-      default:
-        filename = `Network`;
-        break;
-    }
-    filename = `${filename}.${config.extension}`;
-
-    let image = this.getImage(config);
-    if (config.extension === 'SVG') {
-      image = new Blob([image], { type: 'text/plain;charset=utf-8' });
-    } else {
-      image = this.getImage(config);
-    }
-
-    const url = window.URL.createObjectURL(image);
-    const a = document.createElement('a');
-    a.href = url;
-    a.setAttribute('download', filename);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-
-  /**
    * Returns the image data as blob
    * @param config Download configuration containing information about file extension, background and scale
    * @private
@@ -314,62 +417,6 @@ export class GraphService {
       image = this.cyCore.svg();
     }
     return image;
-  }
-
-  /**
-   * Fits the graph to the current viewport
-   */
-  fitGraph(): void {
-    this.cyCore.fit();
-  }
-
-  /**
-   * Triggers the layout for zero, one or two selected patients depending on the user input.
-   */
-  layoutPatient(
-    patientADetails: PatientItem[],
-    patientBDetails: PatientItem[],
-    patientGroupA: Patient[] | null,
-    patientGroupB: Patient[] | null,
-    network: Network,
-    nodeColorBy: Property | null,
-    nodeSizeBy: Property | null,
-    showAllNodes: boolean,
-    showOnlySharedNodes: boolean,
-    booleanProperty: Property | null,
-    visibleNodes: NetworkNode[],
-    properties: Property[],
-  ) {
-    this.updateBooleanProperty(booleanProperty, properties);
-    const visibleNodesIds: string[] = visibleNodes.map((a) => a.data.id.toString());
-    const boolProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
-
-    if (
-      patientADetails &&
-      patientADetails?.length > 0 &&
-      patientBDetails &&
-      patientBDetails?.length > 0
-    ) {
-      this.clear(boolProperties);
-      this.visualizeTwo(
-        patientADetails,
-        patientBDetails,
-        nodeColorBy,
-        visibleNodesIds,
-        boolProperties,
-      );
-    } else if (patientADetails && patientADetails.length > 0) {
-      this.visualizeOne(patientADetails, nodeSizeBy, nodeColorBy, visibleNodesIds, boolProperties);
-    } else if (patientBDetails && patientBDetails.length > 0) {
-      this.visualizeOne(patientBDetails, nodeSizeBy, nodeColorBy, visibleNodesIds, boolProperties);
-    } else {
-      this.clear(boolProperties);
-      this.cyCore.elements('node').data('shown', true);
-    }
-    const patientSelected =
-      (patientADetails && patientADetails.length > 0) ||
-      (patientBDetails && patientBDetails.length > 0);
-    this.updateShownNodes(showAllNodes, showOnlySharedNodes, patientSelected);
   }
 
   /**
@@ -474,7 +521,6 @@ export class GraphService {
     visibleNodes: string[],
     boolProperties: Property[],
   ): void {
-
     this.cyCore.batch(() => {
       this.clear(boolProperties);
 
@@ -683,32 +729,6 @@ export class GraphService {
   }
 
   /**
-   * If the displayed nodes are not modified themselves,
-   * it's sufficient to update which nodes are displayed.
-   */
-  updateShownNodes(showAllNodes: boolean, showOnlySharedNodes: boolean, patientSelected: boolean) {
-    this.cyCore.batch(() => {
-      this.cyCore.elements('node[member]').data('shown', true);
-      this.cyCore.elements('node[!member]').data('shown', patientSelected ? showAllNodes : true);
-      (this.cyCore.elements('node[member]').connectedEdges() as CollectionReturnValue).data(
-        'shown',
-        true,
-      );
-      (this.cyCore.elements('node[!member]').connectedEdges() as CollectionReturnValue).data(
-        'shown',
-        patientSelected ? showAllNodes : true,
-      );
-      this.cyCore.elements('node.split[colorA][^colorB]').data('shown', !showOnlySharedNodes);
-      this.cyCore.elements('node.split[^colorA][colorB]').data('shown', !showOnlySharedNodes);
-      (
-        this.cyCore
-          .elements('node.split[colorA][^colorB], node.split[^colorA][colorB]')
-          .connectedEdges('edge[?shown]') as CollectionReturnValue
-      ).data('shown', !showOnlySharedNodes);
-    });
-  }
-
-  /**
    * Updates the node style based on if a boolean property is to be displayed.
    * @param booleanProperty Active property that borders single nodes
    * @param properties List of properties
@@ -722,26 +742,5 @@ export class GraphService {
         .selector(`node.${property.name}`)
         .style('border-width', property === booleanProperty ? '7px' : '0px');
     });
-  }
-
-  /**
-   * Applies the style for selected nodes to the list of currently selected nodes.
-   * All other styles are reset to their default.
-   * @param markedNodes List of currently selected nodes
-   */
-  highlightNode(markedNodes: NetworkNode[]) {
-    const nodes: string[] = markedNodes.map((a) => a.data.id.toString());
-    this.cyCore.elements('node').removeClass('highlight');
-    this.cyCore.elements('edge').removeClass('highlight');
-    if (nodes !== undefined) {
-      nodes.forEach((node) => {
-        this.cyCore
-          .nodes()
-          .getElementById(node)
-          .addClass('highlight')
-          .connectedEdges()
-          .addClass('highlight');
-      });
-    }
   }
 }

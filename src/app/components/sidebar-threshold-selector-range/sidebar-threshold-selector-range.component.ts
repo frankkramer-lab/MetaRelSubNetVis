@@ -8,7 +8,6 @@ import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
   styleUrls: ['./sidebar-threshold-selector-range.component.scss'],
 })
 export class SidebarThresholdSelectorRangeComponent {
-
   @Input() patientSelection!: PatientSelectionEnum | null;
 
   @Input() groupLabelA!: string | null;
@@ -23,7 +22,8 @@ export class SidebarThresholdSelectorRangeComponent {
 
   @Input() multiplier!: number | null;
 
-  @Output() thresholdChangedEmitter: EventEmitter<ThresholdDefinition> = new EventEmitter<ThresholdDefinition>();
+  @Output() thresholdChangedEmitter: EventEmitter<ThresholdDefinition> =
+    new EventEmitter<ThresholdDefinition>();
 
   emitChangedThreshold(defined: number) {
     if (this.threshold && this.threshold.property) {

@@ -9,7 +9,8 @@ import {
   triggerImageDownload,
 } from '../../data/state/download/download.actions';
 import {
-  selectExtension, selectIsFormValid,
+  selectExtension,
+  selectIsFormValid,
   selectScale,
   selectTransparentBackground,
 } from '../../data/state/download/download.selectors';
@@ -29,8 +30,7 @@ export class SidebarDownloadComponent implements OnInit {
 
   @Input() isFormValid$!: Observable<boolean>;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.extension$ = this.store.select(selectExtension);

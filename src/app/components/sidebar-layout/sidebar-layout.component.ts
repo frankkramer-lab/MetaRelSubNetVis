@@ -3,7 +3,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../../data/state/app.state';
 import {
-  selectActiveBooleanProperty, selectGradient,
+  selectActiveBooleanProperty,
+  selectGradient,
   selectNodeColorBy,
   selectNodeSizeBy,
   selectProperties,
@@ -44,8 +45,7 @@ export class SidebarLayoutComponent implements OnInit {
 
   properties$!: Observable<Property[]>;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.patientSelection$ = this.store.select(selectPatientSelection);

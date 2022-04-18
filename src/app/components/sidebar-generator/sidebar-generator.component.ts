@@ -113,8 +113,7 @@ export class SidebarGeneratorComponent implements OnInit {
 
   url$!: Observable<string>;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.uuid$ = this.store.select(selectUuid);

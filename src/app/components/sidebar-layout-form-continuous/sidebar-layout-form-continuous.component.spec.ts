@@ -8,9 +8,8 @@ describe('SidebarLayoutFormContinuousComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SidebarLayoutFormContinuousComponent ]
-    })
-    .compileComponents();
+      declarations: [SidebarLayoutFormContinuousComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

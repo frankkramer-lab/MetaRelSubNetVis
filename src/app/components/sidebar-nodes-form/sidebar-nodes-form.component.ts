@@ -9,7 +9,6 @@ import { SortByEnum } from '../../core/enum/sort-by.enum';
   styleUrls: ['./sidebar-nodes-form.component.scss'],
 })
 export class SidebarNodesFormComponent {
-
   @Input() occurrences!: NetworkOccurrences | null;
 
   @Input() nodes!: NetworkNode[] | null;
@@ -29,5 +28,4 @@ export class SidebarNodesFormComponent {
   @Output() sortingChanged: EventEmitter<SortByEnum> = new EventEmitter<SortByEnum>();
 
   @Output() filterTermChanged: EventEmitter<string> = new EventEmitter<string>();
-
 }

@@ -4,10 +4,9 @@ import { NetworkSearchItem } from '../../data/schema/network-search-item';
 @Component({
   selector: 'app-home-content',
   templateUrl: './home-content.component.html',
-  styleUrls: ['./home-content.component.scss']
+  styleUrls: ['./home-content.component.scss'],
 })
 export class HomeContentComponent {
-
   @Input() isLoading!: boolean | null;
 
   @Input() setupInProgress!: boolean | null;
@@ -22,7 +21,8 @@ export class HomeContentComponent {
 
   @Input() lastResultWasEmpty!: boolean | null;
 
-  @Output() networkDetailsEmitter: EventEmitter<NetworkSearchItem> = new EventEmitter<NetworkSearchItem>();
+  @Output() networkDetailsEmitter: EventEmitter<NetworkSearchItem> =
+    new EventEmitter<NetworkSearchItem>();
 
   @Output() loadNetwork: EventEmitter<string> = new EventEmitter<string>();
 
@@ -31,5 +31,4 @@ export class HomeContentComponent {
   @Output() showModal: EventEmitter<void> = new EventEmitter<void>();
 
   searchTerm: string | null = null;
-
 }

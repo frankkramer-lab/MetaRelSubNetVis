@@ -1,54 +1,43 @@
 <div class="row mb-2">
   <div class="col">
-    <b>{{name}}</b>
+    <b>{{ name }}</b>
   </div>
   <div class="col-auto">
-        <div class="btn-group" role="group" ngbRadioGroup
-             [disabled]="name !== 'Sidebar' && parentVisibility === 2"
-             [ngModel]="model"
-             (ngModelChange)="modelEmitter.emit($event)">
-          <label class="btn-outline-info" ngbButtonLabel>
-            <input
-              type="radio"
-              class="btn-check"
-              ngbButton
-              [value]="2"
-            />
-            None
-          </label>
-          <label class="btn-outline-info" ngbButtonLabel>
-            <input
-              type="radio"
-              class="btn-check"
-              ngbButton
-              [value]="1"
-            />
-            Button
-          </label>
-          <label class="btn-outline-info" ngbButtonLabel>
-            <input
-              type="radio"
-              class="btn-check"
-              ngbButton
-              [value]="0"
-            />
-            Full
-          </label>
-        </div>
+    <div
+      (ngModelChange)="modelEmitter.emit($event)"
+      [disabled]="name !== 'Sidebar' && parentVisibility === 2"
+      [ngModel]="model"
+      class="btn-group"
+      ngbRadioGroup
+      role="group"
+    >
+      <label class="btn-outline-info" ngbButtonLabel>
+        <input [value]="2" class="btn-check" ngbButton type="radio" />
+        None
+      </label>
+      <label class="btn-outline-info" ngbButtonLabel>
+        <input [value]="1" class="btn-check" ngbButton type="radio" />
+        Button
+      </label>
+      <label class="btn-outline-info" ngbButtonLabel>
+        <input [value]="0" class="btn-check" ngbButton type="radio" />
+        Full
+      </label>
+    </div>
   </div>
   <div class="col-auto pl-3">
     <fa-icon
-      size="2x"
-      class="text-secondary"
-      icon="info-circle"
-      container="body"
-      [openDelay]="1000"
-      placement="bottom"
       [ngbTooltip]="tooltipContent"
+      [openDelay]="1000"
+      class="text-secondary"
+      container="body"
+      icon="info-circle"
+      placement="bottom"
+      size="2x"
     ></fa-icon>
   </div>
 </div>
 
 <ng-template #tooltipContent>
-  <div class="text-start" [innerHTML]="tooltip"></div>
+  <div [innerHTML]="tooltip" class="text-start"></div>
 </ng-template>

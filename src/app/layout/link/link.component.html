@@ -1,1 +1,4 @@
-<app-link-content [inProgress]="hydrationInProgress$ | async" (routingEmitter)="returnHome()"></app-link-content>
+<app-link-content
+  (routingEmitter)="returnHome()"
+  [inProgress]="hydrationInProgress$ | async"
+></app-link-content>

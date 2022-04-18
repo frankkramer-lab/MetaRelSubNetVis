@@ -22,5 +22,6 @@ export class SidebarThresholdSelectorComponent {
 
   @Input() groupLabelB!: string | null;
 
-  @Output() thresholdChangedEmitter: EventEmitter<ThresholdDefinition> = new EventEmitter<ThresholdDefinition>();
+  @Output() thresholdChangedEmitter: EventEmitter<ThresholdDefinition> =
+    new EventEmitter<ThresholdDefinition>();
 }

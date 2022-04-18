@@ -8,9 +8,8 @@ describe('HomeModalFormatComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomeModalFormatComponent ]
-    })
-    .compileComponents();
+      declarations: [HomeModalFormatComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

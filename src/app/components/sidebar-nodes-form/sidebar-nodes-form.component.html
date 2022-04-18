@@ -1,85 +1,88 @@
 <!-- filter form -->
 <div class="input-group">
-  <input type="text"
-         class="form-control"
-         placeholder="Search..."
-         (input)="filterTermChanged.emit(filterTerm.value)"
-         id="filterTerm"
-         #filterTerm
-         aria-label="Filter nodes">
-  <button *ngIf="filterTerm.value.length > 0"
-          (click)="filterTerm.value = ''; filterTermChanged.emit('')"
-          class="btn btn-dark" type="button" id="clearSearch">
+  <input
+    #filterTerm
+    (input)="filterTermChanged.emit(filterTerm.value)"
+    aria-label="Filter nodes"
+    class="form-control"
+    id="filterTerm"
+    placeholder="Search..."
+    type="text"
+  />
+  <button
+    (click)="filterTerm.value = ''; filterTermChanged.emit('')"
+    *ngIf="filterTerm.value.length > 0"
+    class="btn btn-dark"
+    id="clearSearch"
+    type="button"
+  >
     <fa-icon icon="times"></fa-icon>
   </button>
-  <button *ngIf="nodes"
-          class="btn btn-dark"
-          disabled="true"
-          type="button">
-    {{nodes.length}}
+  <button *ngIf="nodes" class="btn btn-dark" disabled="true" type="button">
+    {{ nodes.length }}
   </button>
 </div>
 
 <hr />
 
 <ng-container *ngIf="occurrences && numberOfColumns && markedNodes && nodes">
-
   <!-- table head -->
   <table class="table table-borderless text-light">
     <thead>
-    <tr class="border-bottom">
-      <!-- protein -->
-      <th class="w-{{ numberOfColumns < 4 ? '50' : '25' }}">Protein</th>
-      <!-- meta patient -->
-      <th class="cursor w-25" *ngIf="subTypeColumnA" (click)="sortingChanged.emit(0)">
-        {{ subTypeColumnA }}&nbsp; ({{occurrences[subTypeColumnA]}})
-      </th>
-      <!-- non-meta patient -->
-      <th class="cursor w-25" *ngIf="subTypeColumnB" (click)="sortingChanged.emit(1)">
-        {{ subTypeColumnB }}&nbsp; ({{occurrences[subTypeColumnB]}})
-      </th>
-      <!-- total -->
-      <th
-        class="cursor"
-        [ngClass]="numberOfColumns === 2 ? 'w-50' : 'w-25'"
-        (click)="sortingChanged.emit(2)"
-      >
-        All&nbsp;({{ occurrences.all }})
-      </th>
-    </tr>
+      <tr class="border-bottom">
+        <!-- protein -->
+        <th class="w-{{ numberOfColumns < 4 ? '50' : '25' }}">Protein</th>
+        <!-- meta patient -->
+        <th (click)="sortingChanged.emit(0)" *ngIf="subTypeColumnA" class="cursor w-25">
+          {{ subTypeColumnA }}&nbsp; ({{ occurrences[subTypeColumnA] }})
+        </th>
+        <!-- non-meta patient -->
+        <th (click)="sortingChanged.emit(1)" *ngIf="subTypeColumnB" class="cursor w-25">
+          {{ subTypeColumnB }}&nbsp; ({{ occurrences[subTypeColumnB] }})
+        </th>
+        <!-- total -->
+        <th
+          (click)="sortingChanged.emit(2)"
+          [ngClass]="numberOfColumns === 2 ? 'w-50' : 'w-25'"
+          class="cursor"
+        >
+          All&nbsp;({{ occurrences.all }})
+        </th>
+      </tr>
     </thead>
   </table>
 
   <!-- table body scrollable -->
-  <div id="table-nodes" class="scroll-style">
+  <div class="scroll-style" id="table-nodes">
     <table class="table table-borderless text-light">
       <tbody>
-      <ng-container *ngFor="let node of nodes">
-        <tr class="cursor"
+        <ng-container *ngFor="let node of nodes">
+          <tr
+            (click)="nodeClicked.emit(node)"
             [ngClass]="markedNodes.includes(node) ? 'bg-info' : ''"
-            (click)="nodeClicked.emit(node)" >
-          <td class="w-{{ numberOfColumns < 4 ? '50' : '25' }}">
-            {{ node.data.name }}
-          </td>
-          <td class="w-25" *ngIf="subTypeColumnA">
-            {{ node.occ[subTypeColumnA] }}
-          </td>
-          <td class="w-25" *ngIf="subTypeColumnB">
-            {{ node.occ[subTypeColumnB] }}
-          </td>
-          <td [ngClass]="numberOfColumns === 2 ? 'w-50' : 'w-25'">
-            {{ node.occ.all }}
-          </td>
-        </tr>
-      </ng-container>
+            class="cursor"
+          >
+            <td class="w-{{ numberOfColumns < 4 ? '50' : '25' }}">
+              {{ node.data.name }}
+            </td>
+            <td *ngIf="subTypeColumnA" class="w-25">
+              {{ node.occ[subTypeColumnA] }}
+            </td>
+            <td *ngIf="subTypeColumnB" class="w-25">
+              {{ node.occ[subTypeColumnB] }}
+            </td>
+            <td [ngClass]="numberOfColumns === 2 ? 'w-50' : 'w-25'">
+              {{ node.occ.all }}
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>
-
 </ng-container>
 
 <!-- Unselect -->
-<div class="d-grid mt-2" *ngIf="markedNodes && markedNodes.length > 0">
+<div *ngIf="markedNodes && markedNodes.length > 0" class="d-grid mt-2">
   <button (click)="unmarkAllNodes.emit()" class="btn btn-secondary">
     <fa-icon icon="redo"></fa-icon>&nbsp;Unselect all
   </button>

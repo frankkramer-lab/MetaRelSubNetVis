@@ -41,8 +41,7 @@ export class HomeComponent implements OnInit {
 
   lastResultWasEmpty$!: Observable<boolean>;
 
-  constructor(private apiService: ApiService, private store: Store<AppState>) {
-  }
+  constructor(private apiService: ApiService, private store: Store<AppState>) {}
 
   /**
    * By default, we load two exemplary networks - one illustrating the basic data structure,

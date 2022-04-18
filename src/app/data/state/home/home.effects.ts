@@ -98,15 +98,18 @@ export class HomeEffects {
     );
   });
 
-  private showModal() {
-    const modal = this.modalService.open(HomeModalFormatComponent, { size: 'xl', scrollable: true });
-    return from(modal.result);
-  }
-
   constructor(
     private actions$: Actions,
     private store: Store<AppState>,
     private apiService: ApiService,
     private modalService: NgbModal,
   ) {}
+
+  private showModal() {
+    const modal = this.modalService.open(HomeModalFormatComponent, {
+      size: 'xl',
+      scrollable: true,
+    });
+    return from(modal.result);
+  }
 }

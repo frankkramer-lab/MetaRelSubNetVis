@@ -26,16 +26,15 @@ export class GraphComponent implements AfterViewInit {
 
   @Input() sidebarVisible!: ComponentVisibilityEnum | null;
 
+  constructor(private graphService: GraphService) {}
+
   @HostListener('window:resize') onResize() {
     if (this.cyContainer) {
       this.windowHeight = window.innerHeight;
     }
   }
 
-  constructor(private graphService: GraphService) {}
-
   ngAfterViewInit(): void {
     this.graphService.cyContainer = this.cyContainer.nativeElement;
   }
-
 }

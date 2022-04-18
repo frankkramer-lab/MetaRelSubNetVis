@@ -18,8 +18,7 @@ export class ApiService {
    * Constructor
    * @param http Loading network.ts and patient data via HTTP
    */
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    * Query NDEx with a specified keyword
@@ -53,8 +52,8 @@ export class ApiService {
    * @param uuid identifier for the network of interest
    */
   loadNetworkSummary(uuid: string): Observable<NetworkSearchItem> {
-    return this.http.get(`${this.ndexPublicApi}network/${uuid}/summary`) as Observable<NetworkSearchItem>;
+    return this.http.get(
+      `${this.ndexPublicApi}network/${uuid}/summary`,
+    ) as Observable<NetworkSearchItem>;
   }
-
-
 }

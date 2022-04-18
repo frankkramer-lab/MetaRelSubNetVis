@@ -84,7 +84,8 @@ export const selectVisibleNodes = createSelector(
             thresholds.forEach((th) => {
               const propertyName = th.property.name;
 
-              if (nodeProperties.includes(propertyName)) { // only compare to threshold, if this property actually exists
+              if (nodeProperties.includes(propertyName)) {
+                // only compare to threshold, if this property actually exists
 
                 const passes = Number(nodeA[propertyName]) >= th.defined;
 
@@ -117,7 +118,8 @@ export const selectVisibleNodes = createSelector(
             thresholds.forEach((th) => {
               const propertyName = th.property.name;
 
-              if (nodeProperties.includes(propertyName)) { // only compare to threshold, if this property actually exists
+              if (nodeProperties.includes(propertyName)) {
+                // only compare to threshold, if this property actually exists
 
                 const passes = Number(nodeB[propertyName]) >= th.defined;
 

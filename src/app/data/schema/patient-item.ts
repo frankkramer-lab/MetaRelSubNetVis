@@ -15,5 +15,4 @@ export interface PatientItem {
    * All relevant properties have to be defined for a patient
    */
   [key: string]: string;
-
 }

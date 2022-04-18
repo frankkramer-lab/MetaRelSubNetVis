@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { NetworkSearch } from '../schema/network-search';
 import { NetworkSearchItem } from '../schema/network-search-item';
 
@@ -25,18 +25,12 @@ export class ApiService {
    * @param keyword Term that is queried
    */
   searchNdex(keyword: string): Observable<NetworkSearch> {
-    const sanitizedSearchTerm = keyword.trim();
+    const searchString = keyword.trim();
 
-    if (sanitizedSearchTerm.length === 0) {
-      return new Observable<NetworkSearch>((o) => o.next());
-    }
-
-    const body: any = {
-      searchString: sanitizedSearchTerm,
-    };
+    if (searchString.length === 0) return of<NetworkSearch>();
 
     const url = `${this.ndexPublicApi}search/network?size=10`;
-    return this.http.post(url, body) as Observable<NetworkSearch>;
+    return this.http.post<NetworkSearch>(url, { searchString });
   }
 
   /**
@@ -44,7 +38,8 @@ export class ApiService {
    * @param uuid identifier for the network of interest
    */
   loadNetwork(uuid: string): Observable<any[]> {
-    return this.http.get(`${this.ndexPublicApi}network/${uuid}`) as Observable<any[]>;
+    const url = `${this.ndexPublicApi}network/${uuid}`;
+    return this.http.get<any[]>(url);
   }
 
   /**
@@ -52,8 +47,7 @@ export class ApiService {
    * @param uuid identifier for the network of interest
    */
   loadNetworkSummary(uuid: string): Observable<NetworkSearchItem> {
-    return this.http.get(
-      `${this.ndexPublicApi}network/${uuid}/summary`,
-    ) as Observable<NetworkSearchItem>;
+    const url = `${this.ndexPublicApi}network/${uuid}/summary`;
+    return this.http.get<NetworkSearchItem>(url);
   }
 }

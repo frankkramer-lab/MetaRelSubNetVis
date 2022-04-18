@@ -13,7 +13,6 @@
         "plugin:@angular-eslint/template/process-inline-templates",
         "airbnb-base",
         "airbnb-typescript/base",
-        "prettier",
         "plugin:prettier/recommended",
         "plugin:ngrx/recommended"
       ],
@@ -34,7 +33,8 @@
             "style": "kebab-case"
           }
         ],
-        "import/prefer-default-export": "off"
+        "import/prefer-default-export": "off",
+        "ngrx/no-typed-global-store": "off"
       },
       "plugins": ["ngrx"]
     },

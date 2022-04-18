@@ -25,9 +25,10 @@ export class HydratorService {
       // patient-specific properties
       if (attribute.individual_properties) {
         attribute.individual_properties.forEach((ip: any) => {
+          const name = ip.property ?? 'n/a';
           const property: Property = {
-            label: ip.label ?? 'n/a',
-            name: ip.property ?? 'n/a',
+            label: ip.label ?? name,
+            name,
             mapping: ip.mapping ?? null,
             threshold: false,
             type: PropertyTypeEnum.boolean,

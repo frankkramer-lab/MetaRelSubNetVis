@@ -25,7 +25,7 @@
       <td>
         <div *ngFor="let threshold of thresholds" class="row">
           <div class="col-4">
-            <b>{{ threshold.property.label ?? threshold.property.name }}</b
+            <b>{{ threshold.property.label }}</b
             >:
           </div>
           <div class="col-8">approx. {{ threshold.defined | norm: 2 }}</div>
@@ -42,11 +42,11 @@
     </tr>
     <tr>
       <td>Node's color</td>
-      <td>{{ nodesColorBy?.label ?? nodesColorBy?.name }}</td>
+      <td>{{ nodesColorBy?.label }}</td>
     </tr>
     <tr>
       <td>Node's size</td>
-      <td>{{ nodesSizeBy?.label ?? nodesSizeBy?.name }}</td>
+      <td>{{ nodesSizeBy?.label }}</td>
     </tr>
     <tr>
       <td>Show all nodes</td>
@@ -58,7 +58,7 @@
     </tr>
     <tr *ngIf="booleanProperty !== null">
       <td>Mark nodes with property</td>
-      <td>{{ booleanProperty.label ?? booleanProperty.name ?? '-' }}</td>
+      <td>{{ booleanProperty.label }}</td>
     </tr>
   </tbody>
 </table>

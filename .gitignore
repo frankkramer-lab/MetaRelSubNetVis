@@ -44,6 +44,12 @@ testem.log
 # further material
 /R
 
+# Angular's cache
+/.angular
+
+# Package-lock
+package-lock.json
+
 # System Files
 .DS_Store
 Thumbs.db

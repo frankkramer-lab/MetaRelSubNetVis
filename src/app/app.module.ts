@@ -48,7 +48,6 @@ import { environment } from '../environments/environment';
 import { SidebarGeneratorComponent } from './components/sidebar-generator/sidebar-generator.component';
 import { SidebarGeneratorFormComponent } from './components/sidebar-generator-form/sidebar-generator-form.component';
 import { SidebarGeneratorTableComponent } from './components/sidebar-generator-table/sidebar-generator-table.component';
-import { NormPipe } from './core/pipe/norm.pipe';
 import { SidebarGeneratorComponentVisibilityComponent } from './components/sidebar-generator-component-visibility/sidebar-generator-component-visibility.component';
 import { SidebarGeneratorResultComponent } from './components/sidebar-generator-result/sidebar-generator-result.component';
 import { HomeComponent } from './layout/home/home.component';
@@ -62,6 +61,7 @@ import { SidebarThresholdSelectorRangeComponent } from './components/sidebar-thr
 import { SidebarLayoutFormDiscreteComponent } from './components/sidebar-layout-form-discrete/sidebar-layout-form-discrete.component';
 import { SidebarLayoutFormContinuousComponent } from './components/sidebar-layout-form-continuous/sidebar-layout-form-continuous.component';
 import { SidebarLayoutFormBooleanComponent } from './components/sidebar-layout-form-boolean/sidebar-layout-form-boolean.component';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
@@ -82,7 +82,6 @@ import { SidebarLayoutFormBooleanComponent } from './components/sidebar-layout-f
     SidebarGeneratorComponent,
     SidebarGeneratorFormComponent,
     SidebarGeneratorTableComponent,
-    NormPipe,
     SidebarGeneratorComponentVisibilityComponent,
     SidebarGeneratorResultComponent,
     HomeComponent,
@@ -103,6 +102,7 @@ import { SidebarLayoutFormBooleanComponent } from './components/sidebar-layout-f
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
+    CoreModule,
     StoreModule.forRoot(reducers, {}),
     StoreDevtoolsModule.instrument({
       maxAge: 25,

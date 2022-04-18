@@ -17,7 +17,6 @@ import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 })
 export class HydratorService {
   initProperties(metaRelSubNetVis: any[]): Property[] {
-    let properties: Property[] = [];
     const cProperties: Property[] = [];
     const dProperties: Property[] = [];
     const bProperties: Property[] = [];
@@ -33,28 +32,32 @@ export class HydratorService {
             threshold: false,
             type: PropertyTypeEnum.boolean,
           };
-          if (ip.type === 'continuous') {
-            property.type = PropertyTypeEnum.continuous;
-            property.threshold = ip.threshold;
-            property.minA = Number.MAX_SAFE_INTEGER;
-            property.minB = Number.MAX_SAFE_INTEGER;
-            property.maxA = Number.MIN_SAFE_INTEGER;
-            property.maxB = Number.MIN_SAFE_INTEGER;
-            cProperties.push(property);
-          } else if (ip.type === 'discrete') {
-            property.type = PropertyTypeEnum.discrete;
-            dProperties.push(property);
-          } else {
-            property.type = PropertyTypeEnum.boolean;
-            bProperties.push(property);
+
+          if (ip.type) {
+            switch (ip.type) {
+              case 'continuous':
+                property.type = PropertyTypeEnum.continuous;
+                property.threshold = ip.threshold;
+                property.minA = Number.MAX_SAFE_INTEGER;
+                property.minB = Number.MAX_SAFE_INTEGER;
+                property.maxA = Number.MIN_SAFE_INTEGER;
+                property.maxB = Number.MIN_SAFE_INTEGER;
+                cProperties.push(property);
+                break;
+              case 'discrete':
+                property.type = PropertyTypeEnum.discrete;
+                dProperties.push(property);
+                break;
+              default:
+                bProperties.push(property);
+                break;
+            }
           }
         });
       }
     });
 
-    properties = cProperties.concat(dProperties, bProperties);
-
-    return properties;
+    return cProperties.concat(dProperties, bProperties);
   }
 
   hydrateNetworkAttributes(
@@ -69,20 +72,22 @@ export class HydratorService {
     let patientSubtypes: string[] = [];
 
     networkAttributes.forEach((attribute: NodeAttributesItem) => {
-      if (attribute.n === 'PatientGroups') {
-        patientGroups = attribute.v as unknown as string[];
-      }
-      if (attribute.n === 'Patients') {
-        patientNames = attribute.v as unknown as string[];
-      }
-      if (attribute.n === 'PatientSurvivalYears') {
-        patientSurvivalYears = attribute.v as unknown as number[];
-      }
-      if (attribute.n === 'PatientSubtype') {
-        patientSubtypes = attribute.v as unknown as string[];
-      }
-      if (attribute.n === 'name') {
-        labels.push(attribute.v);
+      if (attribute.n) {
+        if (attribute.n === 'PatientGroups') {
+          patientGroups = attribute.v as unknown as string[];
+        }
+        if (attribute.n === 'Patients') {
+          patientNames = attribute.v as unknown as string[];
+        }
+        if (attribute.n === 'PatientSurvivalYears') {
+          patientSurvivalYears = attribute.v as unknown as number[];
+        }
+        if (attribute.n === 'PatientSubtype') {
+          patientSubtypes = attribute.v as unknown as string[];
+        }
+        if (attribute.n === 'name') {
+          labels.push(attribute.v);
+        }
       }
     });
 
@@ -97,7 +102,7 @@ export class HydratorService {
     labels.push(groupLabelA);
     labels.push(groupLabelB);
 
-    for (let i = 0; i < patientGroups.length; i++) {
+    for (let i = 0; i < patientGroups.length; i += 1) {
       const patient: Patient = {
         mfsYears: patientSurvivalYears[i],
         subtype: patientSubtypes[i],
@@ -266,7 +271,7 @@ export class HydratorService {
     });
 
     const typedNodes: NetworkNode[] = [];
-    for (let i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i += 1) {
       const n = nodes[i];
       const node: NetworkNode = {
         data: {
@@ -282,7 +287,7 @@ export class HydratorService {
 
   hydrateEdges(edges: any[]): NetworkEdge[] {
     const typedEdges: NetworkEdge[] = [];
-    for (let i = 0; i < edges.length; i++) {
+    for (let i = 0; i < edges.length; i += 1) {
       const e = edges[i];
       const edge: NetworkEdge = {
         data: {

@@ -75,16 +75,14 @@ export const layoutReducer = createReducer(
     (
       state: LayoutState,
       { showAll, showShared, booleanProperty, nodeSizeBy, nodeColorBy },
-    ): LayoutState => {
-      return {
-        ...state,
-        nodeSizeBy: nodeSizeBy ?? null,
-        nodeColorBy: nodeColorBy ?? null,
-        showAllNodes: showAll && showShared ? false : showAll,
-        showOnlySharedNodes: showShared,
-        booleanProperty,
-      };
-    },
+    ): LayoutState => ({
+      ...state,
+      nodeSizeBy: nodeSizeBy ?? null,
+      nodeColorBy: nodeColorBy ?? null,
+      showAllNodes: showAll && showShared ? false : showAll,
+      showOnlySharedNodes: showShared,
+      booleanProperty,
+    }),
   ),
   on(
     navigateHome,

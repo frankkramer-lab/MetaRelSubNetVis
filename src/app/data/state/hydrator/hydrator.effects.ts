@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
@@ -67,15 +67,14 @@ export class HydratorEffects {
         }
         return setUuid({ uuid: config.uuid });
       }),
-      catchError(() => of(hydrateAbort())),
     );
   });
 
   loadDataNdex$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setUuid),
-      switchMap((action) => {
-        if (action.uuid === null || action.uuid === '') {
+      mergeMap((action) => {
+        if (!action.uuid || action.uuid.trim() === '') {
           return of(loadDataFailure({ uuid: '' }));
         }
 

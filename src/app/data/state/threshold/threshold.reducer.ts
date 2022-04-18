@@ -20,13 +20,14 @@ export const thresholdReducer = createReducer(
   initialState,
   on(loadQueryParams, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: true })),
   on(loadDataFailure, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: false })),
-  on(loadDataSuccess, (state: ThresholdState, { thresholds }): ThresholdState => {
-    return {
+  on(
+    loadDataSuccess,
+    (state: ThresholdState, { thresholds }): ThresholdState => ({
       ...state,
       isLoading: false,
       thresholds,
-    };
-  }),
+    }),
+  ),
   on(
     hydrateThresholdSuccess,
     setAllThresholds,
@@ -36,16 +37,17 @@ export const thresholdReducer = createReducer(
     }),
   ),
   on(setThreshold, (state: ThresholdState, { threshold }): ThresholdState => {
-    const newThresholds: ThresholdDefinition[] = [
-      ...state.thresholds.filter((a) => a.property.name !== threshold.property.name),
+    const index = state.thresholds.findIndex((a) => a.property.name === threshold.property.name);
+
+    const thresholds: ThresholdDefinition[] = [
+      ...state.thresholds.slice(0, index),
+      threshold,
+      ...state.thresholds.slice(index + 1),
     ];
-    const relevantThresholdIndex = state.thresholds.findIndex(
-      (a) => a.property.name === threshold.property.name,
-    );
-    newThresholds.splice(relevantThresholdIndex, 0, threshold);
+
     return {
       ...state,
-      thresholds: newThresholds,
+      thresholds,
     };
   }),
   on(

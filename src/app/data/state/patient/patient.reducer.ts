@@ -35,8 +35,9 @@ export const patientReducer = createReducer(
   initialState,
   on(loadQueryParams, (state: PatientState): PatientState => ({ ...state, isLoading: true })),
   on(loadDataFailure, (state: PatientState): PatientState => ({ ...state, isLoading: false })),
-  on(loadDataSuccess, (state: PatientState, payload): PatientState => {
-    return {
+  on(
+    loadDataSuccess,
+    (state: PatientState, payload): PatientState => ({
       ...state,
       isLoading: false,
       groupA: payload.patients.groupA,
@@ -45,27 +46,25 @@ export const patientReducer = createReducer(
       groupBDetails: payload.patients.detailsB,
       groupALabel: payload.patients.labelA,
       groupBLabel: payload.patients.labelB,
-    };
-  }),
+    }),
+  ),
   on(
     setPatientA,
     hydratePatientAPatientBSuccess,
-    (state: PatientState, { patientA }): PatientState => {
-      if (patientA) {
-        return { ...state, patientA, patientADetails: state.groupADetails[patientA.name] };
-      }
-      return { ...state, patientA, patientADetails: [] };
-    },
+    (state: PatientState, { patientA }): PatientState => ({
+      ...state,
+      patientA,
+      patientADetails: patientA ? state.groupADetails[patientA.name] : [],
+    }),
   ),
   on(
     setPatientB,
     hydratePatientAPatientBSuccess,
-    (state: PatientState, { patientB }): PatientState => {
-      if (patientB) {
-        return { ...state, patientB, patientBDetails: state.groupBDetails[patientB.name] };
-      }
-      return { ...state, patientB, patientBDetails: [] };
-    },
+    (state: PatientState, { patientB }): PatientState => ({
+      ...state,
+      patientB,
+      patientBDetails: patientB ? state.groupBDetails[patientB.name] : [],
+    }),
   ),
   on(
     resetPatientA,

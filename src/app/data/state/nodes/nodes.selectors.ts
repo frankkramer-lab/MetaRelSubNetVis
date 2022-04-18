@@ -21,11 +21,6 @@ export const selectNumberOfColumns = createSelector(
   (state: NodesState) => state.numberOfColumns,
 );
 
-export const selectSortByColumn = createSelector(
-  selectState,
-  (state: NodesState) => state.sortByColumn,
-);
-
 export const selectSubtypeColumnA = createSelector(
   selectState,
   (state: NodesState) => state.subtypeColumnA,
@@ -69,7 +64,7 @@ export const selectVisibleNodes = createSelector(
     ) {
       visibleNodes = [];
       if (patientADetails) {
-        for (const nodeA of patientADetails || []) {
+        patientADetails.forEach((nodeA) => {
           const nodeProperties = Object.keys(nodeA);
           const nodeLabel = nodeA.name;
           const cleanNodeLabel = nodeLabel.trim().toLowerCase();
@@ -99,11 +94,11 @@ export const selectVisibleNodes = createSelector(
               visibleNodes.push(node);
             }
           }
-        }
+        });
       }
 
       if (patientBDetails) {
-        for (const nodeB of patientBDetails || []) {
+        patientBDetails.forEach((nodeB) => {
           const nodeProperties = Object.keys(nodeB);
           const nodeLabel = nodeB.name;
           const cleanNodeLabel = nodeLabel.trim().toLowerCase();
@@ -133,7 +128,7 @@ export const selectVisibleNodes = createSelector(
               visibleNodes.push(node);
             }
           }
-        }
+        });
       }
     } else {
       visibleNodes = [];

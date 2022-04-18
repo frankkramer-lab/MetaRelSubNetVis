@@ -101,19 +101,17 @@ export const sidebarReducer = createReducer(
         cmpImpressumVis,
         backButtonVis,
       },
-    ): SidebarState => {
-      return {
-        ...state,
-        visibility,
-        visibilityPatients: cmpPatientsVis,
-        visibilityThreshold: cmpThresholdVis,
-        visibilityNodes: cmpNodesVis,
-        visibilityLayout: cmpLayoutVis,
-        visibilityDownload: cmpDownloadVis,
-        visibilityGenerator: cmpGeneratorVis,
-        visibilityImpressum: cmpImpressumVis,
-        visibilityBackButton: backButtonVis,
-      };
-    },
+    ): SidebarState => ({
+      ...state,
+      visibility,
+      visibilityPatients: cmpPatientsVis,
+      visibilityThreshold: cmpThresholdVis,
+      visibilityNodes: cmpNodesVis,
+      visibilityLayout: cmpLayoutVis,
+      visibilityDownload: cmpDownloadVis,
+      visibilityGenerator: cmpGeneratorVis,
+      visibilityImpressum: cmpImpressumVis,
+      visibilityBackButton: backButtonVis,
+    }),
   ),
 );

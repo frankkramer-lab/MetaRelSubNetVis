@@ -23,37 +23,37 @@ export const hydratorReducer = createReducer(
     };
 
     // if there is no UUID, none of the config settings are valid
-    if (params.uuid === undefined) {
+    if (!params.uuid || params.uuid.trim() === '') {
       return { ...state, config: null };
     }
 
     config.uuid = params.uuid;
 
-    if (params.sb !== undefined) {
+    if (params.sb !== undefined && params.sb !== null) {
       config.sb = Number(params.sb);
     }
-    if (params.cP !== undefined) {
+    if (params.cP !== undefined && params.cP !== null) {
       config.cP = Number(params.cP);
     }
-    if (params.cT !== undefined) {
+    if (params.cT !== undefined && params.cT !== null) {
       config.cT = Number(params.cT);
     }
-    if (params.cN !== undefined) {
+    if (params.cN !== undefined && params.cN !== null) {
       config.cN = Number(params.cN);
     }
-    if (params.cL !== undefined) {
+    if (params.cL !== undefined && params.cL !== null) {
       config.cL = Number(params.cL);
     }
-    if (params.cD !== undefined) {
+    if (params.cD !== undefined && params.cD !== null) {
       config.cD = Number(params.cD);
     }
-    if (params.cG !== undefined) {
+    if (params.cG !== undefined && params.cG !== null) {
       config.cG = Number(params.cG);
     }
-    if (params.cIm !== undefined) {
+    if (params.cIm !== undefined && params.cIm !== null) {
       config.cIm = Number(params.cIm);
     }
-    if (params.bb !== undefined) {
+    if (params.bb) {
       config.bb = params.bb === 'true';
     }
 
@@ -77,11 +77,11 @@ export const hydratorReducer = createReducer(
       };
     }
 
-    if (params.col !== undefined) {
+    if (params.col) {
       config.col = params.col;
     }
 
-    if (params.size !== undefined) {
+    if (params.size) {
       config.size = params.size;
     }
 
@@ -112,7 +112,7 @@ export const hydratorReducer = createReducer(
     const thresholdKeys = Object.keys(params).filter((a) => a.startsWith('th_'));
 
     thresholdKeys.forEach((key) => {
-      if (params[key] !== undefined) {
+      if (params[key] !== undefined && params[key] !== null) {
         if (!config.th) {
           config.th = {};
         }

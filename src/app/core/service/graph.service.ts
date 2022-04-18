@@ -122,9 +122,6 @@ export class GraphService {
   layoutPatient(
     patientADetails: PatientItem[],
     patientBDetails: PatientItem[],
-    patientGroupA: Patient[] | null,
-    patientGroupB: Patient[] | null,
-    network: Network,
     nodeColorBy: Property | null,
     nodeSizeBy: Property | null,
     showAllNodes: boolean,

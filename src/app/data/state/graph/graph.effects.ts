@@ -4,7 +4,6 @@ import { debounceTime, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { selectNetwork } from '../network/network.selectors';
 import { AppState } from '../app.state';
-import { ApiService } from '../../service/api.service';
 import { GraphService } from '../../../core/service/graph.service';
 
 import {
@@ -12,8 +11,6 @@ import {
   selectPatientADetails,
   selectPatientB,
   selectPatientBDetails,
-  selectPatientGroupA,
-  selectPatientGroupB,
   selectPatientSelection,
 } from '../patient/patient.selectors';
 import { selectMarkedNodes, selectVisibleNodes } from '../nodes/nodes.selectors';
@@ -81,8 +78,6 @@ export class GraphEffects {
       concatLatestFrom(() => [
         this.store.select(selectPatientADetails),
         this.store.select(selectPatientBDetails),
-        this.store.select(selectPatientGroupA),
-        this.store.select(selectPatientGroupB),
         this.store.select(selectNetwork),
         this.store.select(selectNodeColorBy),
         this.store.select(selectNodeSizeBy),
@@ -97,8 +92,6 @@ export class GraphEffects {
           ,
           patientADetails,
           patientBDetails,
-          patientGroupA,
-          patientGroupB,
           network,
           nodeColorBy,
           nodeSizeBy,
@@ -112,9 +105,6 @@ export class GraphEffects {
           this.graphService.layoutPatient(
             patientADetails,
             patientBDetails,
-            patientGroupA,
-            patientGroupB,
-            network,
             nodeColorBy,
             nodeSizeBy,
             showAllNodes,
@@ -209,7 +199,6 @@ export class GraphEffects {
   constructor(
     private actions$: Actions,
     private store: Store<AppState>,
-    private apiService: ApiService,
     private graphService: GraphService,
   ) {}
 }

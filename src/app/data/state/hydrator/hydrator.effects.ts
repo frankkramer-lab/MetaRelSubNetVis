@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
@@ -180,13 +180,13 @@ export class HydratorEffects {
         this.store.select(selectGroupADetails),
         this.store.select(selectGroupBDetails),
       ]),
-      switchMap(([, config, patientsA, patientsB, detailsA, detailsB]) => {
+      map(([, config, patientsA, patientsB, detailsA, detailsB]) => {
         if (!config) {
-          return [hydrateAbort()];
+          return hydrateAbort();
         }
 
         if (!config.pa && !config.pb) {
-          return [hydratePatientAPatientBFailure()];
+          return hydratePatientAPatientBFailure();
         }
 
         let patientA: Patient | null = null;
@@ -203,14 +203,12 @@ export class HydratorEffects {
           patientBDetails = detailsB[config.pb];
         }
 
-        return [
-          hydratePatientAPatientBSuccess({
-            patientA,
-            patientB,
-            patientADetails: patientADetails ?? [],
-            patientBDetails: patientBDetails ?? [],
-          }),
-        ];
+        return hydratePatientAPatientBSuccess({
+          patientA,
+          patientB,
+          patientADetails: patientADetails ?? [],
+          patientBDetails: patientBDetails ?? [],
+        });
       }),
     );
   });

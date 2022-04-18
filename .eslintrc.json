@@ -34,7 +34,8 @@
           }
         ],
         "import/prefer-default-export": "off",
-        "ngrx/no-typed-global-store": "off"
+        "ngrx/no-typed-global-store": "off",
+        "class-methods-use-this": "off"
       },
       "plugins": ["ngrx"]
     },

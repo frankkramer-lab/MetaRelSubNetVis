@@ -87,7 +87,7 @@ export class HomeEffects {
       ofType(showModalFormat),
       exhaustMap(() => {
         return this.showModal().pipe(
-          map((result) => {
+          map(() => {
             return closeModalFormat();
           }),
           catchError(() => {

@@ -62,6 +62,7 @@ import { SidebarLayoutFormDiscreteComponent } from './components/sidebar-layout-
 import { SidebarLayoutFormContinuousComponent } from './components/sidebar-layout-form-continuous/sidebar-layout-form-continuous.component';
 import { SidebarLayoutFormBooleanComponent } from './components/sidebar-layout-form-boolean/sidebar-layout-form-boolean.component';
 import { CoreModule } from './core/core.module';
+import { extModules } from './build-specifics';
 
 @NgModule({
   declarations: [
@@ -104,11 +105,7 @@ import { CoreModule } from './core/core.module';
     AppRoutingModule,
     CoreModule,
     StoreModule.forRoot(reducers, {}),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: environment.production,
-      autoPause: true,
-    }),
+    extModules,
     EffectsModule.forRoot(effects),
     NgbModule,
     FontAwesomeModule,

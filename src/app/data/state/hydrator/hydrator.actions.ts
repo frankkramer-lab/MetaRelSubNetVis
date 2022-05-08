@@ -8,6 +8,7 @@ import { ImageDownloadConfig } from '../../schema/image-download-config';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 import { Property } from '../../schema/property';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
+import { PropertyCollection } from '../../schema/property-collection';
 
 export const loadQueryParams = createAction(
   '[Layout Component] load query params',
@@ -25,7 +26,7 @@ export const loadDataSuccess = createAction(
     patients: PatientCollection;
     thresholds: ThresholdDefinition[];
     headline: string;
-    properties: Property[];
+    properties: PropertyCollection;
     highlightColor: string;
   }>(),
 );

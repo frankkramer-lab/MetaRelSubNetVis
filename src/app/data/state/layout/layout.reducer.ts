@@ -17,14 +17,19 @@ const initialState: LayoutState = {
   showAllNodes: false,
   showOnlySharedNodes: false,
   booleanProperty: null,
-  properties: [],
+  properties: {
+    individual: [],
+    default: [],
+  },
   highlightColor: '#000000',
 };
 
 export const layoutReducer = createReducer(
   initialState,
   on(loadDataSuccess, (state: LayoutState, { properties, highlightColor }): LayoutState => {
-    const firstContinuous = properties.find((a) => a.type === PropertyTypeEnum.continuous);
+    const firstContinuous = properties.individual.find(
+      (a) => a.type === PropertyTypeEnum.continuous,
+    );
     return {
       ...state,
       properties,

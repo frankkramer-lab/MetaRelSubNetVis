@@ -31,7 +31,15 @@ export const selectActiveBooleanProperty = createSelector(
 );
 export const selectProperties = createSelector(
   selectState,
-  (state: LayoutState) => state.properties,
+  (state: LayoutState) => state.properties
+);
+export const selectPropertiesIndividual = createSelector(
+  selectState,
+  (state: LayoutState) => state.properties.individual,
+);
+export const selectPropertiesDefault = createSelector(
+  selectState,
+  (state: LayoutState) => state.properties.individual,
 );
 
 export const selectHighlightColor = createSelector(

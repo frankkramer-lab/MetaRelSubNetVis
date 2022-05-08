@@ -52,8 +52,9 @@ import { HydratorService } from '../../../core/service/hydrator.service';
 import { Network } from '../../schema/network';
 import { setUuid } from '../network/network.actions';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
-import { selectProperties } from '../layout/layout.selectors';
+import { selectPropertiesIndividual } from '../layout/layout.selectors';
 import { PropertyTypeEnum } from '../../../core/enum/property-type-enum';
+import { Property } from '../../schema/property';
 
 @Injectable()
 export class HydratorEffects {
@@ -218,7 +219,7 @@ export class HydratorEffects {
       ofType(hydratePatientAPatientBSuccess, hydratePatientAPatientBFailure),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
-        this.store.select(selectProperties),
+        this.store.select(selectPropertiesIndividual),
       ]),
       map(([, config, properties]) => {
         if (!config || !config.th) return hydrateThresholdFailure();
@@ -228,7 +229,7 @@ export class HydratorEffects {
         Object.entries(config.th).forEach(([key, value]) => {
           const numericValue = Number(value);
           const property = properties.find(
-            (a) => a.name === key && a.type === PropertyTypeEnum.continuous,
+            (a: Property) => a.name === key && a.type === PropertyTypeEnum.continuous,
           );
 
           if (property && !Number.isNaN(numericValue)) {
@@ -249,21 +250,21 @@ export class HydratorEffects {
       ofType(hydrateThresholdSuccess, hydrateThresholdFailure),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
-        this.store.select(selectProperties),
+        this.store.select(selectPropertiesIndividual),
       ]),
       map(([, config, properties]) => {
         if (!config || (!config.shared && !config.all && !config.col && !config.size))
           return hydrateLayoutFailure();
 
         const booleanProperty = properties.find(
-          (a) => a.name === config.bool && a.type === PropertyTypeEnum.boolean,
+          (a: Property) => a.name === config.bool && a.type === PropertyTypeEnum.boolean,
         );
 
         const colProperty = properties.find(
-          (a) => a.name === config.col && a.type !== PropertyTypeEnum.boolean,
+          (a: Property) => a.name === config.col && a.type !== PropertyTypeEnum.boolean,
         );
         const sizeProperty = properties.find(
-          (a) => a.name === config.size && a.type !== PropertyTypeEnum.boolean,
+          (a: Property) => a.name === config.size && a.type !== PropertyTypeEnum.boolean,
         );
 
         return hydrateLayoutSuccess({

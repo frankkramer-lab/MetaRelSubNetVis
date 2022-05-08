@@ -11,54 +11,67 @@ import { NetworkOccurrences } from '../../data/schema/network-occurrences';
 import { Property } from '../../data/schema/property';
 import { PropertyTypeEnum } from '../enum/property-type-enum';
 import { ThresholdDefinition } from '../../data/schema/threshold-definition';
+import { PropertyCollection } from '../../data/schema/property-collection';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HydratorService {
-  initProperties(metaRelSubNetVis: any[]): Property[] {
+  private extractProperties(input: any[]): Property[] {
     const cProperties: Property[] = [];
     const dProperties: Property[] = [];
     const bProperties: Property[] = [];
 
+    input.forEach((p: any) => {
+      const name = p.property ?? 'n/a';
+      const property: Property = {
+        label: p.label ?? name,
+        name,
+        mapping: p.mapping ?? null,
+        threshold: false,
+        type: PropertyTypeEnum.boolean,
+      };
+
+      if (p.type) {
+        switch (p.type) {
+          case 'continuous':
+            property.type = PropertyTypeEnum.continuous;
+            property.threshold = p.threshold;
+            property.minA = Number.MAX_SAFE_INTEGER;
+            property.minB = Number.MAX_SAFE_INTEGER;
+            property.maxA = Number.MIN_SAFE_INTEGER;
+            property.maxB = Number.MIN_SAFE_INTEGER;
+            cProperties.push(property);
+            break;
+          case 'discrete':
+            property.type = PropertyTypeEnum.discrete;
+            dProperties.push(property);
+            break;
+          default:
+            bProperties.push(property);
+            break;
+        }
+      }
+    });
+    return cProperties.concat(dProperties, bProperties);
+  }
+
+  initProperties(metaRelSubNetVis: any[]): PropertyCollection {
+    const collection: PropertyCollection = {
+      default: [],
+      individual: [],
+    };
     metaRelSubNetVis.forEach((attribute: any) => {
       // patient-specific properties
       if (attribute.individual_properties) {
-        attribute.individual_properties.forEach((ip: any) => {
-          const name = ip.property ?? 'n/a';
-          const property: Property = {
-            label: ip.label ?? name,
-            name,
-            mapping: ip.mapping ?? null,
-            threshold: false,
-            type: PropertyTypeEnum.boolean,
-          };
-
-          if (ip.type) {
-            switch (ip.type) {
-              case 'continuous':
-                property.type = PropertyTypeEnum.continuous;
-                property.threshold = ip.threshold;
-                property.minA = Number.MAX_SAFE_INTEGER;
-                property.minB = Number.MAX_SAFE_INTEGER;
-                property.maxA = Number.MIN_SAFE_INTEGER;
-                property.maxB = Number.MIN_SAFE_INTEGER;
-                cProperties.push(property);
-                break;
-              case 'discrete':
-                property.type = PropertyTypeEnum.discrete;
-                dProperties.push(property);
-                break;
-              default:
-                bProperties.push(property);
-                break;
-            }
-          }
-        });
+        collection.individual = this.extractProperties(attribute.individual_properties);
+      }
+      // default properties
+      if (attribute.properties) {
+        collection.default = this.extractProperties(attribute.properties);
       }
     });
-
-    return cProperties.concat(dProperties, bProperties);
+    return collection;
   }
 
   hydrateNetworkAttributes(
@@ -122,7 +135,7 @@ export class HydratorService {
     nodeAttributes: any,
     patientCollection: PatientCollection,
     nodesDictionary: any,
-    properties: Property[],
+    properties: PropertyCollection,
   ) {
     const patients = { ...patientCollection };
 
@@ -144,7 +157,7 @@ export class HydratorService {
         }
         const relevantDetail = patientDetailItemA[patient.name].find((a) => a.name === proteinName);
         if (relevantDetail) {
-          properties.forEach((property: Property) => {
+          properties.individual.forEach((property: Property) => {
             if (detail.n.endsWith(property.name)) {
               // this nodeAttribute relates to this property
               relevantDetail[property.name] = detail.v;
@@ -185,7 +198,7 @@ export class HydratorService {
         }
         const relevantDetail = patientDetailItemB[patient.name].find((a) => a.name === proteinName);
         if (relevantDetail) {
-          properties.forEach((property: Property) => {
+          properties.individual.forEach((property: Property) => {
             if (detail.n.endsWith(property.name)) {
               // this nodeAttribute relates to this property
               relevantDetail[property.name] = detail.v;
@@ -319,8 +332,10 @@ export class HydratorService {
     return occurrences;
   }
 
-  hydrateThresholds(properties: Property[]): ThresholdDefinition[] {
-    const availableProperties = properties.filter((a) => a.type === PropertyTypeEnum.continuous);
+  hydrateThresholds(properties: PropertyCollection): ThresholdDefinition[] {
+    const availableProperties = properties.individual.filter(
+      (a) => a.type === PropertyTypeEnum.continuous,
+    );
     const validProperties = availableProperties.filter((a) => a.threshold);
 
     const thresholds: ThresholdDefinition[] = [];

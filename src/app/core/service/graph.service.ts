@@ -14,6 +14,7 @@ import { Property } from '../../data/schema/property';
 import { PropertyTypeEnum } from '../enum/property-type-enum';
 import { UtilService } from './util.service';
 import { NetworkColors } from '../../data/schema/network-colors';
+import { PropertyCollection } from '../../data/schema/property-collection';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +46,7 @@ export class GraphService {
    * @param properties List of properties that can be used for visualization
    * @param highlightColor Hex encoded color used for highlighting a node within the network
    */
-  initializeCore(network: Network, properties: Property[], highlightColor: string): void {
+  initializeCore(network: Network, properties: PropertyCollection, highlightColor: string): void {
     const networkCopy = JSON.parse(JSON.stringify(network)) as ElementsDefinition;
 
     this.colors.highlight = highlightColor;
@@ -128,11 +129,11 @@ export class GraphService {
     showOnlySharedNodes: boolean,
     booleanProperty: Property | null,
     visibleNodes: NetworkNode[],
-    properties: Property[],
+    properties: PropertyCollection,
   ) {
     this.updateBooleanProperty(booleanProperty, properties);
     const visibleNodesIds: string[] = visibleNodes.map((a) => a.data.id.toString());
-    const boolProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
+    const boolProperties = properties.individual.filter((a) => a.type === PropertyTypeEnum.boolean);
 
     if (
       patientADetails &&
@@ -154,6 +155,7 @@ export class GraphService {
       this.visualizeOne(patientBDetails, nodeSizeBy, nodeColorBy, visibleNodesIds, boolProperties);
     } else {
       this.clear(boolProperties);
+      this.visualizeDefault();
       this.cyCore.elements('node').data('shown', true);
     }
     const patientSelected =
@@ -277,7 +279,7 @@ export class GraphService {
    * Returns the network.ts's default style
    * @param properties List of properties
    */
-  private getStyle(properties: Property[]): any[] {
+  private getStyle(properties: PropertyCollection): any[] {
     const style: any[] = [
       // default
       {
@@ -359,7 +361,7 @@ export class GraphService {
     ];
 
     // adding bool mappings
-    properties.forEach((property: Property) => {
+    properties.individual.forEach((property: Property) => {
       if (property.type === PropertyTypeEnum.boolean) {
         const key = Object.keys(property.mapping)[0];
         const selector = key === 'true' ? `node.${property.name}` : `node[!${property.name}]`;
@@ -564,6 +566,10 @@ export class GraphService {
     });
   }
 
+  private visualizeDefault(): void {
+    // todo
+  }
+
   /**
    * Applies a continuous coloring style to nodes
    * @param property
@@ -727,8 +733,11 @@ export class GraphService {
    * @param booleanProperty Active property that borders single nodes
    * @param properties List of properties
    */
-  private updateBooleanProperty(booleanProperty: Property | null, properties: Property[]): void {
-    const booleanProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
+  private updateBooleanProperty(
+    booleanProperty: Property | null,
+    properties: PropertyCollection,
+  ): void {
+    const booleanProperties = properties.individual.filter((a) => a.type === PropertyTypeEnum.boolean);
     booleanProperties.forEach((property) => {
       this.cyCore
         .style()

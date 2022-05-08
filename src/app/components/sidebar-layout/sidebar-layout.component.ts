@@ -7,7 +7,7 @@ import {
   selectGradient,
   selectNodeColorBy,
   selectNodeSizeBy,
-  selectProperties,
+  selectPropertiesIndividual,
   selectShowAllNodes,
   selectShowOnlySharedNodes,
 } from '../../data/state/layout/layout.selectors';
@@ -55,7 +55,7 @@ export class SidebarLayoutComponent implements OnInit {
     this.booleanProperty$ = this.store.select(selectActiveBooleanProperty);
     this.gradient$ = this.store.select(selectGradient);
     this.showOnlySharedNodes$ = this.store.select(selectShowOnlySharedNodes);
-    this.properties$ = this.store.select(selectProperties);
+    this.properties$ = this.store.select(selectPropertiesIndividual);
   }
 
   setNodeColorBy(nodeColorBy: Property | null) {

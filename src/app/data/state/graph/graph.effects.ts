@@ -89,18 +89,18 @@ export class GraphEffects {
       ]),
       map(
         ([
-          ,
-          patientADetails,
-          patientBDetails,
-          network,
-          nodeColorBy,
-          nodeSizeBy,
-          showAllNodes,
-          showOnlySharedNodes,
-          booleanProperty,
-          visibleNodes,
-          properties,
-        ]) => {
+           ,
+           patientADetails,
+           patientBDetails,
+           network,
+           nodeColorBy,
+           nodeSizeBy,
+           showAllNodes,
+           showOnlySharedNodes,
+           booleanProperty,
+           visibleNodes,
+           properties,
+         ]) => {
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
             patientADetails,
@@ -200,5 +200,6 @@ export class GraphEffects {
     private actions$: Actions,
     private store: Store<AppState>,
     private graphService: GraphService,
-  ) {}
+  ) {
+  }
 }

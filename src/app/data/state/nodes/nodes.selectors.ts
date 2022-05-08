@@ -5,7 +5,7 @@ import { selectNodes } from '../network/network.selectors';
 import { NetworkNode } from '../../schema/network-node';
 import { SortByEnum } from '../../../core/enum/sort-by.enum';
 import { selectPatientADetails, selectPatientBDetails } from '../patient/patient.selectors';
-import { PatientItem } from '../../schema/patient-item';
+import { AttributeItem } from '../../schema/attribute-item';
 import { selectThresholds } from '../threshold/threshold.selectors';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
 
@@ -50,8 +50,8 @@ export const selectVisibleNodes = createSelector(
   selectThresholds,
   (
     nodes: NetworkNode[],
-    patientADetails: PatientItem[] | null,
-    patientBDetails: PatientItem[] | null,
+    patientADetails: AttributeItem[] | null,
+    patientBDetails: AttributeItem[] | null,
     filterTerm: string | null,
     nodesState: NodesState,
     thresholds: ThresholdDefinition[],

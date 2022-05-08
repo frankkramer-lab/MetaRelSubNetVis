@@ -6,7 +6,7 @@ import { CollectionReturnValue, ElementsDefinition } from 'cytoscape';
 import { NetworkNode } from '../../data/schema/network-node';
 import { Network } from '../../data/schema/network';
 import { Patient } from '../../data/schema/patient';
-import { PatientItem } from '../../data/schema/patient-item';
+import { AttributeItem } from '../../data/schema/attribute-item';
 import { PatientSelectionEnum } from '../enum/patient-selection-enum';
 import { ImageDownloadConfig } from '../../data/schema/image-download-config';
 import { NetworkLayer } from '../../data/schema/network-layer';
@@ -121,8 +121,8 @@ export class GraphService {
    * Triggers the layout for zero, one or two selected patients depending on the user input.
    */
   layoutPatient(
-    patientADetails: PatientItem[],
-    patientBDetails: PatientItem[],
+    patientADetails: AttributeItem[],
+    patientBDetails: AttributeItem[],
     nodeColorBy: Property | null,
     nodeSizeBy: Property | null,
     showAllNodes: boolean,
@@ -130,6 +130,7 @@ export class GraphService {
     booleanProperty: Property | null,
     visibleNodes: NetworkNode[],
     properties: PropertyCollection,
+    defaultAttributes: AttributeItem[],
   ) {
     this.updateBooleanProperty(booleanProperty, properties);
     const visibleNodesIds: string[] = visibleNodes.map((a) => a.data.id.toString());
@@ -155,7 +156,12 @@ export class GraphService {
       this.visualizeOne(patientBDetails, nodeSizeBy, nodeColorBy, visibleNodesIds, boolProperties);
     } else {
       this.clear(boolProperties);
-      this.visualizeDefault();
+      this.visualizeDefault(
+        properties.default,
+        defaultAttributes,
+        nodeSizeBy,
+        nodeColorBy,
+      );
       this.cyCore.elements('node').data('shown', true);
     }
     const patientSelected =
@@ -425,8 +431,8 @@ export class GraphService {
    * @private
    */
   private visualizeTwo(
-    patientADetails: PatientItem[] | null,
-    patientBDetails: PatientItem[] | null,
+    patientADetails: AttributeItem[] | null,
+    patientBDetails: AttributeItem[] | null,
     nodeColorBy: Property | null,
     visibleNodes: string[],
     boolProperties: Property[],
@@ -452,7 +458,7 @@ export class GraphService {
         }
       }
 
-      (patientADetails || []).forEach((data: PatientItem) => {
+      (patientADetails || []).forEach((data: AttributeItem) => {
         if (visibleNodes.includes(data.id)) {
           const node = this.cyCore
             .nodes()
@@ -463,8 +469,8 @@ export class GraphService {
             .data(
               'colorA',
               nodeColorBy?.type === PropertyTypeEnum.continuous
-                ? Number(data[color as keyof PatientItem])
-                : data[color as keyof PatientItem],
+                ? Number(data[color as keyof AttributeItem])
+                : data[color as keyof AttributeItem],
             );
 
           boolProperties.forEach((property) => {
@@ -476,7 +482,7 @@ export class GraphService {
       });
 
       // loop non-metastatic patient data
-      (patientBDetails || []).forEach((data: PatientItem) => {
+      (patientBDetails || []).forEach((data: AttributeItem) => {
         if (visibleNodes.includes(data.id)) {
           const node = this.cyCore
             .nodes()
@@ -487,8 +493,8 @@ export class GraphService {
             .data(
               'colorB',
               nodeColorBy?.type === PropertyTypeEnum.continuous
-                ? Number(data[color as keyof PatientItem])
-                : data[color as keyof PatientItem],
+                ? Number(data[color as keyof AttributeItem])
+                : data[color as keyof AttributeItem],
             );
 
           boolProperties.forEach((property) => {
@@ -511,7 +517,7 @@ export class GraphService {
    * @private
    */
   private visualizeOne(
-    patientDetails: PatientItem[],
+    patientDetails: AttributeItem[],
     nodeSizeBy: Property | null,
     nodeColorBy: Property | null,
     visibleNodes: string[],
@@ -541,19 +547,19 @@ export class GraphService {
         }
       }
 
-      (patientDetails || []).forEach((data: PatientItem) => {
+      (patientDetails || []).forEach((data: AttributeItem) => {
         if (visibleNodes.includes(data.id)) {
           const node = this.cyCore
             .nodes()
             .getElementById(data.id.toString())
             .data('member', true)
             .data('shown', true)
-            .data('size', Number(data[size as keyof PatientItem]))
+            .data('size', Number(data[size as keyof AttributeItem]))
             .data(
               'color',
               nodeColorBy?.type === PropertyTypeEnum.continuous
-                ? Number(data[color as keyof PatientItem])
-                : data[color as keyof PatientItem],
+                ? Number(data[color as keyof AttributeItem])
+                : data[color as keyof AttributeItem],
             );
 
           boolProperties.forEach((property) => {
@@ -566,8 +572,56 @@ export class GraphService {
     });
   }
 
-  private visualizeDefault(): void {
-    // todo
+  private visualizeDefault(
+    properties: Property[],
+    defaultAttributes: AttributeItem[],
+    nodeSizeBy: Property | null,
+    nodeColorBy: Property | null,
+  ): void {
+    const boolProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
+    this.cyCore.batch(() => {
+      this.clear(boolProperties);
+
+      const size = nodeSizeBy?.name;
+      if (nodeSizeBy !== null) {
+        this.setSizeMap(nodeSizeBy);
+      }
+      const color = nodeColorBy?.name;
+      if (nodeColorBy !== null) {
+        switch (nodeColorBy.type) {
+          case PropertyTypeEnum.continuous:
+            this.setColorContinuous(nodeColorBy);
+            break;
+          case PropertyTypeEnum.discrete:
+            this.setColorDiscrete(nodeColorBy);
+            break;
+          default:
+            console.log(
+              `Coloring is only valid for a discrete or continuous property! Got ${nodeColorBy.name} with type ${nodeColorBy.type}`,
+            );
+        }
+      }
+
+      defaultAttributes.forEach((data: AttributeItem) => {
+        const node = this.cyCore
+          .nodes()
+          .getElementById(data.id)
+          .data('member', true)
+          .data('shown', true)
+          .data('size', Number(data[size as keyof AttributeItem]))
+          .data(
+            'color',
+            nodeColorBy?.type === PropertyTypeEnum.continuous
+              ? Number(data[color as keyof AttributeItem])
+              : data[color as keyof AttributeItem],
+          );
+        boolProperties.forEach((property) => {
+          if (node && data[property.name]) {
+            node.addClass(property.name);
+          }
+        });
+      });
+    });
   }
 
   /**
@@ -737,7 +791,9 @@ export class GraphService {
     booleanProperty: Property | null,
     properties: PropertyCollection,
   ): void {
-    const booleanProperties = properties.individual.filter((a) => a.type === PropertyTypeEnum.boolean);
+    const booleanProperties = properties.individual.filter(
+      (a) => a.type === PropertyTypeEnum.boolean,
+    );
     booleanProperties.forEach((property) => {
       this.cyCore
         .style()

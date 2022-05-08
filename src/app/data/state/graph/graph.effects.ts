@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { debounceTime, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { selectNetwork } from '../network/network.selectors';
+import { selectNetwork, selectNodeAttributes } from '../network/network.selectors';
 import { AppState } from '../app.state';
 import { GraphService } from '../../../core/service/graph.service';
 
@@ -86,21 +86,23 @@ export class GraphEffects {
         this.store.select(selectActiveBooleanProperty),
         this.store.select(selectVisibleNodes),
         this.store.select(selectProperties),
+        this.store.select(selectNodeAttributes),
       ]),
       map(
         ([
-           ,
-           patientADetails,
-           patientBDetails,
-           network,
-           nodeColorBy,
-           nodeSizeBy,
-           showAllNodes,
-           showOnlySharedNodes,
-           booleanProperty,
-           visibleNodes,
-           properties,
-         ]) => {
+          ,
+          patientADetails,
+          patientBDetails,
+          network,
+          nodeColorBy,
+          nodeSizeBy,
+          showAllNodes,
+          showOnlySharedNodes,
+          booleanProperty,
+          visibleNodes,
+          properties,
+          defaultAttributes,
+        ]) => {
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
             patientADetails,
@@ -112,6 +114,7 @@ export class GraphEffects {
             booleanProperty,
             visibleNodes,
             properties,
+            defaultAttributes,
           );
           return renderingSuccess();
         },
@@ -200,6 +203,5 @@ export class GraphEffects {
     private actions$: Actions,
     private store: Store<AppState>,
     private graphService: GraphService,
-  ) {
-  }
+  ) {}
 }

@@ -37,7 +37,7 @@ import {
   selectPatientGroupB,
 } from '../patient/patient.selectors';
 import { Patient } from '../../schema/patient';
-import { PatientItem } from '../../schema/patient-item';
+import { AttributeItem } from '../../schema/attribute-item';
 import { selectNodes } from '../network/network.selectors';
 import { markingNodesSuccess, renderingSuccess } from '../graph/graph.actions';
 import { triggerImageDownload } from '../download/download.actions';
@@ -89,6 +89,8 @@ export class HydratorEffects {
             let metaRelSubNetVis: any;
             const labels: string[] = [];
 
+            console.log(data);
+
             (data as any[]).forEach((aspect) => {
               if (aspect.nodes) {
                 nodesRaw = aspect.nodes;
@@ -98,6 +100,15 @@ export class HydratorEffects {
               }
               if (aspect.nodeAttributes) {
                 nodeAttributes = aspect.nodeAttributes;
+
+                // todo remove
+                const defaultNa = (nodeAttributes as any[]).filter(
+                  (a: any) => !a.n.startsWith('GSM'),
+                );
+                const sigNa = (nodeAttributes as any[]).filter((a: any) => a.n.startsWith('sig'));
+                console.log(defaultNa);
+                console.log(sigNa);
+                console.log(nodeAttributes.length);
               }
               if (aspect.edges) {
                 edgesRaw = aspect.edges;
@@ -149,6 +160,12 @@ export class HydratorEffects {
               return loadDataFailure({ uuid: action.uuid ?? '' });
             }
 
+            const defaultAttributes = this.hydratorService.hydrateDefaultAttributes(
+              nodeAttributes,
+              nodesDictionary,
+              properties,
+            );
+
             network.occ = this.hydratorService.hydrateOccurrences(patients);
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
             network.edges = this.hydratorService.hydrateEdges(edgesRaw);
@@ -163,6 +180,7 @@ export class HydratorEffects {
               headline: labels[0],
               properties,
               highlightColor,
+              defaultAttributes,
             });
           }),
           catchError(() => of(loadDataFailure({ uuid: action.uuid ?? '' }))),
@@ -192,8 +210,8 @@ export class HydratorEffects {
 
         let patientA: Patient | null = null;
         let patientB: Patient | null = null;
-        let patientADetails: PatientItem[] | null = null;
-        let patientBDetails: PatientItem[] | null = null;
+        let patientADetails: AttributeItem[] | null = null;
+        let patientBDetails: AttributeItem[] | null = null;
 
         if (config.pa) {
           patientA = patientsA.find((a) => a.name === config.pa) ?? null;

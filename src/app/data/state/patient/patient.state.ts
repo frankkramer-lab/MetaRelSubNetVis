@@ -1,5 +1,5 @@
 import { Patient } from '../../schema/patient';
-import { PatientItem } from '../../schema/patient-item';
+import { AttributeItem } from '../../schema/attribute-item';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import { PatientDetails } from '../../schema/patient-details';
 
@@ -12,8 +12,8 @@ export interface PatientState {
   groupBDetails: PatientDetails;
   patientA: Patient | null;
   patientB: Patient | null;
-  patientADetails: PatientItem[];
-  patientBDetails: PatientItem[];
+  patientADetails: AttributeItem[];
+  patientBDetails: AttributeItem[];
   patientSelection: PatientSelectionEnum;
   isLoading: boolean;
 }

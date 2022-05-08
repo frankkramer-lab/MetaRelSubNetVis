@@ -27,7 +27,7 @@ const initialState: LayoutState = {
 export const layoutReducer = createReducer(
   initialState,
   on(loadDataSuccess, (state: LayoutState, { properties, highlightColor }): LayoutState => {
-    const firstContinuous = properties.individual.find(
+    const firstContinuous = properties.default.find(
       (a) => a.type === PropertyTypeEnum.continuous,
     );
     return {

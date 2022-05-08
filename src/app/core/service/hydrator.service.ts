@@ -3,7 +3,7 @@ import { NodeAttributesItem } from '../../data/schema/node-attributes-item';
 import { Patient } from '../../data/schema/patient';
 import { PatientCollection } from '../../data/schema/patient-collection';
 import { PatientDetails } from '../../data/schema/patient-details';
-import { PatientItem } from '../../data/schema/patient-item';
+import { AttributeItem } from '../../data/schema/attribute-item';
 import { NodeRaw } from '../../data/schema/node-raw';
 import { NetworkEdge } from '../../data/schema/network-edge';
 import { NetworkNode } from '../../data/schema/network-node';
@@ -131,6 +131,49 @@ export class HydratorService {
     return patientSubtypes;
   }
 
+  hydrateDefaultAttributes(
+    nodeAttributes: any[],
+    nodesDictionary: any,
+    properties: PropertyCollection,
+  ): AttributeItem[] {
+    const attributes: AttributeItem[] = [];
+
+    nodeAttributes.forEach((attribute: NodeAttributesItem) => {
+      const proteinName = nodesDictionary[attribute.po];
+      const property = properties.default.find((a) => a.name === attribute.n);
+
+      if (property && property.name === attribute.n) {
+        let item = attributes.find((a) => a.name === proteinName);
+
+        if (item === undefined) {
+          item = {
+            name: proteinName,
+            id: attribute.po.toString(),
+          };
+          item[attribute.n] = attribute.v;
+          attributes.push(item);
+        } else {
+          item[attribute.n] = attribute.v;
+        }
+
+        if (property.type === PropertyTypeEnum.continuous) {
+          // update this property's min and max
+          const numericDetailValue = Number(attribute.v);
+          if (!Number.isNaN(numericDetailValue) && property.maxA && property.minA) {
+            if (property.maxA < numericDetailValue) {
+              property.maxA = numericDetailValue;
+            }
+            if (property.minA > numericDetailValue) {
+              property.minA = numericDetailValue;
+            }
+          }
+        }
+      }
+    });
+
+    return attributes;
+  }
+
   hydrateNodeAttributes(
     nodeAttributes: any,
     patientCollection: PatientCollection,
@@ -141,7 +184,7 @@ export class HydratorService {
 
     const patientDetailItemA: PatientDetails = {};
     patients.groupA.forEach((patient) => {
-      patientDetailItemA[patient.name] = [] as PatientItem[];
+      patientDetailItemA[patient.name] = [] as AttributeItem[];
 
       const patientDetailsRaw: NodeAttributesItem[] = nodeAttributes.filter(
         (a: NodeAttributesItem) => a.n.startsWith(patient.name),
@@ -182,7 +225,7 @@ export class HydratorService {
 
     const patientDetailItemB: PatientDetails = {};
     patients.groupB.forEach((patient) => {
-      patientDetailItemB[patient.name] = [] as PatientItem[];
+      patientDetailItemB[patient.name] = [] as AttributeItem[];
 
       const patientDetailsRaw: NodeAttributesItem[] = nodeAttributes.filter(
         (a: NodeAttributesItem) => a.n.startsWith(patient.name),

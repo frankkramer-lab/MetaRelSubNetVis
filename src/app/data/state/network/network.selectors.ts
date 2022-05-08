@@ -18,6 +18,11 @@ export const selectIsLoading = createSelector(
   selectState,
   (state: NetworkState) => state.isLoading,
 );
+export const selectNodeAttributes = createSelector(
+  selectState,
+  (state: NetworkState) => state.nodeAttributes,
+);
+
 export const selectNodes = createSelector(selectNetwork, (network: Network | null) => {
   return network?.nodes || [];
 });

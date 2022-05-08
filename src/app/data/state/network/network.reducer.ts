@@ -9,6 +9,7 @@ const initialState: NetworkState = {
   isLoading: false,
   headline: null,
   uuid: null,
+  nodeAttributes: [],
 };
 
 export const networkReducer = createReducer(
@@ -24,11 +25,12 @@ export const networkReducer = createReducer(
   on(loadQueryParams, (state: NetworkState): NetworkState => ({ ...state, isLoading: true })),
   on(
     loadDataSuccess,
-    (state: NetworkState, { network, headline }): NetworkState => ({
+    (state: NetworkState, { network, headline, defaultAttributes }): NetworkState => ({
       ...state,
       isLoading: false,
       headline,
       network,
+      nodeAttributes: defaultAttributes,
     }),
   ),
   on(loadDataFailure, (state: NetworkState): NetworkState => ({ ...state, isLoading: false })),

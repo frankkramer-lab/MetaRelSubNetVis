@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
 import { Property } from '../../data/schema/property';
+import { PropertyCollection } from '../../data/schema/property-collection';
 
 @Component({
   selector: 'app-sidebar-layout-form',
@@ -22,7 +23,7 @@ export class SidebarLayoutFormComponent {
 
   @Input() showOnlySharedNodes!: boolean | null;
 
-  @Input() properties!: Property[] | null;
+  @Input() properties!: PropertyCollection | null;
 
   @Output() booleanPropertyChanged: EventEmitter<Property | null> =
     new EventEmitter<Property | null>();

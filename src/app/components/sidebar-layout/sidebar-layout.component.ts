@@ -6,7 +6,7 @@ import {
   selectActiveBooleanProperty,
   selectGradient,
   selectNodeColorBy,
-  selectNodeSizeBy,
+  selectNodeSizeBy, selectProperties,
   selectPropertiesIndividual,
   selectShowAllNodes,
   selectShowOnlySharedNodes,
@@ -22,6 +22,7 @@ import {
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
 import { selectPatientSelection } from '../../data/state/patient/patient.selectors';
 import { Property } from '../../data/schema/property';
+import { PropertyCollection } from '../../data/schema/property-collection';
 
 @Component({
   selector: 'app-sidebar-layout',
@@ -43,7 +44,7 @@ export class SidebarLayoutComponent implements OnInit {
 
   showOnlySharedNodes$!: Observable<boolean>;
 
-  properties$!: Observable<Property[]>;
+  properties$!: Observable<PropertyCollection>;
 
   constructor(private store: Store<AppState>) {}
 
@@ -55,7 +56,7 @@ export class SidebarLayoutComponent implements OnInit {
     this.booleanProperty$ = this.store.select(selectActiveBooleanProperty);
     this.gradient$ = this.store.select(selectGradient);
     this.showOnlySharedNodes$ = this.store.select(selectShowOnlySharedNodes);
-    this.properties$ = this.store.select(selectPropertiesIndividual);
+    this.properties$ = this.store.select(selectProperties);
   }
 
   setNodeColorBy(nodeColorBy: Property | null) {

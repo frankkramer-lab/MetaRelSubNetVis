@@ -68,7 +68,7 @@ export const selectGradient = createSelector(selectState, (state: LayoutState) =
 
   keysSorted.forEach((rawKey, index: number) => {
     const key: number = Number(rawKey);
-    const item = unsorted[key];
+    const item = unsorted[rawKey];
 
     const width = Math.round(((key - predecessor) / range) * 100);
     cumulative += width;

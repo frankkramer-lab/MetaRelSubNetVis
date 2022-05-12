@@ -191,8 +191,8 @@ export class HydratorService {
 
         if (property.type === PropertyTypeEnum.continuous) {
           // update this property's min and max
-          property.maxA = HydratorService.updateMax(property.maxA, attribute.v);
-          property.minA = HydratorService.updateMin(property.minA, attribute.v);
+          property.max = HydratorService.updateMax(property.max, attribute.v);
+          property.min = HydratorService.updateMin(property.min, attribute.v);
         }
       }
     });

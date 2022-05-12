@@ -1,39 +1,7 @@
-<ng-container *ngIf="patientSelection === 0 then defaultTemplate; else individualTemplate"></ng-container>
-
-<ng-template #defaultTemplate>
-  <ng-container *ngFor="let property of properties?.default; let propertyId = index">
-    <app-sidebar-layout-form-continuous
-      (propertyClicked)="nodeColorByChanged.emit(property)"
-      *ngIf="property.type === 0"
-      [gradient]="gradient"
-      [isChecked]="property === nodeColorBy"
-      [propertyId]="propertyId"
-      [property]="property"
-      type="color"
-    ></app-sidebar-layout-form-continuous>
-
-    <app-sidebar-layout-form-discrete
-      (propertyClicked)="nodeColorByChanged.emit(property)"
-      *ngIf="property.type === 1"
-      [isChecked]="property === nodeColorBy"
-      [propertyId]="propertyId"
-      [property]="property"
-    ></app-sidebar-layout-form-discrete>
-
-    <app-sidebar-layout-form-boolean
-      (propertyClicked)="booleanPropertyChanged.emit($event)"
-      *ngIf="property.type === 2"
-      [booleanProperty]="booleanProperty"
-      [propertyId]="propertyId"
-      [property]="property"
-    ></app-sidebar-layout-form-boolean>
-  </ng-container>
-</ng-template>
-
-<ng-template #individualTemplate>
+<ng-container>
   <h6>Color nodes</h6>
 
-  <ng-container *ngFor="let property of properties?.individual; let propertyId = index">
+  <ng-container *ngFor="let property of properties; let propertyId = index">
     <app-sidebar-layout-form-continuous
       (propertyClicked)="nodeColorByChanged.emit(property)"
       *ngIf="property.type === 0"
@@ -94,7 +62,7 @@
     <!-- set node size -->
     <h6>Node size</h6>
 
-    <ng-container *ngFor="let property of properties?.individual; let propertyId = index">
+    <ng-container *ngFor="let property of properties; let propertyId = index">
       <app-sidebar-layout-form-continuous
         (propertyClicked)="nodeSizeByChanged.emit(property)"
         *ngIf="property.type === 0"
@@ -105,7 +73,7 @@
       ></app-sidebar-layout-form-continuous>
     </ng-container>
   </ng-container>
-</ng-template>
+</ng-container>
 
 <!-- FIT -->
 <div class="d-grid mt-2">

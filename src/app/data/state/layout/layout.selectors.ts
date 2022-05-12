@@ -1,6 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { LayoutState } from './layout.state';
+import { selectIsAnyPatientSelected } from '../patient/patient.selectors';
 
 const selectState = createSelector(
   (appState: AppState) => appState.layout,
@@ -40,6 +41,13 @@ export const selectPropertiesIndividual = createSelector(
 export const selectPropertiesDefault = createSelector(
   selectState,
   (state: LayoutState) => state.properties.individual,
+);
+export const selectRelevantProperties = createSelector(
+  selectState,
+  selectIsAnyPatientSelected,
+  (state: LayoutState, isAnyPatientSelected: boolean) => {
+    return isAnyPatientSelected ? state.properties.individual : state.properties.default;
+  },
 );
 
 export const selectHighlightColor = createSelector(

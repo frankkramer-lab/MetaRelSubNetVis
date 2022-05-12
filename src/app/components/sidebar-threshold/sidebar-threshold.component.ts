@@ -6,9 +6,7 @@ import {
   selectMax,
   selectMin,
   selectMultiplier,
-  selectThresholdDefault,
-  selectThresholdIndividual,
-  selectThresholds,
+  selectRelevantThresholds,
 } from '../../data/state/threshold/threshold.selectors';
 import {
   selectGroupLabelA,
@@ -27,9 +25,7 @@ import { setThreshold } from '../../data/state/threshold/threshold.action';
 export class SidebarThresholdComponent implements OnInit {
   multiplier$!: Observable<number>;
 
-  thresholdsIndividual$!: Observable<ThresholdDefinition[]>;
-
-  thresholdsDefault$!: Observable<ThresholdDefinition[]>;
+  thresholds$!: Observable<ThresholdDefinition[]>;
 
   patientSelection$!: Observable<PatientSelectionEnum>;
 
@@ -41,12 +37,12 @@ export class SidebarThresholdComponent implements OnInit {
 
   max$!: Observable<number[]>;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>) {
+  }
 
   ngOnInit(): void {
     this.multiplier$ = this.store.select(selectMultiplier);
-    this.thresholdsIndividual$ = this.store.select(selectThresholdIndividual);
-    this.thresholdsDefault$ = this.store.select(selectThresholdDefault);
+    this.thresholds$ = this.store.select(selectRelevantThresholds);
     this.patientSelection$ = this.store.select(selectPatientSelection);
     this.groupLabelA$ = this.store.select(selectGroupLabelA);
     this.groupLabelB$ = this.store.select(selectGroupLabelB);

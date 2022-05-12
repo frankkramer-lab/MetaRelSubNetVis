@@ -13,6 +13,7 @@ import { PropertyTypeEnum } from '../enum/property-type-enum';
 import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 import { PropertyCollection } from '../../data/schema/property-collection';
 import { PropertyScopeEnum } from '../enum/property-scope.enum';
+import { ThresholdCollection } from '../../data/schema/threshold-collection';
 
 @Injectable({
   providedIn: 'root',
@@ -68,7 +69,10 @@ export class HydratorService {
     validProperties.forEach((property) => {
       thresholds.push({
         property,
-        defined: Number.MIN_SAFE_INTEGER,
+        defined:
+          scope === PropertyScopeEnum.default
+            ? property.min ?? Number.MIN_SAFE_INTEGER
+            : Number.MIN_SAFE_INTEGER,
         scope,
       });
     });
@@ -387,7 +391,7 @@ export class HydratorService {
     return occurrences;
   }
 
-  hydrateThresholds(properties: PropertyCollection): ThresholdDefinition[] {
+  hydrateThresholds(properties: PropertyCollection): ThresholdCollection {
     const propertiesIndividual = this.findThresholdProperties(
       properties.individual,
       PropertyScopeEnum.individual,
@@ -397,10 +401,10 @@ export class HydratorService {
       PropertyScopeEnum.default,
     );
 
-    console.log(propertiesIndividual);
-    console.log(propertiesDefault);
-
-    return propertiesIndividual.concat(propertiesDefault);
+    return {
+      individual: propertiesIndividual,
+      default: propertiesDefault,
+    };
   }
 
   hydrateHighlightColor(metaRelSubNetVis: any[]): string {

@@ -1,7 +1,7 @@
-import { ThresholdDefinition } from '../../schema/threshold-definition';
+import { ThresholdCollection } from '../../schema/threshold-collection';
 
 export interface ThresholdState {
-  thresholds: ThresholdDefinition[];
+  thresholds: ThresholdCollection;
   multiplier: number;
   isLoading: boolean;
 }

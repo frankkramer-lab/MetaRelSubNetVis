@@ -52,10 +52,11 @@ import { HydratorService } from '../../../core/service/hydrator.service';
 import { Network } from '../../schema/network';
 import { setUuid } from '../network/network.actions';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
-import { selectPropertiesIndividual } from '../layout/layout.selectors';
+import { selectProperties, selectPropertiesIndividual } from '../layout/layout.selectors';
 import { PropertyTypeEnum } from '../../../core/enum/property-type-enum';
 import { Property } from '../../schema/property';
 import { PropertyScopeEnum } from '../../../core/enum/property-scope.enum';
+import { ThresholdCollection } from '../../schema/threshold-collection';
 
 @Injectable()
 export class HydratorEffects {
@@ -160,7 +161,7 @@ export class HydratorEffects {
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
             network.edges = this.hydratorService.hydrateEdges(edgesRaw);
 
-            const thresholds: ThresholdDefinition[] =
+            const thresholds: ThresholdCollection =
               this.hydratorService.hydrateThresholds(properties);
 
             return loadDataSuccess({
@@ -227,21 +228,26 @@ export class HydratorEffects {
       ofType(hydratePatientAPatientBSuccess, hydratePatientAPatientBFailure),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
-        this.store.select(selectPropertiesIndividual),
+        this.store.select(selectProperties),
       ]),
       map(([, config, properties]) => {
         if (!config || !config.th) return hydrateThresholdFailure();
 
-        const thresholds: ThresholdDefinition[] = [];
+        const thresholds: ThresholdCollection = {
+          default: [],
+          individual: [],
+        };
 
         Object.entries(config.th).forEach(([key, value]) => {
           const numericValue = Number(value);
-          const property = properties.find(
+          // fixme: handle distinction between individual and default properties
+          const property = properties.individual.find(
             (a: Property) => a.name === key && a.type === PropertyTypeEnum.continuous,
           );
 
           if (property && !Number.isNaN(numericValue)) {
-            thresholds.push({
+            // fixme: handle distinction between individual and default thresholds
+            thresholds.individual.push({
               defined: numericValue,
               property,
               scope: PropertyScopeEnum.individual,
@@ -392,5 +398,6 @@ export class HydratorEffects {
     private apiService: ApiService,
     private hydratorService: HydratorService,
     private router: Router,
-  ) {}
+  ) {
+  }
 }

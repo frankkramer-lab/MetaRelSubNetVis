@@ -81,8 +81,8 @@ export const selectUrl = createSelector(
     if (patientB) {
       queryParams.push(`pb=${patientB.name}`);
     }
-    if (patientA || patientB) {
-      thresholds.forEach((threshold) => {
+    if (patientA || patientB) { // fixme
+      thresholds.individual.forEach((threshold) => {
         const paramKey = `th_${threshold.property.name}`;
         queryParams.push(`${paramKey}=${threshold.defined}`);
       });

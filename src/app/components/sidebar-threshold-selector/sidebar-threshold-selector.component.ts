@@ -12,9 +12,7 @@ export class SidebarThresholdSelectorComponent {
 
   @Input() multiplier!: number | null;
 
-  @Input() thresholdsIndividual!: ThresholdDefinition[] | null;
-
-  @Input() thresholdsDefault!: ThresholdDefinition[] | null;
+  @Input() thresholds!: ThresholdDefinition[] | null;
 
   @Input() min!: number[] | null;
 

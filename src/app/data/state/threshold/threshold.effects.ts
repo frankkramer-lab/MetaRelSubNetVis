@@ -6,7 +6,7 @@ import { ApiService } from '../../service/api.service';
 import { AppState } from '../app.state';
 import { setPatientSelection } from '../patient/patient.actions';
 import { selectPatientSelection } from '../patient/patient.selectors';
-import { selectThresholds } from './threshold.selectors';
+import { selectRelevantThresholds } from './threshold.selectors';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
 import { keepAllThresholds, setAllThresholds } from './threshold.action';
@@ -18,12 +18,13 @@ export class ThresholdEffects {
       ofType(setPatientSelection),
       concatLatestFrom(() => [
         this.store.select(selectPatientSelection),
-        this.store.select(selectThresholds),
+        this.store.select(selectRelevantThresholds),
       ]),
       map(([action, patientSelection, thresholds]) => {
         // was there a change in patient selection?
         if (action.previousSelection !== patientSelection) {
           // update the all thresholds with the valid defined settings
+
           const newThresholds: ThresholdDefinition[] = [];
           thresholds.forEach((th) => {
             switch (patientSelection) {
@@ -42,8 +43,12 @@ export class ThresholdEffects {
                   ),
                 });
                 break;
+              case PatientSelectionEnum.none:
               default:
-                newThresholds.push({ ...th, defined: Number.MIN_SAFE_INTEGER });
+                newThresholds.push({
+                  ...th,
+                  defined: th.property.min ?? Number.MIN_SAFE_INTEGER,
+                });
                 break;
             }
           });

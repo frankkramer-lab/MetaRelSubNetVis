@@ -4,10 +4,57 @@ import { NodesState } from './nodes.state';
 import { selectNodes } from '../network/network.selectors';
 import { NetworkNode } from '../../schema/network-node';
 import { SortByEnum } from '../../../core/enum/sort-by.enum';
-import { selectPatientADetails, selectPatientBDetails } from '../patient/patient.selectors';
+import {
+  selectIsAnyPatientSelected,
+  selectPatientADetails,
+  selectPatientBDetails,
+} from '../patient/patient.selectors';
 import { AttributeItem } from '../../schema/attribute-item';
 import { selectThresholds } from '../threshold/threshold.selectors';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
+import { ThresholdCollection } from '../../schema/threshold-collection';
+
+const updateVisibleNodes = (
+  attributeItems: AttributeItem[],
+  nodes: NetworkNode[],
+  visibleNodes: NetworkNode[],
+  filterTerm: string | null,
+  thresholds: ThresholdDefinition[],
+): NetworkNode[] => {
+  attributeItems.forEach((item) => {
+    const nodeProperties = Object.keys(item);
+    const nodeLabel = item.name;
+    const cleanNodeLabel = nodeLabel.trim().toLowerCase();
+
+    if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
+      // a node can only be visible, if it matches all defined thresholds
+      // if a node does not contain the threshold's property, it ignores this check => assuming it passes
+
+      let passedTest = true;
+      const node = nodes.find((a) => a.data.name === nodeLabel);
+
+      thresholds.forEach((th) => {
+        const propertyName = th.property.name;
+
+        if (nodeProperties.includes(propertyName)) {
+          // only compare to threshold, if this property actually exists
+
+          const passes = Number(item[propertyName]) >= th.defined;
+
+          if (!passes) {
+            passedTest = false;
+          }
+        }
+      });
+
+      if (passedTest && node && !visibleNodes.includes(node)) {
+        visibleNodes.push(node);
+      }
+    }
+  });
+  return visibleNodes;
+};
+
 
 const selectState = createSelector(
   (appState: AppState) => appState.nodes,
@@ -43,6 +90,7 @@ export const selectMarkedNodes = createSelector(
 
 export const selectVisibleNodes = createSelector(
   selectNodes,
+  selectIsAnyPatientSelected,
   selectPatientADetails,
   selectPatientBDetails,
   selectFilterTerm,
@@ -50,11 +98,12 @@ export const selectVisibleNodes = createSelector(
   selectThresholds,
   (
     nodes: NetworkNode[],
+    isAnyPatientSelected: boolean,
     patientADetails: AttributeItem[] | null,
     patientBDetails: AttributeItem[] | null,
     filterTerm: string | null,
     nodesState: NodesState,
-    thresholds: ThresholdDefinition[],
+    thresholds: ThresholdCollection,
   ) => {
     let visibleNodes: NetworkNode[];
 
@@ -64,71 +113,86 @@ export const selectVisibleNodes = createSelector(
     ) {
       visibleNodes = [];
       if (patientADetails) {
-        patientADetails.forEach((nodeA) => {
-          const nodeProperties = Object.keys(nodeA);
-          const nodeLabel = nodeA.name;
-          const cleanNodeLabel = nodeLabel.trim().toLowerCase();
-
-          if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
-            // a node can only be visible, if it matches all defined thresholds
-            // if a node does not contain the threshold's property, it ignores this check => assuming it passes
-
-            let passedTest = true;
-            const node = nodes.find((a) => a.data.name === nodeLabel);
-
-            thresholds.forEach((th) => {
-              const propertyName = th.property.name;
-
-              if (nodeProperties.includes(propertyName)) {
-                // only compare to threshold, if this property actually exists
-
-                const passes = Number(nodeA[propertyName]) >= th.defined;
-
-                if (!passes) {
-                  passedTest = false;
-                }
-              }
-            });
-
-            if (passedTest && node && !visibleNodes.includes(node)) {
-              visibleNodes.push(node);
-            }
-          }
-        });
+        visibleNodes = updateVisibleNodes(
+          patientADetails,
+          nodes,
+          visibleNodes,
+          filterTerm,
+          isAnyPatientSelected ? thresholds.individual : thresholds.default,
+        );
+        // patientADetails.forEach((nodeA) => {
+        //   const nodeProperties = Object.keys(nodeA);
+        //   const nodeLabel = nodeA.name;
+        //   const cleanNodeLabel = nodeLabel.trim().toLowerCase();
+        //
+        //   if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
+        //     // a node can only be visible, if it matches all defined thresholds
+        //     // if a node does not contain the threshold's property, it ignores this check => assuming it passes
+        //
+        //     let passedTest = true;
+        //     const node = nodes.find((a) => a.data.name === nodeLabel);
+        //
+        //     thresholds.forEach((th) => {
+        //       const propertyName = th.property.name;
+        //
+        //       if (nodeProperties.includes(propertyName)) {
+        //         // only compare to threshold, if this property actually exists
+        //
+        //         const passes = Number(nodeA[propertyName]) >= th.defined;
+        //
+        //         if (!passes) {
+        //           passedTest = false;
+        //         }
+        //       }
+        //     });
+        //
+        //     if (passedTest && node && !visibleNodes.includes(node)) {
+        //       visibleNodes.push(node);
+        //     }
+        //   }
+        // });
       }
 
       if (patientBDetails) {
-        patientBDetails.forEach((nodeB) => {
-          const nodeProperties = Object.keys(nodeB);
-          const nodeLabel = nodeB.name;
-          const cleanNodeLabel = nodeLabel.trim().toLowerCase();
+        visibleNodes = updateVisibleNodes(
+          patientBDetails,
+          nodes,
+          visibleNodes,
+          filterTerm,
+          isAnyPatientSelected ? thresholds.individual : thresholds.default,
+        );
 
-          if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
-            // a node can only be visible, if it matches all defined thresholds
-            // if a node does not contain the threshold's property, it ignores this check => assuming it passes
-
-            let passedTest = true;
-            const node = nodes.find((a) => a.data.name === nodeLabel);
-
-            thresholds.forEach((th) => {
-              const propertyName = th.property.name;
-
-              if (nodeProperties.includes(propertyName)) {
-                // only compare to threshold, if this property actually exists
-
-                const passes = Number(nodeB[propertyName]) >= th.defined;
-
-                if (!passes) {
-                  passedTest = false;
-                }
-              }
-            });
-
-            if (passedTest && node && !visibleNodes.includes(node)) {
-              visibleNodes.push(node);
-            }
-          }
-        });
+        // patientBDetails.forEach((nodeB) => {
+        //   const nodeProperties = Object.keys(nodeB);
+        //   const nodeLabel = nodeB.name;
+        //   const cleanNodeLabel = nodeLabel.trim().toLowerCase();
+        //
+        //   if (!filterTerm || (filterTerm && cleanNodeLabel.includes(filterTerm.toLowerCase()))) {
+        //     // a node can only be visible, if it matches all defined thresholds
+        //     // if a node does not contain the threshold's property, it ignores this check => assuming it passes
+        //
+        //     let passedTest = true;
+        //     const node = nodes.find((a) => a.data.name === nodeLabel);
+        //
+        //     thresholds.forEach((th) => {
+        //       const propertyName = th.property.name;
+        //
+        //       if (nodeProperties.includes(propertyName)) {
+        //         // only compare to threshold, if this property actually exists
+        //
+        //         const passes = Number(nodeB[propertyName]) >= th.defined;
+        //
+        //         if (!passes) {
+        //           passedTest = false;
+        //         }
+        //       }
+        //     });
+        //
+        //     if (passedTest && node && !visibleNodes.includes(node)) {
+        //       visibleNodes.push(node);
+        //     }
+        //   }
+        // });
       }
     } else {
       visibleNodes = [];

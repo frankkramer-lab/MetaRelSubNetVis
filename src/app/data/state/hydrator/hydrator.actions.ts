@@ -7,8 +7,8 @@ import { NetworkNode } from '../../schema/network-node';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 import { Property } from '../../schema/property';
-import { ThresholdDefinition } from '../../schema/threshold-definition';
 import { PropertyCollection } from '../../schema/property-collection';
+import { ThresholdCollection } from '../../schema/threshold-collection';
 
 export const loadQueryParams = createAction(
   '[Layout Component] load query params',
@@ -24,7 +24,7 @@ export const loadDataSuccess = createAction(
   props<{
     network: Network;
     patients: PatientCollection;
-    thresholds: ThresholdDefinition[];
+    thresholds: ThresholdCollection;
     headline: string;
     properties: PropertyCollection;
     defaultAttributes: AttributeItem[];
@@ -49,7 +49,7 @@ export const hydratePatientAPatientBFailure = createAction(
 
 export const hydrateThresholdSuccess = createAction(
   '[Hydrator Effects] hydrate threshold success',
-  props<{ thresholds: ThresholdDefinition[] }>(),
+  props<{ thresholds: ThresholdCollection }>(),
 );
 export const hydrateThresholdFailure = createAction('[Hydrator Effects] hydrate threshold failure');
 

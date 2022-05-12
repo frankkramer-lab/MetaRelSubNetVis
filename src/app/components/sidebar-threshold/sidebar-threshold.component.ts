@@ -15,7 +15,11 @@ import {
 } from '../../data/state/patient/patient.selectors';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
 import { ThresholdDefinition } from '../../data/schema/threshold-definition';
-import { setThreshold } from '../../data/state/threshold/threshold.action';
+import {
+  setThresholdDefault,
+  setThresholdIndividual,
+} from '../../data/state/threshold/threshold.action';
+import { PropertyScopeEnum } from '../../core/enum/property-scope.enum';
 
 @Component({
   selector: 'app-sidebar-threshold',
@@ -51,6 +55,10 @@ export class SidebarThresholdComponent implements OnInit {
   }
 
   triggerThresholdChanged(threshold: ThresholdDefinition) {
-    this.store.dispatch(setThreshold({ threshold }));
+    if (threshold.scope === PropertyScopeEnum.default) {
+      this.store.dispatch(setThresholdDefault({ threshold }));
+    } else {
+      this.store.dispatch(setThresholdIndividual({ threshold }));
+    }
   }
 }

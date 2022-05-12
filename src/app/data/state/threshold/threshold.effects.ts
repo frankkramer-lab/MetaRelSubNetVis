@@ -5,11 +5,15 @@ import { map } from 'rxjs/operators';
 import { ApiService } from '../../service/api.service';
 import { AppState } from '../app.state';
 import { setPatientSelection } from '../patient/patient.actions';
-import { selectPatientSelection } from '../patient/patient.selectors';
+import { selectIsAnyPatientSelected, selectPatientSelection } from '../patient/patient.selectors';
 import { selectRelevantThresholds } from './threshold.selectors';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
-import { keepAllThresholds, setAllThresholds } from './threshold.action';
+import {
+  keepAllThresholds,
+  setAllDefaultThresholds,
+  setAllIndividualThresholds,
+} from './threshold.action';
 
 @Injectable()
 export class ThresholdEffects {
@@ -19,14 +23,16 @@ export class ThresholdEffects {
       concatLatestFrom(() => [
         this.store.select(selectPatientSelection),
         this.store.select(selectRelevantThresholds),
+        this.store.select(selectIsAnyPatientSelected),
       ]),
-      map(([action, patientSelection, thresholds]) => {
+      map(([action, patientSelection, thresholds, isAnyPatientSelected]) => {
         // was there a change in patient selection?
         if (action.previousSelection !== patientSelection) {
           // update the all thresholds with the valid defined settings
 
           const newThresholds: ThresholdDefinition[] = [];
-          thresholds.forEach((th) => {
+
+          thresholds.forEach((th: ThresholdDefinition) => {
             switch (patientSelection) {
               case PatientSelectionEnum.groupA:
                 newThresholds.push({ ...th, defined: th.property.minA ?? Number.MIN_SAFE_INTEGER });
@@ -52,7 +58,10 @@ export class ThresholdEffects {
                 break;
             }
           });
-          return setAllThresholds({ thresholds: newThresholds });
+
+          if (isAnyPatientSelected)
+            return setAllIndividualThresholds({ individual: newThresholds });
+          return setAllDefaultThresholds({ defaults: newThresholds });
         }
         return keepAllThresholds();
       }),
@@ -63,5 +72,6 @@ export class ThresholdEffects {
     private actions$: Actions,
     private apiService: ApiService,
     private store: Store<AppState>,
-  ) {}
+  ) {
+  }
 }

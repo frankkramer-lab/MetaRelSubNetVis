@@ -135,18 +135,7 @@ export const selectVisibleNodes = createSelector(
         filterTerm,
         thresholds.default,
       );
-      // nodes.forEach((node) => {
-      //   const nodeLabel = node.data.name.toLowerCase();
-      //
-      //   // there is no filter term or filterterm can be applied
-      //   if (!filterTerm || (filterTerm && nodeLabel.includes(filterTerm.toLowerCase()))) {
-      //     if (!visibleNodes.includes(node)) {
-      //       visibleNodes.push(node);
-      //     }
-      //   }
-      // });
     }
-    console.log(visibleNodes);
 
     const subTypeA = nodesState.subtypeColumnA;
     const subTypeB = nodesState.subtypeColumnB;

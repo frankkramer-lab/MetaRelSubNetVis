@@ -142,7 +142,6 @@ export class GraphService {
       patientBDetails &&
       patientBDetails?.length > 0
     ) {
-      this.clear(boolProperties);
       this.visualizeTwo(
         patientADetails,
         patientBDetails,
@@ -155,36 +154,32 @@ export class GraphService {
     } else if (patientBDetails && patientBDetails.length > 0) {
       this.visualizeOne(patientBDetails, nodeSizeBy, nodeColorBy, visibleNodesIds, boolProperties);
     } else {
-      this.clear(boolProperties);
       this.visualizeDefault(
-        properties.default,
         defaultAttributes,
         nodeSizeBy,
         nodeColorBy,
+        visibleNodesIds,
+        properties.default,
       );
-      this.cyCore.elements('node').data('shown', true);
     }
-    const patientSelected =
-      (patientADetails && patientADetails.length > 0) ||
-      (patientBDetails && patientBDetails.length > 0);
-    this.updateShownNodes(showAllNodes, showOnlySharedNodes, patientSelected);
+    this.updateShownNodes(showAllNodes, showOnlySharedNodes);
   }
 
   /**
    * If the displayed nodes are not modified themselves,
    * it's sufficient to update which nodes are displayed.
    */
-  updateShownNodes(showAllNodes: boolean, showOnlySharedNodes: boolean, patientSelected: boolean) {
+  updateShownNodes(showAllNodes: boolean, showOnlySharedNodes: boolean) {
     this.cyCore.batch(() => {
       this.cyCore.elements('node[member]').data('shown', true);
-      this.cyCore.elements('node[!member]').data('shown', patientSelected ? showAllNodes : true);
+      this.cyCore.elements('node[!member]').data('shown', showAllNodes);
       (this.cyCore.elements('node[member]').connectedEdges() as CollectionReturnValue).data(
         'shown',
         true,
       );
       (this.cyCore.elements('node[!member]').connectedEdges() as CollectionReturnValue).data(
         'shown',
-        patientSelected ? showAllNodes : true,
+        showAllNodes,
       );
       this.cyCore.elements('node.split[colorA][^colorB]').data('shown', !showOnlySharedNodes);
       this.cyCore.elements('node.split[^colorA][colorB]').data('shown', !showOnlySharedNodes);
@@ -573,11 +568,13 @@ export class GraphService {
   }
 
   private visualizeDefault(
-    properties: Property[],
     defaultAttributes: AttributeItem[],
     nodeSizeBy: Property | null,
     nodeColorBy: Property | null,
+    visibleNodes: string[],
+    properties: Property[],
   ): void {
+
     const boolProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
     this.cyCore.batch(() => {
       this.clear(boolProperties);
@@ -603,23 +600,25 @@ export class GraphService {
       }
 
       defaultAttributes.forEach((data: AttributeItem) => {
-        const node = this.cyCore
-          .nodes()
-          .getElementById(data.id)
-          .data('member', true)
-          .data('shown', true)
-          .data('size', Number(data[size as keyof AttributeItem]))
-          .data(
-            'color',
-            nodeColorBy?.type === PropertyTypeEnum.continuous
-              ? Number(data[color as keyof AttributeItem])
-              : data[color as keyof AttributeItem],
-          );
-        boolProperties.forEach((property) => {
-          if (node && data[property.name]) {
-            node.addClass(property.name);
-          }
-        });
+        if (visibleNodes.includes(data.id)) {
+          const node = this.cyCore
+            .nodes()
+            .getElementById(data.id.toString())
+            .data('member', true)
+            .data('shown', true)
+            .data('size', Number(data[size as keyof AttributeItem]))
+            .data(
+              'color',
+              nodeColorBy?.type === PropertyTypeEnum.continuous
+                ? Number(data[color as keyof AttributeItem])
+                : data[color as keyof AttributeItem],
+            );
+          boolProperties.forEach((property) => {
+            if (node && data[property.name]) {
+              node.addClass(property.name);
+            }
+          });
+        }
       });
     });
   }

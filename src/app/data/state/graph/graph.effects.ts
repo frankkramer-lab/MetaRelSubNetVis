@@ -44,7 +44,12 @@ import { hydrateTriggerDownloadSuccess, markMultipleNodes } from '../hydrator/hy
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import { initCoreFailure, initCoreSuccess, initializeCore } from '../network/network.actions';
-import { setAllThresholds, setThreshold } from '../threshold/threshold.action';
+import {
+  setAllDefaultThresholds,
+  setAllIndividualThresholds,
+  setThresholdDefault,
+  setThresholdIndividual,
+} from '../threshold/threshold.action';
 
 @Injectable()
 export class GraphEffects {
@@ -70,8 +75,10 @@ export class GraphEffects {
     return this.actions$.pipe(
       ofType(
         initCoreSuccess,
-        setAllThresholds,
-        setThreshold,
+        setAllIndividualThresholds,
+        setAllDefaultThresholds,
+        setThresholdDefault,
+        setThresholdIndividual,
         toggleBooleanProperty,
         setNodeColorBy,
         setNodeSizeBy,
@@ -92,19 +99,19 @@ export class GraphEffects {
       ]),
       map(
         ([
-          ,
-          patientADetails,
-          patientBDetails,
-          network,
-          nodeColorBy,
-          nodeSizeBy,
-          showAllNodes,
-          showOnlySharedNodes,
-          booleanProperty,
-          visibleNodes,
-          properties,
-          defaultAttributes,
-        ]) => {
+           ,
+           patientADetails,
+           patientBDetails,
+           network,
+           nodeColorBy,
+           nodeSizeBy,
+           showAllNodes,
+           showOnlySharedNodes,
+           booleanProperty,
+           visibleNodes,
+           properties,
+           defaultAttributes,
+         ]) => {
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
             patientADetails,
@@ -205,5 +212,6 @@ export class GraphEffects {
     private actions$: Actions,
     private store: Store<AppState>,
     private graphService: GraphService,
-  ) {}
+  ) {
+  }
 }

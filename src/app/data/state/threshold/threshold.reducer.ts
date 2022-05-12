@@ -7,8 +7,12 @@ import {
   loadQueryParams,
 } from '../hydrator/hydrator.actions';
 import { navigateHome } from '../sidebar/sidebar.actions';
-import { setAllThresholds, setThreshold } from './threshold.action';
-import { PropertyScopeEnum } from '../../../core/enum/property-scope.enum';
+import {
+  setAllDefaultThresholds,
+  setAllIndividualThresholds,
+  setThresholdDefault,
+  setThresholdIndividual,
+} from './threshold.action';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
 
 const initialState: ThresholdState = {
@@ -39,43 +43,44 @@ export const thresholdReducer = createReducer(
       thresholds,
     }),
   ),
-  on(setAllThresholds, (state: ThresholdState, { thresholds }): ThresholdState => {
-    if (thresholds.length === 0) return { ...state };
-    if (thresholds[0].scope === PropertyScopeEnum.individual) {
-      return {
-        ...state,
-        thresholds: {
-          default: [...state.thresholds.default],
-          individual: thresholds,
-        },
-      };
-    }
+  on(
+    setAllIndividualThresholds,
+    (state: ThresholdState, { individual }): ThresholdState => ({
+      ...state,
+      thresholds: {
+        default: [...state.thresholds.default],
+        individual,
+      },
+    }),
+  ),
+  on(
+    setAllDefaultThresholds,
+    (state: ThresholdState, { defaults }): ThresholdState => ({
+      ...state,
+      thresholds: {
+        default: defaults,
+        individual: [...state.thresholds.individual],
+      },
+    }),
+  ),
+  on(setThresholdIndividual, (state: ThresholdState, { threshold }): ThresholdState => {
+    const index = state.thresholds.individual.findIndex(
+      (a) => a.property.name === threshold.property.name,
+    );
+    const individual: ThresholdDefinition[] = [
+      ...state.thresholds.individual.slice(0, index),
+      threshold,
+      ...state.thresholds.individual.slice(index + 1),
+    ];
     return {
       ...state,
       thresholds: {
-        individual: [...state.thresholds.individual],
-        default: thresholds,
+        default: [...state.thresholds.default],
+        individual,
       },
     };
   }),
-  on(setThreshold, (state: ThresholdState, { threshold }): ThresholdState => {
-    if (threshold.scope === PropertyScopeEnum.individual) {
-      const index = state.thresholds.individual.findIndex(
-        (a) => a.property.name === threshold.property.name,
-      );
-      const individual: ThresholdDefinition[] = [
-        ...state.thresholds.individual.slice(0, index),
-        threshold,
-        ...state.thresholds.individual.slice(index + 1),
-      ];
-      return {
-        ...state,
-        thresholds: {
-          default: [...state.thresholds.default],
-          individual,
-        },
-      };
-    }
+  on(setThresholdDefault, (state: ThresholdState, { threshold }): ThresholdState => {
     const index = state.thresholds.default.findIndex(
       (a) => a.property.name === threshold.property.name,
     );

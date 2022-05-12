@@ -3,6 +3,7 @@ import { AppState } from '../app.state';
 import { ThresholdState } from './threshold.state';
 import { selectPatientSelection } from '../patient/patient.selectors';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
+import { PropertyScopeEnum } from '../../../core/enum/property-scope.enum';
 
 const selectState = createSelector(
   (appState: AppState) => appState.threshold,
@@ -79,4 +80,11 @@ export const selectMax = createSelector(
 export const selectThresholds = createSelector(
   selectState,
   (state: ThresholdState) => state.thresholds,
+);
+
+export const selectThresholdIndividual = createSelector(selectState, (state: ThresholdState) =>
+  state.thresholds.filter((a) => a.scope === PropertyScopeEnum.individual),
+);
+export const selectThresholdDefault = createSelector(selectState, (state: ThresholdState) =>
+  state.thresholds.filter((a) => a.scope === PropertyScopeEnum.default),
 );

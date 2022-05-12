@@ -1,15 +1,18 @@
-<ng-container *ngIf="patientsSelected !== 0; else emptyTemplate">
+<ng-container *ngIf="patientsSelected !== 0 then patientTemplate; else defaultTemplate">
+</ng-container>
+
+<ng-template #patientTemplate>
   <h5>
     {{
-      patientsSelected === 3
-        ? 'Both patients:'
-        : patientsSelected === 1
+    patientsSelected === 3
+      ? 'Both patients:'
+      : patientsSelected === 1
         ? groupLabelA + ':'
         : groupLabelB + ':'
     }}
   </h5>
 
-  <ng-container *ngFor="let threshold of thresholds; let thIndex = index">
+  <ng-container *ngFor="let threshold of thresholdsIndividual; let thIndex = index">
     <app-sidebar-threshold-selector-range
       (thresholdChangedEmitter)="thresholdChangedEmitter.emit($event)"
       [groupLabelA]="groupLabelA"
@@ -17,14 +20,29 @@
       [max]="max ? max[thIndex] : 1"
       [min]="min ? min[thIndex] : 0"
       [multiplier]="multiplier"
-      [patientSelection]="patientsSelected"
       [threshold]="threshold"
     ></app-sidebar-threshold-selector-range>
 
     <hr />
   </ng-container>
-</ng-container>
+</ng-template>
 
-<ng-template #emptyTemplate>
-  <p>Select at least one patient above</p>
+<ng-template #defaultTemplate>
+  <h5>
+    All nodes:
+  </h5>
+
+  <ng-container *ngFor="let threshold of thresholdsDefault; let thIndex = index">
+    <app-sidebar-threshold-selector-range
+      (thresholdChangedEmitter)="thresholdChangedEmitter.emit($event)"
+      [groupLabelA]="groupLabelA"
+      [groupLabelB]="groupLabelB"
+      [max]="max ? max[thIndex] : 1"
+      [min]="min ? min[thIndex] : 0"
+      [multiplier]="multiplier"
+      [threshold]="threshold"
+    ></app-sidebar-threshold-selector-range>
+
+    <hr />
+  </ng-container>
 </ng-template>

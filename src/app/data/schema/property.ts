@@ -1,5 +1,6 @@
 import { PropertyTypeEnum } from '../../core/enum/property-type-enum';
 import { PropertyMapping } from './property-mapping';
+import { PropertyScopeEnum } from '../../core/enum/property-scope.enum';
 
 export interface Property {
   name: string;

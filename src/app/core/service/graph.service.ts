@@ -640,12 +640,11 @@ export class GraphService {
       const successorValue = values[index + 1];
 
       const map = `mapData(color, ${key}, ${successorKey}, ${value}, ${successorValue})`;
-
       if (index !== keys.length - 1) {
         this.cyCore
           .style()
           // @ts-ignore
-          .selector(`node[color>=${key}][color<${successorKey}]`)
+          .selector(`node[color>=${key}][color<=${successorKey}]`)
           .style('background-color', map)
           .style('text-outline-color', map);
       }

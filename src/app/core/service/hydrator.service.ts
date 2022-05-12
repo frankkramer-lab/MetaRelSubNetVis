@@ -12,6 +12,7 @@ import { Property } from '../../data/schema/property';
 import { PropertyTypeEnum } from '../enum/property-type-enum';
 import { ThresholdDefinition } from '../../data/schema/threshold-definition';
 import { PropertyCollection } from '../../data/schema/property-collection';
+import { PropertyScopeEnum } from '../enum/property-scope.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -56,7 +57,10 @@ export class HydratorService {
     return cProperties.concat(dProperties, bProperties);
   }
 
-  private findThresholdProperties(properties: Property[]): ThresholdDefinition[] {
+  private findThresholdProperties(
+    properties: Property[],
+    scope: PropertyScopeEnum,
+  ): ThresholdDefinition[] {
     const validProperties = properties
       .filter((a) => a.type === PropertyTypeEnum.continuous)
       .filter((a) => a.threshold);
@@ -65,6 +69,7 @@ export class HydratorService {
       thresholds.push({
         property,
         defined: Number.MIN_SAFE_INTEGER,
+        scope,
       });
     });
     return thresholds;
@@ -390,8 +395,14 @@ export class HydratorService {
   }
 
   hydrateThresholds(properties: PropertyCollection): ThresholdDefinition[] {
-    const propertiesIndividual = this.findThresholdProperties(properties.individual);
-    const propertiesDefault = this.findThresholdProperties(properties.default);
+    const propertiesIndividual = this.findThresholdProperties(
+      properties.individual,
+      PropertyScopeEnum.individual,
+    );
+    const propertiesDefault = this.findThresholdProperties(
+      properties.default,
+      PropertyScopeEnum.default,
+    );
 
     return propertiesIndividual.concat(propertiesDefault);
   }

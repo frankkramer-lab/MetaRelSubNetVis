@@ -55,6 +55,7 @@ import { ThresholdDefinition } from '../../schema/threshold-definition';
 import { selectPropertiesIndividual } from '../layout/layout.selectors';
 import { PropertyTypeEnum } from '../../../core/enum/property-type-enum';
 import { Property } from '../../schema/property';
+import { PropertyScopeEnum } from '../../../core/enum/property-scope.enum';
 
 @Injectable()
 export class HydratorEffects {
@@ -243,6 +244,7 @@ export class HydratorEffects {
             thresholds.push({
               defined: numericValue,
               property,
+              scope: PropertyScopeEnum.individual,
             });
           }
         });

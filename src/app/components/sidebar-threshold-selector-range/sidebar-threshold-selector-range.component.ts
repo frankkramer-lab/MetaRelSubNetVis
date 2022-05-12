@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ThresholdDefinition } from '../../data/schema/threshold-definition';
-import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
+import { PropertyScopeEnum } from '../../core/enum/property-scope.enum';
 
 @Component({
   selector: 'app-sidebar-threshold-selector-range',
@@ -8,8 +8,6 @@ import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
   styleUrls: ['./sidebar-threshold-selector-range.component.scss'],
 })
 export class SidebarThresholdSelectorRangeComponent {
-  @Input() patientSelection!: PatientSelectionEnum | null;
-
   @Input() groupLabelA!: string | null;
 
   @Input() groupLabelB!: string | null;
@@ -30,6 +28,7 @@ export class SidebarThresholdSelectorRangeComponent {
       this.thresholdChangedEmitter.emit({
         defined: defined / (this.multiplier ?? 1),
         property: this.threshold.property,
+        scope: PropertyScopeEnum.individual,
       });
     }
   }

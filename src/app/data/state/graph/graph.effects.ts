@@ -42,7 +42,6 @@ import {
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 import { hydrateTriggerDownloadSuccess, markMultipleNodes } from '../hydrator/hydrator.actions';
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
-import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import { initCoreFailure, initCoreSuccess, initializeCore } from '../network/network.actions';
 import {
   setAllDefaultThresholds,
@@ -99,19 +98,19 @@ export class GraphEffects {
       ]),
       map(
         ([
-           ,
-           patientADetails,
-           patientBDetails,
-           network,
-           nodeColorBy,
-           nodeSizeBy,
-           showAllNodes,
-           showOnlySharedNodes,
-           booleanProperty,
-           visibleNodes,
-           properties,
-           defaultAttributes,
-         ]) => {
+          ,
+          patientADetails,
+          patientBDetails,
+          network,
+          nodeColorBy,
+          nodeSizeBy,
+          showAllNodes,
+          showOnlySharedNodes,
+          booleanProperty,
+          visibleNodes,
+          properties,
+          defaultAttributes,
+        ]) => {
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
             patientADetails,
@@ -139,14 +138,9 @@ export class GraphEffects {
         concatLatestFrom(() => [
           this.store.select(selectShowAllNodes),
           this.store.select(selectShowOnlySharedNodes),
-          this.store.select(selectPatientSelection),
         ]),
-        map(([, showAllNodes, showOnlySharedNodes, patientSelection]) =>
-          this.graphService.updateShownNodes(
-            showAllNodes,
-            showOnlySharedNodes,
-            patientSelection !== PatientSelectionEnum.none,
-          ),
+        map(([, showAllNodes, showOnlySharedNodes]) =>
+          this.graphService.updateShownNodes(showAllNodes, showOnlySharedNodes),
         ),
       );
     },
@@ -212,6 +206,5 @@ export class GraphEffects {
     private actions$: Actions,
     private store: Store<AppState>,
     private graphService: GraphService,
-  ) {
-  }
+  ) {}
 }

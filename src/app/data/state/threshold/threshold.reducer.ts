@@ -45,7 +45,7 @@ export const thresholdReducer = createReducer(
       return {
         ...state,
         thresholds: {
-          ...state.thresholds,
+          default: [...state.thresholds.default],
           individual: thresholds,
         },
       };
@@ -53,14 +53,12 @@ export const thresholdReducer = createReducer(
     return {
       ...state,
       thresholds: {
-        ...state.thresholds,
+        individual: [...state.thresholds.individual],
         default: thresholds,
       },
     };
   }),
   on(setThreshold, (state: ThresholdState, { threshold }): ThresholdState => {
-    console.log(threshold);
-
     if (threshold.scope === PropertyScopeEnum.individual) {
       const index = state.thresholds.individual.findIndex(
         (a) => a.property.name === threshold.property.name,
@@ -73,7 +71,7 @@ export const thresholdReducer = createReducer(
       return {
         ...state,
         thresholds: {
-          ...state.thresholds,
+          default: [...state.thresholds.default],
           individual,
         },
       };
@@ -89,7 +87,7 @@ export const thresholdReducer = createReducer(
     return {
       ...state,
       thresholds: {
-        ...state.thresholds,
+        individual: [...state.thresholds.individual],
         default: defaults,
       },
     };

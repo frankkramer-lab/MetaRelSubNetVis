@@ -75,6 +75,20 @@ export class HydratorService {
     return thresholds;
   }
 
+  private static updateMin(min: number | undefined, value: string): number {
+    const numericValue = Number(value);
+    const currentMin: number = Number.isNaN(Number(min)) ? Number.MAX_SAFE_INTEGER : Number(min);
+    if (Number.isNaN(numericValue)) return currentMin;
+    return numericValue < currentMin ? numericValue : currentMin;
+  }
+
+  private static updateMax(max: number | undefined, value: string): number {
+    const numericValue = Number(value);
+    const currentMax: number = Number.isNaN(Number(max)) ? Number.MIN_SAFE_INTEGER : Number(max);
+    if (Number.isNaN(numericValue)) return currentMax;
+    return numericValue > currentMax ? numericValue : currentMax;
+  }
+
   initProperties(metaRelSubNetVis: any[]): PropertyCollection {
     const collection: PropertyCollection = {
       default: [],
@@ -177,15 +191,8 @@ export class HydratorService {
 
         if (property.type === PropertyTypeEnum.continuous) {
           // update this property's min and max
-          const numericDetailValue = Number(attribute.v);
-          if (!Number.isNaN(numericDetailValue) && property.maxA && property.minA) {
-            if (property.maxA < numericDetailValue) {
-              property.maxA = numericDetailValue;
-            }
-            if (property.minA > numericDetailValue) {
-              property.minA = numericDetailValue;
-            }
-          }
+          property.maxA = HydratorService.updateMax(property.maxA, attribute.v);
+          property.minA = HydratorService.updateMin(property.minA, attribute.v);
         }
       }
     });
@@ -209,32 +216,25 @@ export class HydratorService {
         (a: NodeAttributesItem) => a.n.startsWith(patient.name),
       );
 
-      patientDetailsRaw.forEach((detail) => {
-        const proteinName = nodesDictionary[detail.po];
+      patientDetailsRaw.forEach((attribute) => {
+        const proteinName = nodesDictionary[attribute.po];
         if (!patientDetailItemA[patient.name].map((a) => a.name).includes(proteinName)) {
           patientDetailItemA[patient.name].push({
-            id: detail.po.toString(),
+            id: attribute.po.toString(),
             name: proteinName,
           });
         }
         const relevantDetail = patientDetailItemA[patient.name].find((a) => a.name === proteinName);
         if (relevantDetail) {
           properties.individual.forEach((property: Property) => {
-            if (detail.n.endsWith(property.name)) {
+            if (attribute.n.endsWith(property.name)) {
               // this nodeAttribute relates to this property
-              relevantDetail[property.name] = detail.v;
+              relevantDetail[property.name] = attribute.v;
 
               if (property.type === PropertyTypeEnum.continuous) {
                 // update this property's min and max
-                const numericDetailValue = Number(detail.v);
-                if (!Number.isNaN(numericDetailValue) && property.maxA && property.minA) {
-                  if (property.maxA < numericDetailValue) {
-                    property.maxA = numericDetailValue;
-                  }
-                  if (property.minA > numericDetailValue) {
-                    property.minA = numericDetailValue;
-                  }
-                }
+                property.maxA = HydratorService.updateMax(property.maxA, attribute.v);
+                property.minA = HydratorService.updateMin(property.minA, attribute.v);
               }
             }
           });
@@ -250,32 +250,25 @@ export class HydratorService {
         (a: NodeAttributesItem) => a.n.startsWith(patient.name),
       );
 
-      patientDetailsRaw.forEach((detail) => {
-        const proteinName = nodesDictionary[detail.po];
+      patientDetailsRaw.forEach((attribute) => {
+        const proteinName = nodesDictionary[attribute.po];
         if (!patientDetailItemB[patient.name].map((a) => a.name).includes(proteinName)) {
           patientDetailItemB[patient.name].push({
-            id: detail.po.toString(),
+            id: attribute.po.toString(),
             name: proteinName,
           });
         }
         const relevantDetail = patientDetailItemB[patient.name].find((a) => a.name === proteinName);
         if (relevantDetail) {
           properties.individual.forEach((property: Property) => {
-            if (detail.n.endsWith(property.name)) {
+            if (attribute.n.endsWith(property.name)) {
               // this nodeAttribute relates to this property
-              relevantDetail[property.name] = detail.v;
+              relevantDetail[property.name] = attribute.v;
 
               if (property.type === PropertyTypeEnum.continuous) {
                 // update this property's min and max
-                const numericDetailValue = Number(detail.v);
-                if (!Number.isNaN(numericDetailValue) && property.maxB && property.minB) {
-                  if (property.maxB < numericDetailValue) {
-                    property.maxB = numericDetailValue;
-                  }
-                  if (property.minB > numericDetailValue) {
-                    property.minB = numericDetailValue;
-                  }
-                }
+                property.maxB = HydratorService.updateMax(property.maxB, attribute.v);
+                property.minB = HydratorService.updateMin(property.minB, attribute.v);
               }
             }
           });
@@ -403,6 +396,9 @@ export class HydratorService {
       properties.default,
       PropertyScopeEnum.default,
     );
+
+    console.log(propertiesIndividual);
+    console.log(propertiesDefault);
 
     return propertiesIndividual.concat(propertiesDefault);
   }

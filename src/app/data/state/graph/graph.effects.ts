@@ -26,6 +26,7 @@ import {
 import {
   fitGraph,
   setNodeColorBy,
+  setNodeMarkup,
   setNodeSizeBy,
   toggleBooleanProperty,
   toggleShowAllNodes,
@@ -74,6 +75,7 @@ export class GraphEffects {
         toggleBooleanProperty,
         setNodeColorBy,
         setNodeSizeBy,
+        setNodeMarkup,
       ),
       concatLatestFrom(() => [
         this.store.select(selectPatientADetails),

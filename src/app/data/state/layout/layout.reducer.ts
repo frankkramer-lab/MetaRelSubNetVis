@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { LayoutState } from './layout.state';
 import {
   setNodeColorBy,
+  setNodeMarkup,
   setNodeSizeBy,
   toggleBooleanProperty,
   toggleShowAllNodes,
@@ -27,9 +28,7 @@ const initialState: LayoutState = {
 export const layoutReducer = createReducer(
   initialState,
   on(loadDataSuccess, (state: LayoutState, { properties, highlightColor }): LayoutState => {
-    const firstContinuous = properties.default.find(
-      (a) => a.type === PropertyTypeEnum.continuous,
-    );
+    const firstContinuous = properties.default.find((a) => a.type === PropertyTypeEnum.continuous);
     return {
       ...state,
       properties,
@@ -38,6 +37,14 @@ export const layoutReducer = createReducer(
       nodeSizeBy: firstContinuous ?? null,
     };
   }),
+  on(
+    setNodeMarkup,
+    (state: LayoutState, { property }): LayoutState => ({
+      ...state,
+      nodeColorBy: property ?? state.nodeColorBy,
+      nodeSizeBy: property ?? state.nodeSizeBy,
+    }),
+  ),
   on(
     toggleBooleanProperty,
     (state: LayoutState, { booleanProperty }): LayoutState => ({

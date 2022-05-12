@@ -56,6 +56,20 @@ export class HydratorService {
     return cProperties.concat(dProperties, bProperties);
   }
 
+  private findThresholdProperties(properties: Property[]): ThresholdDefinition[] {
+    const validProperties = properties
+      .filter((a) => a.type === PropertyTypeEnum.continuous)
+      .filter((a) => a.threshold);
+    const thresholds: ThresholdDefinition[] = [];
+    validProperties.forEach((property) => {
+      thresholds.push({
+        property,
+        defined: Number.MIN_SAFE_INTEGER,
+      });
+    });
+    return thresholds;
+  }
+
   initProperties(metaRelSubNetVis: any[]): PropertyCollection {
     const collection: PropertyCollection = {
       default: [],
@@ -376,19 +390,10 @@ export class HydratorService {
   }
 
   hydrateThresholds(properties: PropertyCollection): ThresholdDefinition[] {
-    const availableProperties = properties.individual.filter(
-      (a) => a.type === PropertyTypeEnum.continuous,
-    );
-    const validProperties = availableProperties.filter((a) => a.threshold);
+    const propertiesIndividual = this.findThresholdProperties(properties.individual);
+    const propertiesDefault = this.findThresholdProperties(properties.default);
 
-    const thresholds: ThresholdDefinition[] = [];
-    validProperties.forEach((property) => {
-      thresholds.push({
-        property,
-        defined: Number.MIN_SAFE_INTEGER,
-      });
-    });
-    return thresholds;
+    return propertiesIndividual.concat(propertiesDefault);
   }
 
   hydrateHighlightColor(metaRelSubNetVis: any[]): string {

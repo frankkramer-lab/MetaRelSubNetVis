@@ -89,8 +89,6 @@ export class HydratorEffects {
             let metaRelSubNetVis: any;
             const labels: string[] = [];
 
-            console.log(data);
-
             (data as any[]).forEach((aspect) => {
               if (aspect.nodes) {
                 nodesRaw = aspect.nodes;
@@ -100,15 +98,6 @@ export class HydratorEffects {
               }
               if (aspect.nodeAttributes) {
                 nodeAttributes = aspect.nodeAttributes;
-
-                // todo remove
-                const defaultNa = (nodeAttributes as any[]).filter(
-                  (a: any) => !a.n.startsWith('GSM'),
-                );
-                const sigNa = (nodeAttributes as any[]).filter((a: any) => a.n.startsWith('sig'));
-                console.log(defaultNa);
-                console.log(sigNa);
-                console.log(nodeAttributes.length);
               }
               if (aspect.edges) {
                 edgesRaw = aspect.edges;

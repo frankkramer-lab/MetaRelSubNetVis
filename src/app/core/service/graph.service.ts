@@ -574,14 +574,13 @@ export class GraphService {
     visibleNodes: string[],
     properties: Property[],
   ): void {
-
     const boolProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
     this.cyCore.batch(() => {
       this.clear(boolProperties);
 
       const size = nodeSizeBy?.name;
       if (nodeSizeBy !== null) {
-        this.setSizeMap(nodeSizeBy);
+        this.setSizeMapDefault(nodeSizeBy);
       }
       const color = nodeColorBy?.name;
       if (nodeColorBy !== null) {
@@ -749,7 +748,8 @@ export class GraphService {
   }
 
   /**
-   * Applies sizing to the nodes
+   * Applies sizing to the nodes for selected patients.
+   * See {@link GraphService#setSizeMapDefault} for handling sizing for no selected patient.
    * @private
    */
   private setSizeMap(property: Property) {
@@ -757,6 +757,22 @@ export class GraphService {
     const max = Math.max(property.maxA ?? 1, property.maxB ?? 1);
     const mapNodeSize = `mapData(size, ${min}, ${max}, 50, 130)`;
     const mapFontSize = `mapData(size, ${min}, ${max}, 18, 30)`;
+    this.cyCore
+      .style()
+      // @ts-ignore
+      .selector('node[?member]')
+      .style('width', mapNodeSize)
+      .style('height', mapNodeSize)
+      .style('font-size', mapFontSize);
+  }
+
+  /**
+   * Builds the size map for the network's default markup.
+   * @private
+   */
+  private setSizeMapDefault(property: Property) {
+    const mapNodeSize = `mapData(size, ${property.min}, ${property.max}, 50, 130)`;
+    const mapFontSize = `mapData(size, ${property.min}, ${property.max}, 18, 30)`;
     this.cyCore
       .style()
       // @ts-ignore

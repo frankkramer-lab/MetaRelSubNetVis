@@ -24,7 +24,7 @@ import {
   selectShowOnlySharedNodes,
 } from '../layout/layout.selectors';
 import {
-  fitGraph,
+  fitGraph, keepNodeMarkup,
   setNodeColorBy,
   setNodeMarkup,
   setNodeSizeBy,
@@ -82,6 +82,7 @@ export class GraphEffects {
         setNodeColorBy,
         setNodeSizeBy,
         setNodeMarkup,
+        keepNodeMarkup,
       ),
       concatLatestFrom(() => [
         this.store.select(selectPatientADetails),

@@ -134,6 +134,7 @@ export class GraphService {
   ) {
     this.updateBooleanProperty(booleanProperty, properties);
     const visibleNodesIds: string[] = visibleNodes.map((a) => a.data.id.toString());
+    this.clearBooleanProperties(properties);
     const boolProperties = properties.individual.filter((a) => a.type === PropertyTypeEnum.boolean);
 
     if (
@@ -163,6 +164,28 @@ export class GraphService {
       );
     }
     this.updateShownNodes(showAllNodes, showOnlySharedNodes);
+  }
+
+  /**
+   * Returns a list of all properties with a boolean type from both individual and default styles.
+   * @param properties
+   * @private
+   */
+  private getAllBooleanProperties(properties: PropertyCollection): Property[] {
+    const propertiesIndividual = properties.individual.filter(
+      (a) => a.type === PropertyTypeEnum.boolean,
+    );
+    const propertiesDefault = properties.default.filter((a) => a.type === PropertyTypeEnum.boolean);
+    return propertiesDefault.concat(propertiesIndividual);
+  }
+
+  /**
+   * Clears all boolean properties from the core.
+   * @param properties
+   * @private
+   */
+  private clearBooleanProperties(properties: PropertyCollection): void {
+    this.clear(this.getAllBooleanProperties(properties));
   }
 
   /**
@@ -362,7 +385,7 @@ export class GraphService {
     ];
 
     // adding bool mappings
-    properties.individual.forEach((property: Property) => {
+    this.getAllBooleanProperties(properties).forEach((property: Property) => {
       if (property.type === PropertyTypeEnum.boolean) {
         const key = Object.keys(property.mapping)[0];
         const selector = key === 'true' ? `node.${property.name}` : `node[!${property.name}]`;
@@ -433,8 +456,6 @@ export class GraphService {
     boolProperties: Property[],
   ) {
     this.cyCore.batch(() => {
-      this.clear(boolProperties);
-
       const color = nodeColorBy?.name;
 
       if (nodeColorBy !== null) {
@@ -519,8 +540,6 @@ export class GraphService {
     boolProperties: Property[],
   ): void {
     this.cyCore.batch(() => {
-      this.clear(boolProperties);
-
       const size = nodeSizeBy?.name;
       if (nodeSizeBy !== null) {
         this.setSizeMap(nodeSizeBy);
@@ -567,6 +586,15 @@ export class GraphService {
     });
   }
 
+  /**
+   * Renders the network for no selected patient
+   * @param defaultAttributes
+   * @param nodeSizeBy
+   * @param nodeColorBy
+   * @param visibleNodes
+   * @param properties
+   * @private
+   */
   private visualizeDefault(
     defaultAttributes: AttributeItem[],
     nodeSizeBy: Property | null,
@@ -575,9 +603,8 @@ export class GraphService {
     properties: Property[],
   ): void {
     const boolProperties = properties.filter((a) => a.type === PropertyTypeEnum.boolean);
-    this.cyCore.batch(() => {
-      this.clear(boolProperties);
 
+    this.cyCore.batch(() => {
       const size = nodeSizeBy?.name;
       if (nodeSizeBy !== null) {
         this.setSizeMapDefault(nodeSizeBy);
@@ -729,8 +756,8 @@ export class GraphService {
    * Clears all applied styles
    * @private
    */
-  private clear(boolProperties: Property[]) {
-    boolProperties.forEach((property) => {
+  private clear(properties: Property[]) {
+    properties.forEach((property) => {
       this.cyCore.elements('node').removeData(property.name);
     });
 
@@ -805,10 +832,14 @@ export class GraphService {
     booleanProperty: Property | null,
     properties: PropertyCollection,
   ): void {
-    const booleanProperties = properties.individual.filter(
-      (a) => a.type === PropertyTypeEnum.boolean,
-    );
-    booleanProperties.forEach((property) => {
+    // const booleanPropertiesIndividual = properties.individual.filter(
+    //   (a) => a.type === PropertyTypeEnum.boolean,
+    // );
+    // const booleanPropertiesDefault = properties.default.filter(
+    //   (a) => a.type === PropertyTypeEnum.boolean,
+    // );
+    // const booleanProperties = booleanPropertiesDefault.concat(booleanPropertiesIndividual);
+    this.getAllBooleanProperties(properties).forEach((property) => {
       this.cyCore
         .style()
         // @ts-ignore

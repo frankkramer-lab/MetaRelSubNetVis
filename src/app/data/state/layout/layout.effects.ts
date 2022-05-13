@@ -8,7 +8,7 @@ import { selectPatientSelection } from '../patient/patient.selectors';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import { selectProperties } from './layout.selectors';
 import { PropertyTypeEnum } from '../../../core/enum/property-type-enum';
-import { setNodeMarkup } from './layout.actions';
+import { keepNodeMarkup, setNodeMarkup } from './layout.actions';
 import { Property } from '../../schema/property';
 
 @Injectable()
@@ -38,6 +38,7 @@ export class LayoutEffects {
               property =
                 properties.individual.find((a) => a.type === PropertyTypeEnum.discrete) ?? null;
             }
+            return setNodeMarkup({ property });
           }
           if (curr === PatientSelectionEnum.none) {
             // A | B => none
@@ -51,9 +52,11 @@ export class LayoutEffects {
               property =
                 properties.default.find((a) => a.type === PropertyTypeEnum.discrete) ?? null;
             }
+            return setNodeMarkup({ property });
           }
+          return keepNodeMarkup();
         }
-        return setNodeMarkup({ property });
+        return keepNodeMarkup();
       }),
     );
   });

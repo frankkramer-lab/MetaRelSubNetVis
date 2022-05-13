@@ -41,6 +41,7 @@ export const layoutReducer = createReducer(
     setNodeMarkup,
     (state: LayoutState, { property }): LayoutState => ({
       ...state,
+      booleanProperty: null,
       nodeColorBy: property ?? state.nodeColorBy,
       nodeSizeBy: property ?? state.nodeSizeBy,
     }),

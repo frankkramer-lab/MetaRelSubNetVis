@@ -24,7 +24,8 @@ import {
   selectShowOnlySharedNodes,
 } from '../layout/layout.selectors';
 import {
-  fitGraph, keepNodeMarkup,
+  fitGraph,
+  keepNodeMarkup,
   setNodeColorBy,
   setNodeMarkup,
   setNodeSizeBy,

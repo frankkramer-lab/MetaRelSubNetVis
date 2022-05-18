@@ -55,10 +55,7 @@ import {
 import { selectUuid } from '../../data/state/network/network.selectors';
 import { Property } from '../../data/schema/property';
 import { ThresholdDefinition } from '../../data/schema/threshold-definition';
-import {
-  selectRelevantThresholds,
-  selectThresholds,
-} from '../../data/state/threshold/threshold.selectors';
+import { selectRelevantThresholds } from '../../data/state/threshold/threshold.selectors';
 
 @Component({
   selector: 'app-sidebar-generator',

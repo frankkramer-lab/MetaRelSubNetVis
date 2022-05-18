@@ -6,8 +6,8 @@ import {
   selectActiveBooleanProperty,
   selectGradient,
   selectNodeColorBy,
-  selectNodeSizeBy, selectProperties,
-  selectPropertiesIndividual, selectRelevantProperties,
+  selectNodeSizeBy,
+  selectRelevantProperties,
   selectShowAllNodes,
   selectShowOnlySharedNodes,
 } from '../../data/state/layout/layout.selectors';

@@ -12,7 +12,7 @@ export const toggleShowOnlySharedNodes = createAction(
 export const keepNodeMarkup = createAction('[Layout Effects] keep current node markup');
 export const setNodeMarkup = createAction(
   '[Layout Effects] set node color and size by the same property',
-  props<{ property: Property | null}>(),
+  props<{ property: Property | null }>(),
 );
 export const setNodeColorBy = createAction(
   '[Sidebar Layout Component] select color nodes by',

@@ -72,6 +72,5 @@ export class ThresholdEffects {
     private actions$: Actions,
     private apiService: ApiService,
     private store: Store<AppState>,
-  ) {
-  }
+  ) {}
 }

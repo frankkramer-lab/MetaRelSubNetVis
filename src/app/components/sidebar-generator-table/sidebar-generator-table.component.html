@@ -20,7 +20,7 @@
       <td>Patient {{ groupLabelB === '' ? 'Group B' : groupLabelB }}</td>
       <td>{{ patientB?.name }}</td>
     </tr>
-    <tr *ngIf="thresholds && thresholds.length > 0 && (patientA !== null || patientB !== null)">
+    <tr *ngIf="thresholds && thresholds.length > 0">
       <td>Thresholds</td>
       <td>
         <div *ngFor="let threshold of thresholds" class="row">

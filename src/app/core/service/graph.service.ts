@@ -167,28 +167,6 @@ export class GraphService {
   }
 
   /**
-   * Returns a list of all properties with a boolean type from both individual and default styles.
-   * @param properties
-   * @private
-   */
-  private getAllBooleanProperties(properties: PropertyCollection): Property[] {
-    const propertiesIndividual = properties.individual.filter(
-      (a) => a.type === PropertyTypeEnum.boolean,
-    );
-    const propertiesDefault = properties.default.filter((a) => a.type === PropertyTypeEnum.boolean);
-    return propertiesDefault.concat(propertiesIndividual);
-  }
-
-  /**
-   * Clears all boolean properties from the core.
-   * @param properties
-   * @private
-   */
-  private clearBooleanProperties(properties: PropertyCollection): void {
-    this.clear(this.getAllBooleanProperties(properties));
-  }
-
-  /**
    * If the displayed nodes are not modified themselves,
    * it's sufficient to update which nodes are displayed.
    */
@@ -233,6 +211,28 @@ export class GraphService {
           .addClass('highlight');
       });
     }
+  }
+
+  /**
+   * Returns a list of all properties with a boolean type from both individual and default styles.
+   * @param properties
+   * @private
+   */
+  private getAllBooleanProperties(properties: PropertyCollection): Property[] {
+    const propertiesIndividual = properties.individual.filter(
+      (a) => a.type === PropertyTypeEnum.boolean,
+    );
+    const propertiesDefault = properties.default.filter((a) => a.type === PropertyTypeEnum.boolean);
+    return propertiesDefault.concat(propertiesIndividual);
+  }
+
+  /**
+   * Clears all boolean properties from the core.
+   * @param properties
+   * @private
+   */
+  private clearBooleanProperties(properties: PropertyCollection): void {
+    this.clear(this.getAllBooleanProperties(properties));
   }
 
   /**

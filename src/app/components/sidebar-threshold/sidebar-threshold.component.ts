@@ -41,8 +41,7 @@ export class SidebarThresholdComponent implements OnInit {
 
   max$!: Observable<number[]>;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.multiplier$ = this.store.select(selectMultiplier);

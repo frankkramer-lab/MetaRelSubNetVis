@@ -19,66 +19,6 @@ import { ThresholdCollection } from '../../data/schema/threshold-collection';
   providedIn: 'root',
 })
 export class HydratorService {
-  private extractProperties(input: any[]): Property[] {
-    const cProperties: Property[] = [];
-    const dProperties: Property[] = [];
-    const bProperties: Property[] = [];
-
-    input.forEach((p: any) => {
-      const name = p.property ?? 'n/a';
-      const property: Property = {
-        label: p.label ?? name,
-        name,
-        mapping: p.mapping ?? null,
-        threshold: false,
-        type: PropertyTypeEnum.boolean,
-      };
-
-      if (p.type) {
-        switch (p.type) {
-          case 'continuous':
-            property.type = PropertyTypeEnum.continuous;
-            property.threshold = p.threshold;
-            property.minA = Number.MAX_SAFE_INTEGER;
-            property.minB = Number.MAX_SAFE_INTEGER;
-            property.maxA = Number.MIN_SAFE_INTEGER;
-            property.maxB = Number.MIN_SAFE_INTEGER;
-            cProperties.push(property);
-            break;
-          case 'discrete':
-            property.type = PropertyTypeEnum.discrete;
-            dProperties.push(property);
-            break;
-          default:
-            bProperties.push(property);
-            break;
-        }
-      }
-    });
-    return cProperties.concat(dProperties, bProperties);
-  }
-
-  private findThresholdProperties(
-    properties: Property[],
-    scope: PropertyScopeEnum,
-  ): ThresholdDefinition[] {
-    const validProperties = properties
-      .filter((a) => a.type === PropertyTypeEnum.continuous)
-      .filter((a) => a.threshold);
-    const thresholds: ThresholdDefinition[] = [];
-    validProperties.forEach((property) => {
-      thresholds.push({
-        property,
-        defined:
-          scope === PropertyScopeEnum.default
-            ? property.min ?? Number.MIN_SAFE_INTEGER
-            : Number.MIN_SAFE_INTEGER,
-        scope,
-      });
-    });
-    return thresholds;
-  }
-
   private static updateMin(min: number | undefined, value: string): number {
     const numericValue = Number(value);
     const currentMin: number = Number.isNaN(Number(min)) ? Number.MAX_SAFE_INTEGER : Number(min);
@@ -409,5 +349,65 @@ export class HydratorService {
 
   hydrateHighlightColor(metaRelSubNetVis: any[]): string {
     return metaRelSubNetVis[0].highlight ?? '#000000';
+  }
+
+  private extractProperties(input: any[]): Property[] {
+    const cProperties: Property[] = [];
+    const dProperties: Property[] = [];
+    const bProperties: Property[] = [];
+
+    input.forEach((p: any) => {
+      const name = p.property ?? 'n/a';
+      const property: Property = {
+        label: p.label ?? name,
+        name,
+        mapping: p.mapping ?? null,
+        threshold: false,
+        type: PropertyTypeEnum.boolean,
+      };
+
+      if (p.type) {
+        switch (p.type) {
+          case 'continuous':
+            property.type = PropertyTypeEnum.continuous;
+            property.threshold = p.threshold;
+            property.minA = Number.MAX_SAFE_INTEGER;
+            property.minB = Number.MAX_SAFE_INTEGER;
+            property.maxA = Number.MIN_SAFE_INTEGER;
+            property.maxB = Number.MIN_SAFE_INTEGER;
+            cProperties.push(property);
+            break;
+          case 'discrete':
+            property.type = PropertyTypeEnum.discrete;
+            dProperties.push(property);
+            break;
+          default:
+            bProperties.push(property);
+            break;
+        }
+      }
+    });
+    return cProperties.concat(dProperties, bProperties);
+  }
+
+  private findThresholdProperties(
+    properties: Property[],
+    scope: PropertyScopeEnum,
+  ): ThresholdDefinition[] {
+    const validProperties = properties
+      .filter((a) => a.type === PropertyTypeEnum.continuous)
+      .filter((a) => a.threshold);
+    const thresholds: ThresholdDefinition[] = [];
+    validProperties.forEach((property) => {
+      thresholds.push({
+        property,
+        defined:
+          scope === PropertyScopeEnum.default
+            ? property.min ?? Number.MIN_SAFE_INTEGER
+            : Number.MIN_SAFE_INTEGER,
+        scope,
+      });
+    });
+    return thresholds;
   }
 }

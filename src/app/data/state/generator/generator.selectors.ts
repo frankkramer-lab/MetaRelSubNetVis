@@ -81,8 +81,13 @@ export const selectUrl = createSelector(
     if (patientB) {
       queryParams.push(`pb=${patientB.name}`);
     }
-    if (patientA || patientB) { // fixme
+    if (patientA || patientB) {
       thresholds.individual.forEach((threshold) => {
+        const paramKey = `th_${threshold.property.name}`;
+        queryParams.push(`${paramKey}=${threshold.defined}`);
+      });
+    } else {
+      thresholds.default.forEach((threshold) => {
         const paramKey = `th_${threshold.property.name}`;
         queryParams.push(`${paramKey}=${threshold.defined}`);
       });
@@ -127,7 +132,6 @@ export const selectUrl = createSelector(
         queryParams.push(`bb=${state.backButtonVisibility}`);
       }
     }
-
     return `${state.domain}?${queryParams.join('&')}`;
   },
 );

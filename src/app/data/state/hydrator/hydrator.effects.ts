@@ -35,6 +35,7 @@ import {
   selectPatientB,
   selectPatientGroupA,
   selectPatientGroupB,
+  selectPatientSelection,
 } from '../patient/patient.selectors';
 import { Patient } from '../../schema/patient';
 import { AttributeItem } from '../../schema/attribute-item';
@@ -51,12 +52,12 @@ import { PatientCollection } from '../../schema/patient-collection';
 import { HydratorService } from '../../../core/service/hydrator.service';
 import { Network } from '../../schema/network';
 import { setUuid } from '../network/network.actions';
-import { ThresholdDefinition } from '../../schema/threshold-definition';
-import { selectProperties, selectPropertiesIndividual } from '../layout/layout.selectors';
+import { selectRelevantProperties } from '../layout/layout.selectors';
 import { PropertyTypeEnum } from '../../../core/enum/property-type-enum';
 import { Property } from '../../schema/property';
 import { PropertyScopeEnum } from '../../../core/enum/property-scope.enum';
 import { ThresholdCollection } from '../../schema/threshold-collection';
+import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 
 @Injectable()
 export class HydratorEffects {
@@ -228,9 +229,10 @@ export class HydratorEffects {
       ofType(hydratePatientAPatientBSuccess, hydratePatientAPatientBFailure),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
-        this.store.select(selectProperties),
+        this.store.select(selectRelevantProperties),
+        this.store.select(selectPatientSelection),
       ]),
-      map(([, config, properties]) => {
+      map(([, config, properties, patientSelection]) => {
         if (!config || !config.th) return hydrateThresholdFailure();
 
         const thresholds: ThresholdCollection = {
@@ -240,21 +242,22 @@ export class HydratorEffects {
 
         Object.entries(config.th).forEach(([key, value]) => {
           const numericValue = Number(value);
-          // fixme: handle distinction between individual and default properties
-          const property = properties.individual.find(
+          const property = properties.find(
             (a: Property) => a.name === key && a.type === PropertyTypeEnum.continuous,
           );
 
           if (property && !Number.isNaN(numericValue)) {
-            // fixme: handle distinction between individual and default thresholds
-            thresholds.individual.push({
+            (patientSelection === PatientSelectionEnum.none
+              ? thresholds.default
+              : thresholds.individual
+            ).push({
               defined: numericValue,
               property,
               scope: PropertyScopeEnum.individual,
             });
           }
         });
-
+        console.log(thresholds);
         return hydrateThresholdSuccess({ thresholds });
       }),
     );
@@ -265,7 +268,7 @@ export class HydratorEffects {
       ofType(hydrateThresholdSuccess, hydrateThresholdFailure),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
-        this.store.select(selectPropertiesIndividual),
+        this.store.select(selectRelevantProperties),
       ]),
       map(([, config, properties]) => {
         if (!config || (!config.shared && !config.all && !config.col && !config.size))
@@ -398,6 +401,5 @@ export class HydratorEffects {
     private apiService: ApiService,
     private hydratorService: HydratorService,
     private router: Router,
-  ) {
-  }
+  ) {}
 }

@@ -82,3 +82,7 @@ The mapping types result in different mapping behaviors:
 
 The summary network is accessible on NDEx
 via [https://www.ndexbio.org/viewer/networks/a420aaee-4be9-11ec-b3be-0ac135e8bacf](https://www.ndexbio.org/viewer/networks/a420aaee-4be9-11ec-b3be-0ac135e8bacf)
+
+# R implementation
+
+Supplementary information about implementing this data format as extension to the Bioconductor package [RCX](https://bioconductor.org/packages/release/bioc/html/RCX.html) can be found in [the R directory](R/).

@@ -6,6 +6,7 @@ import { HydratorEffects } from './hydrator/hydrator.effects';
 import { GeneratorEffects } from './generator/generator.effects';
 import { SidebarEffects } from './sidebar/sidebar.effects';
 import { HomeEffects } from './home/home.effects';
+import { LayoutEffects } from './layout/layout.effects';
 
 export const effects: any[] = [
   PatientEffects,
@@ -16,4 +17,5 @@ export const effects: any[] = [
   GeneratorEffects,
   SidebarEffects,
   HomeEffects,
+  LayoutEffects,
 ];

@@ -1,12 +1,13 @@
 <app-sidebar-nodes-form
-  [occurrences]="occurrences$|async"
+  (filterTermChanged)="triggerFilterTermChanged($event)"
+  (nodeClicked)="triggerMarkNode($event)"
+  (sortingChanged)="triggerSorting($event)"
+  (unmarkAllNodes)="triggerUnmarkAllNodes()"
+  [markedNodes]="markedNodes$ | async"
   [nodes]="nodes$ | async"
-  [markedNodes]="markedNodes$ |async"
   [numberOfColumns]="numberOfColumns$ | async"
+  [occurrences]="occurrences$ | async"
   [subTypeColumnA]="subtypeColumnA$ | async"
   [subTypeColumnB]="subtypeColumnB$ | async"
-  (sortingChanged)="triggerSorting($event)"
-  (nodeClicked)="triggerMarkNode($event)"
-  (unmarkAllNodes)="triggerUnmarkAllNodes()"
-  (filterTermChanged)="triggerFilterTermChanged($event)">
+>
 </app-sidebar-nodes-form>

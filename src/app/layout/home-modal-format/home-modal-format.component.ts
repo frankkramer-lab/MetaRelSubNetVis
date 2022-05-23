@@ -6,10 +6,8 @@ import { AppState } from '../../data/state/app.state';
 @Component({
   selector: 'app-home-modal-format',
   templateUrl: './home-modal-format.component.html',
-  styleUrls: ['./home-modal-format.component.scss']
+  styleUrls: ['./home-modal-format.component.scss'],
 })
 export class HomeModalFormatComponent {
-
-  constructor(public activeModal: NgbActiveModal, private store: Store<AppState>) { }
-
+  constructor(public activeModal: NgbActiveModal, private store: Store<AppState>) {}
 }

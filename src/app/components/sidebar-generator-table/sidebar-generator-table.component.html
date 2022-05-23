@@ -1,76 +1,76 @@
 <table class="table table-dark table-striped">
   <thead>
-  <tr>
-    <th scope="col">Variable</th>
-    <th scope="col">Value</th>
-  </tr>
+    <tr>
+      <th scope="col">Variable</th>
+      <th scope="col">Value</th>
+    </tr>
   </thead>
   <tbody>
-  <tr>
-    <td><b>UUID</b></td>
-    <td>
-      <b>{{ uuid }}</b>
-    </td>
-  </tr>
-  <tr>
-    <td>Patient {{ groupLabelA === '' ? 'Group A' : groupLabelA }}</td>
-    <td>{{ patientA?.name }}</td>
-  </tr>
-  <tr>
-    <td>Patient {{ groupLabelB === '' ? 'Group B' : groupLabelB }}</td>
-    <td>{{ patientB?.name }}</td>
-  </tr>
-  <tr *ngIf="thresholds && thresholds.length > 0 && (patientA !== null || patientB !== null)">
-    <td>Thresholds</td>
-    <td>
-      <div class="row" *ngFor="let threshold of thresholds">
-        <div class="col-4">
-          <b>{{ threshold.property.label ?? threshold.property.name }}</b
-          >:
+    <tr>
+      <td><b>UUID</b></td>
+      <td>
+        <b>{{ uuid }}</b>
+      </td>
+    </tr>
+    <tr>
+      <td>Patient {{ groupLabelA === '' ? 'Group A' : groupLabelA }}</td>
+      <td>{{ patientA?.name }}</td>
+    </tr>
+    <tr>
+      <td>Patient {{ groupLabelB === '' ? 'Group B' : groupLabelB }}</td>
+      <td>{{ patientB?.name }}</td>
+    </tr>
+    <tr *ngIf="thresholds && thresholds.length > 0">
+      <td>Thresholds</td>
+      <td>
+        <div *ngFor="let threshold of thresholds" class="row">
+          <div class="col-4">
+            <b>{{ threshold.property.label }}</b
+            >:
+          </div>
+          <div class="col-8">approx. {{ threshold.defined | norm: 2 }}</div>
         </div>
-        <div class="col-8">approx. {{ threshold.defined | norm: 2 }}</div>
-      </div>
-    </td>
-  </tr>
-  <tr *ngIf="nodes">
-    <td>Selected nodes ({{ nodes.length }} selected)</td>
-    <td>
-      <ul *ngIf="nodes.length > 0">
-        <li *ngFor="let node of nodes">{{ node.data.name }}</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td>Node's color</td>
-    <td>{{ nodesColorBy?.label ?? nodesColorBy?.name }}</td>
-  </tr>
-  <tr>
-    <td>Node's size</td>
-    <td>{{ nodesSizeBy?.label ?? nodesSizeBy?.name }}</td>
-  </tr>
-  <tr>
-    <td>Show all nodes</td>
-    <td>{{ showAll ? 'yes' : 'no' }}</td>
-  </tr>
-  <tr>
-    <td>Show only shared nodes</td>
-    <td>{{ showShared ? 'yes' : 'no' }}</td>
-  </tr>
-  <tr *ngIf="booleanProperty !== null">
-    <td>Mark nodes with property</td>
-    <td>{{ booleanProperty.label ?? booleanProperty.name ?? '-' }}</td>
-  </tr>
+      </td>
+    </tr>
+    <tr *ngIf="nodes">
+      <td>Selected nodes ({{ nodes.length }} selected)</td>
+      <td>
+        <ul *ngIf="nodes.length > 0">
+          <li *ngFor="let node of nodes">{{ node.data.name }}</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>Node's color</td>
+      <td>{{ nodesColorBy?.label }}</td>
+    </tr>
+    <tr>
+      <td>Node's size</td>
+      <td>{{ nodesSizeBy?.label }}</td>
+    </tr>
+    <tr>
+      <td>Show all nodes</td>
+      <td>{{ showAll ? 'yes' : 'no' }}</td>
+    </tr>
+    <tr>
+      <td>Show only shared nodes</td>
+      <td>{{ showShared ? 'yes' : 'no' }}</td>
+    </tr>
+    <tr *ngIf="booleanProperty !== null">
+      <td>Mark nodes with property</td>
+      <td>{{ booleanProperty.label }}</td>
+    </tr>
   </tbody>
 </table>
 
 <div class="mb-2">
   <div class="mb-3 form-check">
     <input
-      type="checkbox"
+      (ngModelChange)="triggerDownloadChanged.emit()"
+      [ngModel]="triggerImmediateImageDownload"
       class="form-check-input"
       id="triggerImageDownload"
-      [ngModel]="triggerImmediateImageDownload"
-      (ngModelChange)="triggerDownloadChanged.emit()"
+      type="checkbox"
     />
     <label class="form-check-label" for="triggerImageDownload">Set immediate image download</label>
   </div>

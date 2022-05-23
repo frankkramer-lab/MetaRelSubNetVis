@@ -1,34 +1,27 @@
-<ng-container *ngIf="patientsSelected !== 0; else emptyTemplate">
-
-  <h5>
+<ng-container>
+  <h5 *ngIf="patientsSelected === 1 || patientsSelected === 2 || patientsSelected === 3">
     {{
-    patientsSelected === 3
-      ? 'Both patients:'
-      : patientsSelected === 1
+      patientsSelected === 3
+        ? 'Both patients:'
+        : patientsSelected === 1
         ? groupLabelA + ':'
         : groupLabelB + ':'
     }}
   </h5>
 
-  <ng-container *ngFor="let threshold of thresholds; let thIndex = index">
+  <h5 *ngIf="patientsSelected === 0">All nodes:</h5>
 
+  <ng-container *ngFor="let threshold of thresholds; let thIndex = index">
     <app-sidebar-threshold-selector-range
-      [threshold]="threshold"
-      [patientSelection]="patientsSelected"
+      (thresholdChangedEmitter)="thresholdChangedEmitter.emit($event)"
       [groupLabelA]="groupLabelA"
       [groupLabelB]="groupLabelB"
-      [multiplier]="multiplier"
-      [min]="min ? min[thIndex] : 0"
       [max]="max ? max[thIndex] : 1"
-      (thresholdChangedEmitter)="thresholdChangedEmitter.emit($event)"
+      [min]="min ? min[thIndex] : 0"
+      [multiplier]="multiplier"
+      [threshold]="threshold"
     ></app-sidebar-threshold-selector-range>
 
-    <hr>
-
+    <hr />
   </ng-container>
-
 </ng-container>
-
-<ng-template #emptyTemplate>
-  <p>Select at least one patient above</p>
-</ng-template>

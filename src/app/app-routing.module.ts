@@ -6,17 +6,18 @@ import { NetworkGuard } from './core/guard/network.guard';
 import { LinkComponent } from './layout/link/link.component';
 
 const routes: Routes = [
-  { path: 'home',
-    component: HomeComponent,
-  },
   {
     path: '',
     component: LinkComponent,
   },
   {
+    path: 'home',
+    component: HomeComponent,
+  },
+  {
     path: 'network',
     component: NetworkComponent,
-    canActivate: [NetworkGuard]
+    canActivate: [NetworkGuard],
   },
   { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];

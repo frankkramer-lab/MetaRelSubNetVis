@@ -8,9 +8,8 @@ describe('SidebarThresholdSelectorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SidebarThresholdSelectorComponent ]
-    })
-    .compileComponents();
+      declarations: [SidebarThresholdSelectorComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

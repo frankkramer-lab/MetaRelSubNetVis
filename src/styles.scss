@@ -1,21 +1,22 @@
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
 
-:root {
-  --custom-red: #ff3d6a;
-  --custom-yellow: #e8e857;
-  --custom-blue: #599eff;
-  --custom-green: #0b0;
-  --custom-gray: #888;
-  --custom-dark: #0f0f0f;
-  --custom-highlight: #333;
+.cursor {
+  cursor: pointer;
 }
 
-.full-height {
-  height: 100vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
+.scroll-style::-webkit-scrollbar-track {
+  border: 1px solid black;
+  background-color: #3a3a3a;
+}
+
+.scroll-style::-webkit-scrollbar {
+  width: 10px;
+  background-color: #3a3a3a;
+}
+
+.scroll-style::-webkit-scrollbar-thumb {
+  background-color: black;
 }
 
 .dark-mode {
@@ -23,13 +24,13 @@
   color: $light;
 }
 
+.icon-hover:hover {
+  color: $info !important;
+}
+
 .light-mode {
   background-color: #fff;
   color: $dark;
-}
-
-.cursor {
-  cursor: pointer;
 }
 
 .circle {
@@ -40,40 +41,4 @@
   border: 4px solid $light;
   top: 5px;
   position: relative;
-}
-
-.icon-hover:hover {
-  color: $info !important;
-}
-
-#table-nodes {
-  max-height: 200px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
-.scroll-style::-webkit-scrollbar-track
-{
-  border: 1px solid black;
-  background-color: #3a3a3a;
-}
-
-.scroll-style::-webkit-scrollbar
-{
-  width: 10px;
-  background-color: #3a3a3a;
-}
-
-.scroll-style::-webkit-scrollbar-thumb
-{
-  background-color: black;
-}
-
-.gradient {
-  height: 20px;
-  width: 100%;
-}
-
-.btn-radio-hidden {
-  display: none;
 }

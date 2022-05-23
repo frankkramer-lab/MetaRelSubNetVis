@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { resetPatientA, resetPatientB, setPatientSelection } from './patient.actions';
 import { setColumnGroupA, setColumnGroupB } from '../nodes/nodes.actions';
 import { AppState } from '../app.state';
-import { Store } from '@ngrx/store';
 import { selectPatientSelection } from './patient.selectors';
 
 @Injectable()

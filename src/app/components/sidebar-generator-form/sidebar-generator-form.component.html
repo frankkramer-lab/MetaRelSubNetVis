@@ -1,12 +1,12 @@
 <app-sidebar-download-form
-  *ngIf="imageDownloadConfig"
-  [isFormValid]="isImageFormValid"
-  [buttonVisible]="false"
-  [extension]="imageDownloadConfig.extension"
-  [scale]="imageDownloadConfig.scale"
-  [transparentBackground]="imageDownloadConfig.transparent"
   (extensionChanged)="imageExtensionChanged.emit($event)"
   (scaleChanged)="imageScaleChanged.emit($event)"
   (transparentBackgroundChanged)="imageTransparencyChanged.emit()"
+  *ngIf="imageDownloadConfig"
+  [buttonVisible]="false"
+  [extension]="imageDownloadConfig.extension"
+  [isFormValid]="isImageFormValid"
+  [scale]="imageDownloadConfig.scale"
+  [transparentBackground]="imageDownloadConfig.transparent"
 >
 </app-sidebar-download-form>

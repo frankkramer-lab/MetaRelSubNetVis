@@ -9,9 +9,9 @@
           target="_blank"
         >
           <img
+            alt="Chair logo"
             class="img-fluid"
             src="https://assets.uni-augsburg.de/media/filer_public_thumbnails/filer_public/69/0d/690d57b6-7679-411b-8a60-6ae0d02122ef/misitsvg.png__1080x2000_q85_subject_location-215%2C89_subsampling-2.png"
-            alt="Chair logo"
           />
         </a>
       </div>
@@ -29,21 +29,21 @@
       <div class="accordion-item">
         <h2 class="accordion-header" id="accordionAboutHead">
           <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#accordionAboutContent"
-            aria-expanded="false"
             aria-controls="accordionAboutContent"
+            aria-expanded="false"
+            class="accordion-button collapsed"
+            data-bs-target="#accordionAboutContent"
+            data-bs-toggle="collapse"
+            type="button"
           >
             About
           </button>
         </h2>
         <div
-          id="accordionAboutContent"
-          class="accordion-collapse collapse"
           aria-labelledby="accordionAboutHead"
+          class="accordion-collapse collapse"
           data-bs-parent="#homeAccordion"
+          id="accordionAboutContent"
         >
           <div class="accordion-body">
             Comparing groups of patients with respect to biological specifics is one of the building
@@ -58,21 +58,21 @@
       <div class="accordion-item">
         <h2 class="accordion-header" id="accordionNdexHead">
           <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#accordionNdexContent"
-            aria-expanded="false"
             aria-controls="accordionNdexContent"
+            aria-expanded="false"
+            class="accordion-button collapsed"
+            data-bs-target="#accordionNdexContent"
+            data-bs-toggle="collapse"
+            type="button"
           >
             NDEx
           </button>
         </h2>
         <div
-          id="accordionNdexContent"
-          class="accordion-collapse collapse"
           aria-labelledby="accordionNdexHead"
+          class="accordion-collapse collapse"
           data-bs-parent="#homeAccordion"
+          id="accordionNdexContent"
         >
           <div class="accordion-body">
             The <b>N</b>etwork <b>D</b>ata <b>Ex</b>change is an online platform specifically
@@ -91,27 +91,28 @@
       <div class="accordion-item">
         <h2 class="accordion-header" id="accordionStartHead">
           <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#accordionStartContent"
-            aria-expanded="false"
             aria-controls="accordionStartContent"
+            aria-expanded="false"
+            class="accordion-button collapsed"
+            data-bs-target="#accordionStartContent"
+            data-bs-toggle="collapse"
+            type="button"
           >
             Getting started
           </button>
         </h2>
         <div
-          id="accordionStartContent"
-          class="accordion-collapse collapse"
           aria-labelledby="accordionStartHead"
+          class="accordion-collapse collapse"
           data-bs-parent="#homeAccordion"
+          id="accordionStartContent"
         >
           <div class="accordion-body">
             To kick-off your visualization, you need a network stored on NDEx that conforms to the
             <a href="https://home.ndexbio.org/data-model/" target="_blank">CX data model</a> and
-            contains all aspects that we expect during rendering. Find out about the necessary aspects
-            <span class="link-primary cursor text-decoration-underline" (click)="showModal.emit()"
+            contains all aspects that we expect during rendering. Find out about the necessary
+            aspects
+            <span (click)="showModal.emit()" class="link-primary cursor text-decoration-underline"
               >here</span
             >.
           </div>
@@ -126,26 +127,26 @@
     <!-- FORM -->
     <div class="input-group">
       <input
+        (keyup.enter)="searchNdex.emit(searchTerm)"
         [(ngModel)]="searchTerm"
-        type="text"
+        [readOnly]="isLoading || setupInProgress"
+        aria-describedby="httpSearch"
         class="form-control"
         placeholder="Search..."
-        aria-describedby="httpSearch"
-        [readOnly]="isLoading || setupInProgress"
-        (keyup.enter)="searchNdex.emit(searchTerm)"
+        type="text"
       />
       <div class="input-group-append">
         <button
+          (click)="searchNdex.emit(searchTerm)"
+          [disabled]="setupInProgress"
+          [openDelay]="1000"
           class="btn btn-outline-primary"
-          type="button"
-          id="httpSearchPrivate"
           container="body"
           data-toggle="tooltip"
+          id="httpSearchPrivate"
           ngbTooltip="Search NDEx by entering a term"
-          [openDelay]="1000"
-          [disabled]="setupInProgress"
           placement="left"
-          (click)="searchNdex.emit(searchTerm)"
+          type="button"
         >
           <span *ngIf="!isLoading">Search</span>
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status">
@@ -156,7 +157,7 @@
     </div>
 
     <!-- hint: empty term -->
-    <div class="card border-warning mt-2" *ngIf="lastTermWasEmpty">
+    <div *ngIf="lastTermWasEmpty" class="card border-warning mt-2">
       <div class="card-body">
         <h5 class="card-title">Term missing</h5>
         <p class="card-text">
@@ -166,7 +167,7 @@
     </div>
 
     <!-- hint: empty result -->
-    <div class="card border-warning mt-2" *ngIf="lastResultWasEmpty">
+    <div *ngIf="lastResultWasEmpty" class="card border-warning mt-2">
       <div class="card-body">
         <h5 class="card-title">Empty result</h5>
         <p class="card-text">
@@ -183,11 +184,11 @@
         <ul class="list-group">
           <ng-container *ngIf="sampleNetworks !== null">
             <li
-              class="list-group-item cursor"
-              *ngFor="let sample of sampleNetworks"
               (click)="networkDetailsEmitter.emit(sample)"
-              [ngClass]="sample === selectedNetwork ? 'active' : ''"
+              *ngFor="let sample of sampleNetworks"
               [attr.aria-current]="sample === selectedNetwork"
+              [ngClass]="sample === selectedNetwork ? 'active' : ''"
+              class="list-group-item cursor"
             >
               <fa-icon icon="star"></fa-icon>&nbsp;[OFFICIAL DEMO] {{ sample.name }}
             </li>
@@ -195,10 +196,10 @@
 
           <ng-container *ngFor="let network of networks">
             <li
-              class="list-group-item cursor"
               (click)="networkDetailsEmitter.emit(network)"
-              [ngClass]="network === selectedNetwork ? 'active' : ''"
               [attr.aria-current]="network === selectedNetwork"
+              [ngClass]="network === selectedNetwork ? 'active' : ''"
+              class="list-group-item cursor"
             >
               <ng-container
                 *ngIf="network.isValid; then blockValid; else blockInvalid"
@@ -248,7 +249,7 @@
                 "
               ></ng-container>
               <ng-template #blockDescription>
-                <p class="card-text" [innerHTML]="selectedNetwork.description"></p>
+                <p [innerHTML]="selectedNetwork.description" class="card-text"></p>
               </ng-template>
               <ng-template #blockDefault class="card-text">
                 <p>No description given</p>
@@ -257,14 +258,14 @@
           </div>
 
           <!-- hint: network invalid -->
-          <div class="card border-warning mb-3" *ngIf="!selectedNetwork.isValid">
+          <div *ngIf="!selectedNetwork.isValid" class="card border-warning mb-3">
             <div class="card-body">
               <h5 class="card-title">Invalid network</h5>
               <p class="card-text">
                 This network does not conform to the
                 <span
-                  class="link-primary cursor text-decoration-underline"
                   (click)="showModal.emit()"
+                  class="link-primary cursor text-decoration-underline"
                   >format</span
                 >
                 we require to build the group comparison. Check out the
@@ -283,12 +284,12 @@
           <!-- links -->
           <div class="row">
             <div class="col d-grid gap-0">
-              <button class="btn btn-info" (click)="loadNetwork.emit(selectedNetwork.externalId)">
+              <button (click)="loadNetwork.emit(selectedNetwork.externalId)" class="btn btn-info">
                 Open the app with this network
               </button>
             </div>
             <div class="col d-grid gap-0">
-              <a [href]="selectedNetwork.linkNdex" target="_blank" class="btn btn-outline-info"
+              <a [href]="selectedNetwork.linkNdex" class="btn btn-outline-info" target="_blank"
                 >Open this network on NDEx</a
               >
             </div>
@@ -307,12 +308,12 @@
       <div class="accordion-item">
         <h2 class="accordion-header" id="faq1Q">
           <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#faq1A"
-            aria-expanded="false"
             aria-controls="faq1A"
+            aria-expanded="false"
+            class="accordion-button collapsed"
+            data-bs-target="#faq1A"
+            data-bs-toggle="collapse"
+            type="button"
           >
             <fa-icon icon="comments"></fa-icon>
             &nbsp;I can't find the network I'm looking for, although it's marked as public. What's
@@ -320,10 +321,10 @@
           </button>
         </h2>
         <div
-          id="faq1A"
-          class="accordion-collapse collapse"
           aria-labelledby="faq1Q"
+          class="accordion-collapse collapse"
           data-bs-parent="#faqAccordion"
+          id="faq1A"
         >
           <div class="accordion-body">
             Please make sure, that your network is not only public, but explicitly marked as
@@ -336,22 +337,22 @@
       <div class="accordion-item">
         <h2 class="accordion-header" id="faq2Q">
           <button
-            class="accordion-button collapsed"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#faq2A"
-            aria-expanded="false"
             aria-controls="faq2A"
+            aria-expanded="false"
+            class="accordion-button collapsed"
+            data-bs-target="#faq2A"
+            data-bs-toggle="collapse"
+            type="button"
           >
             <fa-icon icon="comments"></fa-icon>
             &nbsp;Can I access networks on NDEx that are private?
           </button>
         </h2>
         <div
-          id="faq2A"
-          class="accordion-collapse collapse"
           aria-labelledby="faq2Q"
+          class="accordion-collapse collapse"
           data-bs-parent="#faqAccordion"
+          id="faq2A"
         >
           <div class="accordion-body">We currently don't support privately stored networks.</div>
         </div>

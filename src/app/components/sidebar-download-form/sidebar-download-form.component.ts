@@ -8,7 +8,6 @@ import { ImageDownloadConfig } from '../../data/schema/image-download-config';
   styleUrls: ['./sidebar-download-form.component.scss'],
 })
 export class SidebarDownloadFormComponent {
-
   @Input() buttonVisible!: boolean;
 
   @Input() isFormValid!: boolean | null;
@@ -30,6 +29,12 @@ export class SidebarDownloadFormComponent {
 
   readonly availableDatatypes: string[] = ['PNG', 'JPEG', 'SVG'];
 
+  downloadForm: FormGroup = new FormGroup({
+    extension: new FormControl('PNG'),
+    scale: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(10)]),
+    transparent: new FormControl(false),
+  });
+
   get formExtension() {
     return this.downloadForm.get('extension');
   }
@@ -41,11 +46,4 @@ export class SidebarDownloadFormComponent {
   get formTransparent() {
     return this.downloadForm.get('transparent');
   }
-
-  downloadForm: FormGroup = new FormGroup({
-    extension: new FormControl('PNG'),
-    scale: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(10)]),
-    transparent: new FormControl(false),
-  });
-
 }

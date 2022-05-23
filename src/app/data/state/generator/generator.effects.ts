@@ -12,9 +12,7 @@ export class GeneratorEffects {
     () => {
       return this.actions$.pipe(
         ofType(copyToClipboard),
-        concatLatestFrom(() => [
-          this.store.select(selectUrl),
-        ]),
+        concatLatestFrom(() => [this.store.select(selectUrl)]),
         map(([, url]) => {
           navigator.clipboard.writeText(url);
         }),
@@ -23,6 +21,5 @@ export class GeneratorEffects {
     { dispatch: false },
   );
 
-  constructor(private actions$: Actions, private store: Store<AppState>) {
-  }
+  constructor(private actions$: Actions, private store: Store<AppState>) {}
 }

@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/docs
 /tmp
 /out-tsc
 # Only exists if Bazel was run
@@ -42,6 +43,12 @@ testem.log
 
 # further material
 /R
+
+# Angular's cache
+/.angular
+
+# Package-lock
+package-lock.json
 
 # System Files
 .DS_Store

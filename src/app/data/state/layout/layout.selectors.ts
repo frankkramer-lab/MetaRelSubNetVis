@@ -1,6 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { LayoutState } from './layout.state';
+import { selectIsAnyPatientSelected } from '../patient/patient.selectors';
 
 const selectState = createSelector(
   (appState: AppState) => appState.layout,
@@ -33,6 +34,21 @@ export const selectProperties = createSelector(
   selectState,
   (state: LayoutState) => state.properties,
 );
+export const selectPropertiesIndividual = createSelector(
+  selectState,
+  (state: LayoutState) => state.properties.individual,
+);
+export const selectPropertiesDefault = createSelector(
+  selectState,
+  (state: LayoutState) => state.properties.individual,
+);
+export const selectRelevantProperties = createSelector(
+  selectState,
+  selectIsAnyPatientSelected,
+  (state: LayoutState, isAnyPatientSelected: boolean) => {
+    return isAnyPatientSelected ? state.properties.individual : state.properties.default;
+  },
+);
 
 export const selectHighlightColor = createSelector(
   selectState,
@@ -60,7 +76,7 @@ export const selectGradient = createSelector(selectState, (state: LayoutState) =
 
   keysSorted.forEach((rawKey, index: number) => {
     const key: number = Number(rawKey);
-    const item = unsorted[key];
+    const item = unsorted[rawKey];
 
     const width = Math.round(((key - predecessor) / range) * 100);
     cumulative += width;

@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { LayoutState } from './layout.state';
 import {
   setNodeColorBy,
+  setNodeMarkup,
   setNodeSizeBy,
   toggleBooleanProperty,
   toggleShowAllNodes,
@@ -17,14 +18,17 @@ const initialState: LayoutState = {
   showAllNodes: false,
   showOnlySharedNodes: false,
   booleanProperty: null,
-  properties: [],
+  properties: {
+    individual: [],
+    default: [],
+  },
   highlightColor: '#000000',
 };
 
 export const layoutReducer = createReducer(
   initialState,
   on(loadDataSuccess, (state: LayoutState, { properties, highlightColor }): LayoutState => {
-    const firstContinuous = properties.find((a) => a.type === PropertyTypeEnum.continuous);
+    const firstContinuous = properties.default.find((a) => a.type === PropertyTypeEnum.continuous);
     return {
       ...state,
       properties,
@@ -33,6 +37,15 @@ export const layoutReducer = createReducer(
       nodeSizeBy: firstContinuous ?? null,
     };
   }),
+  on(
+    setNodeMarkup,
+    (state: LayoutState, { property }): LayoutState => ({
+      ...state,
+      booleanProperty: null,
+      nodeColorBy: property ?? state.nodeColorBy,
+      nodeSizeBy: property ?? state.nodeSizeBy,
+    }),
+  ),
   on(
     toggleBooleanProperty,
     (state: LayoutState, { booleanProperty }): LayoutState => ({
@@ -75,16 +88,14 @@ export const layoutReducer = createReducer(
     (
       state: LayoutState,
       { showAll, showShared, booleanProperty, nodeSizeBy, nodeColorBy },
-    ): LayoutState => {
-      return {
-        ...state,
-        nodeSizeBy: nodeSizeBy ?? null,
-        nodeColorBy: nodeColorBy ?? null,
-        showAllNodes: showAll && showShared ? false : showAll,
-        showOnlySharedNodes: showShared,
-        booleanProperty,
-      };
-    },
+    ): LayoutState => ({
+      ...state,
+      nodeSizeBy: nodeSizeBy ?? null,
+      nodeColorBy: nodeColorBy ?? null,
+      showAllNodes: showAll && showShared ? false : showAll,
+      showOnlySharedNodes: showShared,
+      booleanProperty,
+    }),
   ),
   on(
     navigateHome,

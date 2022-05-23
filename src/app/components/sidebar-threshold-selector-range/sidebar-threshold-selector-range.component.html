@@ -1,9 +1,14 @@
 <div class="input-group mb-3">
-    <span class="input-group-text" id="thresholdLabel">
-      {{threshold?.property?.label ?? threshold?.property?.name}}
-    </span>
-  <input [disabled]="true" type="text" id="threshold" class="form-control"
-         [ngModel]="threshold?.defined" />
+  <span class="input-group-text" id="thresholdLabel">
+    {{ threshold?.property?.label ?? threshold?.property?.name }}
+  </span>
+  <input
+    [disabled]="true"
+    [ngModel]="threshold?.defined"
+    class="form-control"
+    id="threshold"
+    type="text"
+  />
 </div>
 
 <div class="row">
@@ -11,15 +16,15 @@
     <!-- range -->
     <input
       (ngModelChange)="emitChangedThreshold($event)"
-      type="range"
+      [max]="(max ?? 1) * (multiplier ?? 1)"
+      [min]="(min ?? 0) * (multiplier ?? 1)"
+      [ngModel]="(threshold?.defined ?? 0) * (multiplier ?? 0)"
       class="form-range"
       id="thresholdRange"
-      [min]="(min ?? 0) * (multiplier ?? 1)"
-      [max]="(max ?? 1) * (multiplier ?? 1)"
-      [ngModel]="(threshold?.defined ?? 0) * (multiplier ?? 0)"
+      type="range"
     />
 
-    <small class="float-start">{{ min ?? 0 | norm : 2 }}</small>
-    <small class="float-end">{{ max ?? 1 | norm : 2 }}</small>
+    <small class="float-start">{{ min ?? 0 | norm: 2 }}</small>
+    <small class="float-end">{{ max ?? 1 | norm: 2 }}</small>
   </div>
 </div>

@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { ThresholdState } from './threshold.state';
-import { selectPatientSelection } from '../patient/patient.selectors';
+import { selectIsAnyPatientSelected, selectPatientSelection } from '../patient/patient.selectors';
 import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 
 const selectState = createSelector(
@@ -16,64 +16,89 @@ export const selectMultiplier = createSelector(
 
 export const selectMin = createSelector(
   selectState,
+  selectIsAnyPatientSelected,
   selectPatientSelection,
-  (state: ThresholdState, patientSelection: PatientSelectionEnum) => {
+  (
+    state: ThresholdState,
+    isAnyPatientSelected: boolean,
+    patientSelection: PatientSelectionEnum,
+  ) => {
     const mins: number[] = [];
 
-    state.thresholds.forEach((th) => {
-      switch (patientSelection) {
-        case PatientSelectionEnum.both:
-          mins.push(
-            Math.min(
-              th.property.minA ?? Number.MAX_SAFE_INTEGER,
-              th.property.minB ?? Number.MAX_SAFE_INTEGER,
-            ),
-          );
-          break;
-        case PatientSelectionEnum.groupA:
-          mins.push(th.property.minA ?? 0);
-          break;
-        case PatientSelectionEnum.groupB:
-          mins.push(th.property.minB ?? 0);
-          break;
-        default:
-          mins.push(0);
-          break;
-      }
-    });
+    if (isAnyPatientSelected) {
+      state.thresholds.individual.forEach((th) => {
+        switch (patientSelection) {
+          case PatientSelectionEnum.groupA:
+            mins.push(th.property.minA ?? 1);
+            break;
+          case PatientSelectionEnum.groupB:
+            mins.push(th.property.minB ?? 1);
+            break;
+          case PatientSelectionEnum.both:
+          default:
+            mins.push(
+              Math.min(
+                th.property.minA ?? Number.MAX_SAFE_INTEGER,
+                th.property.minB ?? Number.MAX_SAFE_INTEGER,
+              ),
+            );
+            break;
+        }
+      });
+    } else {
+      state.thresholds.default.forEach((th) => {
+        mins.push(th.property.min ?? 1);
+      });
+    }
     return mins;
   },
 );
 
 export const selectMax = createSelector(
   selectState,
+  selectIsAnyPatientSelected,
   selectPatientSelection,
-  (state: ThresholdState, patientSelection: PatientSelectionEnum) => {
+  (
+    state: ThresholdState,
+    isAnyPatientSelected: boolean,
+    patientSelection: PatientSelectionEnum,
+  ) => {
     const max: number[] = [];
 
-    state.thresholds.forEach((th) => {
-      switch (patientSelection) {
-        case PatientSelectionEnum.both:
-          max.push(
-            Math.max(
-              th.property.maxA ?? Number.MIN_SAFE_INTEGER,
-              th.property.maxB ?? Number.MIN_SAFE_INTEGER,
-            ),
-          );
-          break;
-        case PatientSelectionEnum.groupA:
-          max.push(th.property.maxA ?? 1);
-          break;
-        case PatientSelectionEnum.groupB:
-          max.push(th.property.maxB ?? 1);
-          break;
-        default:
-          max.push(1);
-          break;
-      }
-    });
+    if (isAnyPatientSelected) {
+      state.thresholds.individual.forEach((th) => {
+        switch (patientSelection) {
+          case PatientSelectionEnum.groupA:
+            max.push(th.property.maxA ?? 1);
+            break;
+          case PatientSelectionEnum.groupB:
+            max.push(th.property.maxB ?? 1);
+            break;
+          case PatientSelectionEnum.both:
+          default:
+            max.push(
+              Math.max(
+                th.property.maxA ?? Number.MIN_SAFE_INTEGER,
+                th.property.maxB ?? Number.MIN_SAFE_INTEGER,
+              ),
+            );
+            break;
+        }
+      });
+    } else {
+      state.thresholds.default.forEach((th) => {
+        max.push(th.property.max ?? 1);
+      });
+    }
     return max;
   },
+);
+
+export const selectRelevantThresholds = createSelector(
+  selectState,
+  selectIsAnyPatientSelected,
+  (state: ThresholdState, isAnyPatientSelected: boolean) =>
+    isAnyPatientSelected ? state.thresholds.individual : state.thresholds.default,
 );
 
 export const selectThresholds = createSelector(

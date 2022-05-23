@@ -8,9 +8,8 @@ describe('SidebarGeneratorComponentVisibilityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SidebarGeneratorComponentVisibilityComponent ]
-    })
-    .compileComponents();
+      declarations: [SidebarGeneratorComponentVisibilityComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

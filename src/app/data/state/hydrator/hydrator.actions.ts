@@ -2,12 +2,13 @@ import { createAction, props } from '@ngrx/store';
 import { Network } from '../../schema/network';
 import { PatientCollection } from '../../schema/patient-collection';
 import { Patient } from '../../schema/patient';
-import { PatientItem } from '../../schema/patient-item';
+import { AttributeItem } from '../../schema/attribute-item';
 import { NetworkNode } from '../../schema/network-node';
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 import { ComponentVisibilityEnum } from '../../../core/enum/component-visibility.enum';
 import { Property } from '../../schema/property';
-import { ThresholdDefinition } from '../../schema/threshold-definition';
+import { PropertyCollection } from '../../schema/property-collection';
+import { ThresholdCollection } from '../../schema/threshold-collection';
 
 export const loadQueryParams = createAction(
   '[Layout Component] load query params',
@@ -23,9 +24,10 @@ export const loadDataSuccess = createAction(
   props<{
     network: Network;
     patients: PatientCollection;
-    thresholds: ThresholdDefinition[];
+    thresholds: ThresholdCollection;
     headline: string;
-    properties: Property[];
+    properties: PropertyCollection;
+    defaultAttributes: AttributeItem[];
     highlightColor: string;
   }>(),
 );
@@ -37,8 +39,8 @@ export const hydratePatientAPatientBSuccess = createAction(
   props<{
     patientA: Patient | null;
     patientB: Patient | null;
-    patientADetails: PatientItem[];
-    patientBDetails: PatientItem[];
+    patientADetails: AttributeItem[];
+    patientBDetails: AttributeItem[];
   }>(),
 );
 export const hydratePatientAPatientBFailure = createAction(
@@ -47,7 +49,7 @@ export const hydratePatientAPatientBFailure = createAction(
 
 export const hydrateThresholdSuccess = createAction(
   '[Hydrator Effects] hydrate threshold success',
-  props<{ thresholds: ThresholdDefinition[] }>(),
+  props<{ thresholds: ThresholdCollection }>(),
 );
 export const hydrateThresholdFailure = createAction('[Hydrator Effects] hydrate threshold failure');
 

@@ -1,3 +1,4 @@
+import { AttributeItem } from '../../schema/attribute-item';
 import { Network } from '../../schema/network';
 
 export interface NetworkState {
@@ -5,4 +6,5 @@ export interface NetworkState {
   headline: string | null;
   uuid: string | null;
   isLoading: boolean;
+  nodeAttributes: AttributeItem[];
 }

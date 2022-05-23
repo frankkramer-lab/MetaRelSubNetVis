@@ -1,10 +1,10 @@
 <div class="modal-header">
   <h4 class="modal-title">Data structure</h4>
   <button
-    type="button"
-    class="btn-close"
-    aria-label="Close"
     (click)="activeModal.dismiss('Cross click')"
+    aria-label="Close"
+    class="btn-close"
+    type="button"
   ></button>
 </div>
 <div class="modal-body">
@@ -53,7 +53,10 @@
   <ul>
     <li><b>property</b>: Name of the property (e.g. Score)</li>
     <li><b>label</b>: Label used in the app to display the property</li>
-    <li><b>type</b>: Mapping/data type (one of <code>continuous</code>, <code>discrete</code> and <code>boolean</code>)</li>
+    <li>
+      <b>type</b>: Mapping/data type (one of <code>continuous</code>, <code>discrete</code> and
+      <code>boolean</code>)
+    </li>
     <li>
       <b>threshold</b>: Nodes can be selected by adjusting the threshold (only possible for
       continuous properties)
@@ -76,4 +79,13 @@
     <li><b>Boolean</b>: The matching nodes get a border in the defined color</li>
   </ul>
 
+  <h6>R implementation</h6>
+
+  Supplementary information about implementing this data format as extension to the Bioconductor
+  package
+  <a href="https://bioconductor.org/packages/release/bioc/html/RCX.html" target="_blank">RCX</a> can
+  be found in the
+  <a href="https://github.com/frankkramer-lab/MetaRelSubNetVis/tree/master/R" target="_blank"
+    >GitHub repository</a
+  >.
 </div>

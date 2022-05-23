@@ -7,7 +7,6 @@ import { ImageDownloadConfig } from '../../data/schema/image-download-config';
   styleUrls: ['./sidebar-generator-form.component.scss'],
 })
 export class SidebarGeneratorFormComponent {
-
   @Input() imageDownloadConfig!: ImageDownloadConfig | null;
 
   @Input() isImageFormValid!: boolean | null;
@@ -18,6 +17,6 @@ export class SidebarGeneratorFormComponent {
 
   @Output() imageTransparencyChanged: EventEmitter<void> = new EventEmitter<void>();
 
-  @Output() copyTrigger: EventEmitter<ImageDownloadConfig> = new EventEmitter<ImageDownloadConfig>();
-
+  @Output() copyTrigger: EventEmitter<ImageDownloadConfig> =
+    new EventEmitter<ImageDownloadConfig>();
 }

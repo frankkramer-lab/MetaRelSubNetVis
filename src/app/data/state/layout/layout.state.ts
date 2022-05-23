@@ -1,4 +1,5 @@
 import { Property } from '../../schema/property';
+import { PropertyCollection } from '../../schema/property-collection';
 
 export interface LayoutState {
   nodeColorBy: Property | null;
@@ -6,6 +7,6 @@ export interface LayoutState {
   showAllNodes: boolean;
   showOnlySharedNodes: boolean;
   booleanProperty: Property | null;
-  properties: Property[];
+  properties: PropertyCollection;
   highlightColor: string;
 }

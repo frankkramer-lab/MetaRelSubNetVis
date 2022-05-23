@@ -7,6 +7,8 @@ export interface Property {
   threshold: boolean;
   type: PropertyTypeEnum;
   mapping: PropertyMapping;
+  min?: number;
+  max?: number;
   minA?: number;
   minB?: number;
   maxA?: number;

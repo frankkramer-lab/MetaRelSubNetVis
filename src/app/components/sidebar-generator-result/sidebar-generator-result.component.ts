@@ -6,7 +6,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./sidebar-generator-result.component.scss'],
 })
 export class SidebarGeneratorResultComponent {
-
   @Input() isImageFormValid!: boolean | null;
 
   @Input() url!: string | null;
@@ -14,5 +13,4 @@ export class SidebarGeneratorResultComponent {
   @Input() uuid!: string | null;
 
   @Output() copyTrigger: EventEmitter<void> = new EventEmitter<void>();
-
 }

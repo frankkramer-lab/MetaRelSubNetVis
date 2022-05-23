@@ -2,7 +2,6 @@ import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { NetworkState } from './network.state';
 import { Network } from '../../schema/network';
-import { createEffect } from '@ngrx/effects';
 
 const selectState = createSelector(
   (appState: AppState) => appState.network,
@@ -19,6 +18,11 @@ export const selectIsLoading = createSelector(
   selectState,
   (state: NetworkState) => state.isLoading,
 );
+export const selectNodeAttributes = createSelector(
+  selectState,
+  (state: NetworkState) => state.nodeAttributes,
+);
+
 export const selectNodes = createSelector(selectNetwork, (network: Network | null) => {
   return network?.nodes || [];
 });

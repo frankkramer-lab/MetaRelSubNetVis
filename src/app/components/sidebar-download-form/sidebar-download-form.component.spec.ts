@@ -8,9 +8,8 @@ describe('SidebarDownloadFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SidebarDownloadFormComponent ]
-    })
-    .compileComponents();
+      declarations: [SidebarDownloadFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -1,7 +1,7 @@
 /**
  * Item the patient data consist of
  */
-export interface PatientItem {
+export interface AttributeItem {
   /**
    * Protein's or gene's identifier
    */
@@ -15,5 +15,4 @@ export interface PatientItem {
    * All relevant properties have to be defined for a patient
    */
   [key: string]: string;
-
 }

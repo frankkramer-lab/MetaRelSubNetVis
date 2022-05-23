@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
@@ -35,9 +35,10 @@ import {
   selectPatientB,
   selectPatientGroupA,
   selectPatientGroupB,
+  selectPatientSelection,
 } from '../patient/patient.selectors';
 import { Patient } from '../../schema/patient';
-import { PatientItem } from '../../schema/patient-item';
+import { AttributeItem } from '../../schema/attribute-item';
 import { selectNodes } from '../network/network.selectors';
 import { markingNodesSuccess, renderingSuccess } from '../graph/graph.actions';
 import { triggerImageDownload } from '../download/download.actions';
@@ -51,9 +52,12 @@ import { PatientCollection } from '../../schema/patient-collection';
 import { HydratorService } from '../../../core/service/hydrator.service';
 import { Network } from '../../schema/network';
 import { setUuid } from '../network/network.actions';
-import { ThresholdDefinition } from '../../schema/threshold-definition';
-import { selectProperties } from '../layout/layout.selectors';
+import { selectRelevantProperties } from '../layout/layout.selectors';
 import { PropertyTypeEnum } from '../../../core/enum/property-type-enum';
+import { Property } from '../../schema/property';
+import { PropertyScopeEnum } from '../../../core/enum/property-scope.enum';
+import { ThresholdCollection } from '../../schema/threshold-collection';
+import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 
 @Injectable()
 export class HydratorEffects {
@@ -67,15 +71,14 @@ export class HydratorEffects {
         }
         return setUuid({ uuid: config.uuid });
       }),
-      catchError(() => of(hydrateAbort())),
     );
   });
 
   loadDataNdex$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(setUuid),
-      switchMap((action) => {
-        if (action.uuid === null || action.uuid === '') {
+      mergeMap((action) => {
+        if (!action.uuid || action.uuid.trim() === '') {
           return of(loadDataFailure({ uuid: '' }));
         }
 
@@ -149,11 +152,17 @@ export class HydratorEffects {
               return loadDataFailure({ uuid: action.uuid ?? '' });
             }
 
+            const defaultAttributes = this.hydratorService.hydrateDefaultAttributes(
+              nodeAttributes,
+              nodesDictionary,
+              properties,
+            );
+
             network.occ = this.hydratorService.hydrateOccurrences(patients);
             network.nodes = this.hydratorService.hydrateNodes(nodesRaw, patients, subtypes);
             network.edges = this.hydratorService.hydrateEdges(edgesRaw);
 
-            const thresholds: ThresholdDefinition[] =
+            const thresholds: ThresholdCollection =
               this.hydratorService.hydrateThresholds(properties);
 
             return loadDataSuccess({
@@ -163,6 +172,7 @@ export class HydratorEffects {
               headline: labels[0],
               properties,
               highlightColor,
+              defaultAttributes,
             });
           }),
           catchError(() => of(loadDataFailure({ uuid: action.uuid ?? '' }))),
@@ -181,19 +191,19 @@ export class HydratorEffects {
         this.store.select(selectGroupADetails),
         this.store.select(selectGroupBDetails),
       ]),
-      switchMap(([, config, patientsA, patientsB, detailsA, detailsB]) => {
+      map(([, config, patientsA, patientsB, detailsA, detailsB]) => {
         if (!config) {
-          return [hydrateAbort()];
+          return hydrateAbort();
         }
 
         if (!config.pa && !config.pb) {
-          return [hydratePatientAPatientBFailure()];
+          return hydratePatientAPatientBFailure();
         }
 
         let patientA: Patient | null = null;
         let patientB: Patient | null = null;
-        let patientADetails: PatientItem[] | null = null;
-        let patientBDetails: PatientItem[] | null = null;
+        let patientADetails: AttributeItem[] | null = null;
+        let patientBDetails: AttributeItem[] | null = null;
 
         if (config.pa) {
           patientA = patientsA.find((a) => a.name === config.pa) ?? null;
@@ -204,14 +214,12 @@ export class HydratorEffects {
           patientBDetails = detailsB[config.pb];
         }
 
-        return [
-          hydratePatientAPatientBSuccess({
-            patientA,
-            patientB,
-            patientADetails: patientADetails ?? [],
-            patientBDetails: patientBDetails ?? [],
-          }),
-        ];
+        return hydratePatientAPatientBSuccess({
+          patientA,
+          patientB,
+          patientADetails: patientADetails ?? [],
+          patientBDetails: patientBDetails ?? [],
+        });
       }),
     );
   });
@@ -221,27 +229,35 @@ export class HydratorEffects {
       ofType(hydratePatientAPatientBSuccess, hydratePatientAPatientBFailure),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
-        this.store.select(selectProperties),
+        this.store.select(selectRelevantProperties),
+        this.store.select(selectPatientSelection),
       ]),
-      map(([, config, properties]) => {
+      map(([, config, properties, patientSelection]) => {
         if (!config || !config.th) return hydrateThresholdFailure();
 
-        const thresholds: ThresholdDefinition[] = [];
+        const thresholds: ThresholdCollection = {
+          default: [],
+          individual: [],
+        };
 
         Object.entries(config.th).forEach(([key, value]) => {
           const numericValue = Number(value);
           const property = properties.find(
-            (a) => a.name === key && a.type === PropertyTypeEnum.continuous,
+            (a: Property) => a.name === key && a.type === PropertyTypeEnum.continuous,
           );
 
           if (property && !Number.isNaN(numericValue)) {
-            thresholds.push({
+            (patientSelection === PatientSelectionEnum.none
+              ? thresholds.default
+              : thresholds.individual
+            ).push({
               defined: numericValue,
               property,
+              scope: PropertyScopeEnum.individual,
             });
           }
         });
-
+        console.log(thresholds);
         return hydrateThresholdSuccess({ thresholds });
       }),
     );
@@ -252,21 +268,21 @@ export class HydratorEffects {
       ofType(hydrateThresholdSuccess, hydrateThresholdFailure),
       concatLatestFrom(() => [
         this.store.select(selectConfig),
-        this.store.select(selectProperties),
+        this.store.select(selectRelevantProperties),
       ]),
       map(([, config, properties]) => {
         if (!config || (!config.shared && !config.all && !config.col && !config.size))
           return hydrateLayoutFailure();
 
         const booleanProperty = properties.find(
-          (a) => a.name === config.bool && a.type === PropertyTypeEnum.boolean,
+          (a: Property) => a.name === config.bool && a.type === PropertyTypeEnum.boolean,
         );
 
         const colProperty = properties.find(
-          (a) => a.name === config.col && a.type !== PropertyTypeEnum.boolean,
+          (a: Property) => a.name === config.col && a.type !== PropertyTypeEnum.boolean,
         );
         const sizeProperty = properties.find(
-          (a) => a.name === config.size && a.type !== PropertyTypeEnum.boolean,
+          (a: Property) => a.name === config.size && a.type !== PropertyTypeEnum.boolean,
         );
 
         return hydrateLayoutSuccess({

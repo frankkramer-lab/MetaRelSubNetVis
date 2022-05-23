@@ -1,19 +1,19 @@
 <div class="row">
-  <div class="p-0" [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-4' : 'col-auto'">
+  <div [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-4' : 'col-auto'" class="p-0">
     <app-sidebar
-      [sidebarVisible]="sidebarVisible$ | async"
-      [sidebarImportVisible]="sidebarImportVisible$ | async"
-      [sidebarPatientsVisible]="sidebarPatientsVisible$ | async"
-      [sidebarThresholdVisible]="sidebarThresholdVisible$ | async"
-      [sidebarNodesVisible]="sidebarNodesVisible$ | async"
-      [sidebarLayoutVisible]="sidebarLayoutVisible$ | async"
+      [sidebarBackButtonVisible]="sidebarBackButtonVisible$ | async"
       [sidebarDownloadVisible]="sidebarDownloadVisible$ | async"
       [sidebarGeneratorVisible]="sidebarGeneratorVisible$ | async"
+      [sidebarImportVisible]="sidebarImportVisible$ | async"
       [sidebarImpressumVisible]="sidebarImpressumVisible$ | async"
-      [sidebarBackButtonVisible]="sidebarBackButtonVisible$ | async"
+      [sidebarLayoutVisible]="sidebarLayoutVisible$ | async"
+      [sidebarNodesVisible]="sidebarNodesVisible$ | async"
+      [sidebarPatientsVisible]="sidebarPatientsVisible$ | async"
+      [sidebarThresholdVisible]="sidebarThresholdVisible$ | async"
+      [sidebarVisible]="sidebarVisible$ | async"
     ></app-sidebar>
   </div>
-  <div class="light-mode" [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-8' : 'col'">
+  <div [ngClass]="(sidebarVisible$ | async) === 0 ? 'col-8' : 'col'" class="light-mode">
     <app-graph [headline]="headline$ | async"></app-graph>
   </div>
 </div>

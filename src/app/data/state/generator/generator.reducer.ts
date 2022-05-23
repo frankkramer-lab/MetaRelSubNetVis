@@ -100,12 +100,10 @@ export const generatorReducer = createReducer(
   ),
   on(
     setGeneratorSidebarVisibility,
-    (state: GeneratorState, { sidebarVisibility }): GeneratorState => {
-      return {
-        ...state,
-        sidebarVisibility,
-      };
-    },
+    (state: GeneratorState, { sidebarVisibility }): GeneratorState => ({
+      ...state,
+      sidebarVisibility,
+    }),
   ),
   on(
     setBackButtonVisibility,
@@ -121,20 +119,14 @@ export const generatorReducer = createReducer(
       triggerImageDownload: !state.triggerImageDownload,
     }),
   ),
-  on(setGeneratorImageScale, (state: GeneratorState, { scale }): GeneratorState => {
-    if (scale <= 0 || scale > 10) {
-      return {
-        ...state,
-        imageDownloadConfig: { ...state.imageDownloadConfig, scale },
-        isImageDownloadConfigValid: false,
-      };
-    }
-    return {
+  on(
+    setGeneratorImageScale,
+    (state: GeneratorState, { scale }): GeneratorState => ({
       ...state,
       imageDownloadConfig: { ...state.imageDownloadConfig, scale },
-      isImageDownloadConfigValid: true,
-    };
-  }),
+      isImageDownloadConfigValid: scale > 0 && scale <= 10,
+    }),
+  ),
   on(setGeneratorImageExtension, (state: GeneratorState, { extension }): GeneratorState => {
     if (extension === 'SVG') {
       return {

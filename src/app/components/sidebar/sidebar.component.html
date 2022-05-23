@@ -3,38 +3,41 @@
   <!-- headline -->
   <h3 class="mt-2 m-2">
     <div class="row">
-      <div class="col-auto" *ngIf="sidebarBackButtonVisible">
-        <fa-icon (click)="returnHome()"
-                 placement="right"
-                 ngbTooltip="Return to home"
-                 container="body"
-                 [openDelay]="1000"
-                 class="cursor"
-                 icon="arrow-left"></fa-icon>
+      <div *ngIf="sidebarBackButtonVisible" class="col-auto">
+        <fa-icon
+          (click)="returnHome()"
+          [openDelay]="1000"
+          class="cursor"
+          container="body"
+          icon="arrow-left"
+          ngbTooltip="Return to home"
+          placement="right"
+        ></fa-icon>
       </div>
       <div class="col">MetaRelSubNetVis</div>
       <div class="col-auto">
-        <fa-icon (click)="toggleSidebar(1)"
-                 placement="left"
-                 ngbTooltip="Hide the sidebar"
-                 container="body"
-                 [openDelay]="1000"
-                 class="cursor"
-                 icon="times"></fa-icon>
+        <fa-icon
+          (click)="toggleSidebar(1)"
+          [openDelay]="1000"
+          class="cursor"
+          container="body"
+          icon="times"
+          ngbTooltip="Hide the sidebar"
+          placement="left"
+        ></fa-icon>
       </div>
     </div>
   </h3>
 
   <div class="d-grid gap-0 mb-4">
-
     <!-- PATIENTS -->
     <ng-container *ngIf="sidebarPatientsVisible !== 2">
       <button
+        (click)="togglePatients(sidebarPatientsVisible)"
         class="btn btn-dark icon-hover btn-lg text-start rounded-0"
         type="button"
-        (click)="togglePatients(sidebarPatientsVisible)"
       >
-        <fa-icon icon="hospital-user" [ngClass]="sidebarPatientsVisible === 0 ? 'text-info' : ''">
+        <fa-icon [ngClass]="sidebarPatientsVisible === 0 ? 'text-info' : ''" icon="hospital-user">
         </fa-icon>
         &nbsp;Patients
       </button>
@@ -48,11 +51,11 @@
     <!-- THRESHOLD -->
     <ng-container *ngIf="sidebarThresholdVisible !== 2">
       <button
+        (click)="toggleThreshold(sidebarThresholdVisible)"
         class="btn btn-dark icon-hover btn-lg text-start rounded-0"
         type="button"
-        (click)="toggleThreshold(sidebarThresholdVisible)"
       >
-        <fa-icon icon="sort-amount-up" [ngClass]="sidebarThresholdVisible === 0 ? 'text-info' : ''">
+        <fa-icon [ngClass]="sidebarThresholdVisible === 0 ? 'text-info' : ''" icon="sort-amount-up">
         </fa-icon>
         &nbsp;Threshold
       </button>
@@ -66,11 +69,11 @@
     <!-- NODES -->
     <ng-container *ngIf="sidebarNodesVisible !== 2">
       <button
+        (click)="toggleNodes(sidebarNodesVisible)"
         class="btn btn-dark icon-hover btn-lg text-start rounded-0"
         type="button"
-        (click)="toggleNodes(sidebarNodesVisible)"
       >
-        <fa-icon icon="project-diagram" [ngClass]="sidebarNodesVisible === 0 ? 'text-info' : ''">
+        <fa-icon [ngClass]="sidebarNodesVisible === 0 ? 'text-info' : ''" icon="project-diagram">
         </fa-icon>
         &nbsp;Nodes
       </button>
@@ -84,11 +87,11 @@
     <!-- LAYOUT -->
     <ng-container *ngIf="sidebarLayoutVisible !== 2">
       <button
+        (click)="toggleLayout(sidebarLayoutVisible)"
         class="btn btn-dark icon-hover btn-lg text-start rounded-0"
         type="button"
-        (click)="toggleLayout(sidebarLayoutVisible)"
       >
-        <fa-icon icon="palette" [ngClass]="sidebarLayoutVisible === 0 ? 'text-info' : ''"></fa-icon>
+        <fa-icon [ngClass]="sidebarLayoutVisible === 0 ? 'text-info' : ''" icon="palette"></fa-icon>
         &nbsp;Layout
       </button>
       <div *ngIf="sidebarLayoutVisible === 0">
@@ -101,12 +104,14 @@
     <!-- DOWNLOAD -->
     <ng-container *ngIf="sidebarDownloadVisible !== 2">
       <button
+        (click)="toggleDownload(sidebarDownloadVisible)"
         class="btn btn-dark icon-hover btn-lg text-start rounded-0"
         type="button"
-        (click)="toggleDownload(sidebarDownloadVisible)"
       >
-        <fa-icon icon="arrow-circle-down"
-                 [ngClass]="sidebarDownloadVisible === 0 ? 'text-info' : ''">
+        <fa-icon
+          [ngClass]="sidebarDownloadVisible === 0 ? 'text-info' : ''"
+          icon="arrow-circle-down"
+        >
         </fa-icon>
         &nbsp;Download
       </button>
@@ -120,11 +125,11 @@
     <!-- LINK GENERATOR -->
     <ng-container *ngIf="sidebarGeneratorVisible !== 2">
       <button
+        (click)="toggleGenerator(sidebarGeneratorVisible)"
         class="btn btn-dark icon-hover btn-lg text-start rounded-0"
         type="button"
-        (click)="toggleGenerator(sidebarGeneratorVisible)"
       >
-        <fa-icon icon="link" [ngClass]="sidebarGeneratorVisible === 0 ? 'text-info' : ''"></fa-icon>
+        <fa-icon [ngClass]="sidebarGeneratorVisible === 0 ? 'text-info' : ''" icon="link"></fa-icon>
         &nbsp;Link generator
       </button>
       <div *ngIf="sidebarGeneratorVisible === 0">
@@ -137,11 +142,11 @@
     <!-- IMPRESSUM -->
     <ng-container *ngIf="sidebarImpressumVisible !== 2">
       <button
+        (click)="toggleImpressum(sidebarImpressumVisible)"
         class="btn btn-dark icon-hover btn-lg text-start rounded-0"
         type="button"
-        (click)="toggleImpressum(sidebarImpressumVisible)"
       >
-        <fa-icon icon="info-circle" [ngClass]="sidebarImpressumVisible === 0 ? 'text-info' : ''">
+        <fa-icon [ngClass]="sidebarImpressumVisible === 0 ? 'text-info' : ''" icon="info-circle">
         </fa-icon>
         &nbsp;Impressum
       </button>
@@ -151,17 +156,18 @@
         </div>
       </div>
     </ng-container>
-
   </div>
 </div>
 
 <!-- sidebar button visible -->
 <ng-container *ngIf="sidebarVisible === 1">
   <fa-icon
-    size="3x"
-    class="cursor m-1"
     (click)="toggleSidebar(0)"
-    placement="right"
     [openDelay]="1000"
-    ngbTooltip="Show the sidebar" icon="bars"></fa-icon>
+    class="cursor m-1"
+    icon="bars"
+    ngbTooltip="Show the sidebar"
+    placement="right"
+    size="3x"
+  ></fa-icon>
 </ng-container>

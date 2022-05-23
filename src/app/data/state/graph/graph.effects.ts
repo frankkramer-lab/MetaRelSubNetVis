@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { debounceTime, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { selectNetwork } from '../network/network.selectors';
+import { selectNetwork, selectNodeAttributes } from '../network/network.selectors';
 import { AppState } from '../app.state';
-import { ApiService } from '../../service/api.service';
 import { GraphService } from '../../../core/service/graph.service';
 
 import {
@@ -12,8 +11,6 @@ import {
   selectPatientADetails,
   selectPatientB,
   selectPatientBDetails,
-  selectPatientGroupA,
-  selectPatientGroupB,
   selectPatientSelection,
 } from '../patient/patient.selectors';
 import { selectMarkedNodes, selectVisibleNodes } from '../nodes/nodes.selectors';
@@ -28,7 +25,9 @@ import {
 } from '../layout/layout.selectors';
 import {
   fitGraph,
+  keepNodeMarkup,
   setNodeColorBy,
+  setNodeMarkup,
   setNodeSizeBy,
   toggleBooleanProperty,
   toggleShowAllNodes,
@@ -44,9 +43,13 @@ import {
 import { ImageDownloadConfig } from '../../schema/image-download-config';
 import { hydrateTriggerDownloadSuccess, markMultipleNodes } from '../hydrator/hydrator.actions';
 import { markingNodesSuccess, renderingFailure, renderingSuccess } from './graph.actions';
-import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 import { initCoreFailure, initCoreSuccess, initializeCore } from '../network/network.actions';
-import { setAllThresholds, setThreshold } from '../threshold/threshold.action';
+import {
+  setAllDefaultThresholds,
+  setAllIndividualThresholds,
+  setThresholdDefault,
+  setThresholdIndividual,
+} from '../threshold/threshold.action';
 
 @Injectable()
 export class GraphEffects {
@@ -72,17 +75,19 @@ export class GraphEffects {
     return this.actions$.pipe(
       ofType(
         initCoreSuccess,
-        setAllThresholds,
-        setThreshold,
+        setAllIndividualThresholds,
+        setAllDefaultThresholds,
+        setThresholdDefault,
+        setThresholdIndividual,
         toggleBooleanProperty,
         setNodeColorBy,
         setNodeSizeBy,
+        setNodeMarkup,
+        keepNodeMarkup,
       ),
       concatLatestFrom(() => [
         this.store.select(selectPatientADetails),
         this.store.select(selectPatientBDetails),
-        this.store.select(selectPatientGroupA),
-        this.store.select(selectPatientGroupB),
         this.store.select(selectNetwork),
         this.store.select(selectNodeColorBy),
         this.store.select(selectNodeSizeBy),
@@ -91,14 +96,13 @@ export class GraphEffects {
         this.store.select(selectActiveBooleanProperty),
         this.store.select(selectVisibleNodes),
         this.store.select(selectProperties),
+        this.store.select(selectNodeAttributes),
       ]),
       map(
         ([
           ,
           patientADetails,
           patientBDetails,
-          patientGroupA,
-          patientGroupB,
           network,
           nodeColorBy,
           nodeSizeBy,
@@ -107,14 +111,12 @@ export class GraphEffects {
           booleanProperty,
           visibleNodes,
           properties,
+          defaultAttributes,
         ]) => {
           if (!network) return renderingFailure();
           this.graphService.layoutPatient(
             patientADetails,
             patientBDetails,
-            patientGroupA,
-            patientGroupB,
-            network,
             nodeColorBy,
             nodeSizeBy,
             showAllNodes,
@@ -122,6 +124,7 @@ export class GraphEffects {
             booleanProperty,
             visibleNodes,
             properties,
+            defaultAttributes,
           );
           return renderingSuccess();
         },
@@ -137,14 +140,9 @@ export class GraphEffects {
         concatLatestFrom(() => [
           this.store.select(selectShowAllNodes),
           this.store.select(selectShowOnlySharedNodes),
-          this.store.select(selectPatientSelection),
         ]),
-        map(([, showAllNodes, showOnlySharedNodes, patientSelection]) =>
-          this.graphService.updateShownNodes(
-            showAllNodes,
-            showOnlySharedNodes,
-            patientSelection !== PatientSelectionEnum.none,
-          ),
+        map(([, showAllNodes, showOnlySharedNodes]) =>
+          this.graphService.updateShownNodes(showAllNodes, showOnlySharedNodes),
         ),
       );
     },
@@ -209,7 +207,6 @@ export class GraphEffects {
   constructor(
     private actions$: Actions,
     private store: Store<AppState>,
-    private apiService: ApiService,
     private graphService: GraphService,
   ) {}
 }

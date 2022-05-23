@@ -7,7 +7,6 @@ import { Property } from '../../data/schema/property';
   styleUrls: ['./sidebar-layout-form-boolean.component.scss'],
 })
 export class SidebarLayoutFormBooleanComponent {
-
   @Input() property!: Property | null;
 
   @Input() booleanProperty!: Property | null;
@@ -15,5 +14,4 @@ export class SidebarLayoutFormBooleanComponent {
   @Input() propertyId!: number | null;
 
   @Output() propertyClicked: EventEmitter<Property | null> = new EventEmitter<Property | null>();
-
 }

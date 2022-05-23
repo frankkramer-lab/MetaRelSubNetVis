@@ -55,7 +55,7 @@ import {
 import { selectUuid } from '../../data/state/network/network.selectors';
 import { Property } from '../../data/schema/property';
 import { ThresholdDefinition } from '../../data/schema/threshold-definition';
-import { selectThresholds } from '../../data/state/threshold/threshold.selectors';
+import { selectRelevantThresholds } from '../../data/state/threshold/threshold.selectors';
 
 @Component({
   selector: 'app-sidebar-generator',
@@ -113,8 +113,7 @@ export class SidebarGeneratorComponent implements OnInit {
 
   url$!: Observable<string>;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.uuid$ = this.store.select(selectUuid);
@@ -122,7 +121,7 @@ export class SidebarGeneratorComponent implements OnInit {
     this.groupLabelB$ = this.store.select(selectGroupLabelB);
     this.patientA$ = this.store.select(selectPatientA);
     this.patientB$ = this.store.select(selectPatientB);
-    this.thresholds$ = this.store.select(selectThresholds);
+    this.thresholds$ = this.store.select(selectRelevantThresholds);
     this.nodes$ = this.store.select(selectMarkedNodes);
     this.nodesColorBy$ = this.store.select(selectNodeColorBy);
     this.nodesSizeBy$ = this.store.select(selectNodeSizeBy);

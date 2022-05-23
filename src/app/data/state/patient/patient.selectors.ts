@@ -1,6 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { PatientState } from './patient.state';
+import { PatientSelectionEnum } from '../../../core/enum/patient-selection-enum';
 
 const selectState = createSelector(
   (appState: AppState) => appState.patient,
@@ -58,4 +59,10 @@ export const selectPatientSelection = createSelector(
   selectState,
   (state: PatientState) => state.patientSelection,
 );
-
+export const selectIsAnyPatientSelected = createSelector(selectState, (state: PatientState) => {
+  return (
+    state.patientSelection === PatientSelectionEnum.groupA ||
+    state.patientSelection === PatientSelectionEnum.groupB ||
+    state.patientSelection === PatientSelectionEnum.both
+  );
+});

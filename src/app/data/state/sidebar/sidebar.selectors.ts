@@ -46,5 +46,5 @@ export const selectSidebarVisibilityImpressum = createSelector(
 );
 export const selectSidebarBackButtonVisibility = createSelector(
   selectState,
-  (state: SidebarState) => state.visibilityBackButton
+  (state: SidebarState) => state.visibilityBackButton,
 );

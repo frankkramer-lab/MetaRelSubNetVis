@@ -24,7 +24,8 @@ export class SidebarLayoutFormComponent {
 
   @Input() properties!: Property[] | null;
 
-  @Output() booleanPropertyChanged: EventEmitter<Property | null> = new EventEmitter<Property | null>();
+  @Output() booleanPropertyChanged: EventEmitter<Property | null> =
+    new EventEmitter<Property | null>();
 
   @Output() nodeColorByChanged: EventEmitter<Property | null> = new EventEmitter<Property | null>();
 
@@ -35,5 +36,4 @@ export class SidebarLayoutFormComponent {
   @Output() showOnlySharedNodesChanged: EventEmitter<void> = new EventEmitter<void>();
 
   @Output() fitGraphPressed: EventEmitter<void> = new EventEmitter<void>();
-
 }

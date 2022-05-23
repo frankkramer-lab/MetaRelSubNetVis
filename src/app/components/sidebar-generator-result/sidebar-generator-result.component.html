@@ -1,24 +1,25 @@
 <div class="form-group mt-2 mb-2">
   <textarea
+    *ngIf="!isImageFormValid"
+    [disabled]="true"
     class="form-control"
     id="link-preview-invalid"
     rows="3"
-    [disabled]="true"
-    *ngIf="!isImageFormValid"
-  >Invalid form!</textarea>
+  >
+Invalid form!</textarea
+  >
   <textarea
+    *ngIf="isImageFormValid"
+    [disabled]="true"
     class="form-control"
     id="link-preview-valid"
     rows="3"
-    [disabled]="true"
-    *ngIf="isImageFormValid"
-  >{{ url }}
+    >{{ url }}
   </textarea>
 </div>
 
-
 <div class="d-grid">
-  <button class="btn btn-success" (click)="copyTrigger.emit()" [disabled]="!isImageFormValid">
+  <button (click)="copyTrigger.emit()" [disabled]="!isImageFormValid" class="btn btn-success">
     <fa-icon icon="clone"></fa-icon>&nbsp;Copy to clipboard
   </button>
 </div>

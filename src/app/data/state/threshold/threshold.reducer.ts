@@ -7,11 +7,19 @@ import {
   loadQueryParams,
 } from '../hydrator/hydrator.actions';
 import { navigateHome } from '../sidebar/sidebar.actions';
-import { setAllThresholds, setThreshold } from './threshold.action';
+import {
+  setAllDefaultThresholds,
+  setAllIndividualThresholds,
+  setThresholdDefault,
+  setThresholdIndividual,
+} from './threshold.action';
 import { ThresholdDefinition } from '../../schema/threshold-definition';
 
 const initialState: ThresholdState = {
-  thresholds: [],
+  thresholds: {
+    default: [],
+    individual: [],
+  },
   multiplier: 1000000000,
   isLoading: false,
 };
@@ -20,32 +28,73 @@ export const thresholdReducer = createReducer(
   initialState,
   on(loadQueryParams, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: true })),
   on(loadDataFailure, (state: ThresholdState): ThresholdState => ({ ...state, isLoading: false })),
-  on(loadDataSuccess, (state: ThresholdState, { thresholds }): ThresholdState => {
-    return {
+  on(
+    loadDataSuccess,
+    (state: ThresholdState, { thresholds }): ThresholdState => ({
       ...state,
       isLoading: false,
       thresholds,
-    };
-  }),
+    }),
+  ),
   on(
     hydrateThresholdSuccess,
-    setAllThresholds,
     (state: ThresholdState, { thresholds }): ThresholdState => ({
       ...state,
       thresholds,
     }),
   ),
-  on(setThreshold, (state: ThresholdState, { threshold }): ThresholdState => {
-    const newThresholds: ThresholdDefinition[] = [
-      ...state.thresholds.filter((a) => a.property.name !== threshold.property.name),
-    ];
-    const relevantThresholdIndex = state.thresholds.findIndex(
+  on(
+    setAllIndividualThresholds,
+    (state: ThresholdState, { individual }): ThresholdState => ({
+      ...state,
+      thresholds: {
+        default: [...state.thresholds.default],
+        individual,
+      },
+    }),
+  ),
+  on(
+    setAllDefaultThresholds,
+    (state: ThresholdState, { defaults }): ThresholdState => ({
+      ...state,
+      thresholds: {
+        default: defaults,
+        individual: [...state.thresholds.individual],
+      },
+    }),
+  ),
+  on(setThresholdIndividual, (state: ThresholdState, { threshold }): ThresholdState => {
+    const index = state.thresholds.individual.findIndex(
       (a) => a.property.name === threshold.property.name,
     );
-    newThresholds.splice(relevantThresholdIndex, 0, threshold);
+    const individual: ThresholdDefinition[] = [
+      ...state.thresholds.individual.slice(0, index),
+      threshold,
+      ...state.thresholds.individual.slice(index + 1),
+    ];
     return {
       ...state,
-      thresholds: newThresholds,
+      thresholds: {
+        default: [...state.thresholds.default],
+        individual,
+      },
+    };
+  }),
+  on(setThresholdDefault, (state: ThresholdState, { threshold }): ThresholdState => {
+    const index = state.thresholds.default.findIndex(
+      (a) => a.property.name === threshold.property.name,
+    );
+    const defaults: ThresholdDefinition[] = [
+      ...state.thresholds.default.slice(0, index),
+      threshold,
+      ...state.thresholds.default.slice(index + 1),
+    ];
+    return {
+      ...state,
+      thresholds: {
+        individual: [...state.thresholds.individual],
+        default: defaults,
+      },
     };
   }),
   on(
@@ -53,7 +102,10 @@ export const thresholdReducer = createReducer(
     (state: ThresholdState): ThresholdState => ({
       ...state,
       isLoading: false,
-      thresholds: [],
+      thresholds: {
+        default: [],
+        individual: [],
+      },
     }),
   ),
 );

@@ -38,8 +38,7 @@ export class SidebarNodesComponent implements OnInit {
 
   subtypeColumnB$!: Observable<string | null>;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.occurrences$ = this.store.select(selectOccurrences);

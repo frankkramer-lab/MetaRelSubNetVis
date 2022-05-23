@@ -1,14 +1,13 @@
 <app-home-content
-  [isLoading]="isLoading$ | async"
-  [setupInProgress]="setupInProgress$ | async"
-  [sampleNetworks]="sampleNetworks$ | async"
-  [networks]="networks$ | async"
-  [selectedNetwork]="selectedNetwork$ | async"
-  [lastTermWasEmpty]="lastTermWasEmpty$ | async"
-  [lastResultWasEmpty]="lastResultWasEmpty$ | async"
   (loadNetwork)="setupWorkspace($event)"
-  (searchNdex)="searchNdex($event)"
   (networkDetailsEmitter)="selectNetwork($event)"
+  (searchNdex)="searchNdex($event)"
   (showModal)="showModal()"
+  [isLoading]="isLoading$ | async"
+  [lastResultWasEmpty]="lastResultWasEmpty$ | async"
+  [lastTermWasEmpty]="lastTermWasEmpty$ | async"
+  [networks]="networks$ | async"
+  [sampleNetworks]="sampleNetworks$ | async"
+  [selectedNetwork]="selectedNetwork$ | async"
+  [setupInProgress]="setupInProgress$ | async"
 ></app-home-content>
-

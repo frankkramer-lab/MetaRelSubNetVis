@@ -6,7 +6,7 @@ import {
   selectMax,
   selectMin,
   selectMultiplier,
-  selectThresholds,
+  selectRelevantThresholds,
 } from '../../data/state/threshold/threshold.selectors';
 import {
   selectGroupLabelA,
@@ -15,7 +15,11 @@ import {
 } from '../../data/state/patient/patient.selectors';
 import { PatientSelectionEnum } from '../../core/enum/patient-selection-enum';
 import { ThresholdDefinition } from '../../data/schema/threshold-definition';
-import { setThreshold } from '../../data/state/threshold/threshold.action';
+import {
+  setThresholdDefault,
+  setThresholdIndividual,
+} from '../../data/state/threshold/threshold.action';
+import { PropertyScopeEnum } from '../../core/enum/property-scope.enum';
 
 @Component({
   selector: 'app-sidebar-threshold',
@@ -41,7 +45,7 @@ export class SidebarThresholdComponent implements OnInit {
 
   ngOnInit(): void {
     this.multiplier$ = this.store.select(selectMultiplier);
-    this.thresholds$ = this.store.select(selectThresholds);
+    this.thresholds$ = this.store.select(selectRelevantThresholds);
     this.patientSelection$ = this.store.select(selectPatientSelection);
     this.groupLabelA$ = this.store.select(selectGroupLabelA);
     this.groupLabelB$ = this.store.select(selectGroupLabelB);
@@ -50,6 +54,10 @@ export class SidebarThresholdComponent implements OnInit {
   }
 
   triggerThresholdChanged(threshold: ThresholdDefinition) {
-    this.store.dispatch(setThreshold({ threshold }));
+    if (threshold.scope === PropertyScopeEnum.default) {
+      this.store.dispatch(setThresholdDefault({ threshold }));
+    } else {
+      this.store.dispatch(setThresholdIndividual({ threshold }));
+    }
   }
 }

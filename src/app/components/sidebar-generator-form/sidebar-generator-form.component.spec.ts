@@ -8,9 +8,8 @@ describe('SidebarGeneratorFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SidebarGeneratorFormComponent ]
-    })
-    .compileComponents();
+      declarations: [SidebarGeneratorFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

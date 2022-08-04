@@ -291,8 +291,11 @@ export class HydratorService {
           id: n['@id'],
           name: n.n,
         },
-        occ: occurrences[n.n],
+        occ: { all: 0 },
       };
+      if (occurrences[n.n]) {
+        node.occ = occurrences[n.n];
+      }
       typedNodes.push(node);
     }
     return typedNodes;
@@ -306,12 +309,13 @@ export class HydratorService {
         data: {
           id: e['@id'],
           name: e['@id'],
-          source: e.s,
-          target: e.t,
+          source: e.s.toString(), // according to cytoscape.js
+          target: e.t.toString(), // according to cytoscape.js
         },
       };
       typedEdges.push(edge);
     }
+    console.log(typedEdges);
     return typedEdges;
   }
 

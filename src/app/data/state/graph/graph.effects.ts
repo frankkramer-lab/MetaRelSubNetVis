@@ -74,7 +74,7 @@ export class GraphEffects {
   renderGraph$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(
-        initCoreSuccess,
+        // initCoreSuccess,
         setAllIndividualThresholds,
         setAllDefaultThresholds,
         setThresholdDefault,

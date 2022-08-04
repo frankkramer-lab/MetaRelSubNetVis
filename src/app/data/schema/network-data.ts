@@ -2,7 +2,7 @@ export interface NetworkData {
   /**
    * This element's id
    */
-  id: number;
+  id: string;
 
   /**
    * This element's name used as label

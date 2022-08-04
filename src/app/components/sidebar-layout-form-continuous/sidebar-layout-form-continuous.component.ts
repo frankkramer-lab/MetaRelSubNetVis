@@ -17,21 +17,25 @@ export class SidebarLayoutFormContinuousComponent {
 
   @Input() gradient!: string | null;
 
+  @Input() minLabel!: number | null;
+
+  @Input() maxLabel!: number | null;
+
   @Output() propertyClicked: EventEmitter<void> = new EventEmitter<void>();
 
-  getMin(): number {
-    if (this.property === null) return 0;
-    return Math.min(
-      this.property.minA ?? Number.MAX_SAFE_INTEGER,
-      this.property.minB ?? Number.MAX_SAFE_INTEGER,
-    );
-  }
-
-  getMax(): number {
-    if (this.property === null) return 1;
-    return Math.max(
-      this.property.maxA ?? Number.MIN_SAFE_INTEGER,
-      this.property.maxB ?? Number.MIN_SAFE_INTEGER,
-    );
-  }
+  // getMin(): number {
+  //   if (this.property === null) return 0;
+  //   return Math.min(
+  //     this.property.minA ?? Number.MAX_SAFE_INTEGER,
+  //     this.property.minB ?? Number.MAX_SAFE_INTEGER,
+  //   );
+  // }
+  //
+  // getMax(): number {
+  //   if (this.property === null) return 1;
+  //   return Math.max(
+  //     this.property.maxA ?? Number.MIN_SAFE_INTEGER,
+  //     this.property.maxB ?? Number.MIN_SAFE_INTEGER,
+  //   );
+  // }
 }

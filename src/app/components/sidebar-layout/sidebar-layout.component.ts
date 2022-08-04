@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { AppState } from '../../data/state/app.state';
 import {
   selectActiveBooleanProperty,
-  selectGradient,
+  selectGradient, selectMaxLabelGradient, selectMinLabelGradient,
   selectNodeColorBy,
   selectNodeSizeBy,
   selectRelevantProperties,
@@ -45,6 +45,10 @@ export class SidebarLayoutComponent implements OnInit {
 
   properties$!: Observable<Property[]>;
 
+  minLabel$!: Observable<number>;
+
+  maxLabel$!: Observable<number>;
+
   constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
@@ -56,6 +60,8 @@ export class SidebarLayoutComponent implements OnInit {
     this.gradient$ = this.store.select(selectGradient);
     this.showOnlySharedNodes$ = this.store.select(selectShowOnlySharedNodes);
     this.properties$ = this.store.select(selectRelevantProperties);
+    this.minLabel$ = this.store.select(selectMinLabelGradient);
+    this.maxLabel$ = this.store.select(selectMaxLabelGradient);
   }
 
   setNodeColorBy(nodeColorBy: Property | null) {

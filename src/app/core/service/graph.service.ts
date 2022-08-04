@@ -49,31 +49,16 @@ export class GraphService {
   initializeCore(network: Network, properties: PropertyCollection, highlightColor: string): void {
     const networkCopy = JSON.parse(JSON.stringify(network)) as ElementsDefinition;
 
-    console.log(networkCopy);
-
     this.colors.highlight = highlightColor;
 
     this.cyCore = cytoscape({
       container: this.cyContainer,
       elements: networkCopy,
-      style: [{
-        selector: 'node',
-        style: {
-          label: 'data(name)',
-          'text-valign': 'center',
-          'background-color': this.colors.gray,
-          color: '#fff',
-          'text-outline-color': this.colors.gray,
-          'text-outline-width': '5px',
-          width: '50px',
-          height: '50px',
-        },
-      }], // this.getStyle(properties),
-      // layout: this.getLayout(network.nodes),
+      style: this.getStyle(properties),
+      layout: this.getLayout(network.nodes),
     });
 
     this.cyCore.elements('node,edge').data('shown', true);
-    console.log(this.cyCore);
   }
 
   /**
@@ -150,6 +135,7 @@ export class GraphService {
     this.updateBooleanProperty(booleanProperty, properties);
     const visibleNodesIds: string[] = visibleNodes.map((a) => a.data.id.toString());
     this.clearBooleanProperties(properties);
+
     const boolProperties = properties.individual.filter((a) => a.type === PropertyTypeEnum.boolean);
 
     if (
@@ -493,7 +479,7 @@ export class GraphService {
         if (visibleNodes.includes(data.id)) {
           const node = this.cyCore
             .nodes()
-            .getElementById(data.id.toString())
+            .getElementById(data.id)
             .data('member', true)
             .data('shown', true)
             .addClass('split')
@@ -517,7 +503,7 @@ export class GraphService {
         if (visibleNodes.includes(data.id)) {
           const node = this.cyCore
             .nodes()
-            .getElementById(data.id.toString())
+            .getElementById(data.id)
             .data('member', true)
             .data('shown', true)
             .addClass('split')
@@ -580,7 +566,7 @@ export class GraphService {
         if (visibleNodes.includes(data.id)) {
           const node = this.cyCore
             .nodes()
-            .getElementById(data.id.toString())
+            .getElementById(data.id)
             .data('member', true)
             .data('shown', true)
             .data('size', Number(data[size as keyof AttributeItem]))
@@ -644,7 +630,7 @@ export class GraphService {
         if (visibleNodes.includes(data.id)) {
           const node = this.cyCore
             .nodes()
-            .getElementById(data.id.toString())
+            .getElementById(data.id)
             .data('member', true)
             .data('shown', true)
             .data('size', Number(data[size as keyof AttributeItem]))

@@ -169,6 +169,7 @@ export class HydratorService {
           });
         }
         const relevantDetail = patientDetailItemA[patient.name].find((a) => a.name === proteinName);
+
         if (relevantDetail) {
           properties.individual.forEach((property: Property) => {
             if (attribute.n.endsWith(property.name)) {
@@ -288,7 +289,7 @@ export class HydratorService {
       const n = nodes[i];
       const node: NetworkNode = {
         data: {
-          id: n['@id'],
+          id: n['@id'].toString(),
           name: n.n,
         },
         occ: { all: 0 },
@@ -307,15 +308,14 @@ export class HydratorService {
       const e = edges[i];
       const edge: NetworkEdge = {
         data: {
-          id: e['@id'],
-          name: e['@id'],
+          id: `e${e['@id']}`,
+          name: `e${e['@id']}`,
           source: e.s.toString(), // according to cytoscape.js
           target: e.t.toString(), // according to cytoscape.js
         },
       };
       typedEdges.push(edge);
     }
-    console.log(typedEdges);
     return typedEdges;
   }
 

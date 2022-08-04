@@ -17,8 +17,8 @@
     <ng-container *ngIf="isChecked && type === 'color'">
       <div [style.background]="gradient" class="gradient"></div>
       <div *ngIf="isChecked" class="row">
-        <small class="col text-start">{{ getMin() | norm: 2 }}</small>
-        <small class="col text-end">{{ getMax() | norm: 2 }}</small>
+        <small class="col text-start" *ngIf="minLabel !== null">{{ minLabel | norm: 2 }}</small>
+        <small class="col text-end" *ngIf="maxLabel !== null">{{ maxLabel | norm: 2 }}</small>
       </div>
     </ng-container>
   </label>

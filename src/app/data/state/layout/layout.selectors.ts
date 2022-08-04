@@ -1,7 +1,8 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { LayoutState } from './layout.state';
-import { selectIsAnyPatientSelected } from '../patient/patient.selectors';
+import { selectIsAnyPatientSelected, selectPatientSelection } from '../patient/patient.selectors';
+import { Property } from '../../schema/property';
 
 const selectState = createSelector(
   (appState: AppState) => appState.layout,
@@ -53,6 +54,41 @@ export const selectRelevantProperties = createSelector(
 export const selectHighlightColor = createSelector(
   selectState,
   (state: LayoutState) => state.highlightColor,
+);
+export const selectMinLabelGradient = createSelector(
+  selectState,
+  selectNodeColorBy,
+  (state: LayoutState, colorBy: Property | null) => {
+    if (!colorBy) return 0;
+    if (colorBy.min && !Number.isNaN(colorBy.min)) return colorBy.min;
+    if (
+      colorBy.minA &&
+      colorBy.minB &&
+      !Number.isNaN(colorBy.minA) &&
+      !Number.isNaN(colorBy.minB)
+    ) {
+      return Math.min(colorBy.minA, colorBy.minB);
+    }
+    return 0;
+  },
+);
+
+export const selectMaxLabelGradient = createSelector(
+  selectState,
+  selectNodeColorBy,
+  (state: LayoutState, colorBy: Property | null) => {
+    if (!colorBy) return 1;
+    if (colorBy.max && !Number.isNaN(colorBy.max)) return colorBy.max;
+    if (
+      colorBy.maxA &&
+      colorBy.maxB &&
+      !Number.isNaN(colorBy.maxA) &&
+      !Number.isNaN(colorBy.maxB)
+    ) {
+      return Math.max(colorBy.maxA, colorBy.maxB);
+    }
+    return 1;
+  },
 );
 export const selectGradient = createSelector(selectState, (state: LayoutState) => {
   if (state.nodeColorBy === null) return null;

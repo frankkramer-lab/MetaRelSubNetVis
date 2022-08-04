@@ -24,6 +24,10 @@ export class SidebarLayoutFormComponent {
 
   @Input() properties!: Property[] | null;
 
+  @Input() minLabel!: number | null;
+
+  @Input() maxLabel!: number | null;
+
   @Output() booleanPropertyChanged: EventEmitter<Property | null> =
     new EventEmitter<Property | null>();
 

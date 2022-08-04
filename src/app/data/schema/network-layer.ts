@@ -1,3 +1,3 @@
 export interface NetworkLayer {
-  [key: number]: number;
+  [key: string]: number;
 }

@@ -462,7 +462,6 @@ export class GraphService {
       if (nodeColorBy !== null) {
         switch (nodeColorBy.type) {
           case PropertyTypeEnum.continuous:
-            // this.setColorContinuous(nodeColorBy);
             this.setColorContinuousSplit(nodeColorBy);
             break;
           case PropertyTypeEnum.discrete:
@@ -673,6 +672,13 @@ export class GraphService {
           .selector(`node[color>=${key}][color<=${successorKey}]`)
           .style('background-color', map)
           .style('text-outline-color', map);
+      } else if (index === keys.length - 1) {
+        this.cyCore
+          .style()
+          // @ts-ignore
+          .selector(`node[color>=${key}]`)
+          .style('background-color', value)
+          .style('text-outline-color', value);
       }
     });
   }
@@ -743,6 +749,25 @@ export class GraphService {
           // @ts-ignore
           .selector(`node.split[colorB>${key}][colorB<=${successorKey}]`)
           .style('pie-1-background-color', bMap)
+          // @ts-ignore
+          .selector('node.split[colorA][^colorB]')
+          .style('pie-1-background-color', this.colors.gray)
+          // @ts-ignore
+          .selector('node.split[^colorA][colorB]')
+          .style('pie-2-background-color', this.colors.gray);
+      } else if (index === keys.length - 1) {
+        this.cyCore
+          .style()
+          // @ts-ignore
+          .selector('node.split[colorA][colorB]')
+          .style('width', '80px')
+          .style('height', '80px')
+          // @ts-ignore
+          .selector(`node.split[colorA>${key}]`)
+          .style('pie-2-background-color', value)
+          // @ts-ignore
+          .selector(`node.split[colorB>${key}]`)
+          .style('pie-1-background-color', value)
           // @ts-ignore
           .selector('node.split[colorA][^colorB]')
           .style('pie-1-background-color', this.colors.gray)
